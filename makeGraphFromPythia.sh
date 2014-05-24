@@ -68,20 +68,20 @@ do
 		gEntry+=" }"
 	fi
 	
-	# gEntry+=" [dir=\"back\"]"
+	gEntry+=" [dir=\"back\"]"
 
 	echo "$gEntry"  >> $outputFile
 	
 	# If initial state, make it a green box
 	if [ "$initialState" == "true" ]
 	then
-		echo " \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=green]"  >> $outputFile
+		echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
 	fi
 
 	# If final state, make it a yellow box
 	if [ "$finalState" == "true" ]
 	then
-		echo " \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
+		echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
 	fi
 done
 echo "}"  >> $outputFile
