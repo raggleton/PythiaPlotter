@@ -22,11 +22,14 @@ d1Arr=($(awk '{print $7}' $inputFile))
 # Store index of second daughter
 d2Arr=($(awk '{print $8}' $inputFile))
 
-# nParticles=${#nameArr[@]}
-# let "nParticles--"
+
+# Interesting particles we wish to highlight
+# include anitparticle
+interesting=( "mu+" "mu-" )
+
+
 echo "digraph g {" > $outputFile
 echo "    rankdir = RL;" >> $outputFile
-# for i in $(eval echo {0..$nParticles})
 for ((i=${#nameArr[@]}-1; i>=0; i--))
 # for i in {2..10}
 do
@@ -72,16 +75,37 @@ do
 
 	echo "$gEntry"  >> $outputFile
 	
-	# If initial state, make it a green box
-	if [ "$initialState" == "true" ]
-	then
-		echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
-	fi
+	# Check to see if one of the interesting particles we defined above
+	isInteresting=false
+	for p in "${interesting[@]}"
+	do
+		if [[ ${nameArr[$i]} == *"$p"* ]]
+		then
+			isInteresting=true
+		fi
+	done
 
-	# If final state, make it a yellow box
-	if [ "$finalState" == "true" ]
+	if [[ $isInteresting == "true" ]]
 	then
-		echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
+		# If final state, make it a square box
+		if [ "$finalState" == "true" ]
+		then
+			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=red]"  >> $outputFile
+		else
+			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=red]"  >> $outputFile
+		fi	
+	else
+		# If initial state, make it a green box
+		if [ "$initialState" == "true" ]
+		then
+			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
+		fi
+
+		# If final state, make it a yellow box
+		if [ "$finalState" == "true" ]
+		then
+			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
+		fi
 	fi
 done
 echo "}"  >> $outputFile
