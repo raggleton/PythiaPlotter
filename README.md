@@ -36,7 +36,7 @@ This will output a PDF file of the event. Change filenames as necessary.
 
 
 ## Future plans
-
+- [ ] Simplify particle lines where you get repeats e.g. `195:g -> 278:g -> 323:g -> 394:g` to become `195:g -> 394:g`
 - [ ] Combine with Latex to represent particle names properly
 - [x] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
 	- [ ] Improve by stripping any `()` from around the particle name to test if == one of interesting particles - allows exact matching (ATM does match to `*particleName*` which fails for say `b` quark)
