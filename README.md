@@ -38,6 +38,7 @@ This will output a PDF file of the event. Change filenames as necessary.
 ## Future plans
 
 - [ ] Combine with Latex to represent particle names properly
-- [ ] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
+- [x] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
+	- [ ] Improve by stripping any `()` from around the particle name to test if == one of interesting particles - allows exact matching (ATM does match to `*particleName*` which fails for say `b` quark)
 - [ ] Make a bit more user-friendly
 - [ ] Redo in python!

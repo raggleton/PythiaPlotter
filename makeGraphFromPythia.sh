@@ -11,35 +11,37 @@ outputFile="myEvent.gv"
 # Filename for input txt file with Pythia listing
 inputFile="testLine.txt"
 
-# array to hold names of particle for given No in event listing
-nameArr=($(awk '{print $1":"$3}' $inputFile))
+# Array to hold number&names of particle for given No in event listing
+NumNameArr=($(awk '{print $1":"$3}' $inputFile))
+# Array to hold particle names by themselves ofr given No in event listing
+NameArr=($(awk '{print $3}' $inputFile))
 # Store index of first mother
 m1Arr=($(awk '{print $5}' $inputFile))
 # Store index of second mother
 m2Arr=($(awk '{print $6}' $inputFile))
 # Store index of first daughter
-d1Arr=($(awk '{print $7}' $inputFile))
+# d1Arr=($(awk '{print $7}' $inputFile))
 # Store index of second daughter
-d2Arr=($(awk '{print $8}' $inputFile))
+# d2Arr=($(awk '{print $8}' $inputFile))
 
 
 # Interesting particles we wish to highlight
-# include anitparticle
-interesting=( "mu+" "mu-" )
+# include antiparticle
+interesting=( "tau+" "tau-" "mu+" "mu-" )
 
 
 echo "digraph g {" > $outputFile
 echo "    rankdir = RL;" >> $outputFile
-for ((i=${#nameArr[@]}-1; i>=0; i--))
+for ((i=${#NumNameArr[@]}-1; i>=0; i--))
 # for i in {2..10}
 do
 	# Create string to be written to fle
-	gEntry="    \"${nameArr[$i]}\" "
+	gEntry="    \"${NumNameArr[$i]}\" "
 	
 	finalState=false
 	initialState=false
 	
-	if [[ ${nameArr[$i]} == *\(* ]]
+	if [[ ${NumNameArr[$i]} == *\(* ]]
 	then
 		finalState=false
 	else
@@ -49,13 +51,13 @@ do
 	# Check if mother2==0 
 	if [[ ${m2Arr[$i]} -eq 0 ]]
 	then
-		# Check if both daughters are == 0 - then initial state
+		# Check if both mothers are == 0 - then initial state
 		if [[ ${m1Arr[$i]} -eq 0 ]]
 		then
 			initialState=true
 		else
 			m1No=${m1Arr[$i]}
-			mum=${nameArr[$m1No]}
+			mum=${NumNameArr[$m1No]}
 			gEntry+="-> \"$mum\""
 		fi
 	else
@@ -65,12 +67,13 @@ do
 		m2=${m2Arr[$i]}
 		for m in $(eval echo {$m1..$m2})
 		do
-			mum=${nameArr[$m]}
+			mum=${NumNameArr[$m]}
 			gEntry+="\"$mum\" "
 		done
 		gEntry+=" }"
 	fi
 	
+	# Reverse arrow direction, since we link daughters to mothers
 	gEntry+=" [dir=\"back\"]"
 
 	echo "$gEntry"  >> $outputFile
@@ -79,7 +82,7 @@ do
 	isInteresting=false
 	for p in "${interesting[@]}"
 	do
-		if [[ ${nameArr[$i]} == *"$p"* ]]
+		if [[ ${NameArr[$i]} == *"$p"* ]]
 		then
 			isInteresting=true
 		fi
@@ -90,21 +93,21 @@ do
 		# If final state, make it a square box
 		if [ "$finalState" == "true" ]
 		then
-			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=red]"  >> $outputFile
+			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=red]"  >> $outputFile
 		else
-			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=red]"  >> $outputFile
+			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=red]"  >> $outputFile
 		fi	
 	else
 		# If initial state, make it a green box
 		if [ "$initialState" == "true" ]
 		then
-			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
+			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
 		fi
 
 		# If final state, make it a yellow box
 		if [ "$finalState" == "true" ]
 		then
-			echo "    \"${nameArr[$i]}\" [label=\"${nameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
+			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
 		fi
 	fi
 done
