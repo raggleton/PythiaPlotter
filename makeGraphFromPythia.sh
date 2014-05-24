@@ -29,6 +29,8 @@ m2Arr=($(awk '{print $6}' $inputFile))
 # include antiparticle
 interesting=( "tau+" "tau-" "mu+" "mu-" )
 
+# To hold all the initial state particles that should be aligned
+sameOnes=""
 
 echo "digraph g {" > $outputFile
 echo "    rankdir = RL;" >> $outputFile
@@ -48,6 +50,7 @@ do
 		finalState=true
 	fi
 
+
 	# Check if mother2==0 
 	if [[ ${m2Arr[$i]} -eq 0 ]]
 	then
@@ -55,6 +58,7 @@ do
 		if [[ ${m1Arr[$i]} -eq 0 ]]
 		then
 			initialState=true
+			sameOnes+="\"${NumNameArr[$i]}\" "
 		else
 			m1No=${m1Arr[$i]}
 			mum=${NumNameArr[$m1No]}
@@ -110,5 +114,7 @@ do
 			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
 		fi
 	fi
+
 done
+echo "{rank=same;$sameOnes}  // Put them on the same level" >> $outputFile
 echo "}"  >> $outputFile
