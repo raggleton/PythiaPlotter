@@ -1,0 +1,1253 @@
+digraph g {
+    rankdir = RL;
+    "971:nu_mu" -> "904:(tau+)"
+ "971:nu_mu" [label="971:nu_mu", shape=box, style=filled, fillcolor=yellow]
+    "970:mu+" -> "904:(tau+)"
+ "970:mu+" [label="970:mu+", shape=box, style=filled, fillcolor=yellow]
+    "969:nu_taubar" -> "904:(tau+)"
+ "969:nu_taubar" [label="969:nu_taubar", shape=box, style=filled, fillcolor=yellow]
+    "968:gamma" -> "964:(pi0)"
+ "968:gamma" [label="968:gamma", shape=box, style=filled, fillcolor=yellow]
+    "967:gamma" -> "964:(pi0)"
+ "967:gamma" [label="967:gamma", shape=box, style=filled, fillcolor=yellow]
+    "966:gamma" -> "962:(pi0)"
+ "966:gamma" [label="966:gamma", shape=box, style=filled, fillcolor=yellow]
+    "965:gamma" -> "962:(pi0)"
+ "965:gamma" [label="965:gamma", shape=box, style=filled, fillcolor=yellow]
+    "964:(pi0)" -> "961:(rho-)"
+    "963:pi-" -> "961:(rho-)"
+ "963:pi-" [label="963:pi-", shape=box, style=filled, fillcolor=yellow]
+    "962:(pi0)" -> "957:(a_1(1260)-)"
+    "961:(rho-)" -> "957:(a_1(1260)-)"
+    "960:gamma" -> "954:(pi0)"
+ "960:gamma" [label="960:gamma", shape=box, style=filled, fillcolor=yellow]
+    "959:gamma" -> "954:(pi0)"
+ "959:gamma" [label="959:gamma", shape=box, style=filled, fillcolor=yellow]
+    "958:K+" -> "953:(Dbar0)"
+ "958:K+" [label="958:K+", shape=box, style=filled, fillcolor=yellow]
+    "957:(a_1(1260)-)" -> "953:(Dbar0)"
+    "956:gamma" -> "913:(pi0)"
+ "956:gamma" [label="956:gamma", shape=box, style=filled, fillcolor=yellow]
+    "955:gamma" -> "913:(pi0)"
+ "955:gamma" [label="955:gamma", shape=box, style=filled, fillcolor=yellow]
+    "954:(pi0)" -> "905:(D*bar0)"
+    "953:(Dbar0)" -> "905:(D*bar0)"
+    "952:gamma" -> "898:(pi0)"
+ "952:gamma" [label="952:gamma", shape=box, style=filled, fillcolor=yellow]
+    "951:gamma" -> "898:(pi0)"
+ "951:gamma" [label="951:gamma", shape=box, style=filled, fillcolor=yellow]
+    "950:gamma" -> "897:(pi0)"
+ "950:gamma" [label="950:gamma", shape=box, style=filled, fillcolor=yellow]
+    "949:gamma" -> "897:(pi0)"
+ "949:gamma" [label="949:gamma", shape=box, style=filled, fillcolor=yellow]
+    "948:K+" -> "891:(Dbar0)"
+ "948:K+" [label="948:K+", shape=box, style=filled, fillcolor=yellow]
+    "947:nu_mubar" -> "891:(Dbar0)"
+ "947:nu_mubar" [label="947:nu_mubar", shape=box, style=filled, fillcolor=yellow]
+    "946:mu-" -> "891:(Dbar0)"
+ "946:mu-" [label="946:mu-", shape=box, style=filled, fillcolor=yellow]
+    "945:pi-" -> "890:(K_S0)"
+ "945:pi-" [label="945:pi-", shape=box, style=filled, fillcolor=yellow]
+    "944:pi+" -> "890:(K_S0)"
+ "944:pi+" [label="944:pi+", shape=box, style=filled, fillcolor=yellow]
+    "943:gamma" -> "889:(pi0)"
+ "943:gamma" [label="943:gamma", shape=box, style=filled, fillcolor=yellow]
+    "942:gamma" -> "889:(pi0)"
+ "942:gamma" [label="942:gamma", shape=box, style=filled, fillcolor=yellow]
+    "941:gamma" -> "888:(pi0)"
+ "941:gamma" [label="941:gamma", shape=box, style=filled, fillcolor=yellow]
+    "940:gamma" -> "888:(pi0)"
+ "940:gamma" [label="940:gamma", shape=box, style=filled, fillcolor=yellow]
+    "939:gamma" -> "871:(pi0)"
+ "939:gamma" [label="939:gamma", shape=box, style=filled, fillcolor=yellow]
+    "938:gamma" -> "871:(pi0)"
+ "938:gamma" [label="938:gamma", shape=box, style=filled, fillcolor=yellow]
+    "937:gamma" -> "831:(pi0)"
+ "937:gamma" [label="937:gamma", shape=box, style=filled, fillcolor=yellow]
+    "936:gamma" -> "831:(pi0)"
+ "936:gamma" [label="936:gamma", shape=box, style=filled, fillcolor=yellow]
+    "935:gamma" -> "830:(pi0)"
+ "935:gamma" [label="935:gamma", shape=box, style=filled, fillcolor=yellow]
+    "934:gamma" -> "830:(pi0)"
+ "934:gamma" [label="934:gamma", shape=box, style=filled, fillcolor=yellow]
+    "933:gamma" -> "826:(pi0)"
+ "933:gamma" [label="933:gamma", shape=box, style=filled, fillcolor=yellow]
+    "932:gamma" -> "826:(pi0)"
+ "932:gamma" [label="932:gamma", shape=box, style=filled, fillcolor=yellow]
+    "931:gamma" -> "824:(pi0)"
+ "931:gamma" [label="931:gamma", shape=box, style=filled, fillcolor=yellow]
+    "930:gamma" -> "824:(pi0)"
+ "930:gamma" [label="930:gamma", shape=box, style=filled, fillcolor=yellow]
+    "929:gamma" -> "822:(pi0)"
+ "929:gamma" [label="929:gamma", shape=box, style=filled, fillcolor=yellow]
+    "928:gamma" -> "822:(pi0)"
+ "928:gamma" [label="928:gamma", shape=box, style=filled, fillcolor=yellow]
+    "927:gamma" -> "821:(pi0)"
+ "927:gamma" [label="927:gamma", shape=box, style=filled, fillcolor=yellow]
+    "926:gamma" -> "821:(pi0)"
+ "926:gamma" [label="926:gamma", shape=box, style=filled, fillcolor=yellow]
+    "925:gamma" -> "812:(pi0)"
+ "925:gamma" [label="925:gamma", shape=box, style=filled, fillcolor=yellow]
+    "924:gamma" -> "812:(pi0)"
+ "924:gamma" [label="924:gamma", shape=box, style=filled, fillcolor=yellow]
+    "923:gamma" -> "811:(pi0)"
+ "923:gamma" [label="923:gamma", shape=box, style=filled, fillcolor=yellow]
+    "922:gamma" -> "811:(pi0)"
+ "922:gamma" [label="922:gamma", shape=box, style=filled, fillcolor=yellow]
+    "921:gamma" -> "810:(pi0)"
+ "921:gamma" [label="921:gamma", shape=box, style=filled, fillcolor=yellow]
+    "920:gamma" -> "810:(pi0)"
+ "920:gamma" [label="920:gamma", shape=box, style=filled, fillcolor=yellow]
+    "919:gamma" -> "807:(pi0)"
+ "919:gamma" [label="919:gamma", shape=box, style=filled, fillcolor=yellow]
+    "918:gamma" -> "807:(pi0)"
+ "918:gamma" [label="918:gamma", shape=box, style=filled, fillcolor=yellow]
+    "917:gamma" -> "806:(pi0)"
+ "917:gamma" [label="917:gamma", shape=box, style=filled, fillcolor=yellow]
+    "916:gamma" -> "806:(pi0)"
+ "916:gamma" [label="916:gamma", shape=box, style=filled, fillcolor=yellow]
+    "915:gamma" -> "805:(pi0)"
+ "915:gamma" [label="915:gamma", shape=box, style=filled, fillcolor=yellow]
+    "914:gamma" -> "805:(pi0)"
+ "914:gamma" [label="914:gamma", shape=box, style=filled, fillcolor=yellow]
+    "913:(pi0)" -> "803:(Lambdabar0)"
+    "912:nbar0" -> "803:(Lambdabar0)"
+ "912:nbar0" [label="912:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "911:gamma" -> "798:(pi0)"
+ "911:gamma" [label="911:gamma", shape=box, style=filled, fillcolor=yellow]
+    "910:gamma" -> "798:(pi0)"
+ "910:gamma" [label="910:gamma", shape=box, style=filled, fillcolor=yellow]
+    "909:gamma" -> "795:(pi0)"
+ "909:gamma" [label="909:gamma", shape=box, style=filled, fillcolor=yellow]
+    "908:gamma" -> "795:(pi0)"
+ "908:gamma" [label="908:gamma", shape=box, style=filled, fillcolor=yellow]
+    "907:gamma" -> "790:(pi0)"
+ "907:gamma" [label="907:gamma", shape=box, style=filled, fillcolor=yellow]
+    "906:gamma" -> "790:(pi0)"
+ "906:gamma" [label="906:gamma", shape=box, style=filled, fillcolor=yellow]
+    "905:(D*bar0)" -> "786:(B+)"
+    "904:(tau+)" -> "786:(B+)"
+    "903:nu_tau" -> "786:(B+)"
+ "903:nu_tau" [label="903:nu_tau", shape=box, style=filled, fillcolor=yellow]
+    "902:gamma" -> "781:(pi0)"
+ "902:gamma" [label="902:gamma", shape=box, style=filled, fillcolor=yellow]
+    "901:gamma" -> "781:(pi0)"
+ "901:gamma" [label="901:gamma", shape=box, style=filled, fillcolor=yellow]
+    "900:gamma" -> "778:(pi0)"
+ "900:gamma" [label="900:gamma", shape=box, style=filled, fillcolor=yellow]
+    "899:gamma" -> "778:(pi0)"
+ "899:gamma" [label="899:gamma", shape=box, style=filled, fillcolor=yellow]
+    "898:(pi0)" -> "766:(Dbar0)"
+    "897:(pi0)" -> "766:(Dbar0)"
+    "896:pi-" -> "766:(Dbar0)"
+ "896:pi-" [label="896:pi-", shape=box, style=filled, fillcolor=yellow]
+    "895:K+" -> "766:(Dbar0)"
+ "895:K+" [label="895:K+", shape=box, style=filled, fillcolor=yellow]
+    "894:gamma" -> "765:(pi0)"
+ "894:gamma" [label="894:gamma", shape=box, style=filled, fillcolor=yellow]
+    "893:gamma" -> "765:(pi0)"
+ "893:gamma" [label="893:gamma", shape=box, style=filled, fillcolor=yellow]
+    "892:pi-" -> "759:(D*-)"
+ "892:pi-" [label="892:pi-", shape=box, style=filled, fillcolor=yellow]
+    "891:(Dbar0)" -> "759:(D*-)"
+    "890:(K_S0)" -> { "748:(K0)"  }
+    "889:(pi0)" -> "743:(K_S0)"
+    "888:(pi0)" -> "743:(K_S0)"
+    "887:pi-" -> "739:(K_S0)"
+ "887:pi-" [label="887:pi-", shape=box, style=filled, fillcolor=yellow]
+    "886:pi+" -> "739:(K_S0)"
+ "886:pi+" [label="886:pi+", shape=box, style=filled, fillcolor=yellow]
+    "885:gamma" -> "737:(pi0)"
+ "885:gamma" [label="885:gamma", shape=box, style=filled, fillcolor=yellow]
+    "884:gamma" -> "737:(pi0)"
+ "884:gamma" [label="884:gamma", shape=box, style=filled, fillcolor=yellow]
+    "883:pi-" -> "735:(K_S0)"
+ "883:pi-" [label="883:pi-", shape=box, style=filled, fillcolor=yellow]
+    "882:pi+" -> "735:(K_S0)"
+ "882:pi+" [label="882:pi+", shape=box, style=filled, fillcolor=yellow]
+    "881:gamma" -> "734:(pi0)"
+ "881:gamma" [label="881:gamma", shape=box, style=filled, fillcolor=yellow]
+    "880:gamma" -> "734:(pi0)"
+ "880:gamma" [label="880:gamma", shape=box, style=filled, fillcolor=yellow]
+    "879:gamma" -> "732:(pi0)"
+ "879:gamma" [label="879:gamma", shape=box, style=filled, fillcolor=yellow]
+    "878:gamma" -> "732:(pi0)"
+ "878:gamma" [label="878:gamma", shape=box, style=filled, fillcolor=yellow]
+    "877:gamma" -> "730:(pi0)"
+ "877:gamma" [label="877:gamma", shape=box, style=filled, fillcolor=yellow]
+    "876:gamma" -> "730:(pi0)"
+ "876:gamma" [label="876:gamma", shape=box, style=filled, fillcolor=yellow]
+    "875:gamma" -> "728:(pi0)"
+ "875:gamma" [label="875:gamma", shape=box, style=filled, fillcolor=yellow]
+    "874:gamma" -> "728:(pi0)"
+ "874:gamma" [label="874:gamma", shape=box, style=filled, fillcolor=yellow]
+    "873:gamma" -> "724:(pi0)"
+ "873:gamma" [label="873:gamma", shape=box, style=filled, fillcolor=yellow]
+    "872:gamma" -> "724:(pi0)"
+ "872:gamma" [label="872:gamma", shape=box, style=filled, fillcolor=yellow]
+    "871:(pi0)" -> "721:(Lambdabar0)"
+    "870:nbar0" -> "721:(Lambdabar0)"
+ "870:nbar0" [label="870:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "869:gamma" -> "720:(pi0)"
+ "869:gamma" [label="869:gamma", shape=box, style=filled, fillcolor=yellow]
+    "868:gamma" -> "720:(pi0)"
+ "868:gamma" [label="868:gamma", shape=box, style=filled, fillcolor=yellow]
+    "867:gamma" -> "718:(pi0)"
+ "867:gamma" [label="867:gamma", shape=box, style=filled, fillcolor=yellow]
+    "866:gamma" -> "718:(pi0)"
+ "866:gamma" [label="866:gamma", shape=box, style=filled, fillcolor=yellow]
+    "865:gamma" -> "714:(pi0)"
+ "865:gamma" [label="865:gamma", shape=box, style=filled, fillcolor=yellow]
+    "864:gamma" -> "714:(pi0)"
+ "864:gamma" [label="864:gamma", shape=box, style=filled, fillcolor=yellow]
+    "863:pi-" -> "712:(K_S0)"
+ "863:pi-" [label="863:pi-", shape=box, style=filled, fillcolor=yellow]
+    "862:pi+" -> "712:(K_S0)"
+ "862:pi+" [label="862:pi+", shape=box, style=filled, fillcolor=yellow]
+    "861:gamma" -> "711:(pi0)"
+ "861:gamma" [label="861:gamma", shape=box, style=filled, fillcolor=yellow]
+    "860:gamma" -> "711:(pi0)"
+ "860:gamma" [label="860:gamma", shape=box, style=filled, fillcolor=yellow]
+    "859:gamma" -> "709:(pi0)"
+ "859:gamma" [label="859:gamma", shape=box, style=filled, fillcolor=yellow]
+    "858:gamma" -> "709:(pi0)"
+ "858:gamma" [label="858:gamma", shape=box, style=filled, fillcolor=yellow]
+    "857:gamma" -> "707:(pi0)"
+ "857:gamma" [label="857:gamma", shape=box, style=filled, fillcolor=yellow]
+    "856:gamma" -> "707:(pi0)"
+ "856:gamma" [label="856:gamma", shape=box, style=filled, fillcolor=yellow]
+    "855:gamma" -> "705:(pi0)"
+ "855:gamma" [label="855:gamma", shape=box, style=filled, fillcolor=yellow]
+    "854:gamma" -> "705:(pi0)"
+ "854:gamma" [label="854:gamma", shape=box, style=filled, fillcolor=yellow]
+    "853:gamma" -> "703:(pi0)"
+ "853:gamma" [label="853:gamma", shape=box, style=filled, fillcolor=yellow]
+    "852:gamma" -> "703:(pi0)"
+ "852:gamma" [label="852:gamma", shape=box, style=filled, fillcolor=yellow]
+    "851:gamma" -> "701:(pi0)"
+ "851:gamma" [label="851:gamma", shape=box, style=filled, fillcolor=yellow]
+    "850:gamma" -> "701:(pi0)"
+ "850:gamma" [label="850:gamma", shape=box, style=filled, fillcolor=yellow]
+    "849:gamma" -> "696:(pi0)"
+ "849:gamma" [label="849:gamma", shape=box, style=filled, fillcolor=yellow]
+    "848:gamma" -> "696:(pi0)"
+ "848:gamma" [label="848:gamma", shape=box, style=filled, fillcolor=yellow]
+    "847:gamma" -> "694:(pi0)"
+ "847:gamma" [label="847:gamma", shape=box, style=filled, fillcolor=yellow]
+    "846:gamma" -> "694:(pi0)"
+ "846:gamma" [label="846:gamma", shape=box, style=filled, fillcolor=yellow]
+    "845:gamma" -> "686:(pi0)"
+ "845:gamma" [label="845:gamma", shape=box, style=filled, fillcolor=yellow]
+    "844:gamma" -> "686:(pi0)"
+ "844:gamma" [label="844:gamma", shape=box, style=filled, fillcolor=yellow]
+    "843:gamma" -> "682:(pi0)"
+ "843:gamma" [label="843:gamma", shape=box, style=filled, fillcolor=yellow]
+    "842:gamma" -> "682:(pi0)"
+ "842:gamma" [label="842:gamma", shape=box, style=filled, fillcolor=yellow]
+    "841:gamma" -> "680:(pi0)"
+ "841:gamma" [label="841:gamma", shape=box, style=filled, fillcolor=yellow]
+    "840:gamma" -> "680:(pi0)"
+ "840:gamma" [label="840:gamma", shape=box, style=filled, fillcolor=yellow]
+    "839:gamma" -> "678:(pi0)"
+ "839:gamma" [label="839:gamma", shape=box, style=filled, fillcolor=yellow]
+    "838:gamma" -> "678:(pi0)"
+ "838:gamma" [label="838:gamma", shape=box, style=filled, fillcolor=yellow]
+    "837:gamma" -> "676:(pi0)"
+ "837:gamma" [label="837:gamma", shape=box, style=filled, fillcolor=yellow]
+    "836:gamma" -> "676:(pi0)"
+ "836:gamma" [label="836:gamma", shape=box, style=filled, fillcolor=yellow]
+    "835:gamma" -> "674:(pi0)"
+ "835:gamma" [label="835:gamma", shape=box, style=filled, fillcolor=yellow]
+    "834:gamma" -> "674:(pi0)"
+ "834:gamma" [label="834:gamma", shape=box, style=filled, fillcolor=yellow]
+    "833:gamma" -> "672:(pi0)"
+ "833:gamma" [label="833:gamma", shape=box, style=filled, fillcolor=yellow]
+    "832:gamma" -> "672:(pi0)"
+ "832:gamma" [label="832:gamma", shape=box, style=filled, fillcolor=yellow]
+    "831:(pi0)" -> "670:(K_S0)"
+    "830:(pi0)" -> "670:(K_S0)"
+    "829:gamma" -> "669:(eta)"
+ "829:gamma" [label="829:gamma", shape=box, style=filled, fillcolor=yellow]
+    "828:gamma" -> "669:(eta)"
+ "828:gamma" [label="828:gamma", shape=box, style=filled, fillcolor=yellow]
+    "827:gamma" -> "666:(omega)"
+ "827:gamma" [label="827:gamma", shape=box, style=filled, fillcolor=yellow]
+    "826:(pi0)" -> "666:(omega)"
+    "825:gamma" -> "665:(omega)"
+ "825:gamma" [label="825:gamma", shape=box, style=filled, fillcolor=yellow]
+    "824:(pi0)" -> "665:(omega)"
+    "823:gamma" -> "660:(omega)"
+ "823:gamma" [label="823:gamma", shape=box, style=filled, fillcolor=yellow]
+    "822:(pi0)" -> "660:(omega)"
+    "821:(pi0)" -> "654:(omega)"
+    "820:pi-" -> "654:(omega)"
+ "820:pi-" [label="820:pi-", shape=box, style=filled, fillcolor=yellow]
+    "819:pi+" -> "654:(omega)"
+ "819:pi+" [label="819:pi+", shape=box, style=filled, fillcolor=yellow]
+    "818:gamma" -> "650:(pi0)"
+ "818:gamma" [label="818:gamma", shape=box, style=filled, fillcolor=yellow]
+    "817:gamma" -> "650:(pi0)"
+ "817:gamma" [label="817:gamma", shape=box, style=filled, fillcolor=yellow]
+    "816:gamma" -> "648:(pi0)"
+ "816:gamma" [label="816:gamma", shape=box, style=filled, fillcolor=yellow]
+    "815:gamma" -> "648:(pi0)"
+ "815:gamma" [label="815:gamma", shape=box, style=filled, fillcolor=yellow]
+    "814:gamma" -> "646:(pi0)"
+ "814:gamma" [label="814:gamma", shape=box, style=filled, fillcolor=yellow]
+    "813:gamma" -> "646:(pi0)"
+ "813:gamma" [label="813:gamma", shape=box, style=filled, fillcolor=yellow]
+    "812:(pi0)" -> "645:(eta)"
+    "811:(pi0)" -> "645:(eta)"
+    "810:(pi0)" -> "645:(eta)"
+    "809:gamma" -> "639:(pi0)"
+ "809:gamma" [label="809:gamma", shape=box, style=filled, fillcolor=yellow]
+    "808:gamma" -> "639:(pi0)"
+ "808:gamma" [label="808:gamma", shape=box, style=filled, fillcolor=yellow]
+    "807:(pi0)" -> "636:(eta)"
+    "806:(pi0)" -> "636:(eta)"
+    "805:(pi0)" -> "636:(eta)"
+    "804:gamma" -> "632:(Sigmabar0)"
+ "804:gamma" [label="804:gamma", shape=box, style=filled, fillcolor=yellow]
+    "803:(Lambdabar0)" -> "632:(Sigmabar0)"
+    "802:pi-" -> "631:(Sigma-)"
+ "802:pi-" [label="802:pi-", shape=box, style=filled, fillcolor=yellow]
+    "801:n0" -> "631:(Sigma-)"
+ "801:n0" [label="801:n0", shape=box, style=filled, fillcolor=yellow]
+    "800:gamma" -> "630:(eta)"
+ "800:gamma" [label="800:gamma", shape=box, style=filled, fillcolor=yellow]
+    "799:gamma" -> "630:(eta)"
+ "799:gamma" [label="799:gamma", shape=box, style=filled, fillcolor=yellow]
+    "798:(pi0)" -> "629:(omega)"
+    "797:pi-" -> "629:(omega)"
+ "797:pi-" [label="797:pi-", shape=box, style=filled, fillcolor=yellow]
+    "796:pi+" -> "629:(omega)"
+ "796:pi+" [label="796:pi+", shape=box, style=filled, fillcolor=yellow]
+    "795:(pi0)" -> "625:(eta)"
+    "794:pi-" -> "625:(eta)"
+ "794:pi-" [label="794:pi-", shape=box, style=filled, fillcolor=yellow]
+    "793:pi+" -> "625:(eta)"
+ "793:pi+" [label="793:pi+", shape=box, style=filled, fillcolor=yellow]
+    "792:gamma" -> "624:(pi0)"
+ "792:gamma" [label="792:gamma", shape=box, style=filled, fillcolor=yellow]
+    "791:gamma" -> "624:(pi0)"
+ "791:gamma" [label="791:gamma", shape=box, style=filled, fillcolor=yellow]
+    "790:(pi0)" -> "623:(omega)"
+    "789:pi-" -> "623:(omega)"
+ "789:pi-" [label="789:pi-", shape=box, style=filled, fillcolor=yellow]
+    "788:pi+" -> "623:(omega)"
+ "788:pi+" [label="788:pi+", shape=box, style=filled, fillcolor=yellow]
+    "787:gamma" -> "598:(B*+)"
+ "787:gamma" [label="787:gamma", shape=box, style=filled, fillcolor=yellow]
+    "786:(B+)" -> "598:(B*+)"
+    "785:gamma" -> "595:(pi0)"
+ "785:gamma" [label="785:gamma", shape=box, style=filled, fillcolor=yellow]
+    "784:gamma" -> "595:(pi0)"
+ "784:gamma" [label="784:gamma", shape=box, style=filled, fillcolor=yellow]
+    "783:gamma" -> "594:(eta)"
+ "783:gamma" [label="783:gamma", shape=box, style=filled, fillcolor=yellow]
+    "782:gamma" -> "594:(eta)"
+ "782:gamma" [label="782:gamma", shape=box, style=filled, fillcolor=yellow]
+    "781:(pi0)" -> "591:(omega)"
+    "780:pi-" -> "591:(omega)"
+ "780:pi-" [label="780:pi-", shape=box, style=filled, fillcolor=yellow]
+    "779:pi+" -> "591:(omega)"
+ "779:pi+" [label="779:pi+", shape=box, style=filled, fillcolor=yellow]
+    "778:(pi0)" -> "581:(omega)"
+    "777:pi-" -> "581:(omega)"
+ "777:pi-" [label="777:pi-", shape=box, style=filled, fillcolor=yellow]
+    "776:pi+" -> "581:(omega)"
+ "776:pi+" [label="776:pi+", shape=box, style=filled, fillcolor=yellow]
+    "775:gamma" -> "575:(pi0)"
+ "775:gamma" [label="775:gamma", shape=box, style=filled, fillcolor=yellow]
+    "774:gamma" -> "575:(pi0)"
+ "774:gamma" [label="774:gamma", shape=box, style=filled, fillcolor=yellow]
+    "773:gamma" -> "572:(pi0)"
+ "773:gamma" [label="773:gamma", shape=box, style=filled, fillcolor=yellow]
+    "772:gamma" -> "572:(pi0)"
+ "772:gamma" [label="772:gamma", shape=box, style=filled, fillcolor=yellow]
+    "771:gamma" -> "553:(pi0)"
+ "771:gamma" [label="771:gamma", shape=box, style=filled, fillcolor=yellow]
+    "770:gamma" -> "553:(pi0)"
+ "770:gamma" [label="770:gamma", shape=box, style=filled, fillcolor=yellow]
+    "769:gamma" -> "545:(pi0)"
+ "769:gamma" [label="769:gamma", shape=box, style=filled, fillcolor=yellow]
+    "768:gamma" -> "545:(pi0)"
+ "768:gamma" [label="768:gamma", shape=box, style=filled, fillcolor=yellow]
+    "767:pi-" -> "542:(D*-)"
+ "767:pi-" [label="767:pi-", shape=box, style=filled, fillcolor=yellow]
+    "766:(Dbar0)" -> "542:(D*-)"
+    "765:(pi0)" -> "539:(Lambdabar0)"
+    "764:nbar0" -> "539:(Lambdabar0)"
+ "764:nbar0" [label="764:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "763:gamma" -> "535:(pi0)"
+ "763:gamma" [label="763:gamma", shape=box, style=filled, fillcolor=yellow]
+    "762:gamma" -> "535:(pi0)"
+ "762:gamma" [label="762:gamma", shape=box, style=filled, fillcolor=yellow]
+    "761:gamma" -> "529:(pi0)"
+ "761:gamma" [label="761:gamma", shape=box, style=filled, fillcolor=yellow]
+    "760:gamma" -> "529:(pi0)"
+ "760:gamma" [label="760:gamma", shape=box, style=filled, fillcolor=yellow]
+    "759:(D*-)" -> "525:(Bbar0)"
+    "758:mu+" -> "525:(Bbar0)"
+ "758:mu+" [label="758:mu+", shape=box, style=filled, fillcolor=yellow]
+    "757:nu_mu" -> "525:(Bbar0)"
+ "757:nu_mu" [label="757:nu_mu", shape=box, style=filled, fillcolor=yellow]
+    "756:gamma" -> "509:(pi0)"
+ "756:gamma" [label="756:gamma", shape=box, style=filled, fillcolor=yellow]
+    "755:gamma" -> "509:(pi0)"
+ "755:gamma" [label="755:gamma", shape=box, style=filled, fillcolor=yellow]
+    "754:gamma" -> "506:(pi0)"
+ "754:gamma" [label="754:gamma", shape=box, style=filled, fillcolor=yellow]
+    "753:gamma" -> "506:(pi0)"
+ "753:gamma" [label="753:gamma", shape=box, style=filled, fillcolor=yellow]
+    "752:gamma" -> "505:(eta)"
+ "752:gamma" [label="752:gamma", shape=box, style=filled, fillcolor=yellow]
+    "751:gamma" -> "505:(eta)"
+ "751:gamma" [label="751:gamma", shape=box, style=filled, fillcolor=yellow]
+    "750:gamma" -> "504:(pi0)"
+ "750:gamma" [label="750:gamma", shape=box, style=filled, fillcolor=yellow]
+    "749:gamma" -> "504:(pi0)"
+ "749:gamma" [label="749:gamma", shape=box, style=filled, fillcolor=yellow]
+    "748:(K0)" -> "494:(D+)"
+    "747:nu_e" -> "494:(D+)"
+ "747:nu_e" [label="747:nu_e", shape=box, style=filled, fillcolor=yellow]
+    "746:e+" -> "494:(D+)"
+ "746:e+" [label="746:e+", shape=box, style=filled, fillcolor=yellow]
+    "745:gamma" -> "484:(pi0)"
+ "745:gamma" [label="745:gamma", shape=box, style=filled, fillcolor=yellow]
+    "744:gamma" -> "484:(pi0)"
+ "744:gamma" [label="744:gamma", shape=box, style=filled, fillcolor=yellow]
+    "743:(K_S0)" -> { "733:(K0)"  }
+    "742:K_L0" -> { "723:(K0)"  }
+ "742:K_L0" [label="742:K_L0", shape=box, style=filled, fillcolor=yellow]
+    "741:K_L0" -> { "715:(K0)"  }
+ "741:K_L0" [label="741:K_L0", shape=box, style=filled, fillcolor=yellow]
+    "740:K_L0" -> { "689:(Kbar0)"  }
+ "740:K_L0" [label="740:K_L0", shape=box, style=filled, fillcolor=yellow]
+    "739:(K_S0)" -> { "681:(K0)"  }
+    "738:K_L0" -> { "679:(Kbar0)"  }
+ "738:K_L0" [label="738:K_L0", shape=box, style=filled, fillcolor=yellow]
+    "737:(pi0)" -> "667:(rho-)"
+    "736:pi-" -> "667:(rho-)"
+ "736:pi-" [label="736:pi-", shape=box, style=filled, fillcolor=yellow]
+    "735:(K_S0)" -> { "659:(Kbar0)"  }
+    "734:(pi0)" -> "658:(K*0)"
+    "733:(K0)" -> "658:(K*0)"
+    "732:(pi0)" -> "653:(K*-)"
+    "731:K-" -> "653:(K*-)"
+ "731:K-" [label="731:K-", shape=box, style=filled, fillcolor=yellow]
+    "730:(pi0)" -> "647:(rho+)"
+    "729:pi+" -> "647:(rho+)"
+ "729:pi+" [label="729:pi+", shape=box, style=filled, fillcolor=yellow]
+    "728:(pi0)" -> "644:(rho-)"
+    "727:pi-" -> "644:(rho-)"
+ "727:pi-" [label="727:pi-", shape=box, style=filled, fillcolor=yellow]
+    "726:pi+" -> "643:(K*bar0)"
+ "726:pi+" [label="726:pi+", shape=box, style=filled, fillcolor=yellow]
+    "725:K-" -> "643:(K*bar0)"
+ "725:K-" [label="725:K-", shape=box, style=filled, fillcolor=yellow]
+    "724:(pi0)" -> "642:(K*0)"
+    "723:(K0)" -> "642:(K*0)"
+    "722:pi+" -> "628:(Sigma*bar+)"
+ "722:pi+" [label="722:pi+", shape=box, style=filled, fillcolor=yellow]
+    "721:(Lambdabar0)" -> "628:(Sigma*bar+)"
+    "720:(pi0)" -> "627:(K*-)"
+    "719:K-" -> "627:(K*-)"
+ "719:K-" [label="719:K-", shape=box, style=filled, fillcolor=yellow]
+    "718:(pi0)" -> "593:(K*-)"
+    "717:K-" -> "593:(K*-)"
+ "717:K-" [label="717:K-", shape=box, style=filled, fillcolor=yellow]
+    "716:pi+" -> "592:(K*+)"
+ "716:pi+" [label="716:pi+", shape=box, style=filled, fillcolor=yellow]
+    "715:(K0)" -> "592:(K*+)"
+    "714:(pi0)" -> "590:(K*-)"
+    "713:K-" -> "590:(K*-)"
+ "713:K-" [label="713:K-", shape=box, style=filled, fillcolor=yellow]
+    "712:(K_S0)" -> { "589:(K0)"  }
+    "711:(pi0)" -> "588:(rho+)"
+    "710:pi+" -> "588:(rho+)"
+ "710:pi+" [label="710:pi+", shape=box, style=filled, fillcolor=yellow]
+    "709:(pi0)" -> "587:(rho-)"
+    "708:pi-" -> "587:(rho-)"
+ "708:pi-" [label="708:pi-", shape=box, style=filled, fillcolor=yellow]
+    "707:(pi0)" -> "584:(rho+)"
+    "706:pi+" -> "584:(rho+)"
+ "706:pi+" [label="706:pi+", shape=box, style=filled, fillcolor=yellow]
+    "705:(pi0)" -> "583:(rho-)"
+    "704:pi-" -> "583:(rho-)"
+ "704:pi-" [label="704:pi-", shape=box, style=filled, fillcolor=yellow]
+    "703:(pi0)" -> "580:(K*-)"
+    "702:K-" -> "580:(K*-)"
+ "702:K-" [label="702:K-", shape=box, style=filled, fillcolor=yellow]
+    "701:(pi0)" -> "574:(rho-)"
+    "700:pi-" -> "574:(rho-)"
+ "700:pi-" [label="700:pi-", shape=box, style=filled, fillcolor=yellow]
+    "699:K_L0" -> { "555:(K0)"  }
+ "699:K_L0" [label="699:K_L0", shape=box, style=filled, fillcolor=yellow]
+    "698:pi+" -> "551:(Deltabar+)"
+ "698:pi+" [label="698:pi+", shape=box, style=filled, fillcolor=yellow]
+    "697:nbar0" -> "551:(Deltabar+)"
+ "697:nbar0" [label="697:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "696:(pi0)" -> "550:(rho-)"
+    "695:pi-" -> "550:(rho-)"
+ "695:pi-" [label="695:pi-", shape=box, style=filled, fillcolor=yellow]
+    "694:(pi0)" -> "547:(rho-)"
+    "693:pi-" -> "547:(rho-)"
+ "693:pi-" [label="693:pi-", shape=box, style=filled, fillcolor=yellow]
+    "692:pi+" -> "546:(Delta++)"
+ "692:pi+" [label="692:pi+", shape=box, style=filled, fillcolor=yellow]
+    "691:p+" -> "546:(Delta++)"
+ "691:p+" [label="691:p+", shape=box, style=filled, fillcolor=yellow]
+    "690:pi-" -> "540:(K*-)"
+ "690:pi-" [label="690:pi-", shape=box, style=filled, fillcolor=yellow]
+    "689:(Kbar0)" -> "540:(K*-)"
+    "688:pi-" -> "537:(Delta-)"
+ "688:pi-" [label="688:pi-", shape=box, style=filled, fillcolor=yellow]
+    "687:n0" -> "537:(Delta-)"
+ "687:n0" [label="687:n0", shape=box, style=filled, fillcolor=yellow]
+    "686:(pi0)" -> "536:(rho+)"
+    "685:pi+" -> "536:(rho+)"
+ "685:pi+" [label="685:pi+", shape=box, style=filled, fillcolor=yellow]
+    "684:pi+" -> "533:(K*bar0)"
+ "684:pi+" [label="684:pi+", shape=box, style=filled, fillcolor=yellow]
+    "683:K-" -> "533:(K*bar0)"
+ "683:K-" [label="683:K-", shape=box, style=filled, fillcolor=yellow]
+    "682:(pi0)" -> "532:(K*0)"
+    "681:(K0)" -> "532:(K*0)"
+    "680:(pi0)" -> "531:(K*bar0)"
+    "679:(Kbar0)" -> "531:(K*bar0)"
+    "678:(pi0)" -> "528:(rho-)"
+    "677:pi-" -> "528:(rho-)"
+ "677:pi-" [label="677:pi-", shape=box, style=filled, fillcolor=yellow]
+    "676:(pi0)" -> "526:(rho-)"
+    "675:pi-" -> "526:(rho-)"
+ "675:pi-" [label="675:pi-", shape=box, style=filled, fillcolor=yellow]
+    "674:(pi0)" -> "496:(rho+)"
+    "673:pi+" -> "496:(rho+)"
+ "673:pi+" [label="673:pi+", shape=box, style=filled, fillcolor=yellow]
+    "672:(pi0)" -> "488:(rho-)"
+    "671:pi-" -> "488:(rho-)"
+ "671:pi-" [label="671:pi-", shape=box, style=filled, fillcolor=yellow]
+    "670:(K_S0)" -> { "480:(Kbar0)"  }
+    "669:(eta)" -> { "655:(u)" "656:(dbar)"  }
+    "668:pi+" -> { "655:(u)" "656:(dbar)"  }
+ "668:pi+" [label="668:pi+", shape=box, style=filled, fillcolor=yellow]
+    "667:(rho-)" -> { "655:(u)" "656:(dbar)"  }
+    "666:(omega)" -> { "655:(u)" "656:(dbar)"  }
+    "665:(omega)" -> { "655:(u)" "656:(dbar)"  }
+    "664:pi+" -> { "655:(u)" "656:(dbar)"  }
+ "664:pi+" [label="664:pi+", shape=box, style=filled, fillcolor=yellow]
+    "663:K-" -> { "655:(u)" "656:(dbar)"  }
+ "663:K-" [label="663:K-", shape=box, style=filled, fillcolor=yellow]
+    "662:K+" -> { "655:(u)" "656:(dbar)"  }
+ "662:K+" [label="662:K+", shape=box, style=filled, fillcolor=yellow]
+    "661:pi-" -> { "655:(u)" "656:(dbar)"  }
+ "661:pi-" [label="661:pi-", shape=box, style=filled, fillcolor=yellow]
+    "660:(omega)" -> { "655:(u)" "656:(dbar)"  }
+    "659:(Kbar0)" -> { "655:(u)" "656:(dbar)"  }
+    "658:(K*0)" -> { "655:(u)" "656:(dbar)"  }
+    "657:pi+" -> { "655:(u)" "656:(dbar)"  }
+ "657:pi+" [label="657:pi+", shape=box, style=filled, fillcolor=yellow]
+    "656:(dbar)" -> { "421:(dbar)"  }
+    "655:(u)" -> { "446:(u)"  }
+    "654:(omega)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "653:(K*-)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "652:K+" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "652:K+" [label="652:K+", shape=box, style=filled, fillcolor=yellow]
+    "651:pbar-" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "651:pbar-" [label="651:pbar-", shape=box, style=filled, fillcolor=yellow]
+    "650:(pi0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "649:n0" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "649:n0" [label="649:n0", shape=box, style=filled, fillcolor=yellow]
+    "648:(pi0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "647:(rho+)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "646:(pi0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "645:(eta)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "644:(rho-)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "643:(K*bar0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "642:(K*0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "641:pi+" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "641:pi+" [label="641:pi+", shape=box, style=filled, fillcolor=yellow]
+    "640:pbar-" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "640:pbar-" [label="640:pbar-", shape=box, style=filled, fillcolor=yellow]
+    "639:(pi0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "638:p+" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "638:p+" [label="638:p+", shape=box, style=filled, fillcolor=yellow]
+    "637:pi-" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "637:pi-" [label="637:pi-", shape=box, style=filled, fillcolor=yellow]
+    "636:(eta)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "635:pi+" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "635:pi+" [label="635:pi+", shape=box, style=filled, fillcolor=yellow]
+    "634:pi-" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "634:pi-" [label="634:pi-", shape=box, style=filled, fillcolor=yellow]
+    "633:pi+" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "633:pi+" [label="633:pi+", shape=box, style=filled, fillcolor=yellow]
+    "632:(Sigmabar0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "631:(Sigma-)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "630:(eta)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "629:(omega)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "628:(Sigma*bar+)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "627:(K*-)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "626:n0" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+ "626:n0" [label="626:n0", shape=box, style=filled, fillcolor=yellow]
+    "625:(eta)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "624:(pi0)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "623:(omega)" -> { "599:(d)" "600:(g)" "601:(g)" "602:(g)" "603:(g)" "604:(g)" "605:(g)" "606:(g)" "607:(g)" "608:(g)" "609:(g)" "610:(g)" "611:(g)" "612:(g)" "613:(g)" "614:(g)" "615:(g)" "616:(g)" "617:(g)" "618:(g)" "619:(g)" "620:(g)" "621:(g)" "622:(ubar)"  }
+    "622:(ubar)" -> { "431:(ubar)"  }
+    "621:(g)" -> { "461:(g)"  }
+    "620:(g)" -> { "426:(g)"  }
+    "619:(g)" -> { "470:(g)"  }
+    "618:(g)" -> { "399:(g)"  }
+    "617:(g)" -> { "462:(g)"  }
+    "616:(g)" -> { "356:(g)"  }
+    "615:(g)" -> { "385:(g)"  }
+    "614:(g)" -> { "468:(g)"  }
+    "613:(g)" -> { "372:(g)"  }
+    "612:(g)" -> { "383:(g)"  }
+    "611:(g)" -> { "467:(g)"  }
+    "610:(g)" -> { "374:(g)"  }
+    "609:(g)" -> { "464:(g)"  }
+    "608:(g)" -> { "355:(g)"  }
+    "607:(g)" -> { "367:(g)"  }
+    "606:(g)" -> { "469:(g)"  }
+    "605:(g)" -> { "349:(g)"  }
+    "604:(g)" -> { "466:(g)"  }
+    "603:(g)" -> { "352:(g)"  }
+    "602:(g)" -> { "346:(g)"  }
+    "601:(g)" -> { "465:(g)"  }
+    "600:(g)" -> { "373:(g)"  }
+    "599:(d)" -> { "341:(d)"  }
+    "598:(B*+)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "597:pi-" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "597:pi-" [label="597:pi-", shape=box, style=filled, fillcolor=yellow]
+    "596:pi+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "596:pi+" [label="596:pi+", shape=box, style=filled, fillcolor=yellow]
+    "595:(pi0)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "594:(eta)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "593:(K*-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "592:(K*+)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "591:(omega)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "590:(K*-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "589:(K0)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "588:(rho+)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "587:(rho-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "586:pi+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "586:pi+" [label="586:pi+", shape=box, style=filled, fillcolor=yellow]
+    "585:pi-" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "585:pi-" [label="585:pi-", shape=box, style=filled, fillcolor=yellow]
+    "584:(rho+)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "583:(rho-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "582:pi+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "582:pi+" [label="582:pi+", shape=box, style=filled, fillcolor=yellow]
+    "581:(omega)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "580:(K*-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "579:K+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "579:K+" [label="579:K+", shape=box, style=filled, fillcolor=yellow]
+    "578:pbar-" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "578:pbar-" [label="578:pbar-", shape=box, style=filled, fillcolor=yellow]
+    "577:n0" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "577:n0" [label="577:n0", shape=box, style=filled, fillcolor=yellow]
+    "576:pi+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "576:pi+" [label="576:pi+", shape=box, style=filled, fillcolor=yellow]
+    "575:(pi0)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "574:(rho-)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "573:pi+" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+ "573:pi+" [label="573:pi+", shape=box, style=filled, fillcolor=yellow]
+    "572:(pi0)" -> { "556:(u)" "557:(g)" "558:(g)" "559:(g)" "560:(g)" "561:(g)" "562:(g)" "563:(g)" "564:(g)" "565:(g)" "566:(g)" "567:(g)" "568:(g)" "569:(g)" "570:(g)" "571:(bbar)"  }
+    "571:(bbar)" -> { "342:(bbar)"  }
+    "570:(g)" -> { "371:(g)"  }
+    "569:(g)" -> { "476:(g)"  }
+    "568:(g)" -> { "471:(g)"  }
+    "567:(g)" -> { "474:(g)"  }
+    "566:(g)" -> { "378:(g)"  }
+    "565:(g)" -> { "384:(g)"  }
+    "564:(g)" -> { "347:(g)"  }
+    "563:(g)" -> { "404:(g)"  }
+    "562:(g)" -> { "477:(g)"  }
+    "561:(g)" -> { "398:(g)"  }
+    "560:(g)" -> { "472:(g)"  }
+    "559:(g)" -> { "475:(g)"  }
+    "558:(g)" -> { "473:(g)"  }
+    "557:(g)" -> { "405:(g)"  }
+    "556:(u)" -> { "408:(u)"  }
+    "555:(K0)" -> { "543:(u)" "544:(sbar)"  }
+    "554:pi+" -> { "543:(u)" "544:(sbar)"  }
+ "554:pi+" [label="554:pi+", shape=box, style=filled, fillcolor=yellow]
+    "553:(pi0)" -> { "543:(u)" "544:(sbar)"  }
+    "552:pi-" -> { "543:(u)" "544:(sbar)"  }
+ "552:pi-" [label="552:pi-", shape=box, style=filled, fillcolor=yellow]
+    "551:(Deltabar+)" -> { "543:(u)" "544:(sbar)"  }
+    "550:(rho-)" -> { "543:(u)" "544:(sbar)"  }
+    "549:n0" -> { "543:(u)" "544:(sbar)"  }
+ "549:n0" [label="549:n0", shape=box, style=filled, fillcolor=yellow]
+    "548:nbar0" -> { "543:(u)" "544:(sbar)"  }
+ "548:nbar0" [label="548:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "547:(rho-)" -> { "543:(u)" "544:(sbar)"  }
+    "546:(Delta++)" -> { "543:(u)" "544:(sbar)"  }
+    "545:(pi0)" -> { "543:(u)" "544:(sbar)"  }
+    "544:(sbar)" -> { "430:(sbar)"  }
+    "543:(u)" -> { "437:(u)"  }
+    "542:(D*-)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "541:pi+" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+ "541:pi+" [label="541:pi+", shape=box, style=filled, fillcolor=yellow]
+    "540:(K*-)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "539:(Lambdabar0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "538:pi+" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+ "538:pi+" [label="538:pi+", shape=box, style=filled, fillcolor=yellow]
+    "537:(Delta-)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "536:(rho+)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "535:(pi0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "534:pi-" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+ "534:pi-" [label="534:pi-", shape=box, style=filled, fillcolor=yellow]
+    "533:(K*bar0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "532:(K*0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "531:(K*bar0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "530:K+" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+ "530:K+" [label="530:K+", shape=box, style=filled, fillcolor=yellow]
+    "529:(pi0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "528:(rho-)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "527:pi+" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+ "527:pi+" [label="527:pi+", shape=box, style=filled, fillcolor=yellow]
+    "526:(rho-)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "525:(Bbar0)" -> { "510:(b)" "511:(g)" "512:(g)" "513:(g)" "514:(g)" "515:(g)" "516:(g)" "517:(g)" "518:(g)" "519:(g)" "520:(g)" "521:(g)" "522:(g)" "523:(g)" "524:(cbar)"  }
+    "524:(cbar)" -> { "412:(cbar)"  }
+    "523:(g)" -> { "456:(g)"  }
+    "522:(g)" -> { "365:(g)"  }
+    "521:(g)" -> { "414:(g)"  }
+    "520:(g)" -> { "452:(g)"  }
+    "519:(g)" -> { "455:(g)"  }
+    "518:(g)" -> { "458:(g)"  }
+    "517:(g)" -> { "388:(g)"  }
+    "516:(g)" -> { "343:(g)"  }
+    "515:(g)" -> { "459:(g)"  }
+    "514:(g)" -> { "450:(g)"  }
+    "513:(g)" -> { "457:(g)"  }
+    "512:(g)" -> { "351:(g)"  }
+    "511:(g)" -> { "358:(g)"  }
+    "510:(b)" -> { "340:(b)"  }
+    "509:(pi0)" -> { "497:(d)" "498:(ubar)"  }
+    "508:pi-" -> { "497:(d)" "498:(ubar)"  }
+ "508:pi-" [label="508:pi-", shape=box, style=filled, fillcolor=yellow]
+    "507:pi+" -> { "497:(d)" "498:(ubar)"  }
+ "507:pi+" [label="507:pi+", shape=box, style=filled, fillcolor=yellow]
+    "506:(pi0)" -> { "497:(d)" "498:(ubar)"  }
+    "505:(eta)" -> { "497:(d)" "498:(ubar)"  }
+    "504:(pi0)" -> { "497:(d)" "498:(ubar)"  }
+    "503:pi-" -> { "497:(d)" "498:(ubar)"  }
+ "503:pi-" [label="503:pi-", shape=box, style=filled, fillcolor=yellow]
+    "502:nbar0" -> { "497:(d)" "498:(ubar)"  }
+ "502:nbar0" [label="502:nbar0", shape=box, style=filled, fillcolor=yellow]
+    "501:n0" -> { "497:(d)" "498:(ubar)"  }
+ "501:n0" [label="501:n0", shape=box, style=filled, fillcolor=yellow]
+    "500:pi+" -> { "497:(d)" "498:(ubar)"  }
+ "500:pi+" [label="500:pi+", shape=box, style=filled, fillcolor=yellow]
+    "499:pi-" -> { "497:(d)" "498:(ubar)"  }
+ "499:pi-" [label="499:pi-", shape=box, style=filled, fillcolor=yellow]
+    "498:(ubar)" -> { "445:(ubar)"  }
+    "497:(d)" -> { "443:(d)"  }
+    "496:(rho+)" -> { "491:(c)" "492:(g)" "493:(dbar)"  }
+    "495:pi-" -> { "491:(c)" "492:(g)" "493:(dbar)"  }
+ "495:pi-" [label="495:pi-", shape=box, style=filled, fillcolor=yellow]
+    "494:(D+)" -> { "491:(c)" "492:(g)" "493:(dbar)"  }
+    "493:(dbar)" -> { "382:(dbar)"  }
+    "492:(g)" -> { "359:(g)"  }
+    "491:(c)" -> { "411:(c)"  }
+    "490:p+" -> { "486:(d)" "487:(uu_1)"  }
+ "490:p+" [label="490:p+", shape=box, style=filled, fillcolor=yellow]
+    "489:pi+" -> { "486:(d)" "487:(uu_1)"  }
+ "489:pi+" [label="489:pi+", shape=box, style=filled, fillcolor=yellow]
+    "488:(rho-)" -> { "486:(d)" "487:(uu_1)"  }
+    "487:(uu_1)" -> { "441:(uu_1)"  }
+    "486:(d)" -> { "357:(d)"  }
+    "485:p+" -> { "482:(u)" "483:(ud_0)"  }
+ "485:p+" [label="485:p+", shape=box, style=filled, fillcolor=yellow]
+    "484:(pi0)" -> { "482:(u)" "483:(ud_0)"  }
+    "483:(ud_0)" -> { "447:(ud_0)"  }
+    "482:(u)" -> { "448:(u)"  }
+    "481:pi-" -> { "478:(s)" "479:(ubar)"  }
+ "481:pi-" [label="481:pi-", shape=box, style=filled, fillcolor=yellow]
+    "480:(Kbar0)" -> { "478:(s)" "479:(ubar)"  }
+    "479:(ubar)" -> { "442:(ubar)"  }
+    "478:(s)" -> { "444:(s)"  }
+    "477:(g)" -> { "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)"  }
+    "476:(g)" -> { "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)"  }
+    "475:(g)" -> { "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)"  }
+    "474:(g)" -> { "348:(g)" "349:(g)" "350:(g)" "351:(g)" "352:(g)" "353:(g)" "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)"  }
+    "473:(g)" -> { "438:(g)" "439:(g)"  }
+    "472:(g)" -> { "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)"  }
+    "471:(g)" -> { "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)"  }
+    "470:(g)" -> { "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)" "450:(g)" "451:(g)" "452:(g)" "453:(g)" "454:(g)" "455:(g)" "456:(g)" "457:(g)" "458:(g)" "459:(g)" "460:(g)" "461:(g)" "462:(g)" "463:(g)"  }
+    "469:(g)" -> { "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)" "450:(g)" "451:(g)" "452:(g)" "453:(g)" "454:(g)" "455:(g)" "456:(g)" "457:(g)" "458:(g)" "459:(g)" "460:(g)"  }
+    "468:(g)" -> { "350:(g)" "351:(g)" "352:(g)" "353:(g)" "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)"  }
+    "467:(g)" -> { "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)"  }
+    "466:(g)" -> { "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)"  }
+    "465:(g)" -> { "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)"  }
+    "464:(g)" -> { "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)"  }
+    "463:(g)" -> { "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)"  }
+    "462:(g)" -> { "344:(g)" "345:(g)" "346:(g)" "347:(g)" "348:(g)" "349:(g)" "350:(g)" "351:(g)" "352:(g)" "353:(g)" "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)" "363:(g)"  }
+    "461:(g)" -> { "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)"  }
+    "460:(g)" -> { "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)"  }
+    "459:(g)" -> { "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)" "450:(g)" "451:(g)" "452:(g)" "453:(g)" "454:(g)"  }
+    "458:(g)" -> { "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)"  }
+    "457:(g)" -> { "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)" "450:(g)" "451:(g)" "452:(g)" "453:(g)"  }
+    "456:(g)" -> { "345:(g)" "346:(g)" "347:(g)" "348:(g)" "349:(g)" "350:(g)" "351:(g)" "352:(g)" "353:(g)" "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)"  }
+    "455:(g)" -> { "353:(g)" "354:(g)" "355:(g)" "356:(g)" "357:(d)" "358:(g)" "359:(g)" "360:(g)" "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)"  }
+    "454:(g)" -> { "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)" "450:(g)" "451:(g)"  }
+    "453:(g)" -> { "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)"  }
+    "452:(g)" -> { "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)" "435:(u)" "436:(g)" "437:(u)" "438:(g)" "439:(g)" "440:(g)" "441:(uu_1)" "442:(ubar)" "443:(d)" "444:(s)" "445:(ubar)" "446:(u)" "447:(ud_0)" "448:(u)" "449:(g)"  }
+    "451:(g)" -> { "360:(g)" "361:(g)" "362:(g)" "363:(g)" "364:(g)" "365:(g)" "366:(g)" "367:(g)" "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)"  }
+    "450:(g)" -> { "423:(g)" "424:(g)"  }
+    "449:(g)" -> { "368:(g)" "369:(g)" "370:(g)" "371:(g)" "372:(g)" "373:(g)" "374:(g)" "375:(g)" "376:(g)" "377:(g)" "378:(g)" "379:(g)" "380:(g)" "381:(g)" "382:(dbar)" "383:(g)" "384:(g)" "385:(g)" "386:(g)" "387:(g)" "388:(g)" "389:(g)" "390:(g)" "391:(g)" "392:(u)" "393:(g)" "394:(g)" "395:(g)" "396:(g)" "397:(g)" "398:(g)" "399:(g)" "400:(g)" "401:(g)" "402:(g)" "403:(g)" "404:(g)" "405:(g)" "406:(g)" "407:(g)" "408:(u)" "409:(g)" "410:(g)" "411:(c)" "412:(cbar)" "413:(g)" "414:(g)" "415:(dbar)" "416:(g)" "417:(g)" "418:(g)" "419:(g)" "420:(g)" "421:(dbar)" "422:(g)" "423:(g)" "424:(g)" "425:(g)" "426:(g)" "427:(g)" "428:(sbar)" "429:(ubar)" "430:(sbar)" "431:(ubar)" "432:(g)" "433:(g)" "434:(g)"  }
+    "448:(u)" -> "2:(p+)"
+    "447:(ud_0)" -> "2:(p+)"
+    "446:(u)" -> "2:(p+)"
+    "445:(ubar)" -> "1:(p+)"
+    "444:(s)" -> "1:(p+)"
+    "443:(d)" -> "1:(p+)"
+    "442:(ubar)" -> "1:(p+)"
+    "441:(uu_1)" -> "1:(p+)"
+    "440:(g)" -> { "283:(g)"  }
+    "439:(g)" -> { "282:(g)"  }
+    "438:(g)" -> { "284:(g)"  }
+    "437:(u)" -> { "69:(u)"  }
+    "436:(g)" -> "2:(p+)"
+    "435:(u)" -> "1:(p+)"
+    "434:(g)" -> { "247:(g)"  }
+    "433:(g)" -> { "241:(g)"  }
+    "432:(g)" -> { "246:(g)"  }
+    "431:(ubar)" -> { "240:(ubar)"  }
+    "430:(sbar)" -> { "76:(sbar)"  }
+    "429:(ubar)" -> "2:(p+)"
+    "428:(sbar)" -> "1:(p+)"
+    "427:(g)" -> { "274:(g)"  }
+    "426:(g)" -> { "271:(g)"  }
+    "425:(g)" -> { "268:(g)"  }
+    "424:(g)" -> { "269:(g)"  }
+    "423:(g)" -> { "250:(g)"  }
+    "422:(g)" -> { "193:(g)"  }
+    "421:(dbar)" -> { "267:(dbar)"  }
+    "420:(g)" -> { "261:(g)"  }
+    "419:(g)" -> { "273:(g)"  }
+    "418:(g)" -> { "249:(g)"  }
+    "417:(g)" -> { "275:(g)"  }
+    "416:(g)" -> "2:(p+)"
+    "415:(dbar)" -> "1:(p+)"
+    "414:(g)" -> { "307:(g)"  }
+    "413:(g)" -> { "306:(g)"  }
+    "412:(cbar)" -> { "47:(cbar)"  }
+    "411:(c)" -> { "46:(c)"  }
+    "410:(g)" -> "2:(p+)"
+    "409:(g)" -> "1:(p+)"
+    "408:(u)" -> { "337:(u)"  }
+    "407:(g)" -> { "336:(g)"  }
+    "406:(g)" -> { "335:(g)"  }
+    "405:(g)" -> { "334:(g)"  }
+    "404:(g)" -> { "333:(g)"  }
+    "403:(g)" -> { "332:(g)"  }
+    "402:(g)" -> { "331:(g)"  }
+    "401:(g)" -> { "330:(g)"  }
+    "400:(g)" -> { "329:(g)"  }
+    "399:(g)" -> { "328:(g)"  }
+    "398:(g)" -> { "327:(g)"  }
+    "397:(g)" -> { "326:(g)"  }
+    "396:(g)" -> { "325:(g)"  }
+    "395:(g)" -> { "324:(g)"  }
+    "394:(g)" -> { "323:(g)"  }
+    "393:(g)" -> "2:(p+)"
+    "392:(u)" -> "1:(p+)"
+    "391:(g)" -> { "316:(g)"  }
+    "390:(g)" -> { "313:(g)"  }
+    "389:(g)" -> { "310:(g)"  }
+    "388:(g)" -> { "304:(g)"  }
+    "387:(g)" -> { "301:(g)"  }
+    "386:(g)" -> { "295:(g)"  }
+    "385:(g)" -> { "289:(g)"  }
+    "384:(g)" -> { "286:(g)"  }
+    "383:(g)" -> { "294:(g)"  }
+    "382:(dbar)" -> { "253:(dbar)"  }
+    "381:(g)" -> { "244:(g)"  }
+    "380:(g)" -> { "238:(g)"  }
+    "379:(g)" -> { "303:(g)"  }
+    "378:(g)" -> { "285:(g)"  }
+    "377:(g)" -> { "311:(g)"  }
+    "376:(g)" -> { "223:(g)"  }
+    "375:(g)" -> { "220:(g)"  }
+    "374:(g)" -> { "296:(g)"  }
+    "373:(g)" -> { "219:(g)"  }
+    "372:(g)" -> { "264:(g)"  }
+    "371:(g)" -> { "314:(g)"  }
+    "370:(g)" -> { "227:(g)"  }
+    "369:(g)" -> { "302:(g)"  }
+    "368:(g)" -> { "243:(g)"  }
+    "367:(g)" -> { "180:(g)"  }
+    "366:(g)" -> { "233:(g)"  }
+    "365:(g)" -> { "184:(g)"  }
+    "364:(g)" -> { "221:(g)"  }
+    "363:(g)" -> { "166:(g)"  }
+    "362:(g)" -> { "228:(g)"  }
+    "361:(g)" -> { "181:(g)"  }
+    "360:(g)" -> { "317:(g)"  }
+    "359:(g)" -> { "254:(g)"  }
+    "358:(g)" -> { "161:(g)"  }
+    "357:(d)" -> { "252:(d)"  }
+    "356:(g)" -> { "290:(g)"  }
+    "355:(g)" -> { "239:(g)"  }
+    "354:(g)" -> { "309:(g)"  }
+    "353:(g)" -> { "245:(g)"  }
+    "352:(g)" -> { "198:(g)"  }
+    "351:(g)" -> { "201:(g)"  }
+    "350:(g)" -> { "288:(g)"  }
+    "349:(g)" -> { "300:(g)"  }
+    "348:(g)" -> { "312:(g)"  }
+    "347:(g)" -> { "287:(g)"  }
+    "346:(g)" -> { "169:(g)"  }
+    "345:(g)" -> { "224:(g)"  }
+    "344:(g)" -> { "147:(g)"  }
+    "343:(g)" -> { "315:(g)"  }
+    "342:(bbar)" -> { "204:(bbar)"  }
+    "341:(d)" -> { "212:(d)"  }
+    "340:(b)" -> { "143:(b)"  }
+    "339:(g)" -> "2:(p+)"
+    "338:(d)" -> "1:(p+)"
+    "337:(u)" -> "321:(u)"
+    "336:(g)" -> { "319:(g)"  }
+    "335:(g)" -> { "320:(g)"  }
+    "334:(g)" -> { "292:(g)"  }
+    "333:(g)" -> { "280:(g)"  }
+    "332:(g)" -> { "277:(g)"  }
+    "331:(g)" -> { "279:(g)"  }
+    "330:(g)" -> { "293:(g)"  }
+    "329:(g)" -> { "258:(g)"  }
+    "328:(g)" -> { "276:(g)"  }
+    "327:(g)" -> { "257:(g)"  }
+    "326:(g)" -> { "234:(g)"  }
+    "325:(g)" -> { "318:(g)"  }
+    "324:(g)" -> { "291:(g)"  }
+    "323:(g)" -> { "278:(g)"  }
+    "322:(g)" -> { "393:(g)"  }
+    "321:(u)" -> { "392:(u)"  }
+    "320:(g)" -> { "298:(g)"  }
+    "319:(g)" -> "297:(g)"
+    "318:(g)" -> "297:(g)"
+    "317:(g)" -> { "163:(g)"  }
+    "316:(g)" -> "305:(g)"
+    "315:(g)" -> "305:(g)"
+    "314:(g)" -> { "205:(g)"  }
+    "313:(g)" -> "206:(g)"
+    "312:(g)" -> "206:(g)"
+    "311:(g)" -> { "226:(g)"  }
+    "310:(g)" -> "225:(g)"
+    "309:(g)" -> "225:(g)"
+    "308:(g)" -> { "410:(g)"  }
+    "307:(g)" -> "48:(g)"
+    "306:(g)" -> "48:(g)"
+    "305:(g)" -> { "231:(g)"  }
+    "304:(g)" -> "232:(g)"
+    "303:(g)" -> "232:(g)"
+    "302:(g)" -> { "199:(g)"  }
+    "301:(g)" -> "200:(g)"
+    "300:(g)" -> "200:(g)"
+    "299:(g)" -> { "322:(g)"  }
+    "298:(g)" -> "281:(g)"
+    "297:(g)" -> "281:(g)"
+    "296:(g)" -> { "266:(g)"  }
+    "295:(g)" -> "265:(g)"
+    "294:(g)" -> "265:(g)"
+    "293:(g)" -> { "256:(g)"  }
+    "292:(g)" -> "255:(g)"
+    "291:(g)" -> "255:(g)"
+    "290:(g)" -> { "159:(g)"  }
+    "289:(g)" -> "207:(g)"
+    "288:(g)" -> "207:(g)"
+    "287:(g)" -> { "230:(g)"  }
+    "286:(g)" -> "229:(g)"
+    "285:(g)" -> "229:(g)"
+    "284:(g)" -> { "213:(g)"  }
+    "283:(g)" -> "214:(g)"
+    "282:(g)" -> "214:(g)"
+    "281:(g)" -> { "260:(g)"  }
+    "280:(g)" -> "259:(g)"
+    "279:(g)" -> "259:(g)"
+    "278:(g)" -> { "195:(g)"  }
+    "277:(g)" -> "196:(g)"
+    "276:(g)" -> "196:(g)"
+    "275:(g)" -> { "270:(g)"  }
+    "274:(g)" -> "192:(g)"
+    "273:(g)" -> "192:(g)"
+    "272:(g)" -> { "416:(g)"  }
+    "271:(g)" -> "187:(g)"
+    "270:(g)" -> "187:(g)"
+    "269:(g)" -> { "262:(g)"  }
+    "268:(g)" -> "263:(dbar)"
+    "267:(dbar)" -> "263:(dbar)"
+    "266:(g)" -> { "237:(g)"  }
+    "265:(g)" -> "218:(g)"
+    "264:(g)" -> "218:(g)"
+    "263:(dbar)" -> { "191:(dbar)"  }
+    "262:(g)" -> "251:(g)"
+    "261:(g)" -> "251:(g)"
+    "260:(g)" -> { "236:(g)"  }
+    "259:(g)" -> "235:(g)"
+    "258:(g)" -> "235:(g)"
+    "257:(g)" -> { "124:(g)"  }
+    "256:(g)" -> "123:(g)"
+    "255:(g)" -> "123:(g)"
+    "254:(g)" -> { "222:(g)"  }
+    "253:(dbar)" -> "160:(g)"
+    "252:(d)" -> "160:(g)"
+    "251:(g)" -> { "190:(g)"  }
+    "250:(g)" -> "194:(g)"
+    "249:(g)" -> "194:(g)"
+    "248:(sbar)" -> { "428:(sbar)"  }
+    "247:(g)" -> "242:(g)"
+    "246:(g)" -> "242:(g)"
+    "245:(g)" -> { "182:(g)"  }
+    "244:(g)" -> "183:(g)"
+    "243:(g)" -> "183:(g)"
+    "242:(g)" -> { "78:(g)"  }
+    "241:(g)" -> "77:(ubar)"
+    "240:(ubar)" -> "77:(ubar)"
+    "239:(g)" -> { "216:(g)"  }
+    "238:(g)" -> "217:(g)"
+    "237:(g)" -> "217:(g)"
+    "236:(g)" -> { "122:(g)"  }
+    "235:(g)" -> "121:(g)"
+    "234:(g)" -> "121:(g)"
+    "233:(g)" -> { "177:(g)"  }
+    "232:(g)" -> "176:(g)"
+    "231:(g)" -> "176:(g)"
+    "230:(g)" -> { "150:(g)"  }
+    "229:(g)" -> "165:(g)"
+    "228:(g)" -> "165:(g)"
+    "227:(g)" -> { "202:(g)"  }
+    "226:(g)" -> "203:(g)"
+    "225:(g)" -> "203:(g)"
+    "224:(g)" -> { "170:(g)"  }
+    "223:(g)" -> "162:(g)"
+    "222:(g)" -> "162:(g)"
+    "221:(g)" -> { "210:(g)"  }
+    "220:(g)" -> "211:(g)"
+    "219:(g)" -> "211:(g)"
+    "218:(g)" -> { "208:(g)"  }
+    "217:(g)" -> "209:(g)"
+    "216:(g)" -> "209:(g)"
+    "215:(g)" -> { "436:(g)"  }
+    "214:(g)" -> "70:(g)"
+    "213:(g)" -> "70:(g)"
+    "212:(d)" -> { "167:(d)"  }
+    "211:(g)" -> "168:(g)"
+    "210:(g)" -> "168:(g)"
+    "209:(g)" -> { "179:(g)"  }
+    "208:(g)" -> "153:(g)"
+    "207:(g)" -> "153:(g)"
+    "206:(g)" -> { "151:(g)"  }
+    "205:(g)" -> "145:(bbar)"
+    "204:(bbar)" -> "145:(bbar)"
+    "203:(g)" -> { "157:(g)"  }
+    "202:(g)" -> "154:(g)"
+    "201:(g)" -> "154:(g)"
+    "200:(g)" -> { "152:(g)"  }
+    "199:(g)" -> "155:(g)"
+    "198:(g)" -> "155:(g)"
+    "197:(g)" -> { "299:(g)"  }
+    "196:(g)" -> "61:(g)"
+    "195:(g)" -> "61:(g)"
+    "194:(g)" -> { "188:(g)"  }
+    "193:(g)" -> "189:(g)"
+    "192:(g)" -> "189:(g)"
+    "191:(dbar)" -> "185:(dbar)"
+    "190:(g)" -> { "174:(g)"  }
+    "189:(g)" -> { "65:(g)"  }
+    "188:(g)" -> { "173:(g)"  }
+    "187:(g)" -> { "64:(g)"  }
+    "186:(g)" -> { "272:(g)"  }
+    "185:(dbar)" -> { "415:(dbar)"  }
+    "184:(g)" -> { "171:(g)"  }
+    "183:(g)" -> "178:(g)"
+    "182:(g)" -> "178:(g)"
+    "181:(g)" -> { "164:(g)"  }
+    "180:(g)" -> "158:(g)"
+    "179:(g)" -> "158:(g)"
+    "178:(g)" -> { "172:(g)"  }
+    "177:(g)" -> "146:(g)"
+    "176:(g)" -> "146:(g)"
+    "175:(g)" -> "185:(dbar)"
+    "174:(g)" -> "66:(g)"
+    "173:(g)" -> "66:(g)"
+    "172:(g)" -> { "156:(g)"  }
+    "171:(g)" -> "148:(g)"
+    "170:(g)" -> "148:(g)"
+    "169:(g)" -> { "149:(g)"  }
+    "168:(g)" -> "144:(d)"
+    "167:(d)" -> "144:(d)"
+    "166:(g)" -> "142:(g)"
+    "165:(g)" -> { "139:(g)"  }
+    "164:(g)" -> { "136:(g)"  }
+    "163:(g)" -> { "133:(g)"  }
+    "162:(g)" -> { "130:(g)"  }
+    "161:(g)" -> { "127:(g)"  }
+    "160:(g)" -> { "131:(g)"  }
+    "159:(g)" -> { "118:(g)"  }
+    "158:(g)" -> { "135:(g)"  }
+    "157:(g)" -> { "134:(g)"  }
+    "156:(g)" -> { "115:(g)"  }
+    "155:(g)" -> { "114:(g)"  }
+    "154:(g)" -> { "126:(g)"  }
+    "153:(g)" -> { "112:(g)"  }
+    "152:(g)" -> { "137:(g)"  }
+    "151:(g)" -> { "138:(g)"  }
+    "150:(g)" -> { "140:(g)"  }
+    "149:(g)" -> { "108:(g)"  }
+    "148:(g)" -> { "129:(g)"  }
+    "147:(g)" -> { "106:(g)"  }
+    "146:(g)" -> { "132:(g)"  }
+    "145:(bbar)" -> { "104:(bbar)"  }
+    "144:(d)" -> { "103:(d)"  }
+    "143:(b)" -> { "128:(b)"  }
+    "142:(g)" -> { "339:(g)"  }
+    "141:(d)" -> { "338:(d)"  }
+    "140:(g)" -> { "109:(g)"  }
+    "139:(g)" -> "110:(g)"
+    "138:(g)" -> "110:(g)"
+    "137:(g)" -> { "111:(g)"  }
+    "136:(g)" -> "117:(g)"
+    "135:(g)" -> "117:(g)"
+    "134:(g)" -> { "116:(g)"  }
+    "133:(g)" -> "105:(g)"
+    "132:(g)" -> "105:(g)"
+    "131:(g)" -> { "119:(g)"  }
+    "130:(g)" -> "107:(g)"
+    "129:(g)" -> "107:(g)"
+    "128:(b)" -> { "102:(b)"  }
+    "127:(g)" -> "113:(g)"
+    "126:(g)" -> "113:(g)"
+    "125:(g)" -> "321:(u)"
+    "124:(g)" -> "120:(g)"
+    "123:(g)" -> "120:(g)"
+    "122:(g)" -> { "63:(g)"  }
+    "121:(g)" -> "62:(g)"
+    "120:(g)" -> "62:(g)"
+    "119:(g)" -> "100:(d)"
+    "118:(g)" -> { "98:(g)"  }
+    "117:(g)" -> { "95:(g)"  }
+    "116:(g)" -> { "92:(g)"  }
+    "115:(g)" -> { "89:(g)"  }
+    "114:(g)" -> { "86:(g)"  }
+    "113:(g)" -> { "93:(g)"  }
+    "112:(g)" -> { "97:(g)"  }
+    "111:(g)" -> { "94:(g)"  }
+    "110:(g)" -> { "57:(g)"  }
+    "109:(g)" -> { "56:(g)"  }
+    "108:(g)" -> { "87:(g)"  }
+    "107:(g)" -> { "88:(g)"  }
+    "106:(g)" -> { "99:(g)"  }
+    "105:(g)" -> { "91:(g)"  }
+    "104:(bbar)" -> { "58:(bbar)"  }
+    "103:(d)" -> { "37:(d)"  }
+    "102:(b)" -> { "82:(b)"  }
+    "101:(g)" -> "142:(g)"
+    "100:(d)" -> { "141:(d)"  }
+    "99:(g)" -> { "79:(g)"  }
+    "98:(g)" -> "96:(g)"
+    "97:(g)" -> "96:(g)"
+    "96:(g)" -> { "80:(g)"  }
+    "95:(g)" -> "85:(g)"
+    "94:(g)" -> "85:(g)"
+    "93:(g)" -> { "83:(g)"  }
+    "92:(g)" -> "90:(g)"
+    "91:(g)" -> "90:(g)"
+    "90:(g)" -> { "84:(g)"  }
+    "89:(g)" -> "28:(g)"
+    "88:(g)" -> "28:(g)"
+    "87:(g)" -> { "71:(g)"  }
+    "86:(g)" -> "81:(g)"
+    "85:(g)" -> "81:(g)"
+    "84:(g)" -> { "26:(g)"  }
+    "83:(g)" -> "23:(b)"
+    "82:(b)" -> "23:(b)"
+    "81:(g)" -> { "72:(g)"  }
+    "80:(g)" -> "73:(g)"
+    "79:(g)" -> "73:(g)"
+    "78:(g)" -> "74:(sbar)"
+    "77:(ubar)" -> { "52:(ubar)"  }
+    "76:(sbar)" -> { "51:(sbar)"  }
+    "75:(ubar)" -> { "429:(ubar)"  }
+    "74:(sbar)" -> { "248:(sbar)"  }
+    "73:(g)" -> { "39:(g)"  }
+    "72:(g)" -> "38:(g)"
+    "71:(g)" -> "38:(g)"
+    "70:(g)" -> { "67:(u)" "68:(g)"  }
+    "69:(u)" -> { "67:(u)" "68:(g)"  }
+    "68:(g)" -> { "215:(g)"  }
+    "67:(u)" -> { "435:(u)"  }
+    "66:(g)" -> { "43:(g)"  }
+    "65:(g)" -> "42:(g)"
+    "64:(g)" -> "42:(g)"
+    "63:(g)" -> "60:(g)"
+    "62:(g)" -> { "32:(g)"  }
+    "61:(g)" -> { "31:(g)"  }
+    "60:(g)" -> { "197:(g)"  }
+    "59:(g)" -> { "125:(g)"  }
+    "58:(bbar)" -> { "53:(bbar)"  }
+    "57:(g)" -> "54:(g)"
+    "56:(g)" -> "54:(g)"
+    "55:(g)" -> { "101:(g)"  }
+    "54:(g)" -> "25:(bbar)"
+    "53:(bbar)" -> "25:(bbar)"
+    "52:(ubar)" -> { "49:(sbar)" "50:(ubar)"  }
+    "51:(sbar)" -> { "49:(sbar)" "50:(ubar)"  }
+    "50:(ubar)" -> { "75:(ubar)"  }
+    "49:(sbar)" -> "74:(sbar)"
+    "48:(g)" -> "44:(g)"
+    "47:(cbar)" -> { "36:(cbar)"  }
+    "46:(c)" -> { "35:(c)"  }
+    "45:(g)" -> { "308:(g)"  }
+    "44:(g)" -> { "409:(g)"  }
+    "43:(g)" -> { "40:(g)" "41:(g)"  }
+    "42:(g)" -> { "40:(g)" "41:(g)"  }
+    "41:(g)" -> { "186:(g)"  }
+    "40:(g)" -> { "175:(g)"  }
+    "39:(g)" -> { "27:(g)"  }
+    "38:(g)" -> "24:(d)"
+    "37:(d)" -> "24:(d)"
+    "36:(cbar)" -> { "33:(g)" "34:(g)"  }
+    "35:(c)" -> { "33:(g)" "34:(g)"  }
+    "34:(g)" -> { "45:(g)"  }
+    "33:(g)" -> "44:(g)"
+    "32:(g)" -> { "29:(g)" "30:(g)"  }
+    "31:(g)" -> { "29:(g)" "30:(g)"  }
+    "30:(g)" -> "60:(g)"
+    "29:(g)" -> { "59:(g)"  }
+    "28:(g)" -> "21:(d)"
+    "27:(g)" -> { "20:(g)"  }
+    "26:(g)" -> { "19:(g)"  }
+    "25:(bbar)" -> { "18:(bbar)"  }
+    "24:(d)" -> { "17:(d)"  }
+    "23:(b)" -> { "16:(b)"  }
+    "22:(g)" -> { "55:(g)"  }
+    "21:(d)" -> "100:(d)"
+    "20:(g)" -> "15:(g)"
+    "19:(g)" -> { "13:(g)"  }
+    "18:(bbar)" -> { "12:(bbar)"  }
+    "17:(d)" -> { "11:(d)"  }
+    "16:(b)" -> { "10:(b)"  }
+    "15:(g)" -> { "22:(g)"  }
+    "14:(d)" -> "21:(d)"
+    "13:(g)" -> "8:(d)"
+    "12:(bbar)" -> { "7:(bbar)"  }
+    "11:(d)" -> { "6:(d)"  }
+    "10:(b)" -> { "5:(b)"  }
+    "9:(g)" -> "15:(g)"
+    "8:(d)" -> { "14:(d)"  }
+    "7:(bbar)" -> { "3:(d)" "4:(g)"  }
+    "6:(d)" -> { "3:(d)" "4:(g)"  }
+    "5:(b)" -> { "3:(d)" "4:(g)"  }
+    "4:(g)" -> { "9:(g)"  }
+    "3:(d)" -> "8:(d)"
+    "2:(p+)" 
+ "2:(p+)" [label="2:(p+)", shape=box, style=filled, fillcolor=green]
+    "1:(p+)" 
+ "1:(p+)" [label="1:(p+)", shape=box, style=filled, fillcolor=green]
+    "0:(system)" 
+ "0:(system)" [label="0:(system)", shape=box, style=filled, fillcolor=green]
+}
