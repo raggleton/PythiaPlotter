@@ -1,0 +1,22 @@
+\documentclass[12pt]{article}
+    \usepackage{psfrag}
+    \usepackage{graphicx}
+    \pagestyle{empty}
+  
+    % You can run this by typing the following commands:
+    %    latex 2dplot.tex
+    %    dvips -o 2dplot.ps 2dplot.dvi
+  
+    \begin{document}
+  
+    % The syntax of the "psfrag" command is:
+    %    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
+    % See the file pfgguide.ps for full documentation.
+  
+    \begin{figure}
+      \psfrag{971:nu_mu}[C][C][1][0]{$971:\nu_\mu$}
+      \psfrag{967:gamma}[C][C][1][0]{$967:\gamma$}
+      \includegraphics{myEvent.eps}
+    \end{figure}
+  
+    \end{document}
