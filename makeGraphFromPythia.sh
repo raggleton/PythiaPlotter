@@ -43,6 +43,8 @@ do
 	finalState=false
 	initialState=false
 	
+	# Check if final-state or not: 
+	# non final state are named "(mu+)", final state are "mu+""
 	if [[ ${NumNameArr[$i]} == *\(* ]]
 	then
 		finalState=false
@@ -97,21 +99,21 @@ do
 		# If final state, make it a square box
 		if [ "$finalState" == "true" ]
 		then
-			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=red]"  >> $outputFile
+			echo "        \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=red]"  >> $outputFile
 		else
-			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=red]"  >> $outputFile
+			echo "        \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=red]"  >> $outputFile
 		fi	
 	else
 		# If initial state, make it a green box
 		if [ "$initialState" == "true" ]
 		then
-			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
+			echo "        \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", style=filled, fillcolor=green]"  >> $outputFile
 		fi
 
 		# If final state, make it a yellow box
 		if [ "$finalState" == "true" ]
 		then
-			echo "    \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
+			echo "        \"${NumNameArr[$i]}\" [label=\"${NumNameArr[$i]}\", shape=box, style=filled, fillcolor=yellow]"  >> $outputFile
 		fi
 	fi
 
