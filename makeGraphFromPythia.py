@@ -9,10 +9,10 @@
 ############################################################################
 #
 # Filename for output graphviz file
-outFile = open("myEvent2.gv","w")
+outputFilename = "myEvent2.gv"
 #
 # Filename for input txt file with Pythia listing
-inputFile = open("testLine.txt","r")
+inputFilename = "testLine.txt"
 #
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -58,12 +58,20 @@ class Particle:
 		# Get name without any ( or )
 		return self.name.translate(None, '()')
 
+############################################################################
+# MAIN BODY OF CODE HERE
+############################################################################
+
 # List of Particle objects in event, in order of number in event listing
 # So the object at event[i] has self.number = i
 event = []
 
 # To hold all the initial state particles that should be aligned
 sameInitialOnes = []
+
+# Open inut/output files
+outFile   = open(outputFilename,"w")
+inputFile = open(inputFilename,"r")
 
 # Read in file to list of Particles
 for line in inputFile:
@@ -133,5 +141,6 @@ outFile.write(rank+"} // Put initial particles on same level\n")
 
 outFile.write("}")
 
+# Clean up
 inputFile.close()
 outFile.close()
