@@ -26,27 +26,25 @@ class Particle:
 	'Class to hold particle info in an event listing'
 
 	def __init__(self, number, PID, name, status, m1, m2):
-		# Class isntance variables
-		self.number        = number # number in event listing
-		self.PID           = PID  # PDGID value
-		self.name          = name # particle name e.b nu_mu
-		self.status        = status # status of particle. If > 0 , is final state.
-		self.m1            = m1 # number of mother 1
-		self.m2            = m2 # number of mother 2
-		self.skip          = False # Whether to skip when writing nodes to file
-		self.mothers       = [] # list of Particle objects that are its mother
-		self.daughters     = [] # list of Particle objects that are its mother
-		self.isInteresting = False # Whether this is one of the particles the user wants highlighted
+		# Class instance variables
+		self.number         = number # number in event listing
+		self.PID            = PID  # PDGID value
+		self.name           = name # particle name e.b nu_mu
+		self.status         = status # status of particle. If > 0 , is final state.
+		self.m1             = m1 # number of mother 1
+		self.m2             = m2 # number of mother 2
+		self.skip           = False # Whether to skip when writing nodes to file
+		self.mothers        = [] # list of Particle objects that are its mother
+		self.daughters      = [] # list of Particle objects that are its mother
+		self.isInteresting  = False # Whether this is one of the particles the user wants highlighted
+		self.isFinalState   = False
+		self.isInitialState = False
 
 		if (status > 0):
 			self.isFinalState = True
-		else:
-			self.isFinalState = False
 		
 		if ((m1 == 0) and (m2 == 0)):
 			self.isInitialState = True
-		else: 
-			self.isInitialState = False
 		
 		# Sometimes Pythia sets m2 == 0 if only one mother & particle from shower
 		# This causes looping issues, so set m2 = m1 if that's the case
@@ -61,13 +59,13 @@ class Particle:
 		return self.name.translate(None, '()')
 
 # List of Particle objects in event, in order of number in event listing
-# So the object at event[i] has number = i
+# So the object at event[i] has self.number = i
 event = []
 
-# To hold all the initial state event that should be aligned
+# To hold all the initial state particles that should be aligned
 sameInitialOnes = []
 
-# Read in file to list 
+# Read in file to list of Particles
 for line in inputFile:
 	values   = line.split()
 	number   = int(values[0])
@@ -90,6 +88,8 @@ for p in event:
 		p.mothers.append(event[m])
 
 # Now process all the particles and add appropriate links to graphviz file
+# Start from the end and work backwards to pick up all connections 
+# (doesn't work if you start at beginning and follow daughters)
 outFile.write("digraph g {\n    rankdir = RL;\n")
 for p in reversed(event):
 	# if p.number < 901:	
@@ -130,6 +130,7 @@ rank = "    {rank=same;"
 for s in sameInitialOnes:
 	rank += '"%s:%s" ' % (s.number, s.name)
 outFile.write(rank+"} // Put initial particles on same level\n")
+
 outFile.write("}")
 
 inputFile.close()
