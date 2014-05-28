@@ -1,3 +1,7 @@
+#!/usr/bin/python
+#
+import sys
+#
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
 # e.g.
@@ -8,11 +12,11 @@
 # Edit the following:
 ###############################################################################
 #
-# Filename for output graphviz file
-outputFilename = "myEvent2.gv"
-#
 # Filename for input txt file with Pythia listing
 inputFilename = "testLine.txt"
+#
+# Filename for output graphviz file
+outputFilename = "myEvent2.gv"
 #
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -78,9 +82,21 @@ event = []
 # To hold all the initial state particles that should be aligned
 sameInitialOnes = []
 
-# Open inut/output files
-outFile = open(outputFilename, "w")
-inputFile = open(inputFilename, "r")
+# Open input/output files
+try:    
+    inputFile = open(inputFilename, "r")
+except IOError:    
+    sys.exit("Error opening %s: can\'t find file or read data" % inputFilename)
+else:
+    print "Reading event listing from %s" % inputFilename
+
+try: 
+    outFile = open(outputFilename, "w")
+except IOError:
+    sys.exit("Error opening %s: can\'t find file or write data" % outputFilename)
+else: 
+    print "Writing graphviz file to %s" % outputFilename
+    
 
 # Read in file to list of Particles
 for line in inputFile:
