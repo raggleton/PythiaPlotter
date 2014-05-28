@@ -6,17 +6,18 @@ import sys
 # into a Graphviz file to be plotted with dot
 # e.g.
 # python makeGraphFromPythia.py
-# dot -Tpdf myEvent2.gv -o myEvent2.pdf
-
+# dot -Tpdf myExampleEvent.gv -o myExampleEvent.pdf
+#
 ###############################################################################
 # Edit the following:
 ###############################################################################
 #
 # Filename for input txt file with Pythia listing
-inputFilename = "testLine.txt"
+# inputFilename = "testLine.txt"
+inputFilename = "qcdScatterSmall.txt"
 #
 # Filename for output graphviz file
-outputFilename = "myEvent2.gv"
+outputFilename = "myExampleEvent.gv"
 #
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -37,7 +38,7 @@ class Particle:
 
     def __init__(self, number, PID, name, status, m1, m2):
         # Class instance variables
-        self.number = number  # number in event listing - unique
+        self.number = number  # number in fullEvent listing - unique
         self.PID = PID  # PDGID value
         self.name = name  # particle name e.b nu_mu
         self.status = status  # status of particle. If > 0, final state
@@ -75,9 +76,11 @@ class Particle:
 # MAIN BODY OF CODE HERE
 ###############################################################################
 
-# List of Particle objects in event, in order of number in event listing
-# So the object at event[i] has self.number = i
-event = []
+# List of Particle objects in hard and full events,
+# in order of number in event listing.
+# So the object at fullEvent[i] has self.number = i
+fullEvent = []
+hardEvent = []
 
 # To hold all the initial state particles that should be aligned
 sameInitialOnes = []
@@ -86,56 +89,85 @@ sameInitialOnes = []
 verbose = False
 
 # Open input/output files
-try:    
+try:
     inputFile = open(inputFilename, "r")
-except IOError:    
-    sys.exit("Error opening %s: can\'t find file or read data" % inputFilename)
+except IOError:
+    sys.exit("Error opening %s: can\'t find file or read data"
+             % inputFilename)
 else:
     print "Reading event listing from %s" % inputFilename
 
-try: 
+try:
     outFile = open(outputFilename, "w")
 except IOError:
-    sys.exit("Error opening %s: can\'t find file or write data" % outputFilename)
-else: 
+    sys.exit("Error opening %s: can\'t find file or write data"
+             % outputFilename)
+else:
     print "Writing graphviz file to %s" % outputFilename
-    
+
+# For processing the full Pythia output
+listingStart = """no        id"""
+listingEnd = """Charge sum"""
+
+doneHardEvent = False
+doneFullEvent = False
+parseLine = False
 
 # Read in file to list of Particles
 for line in inputFile:
-    values = line.split()
-    number = int(values[0])
-    PID = int(values[1])
-    name = values[2]
-    status = int(values[3])
-    m1 = int(values[4])
-    m2 = int(values[5])
-    # d1       = int(values[6])
-    # d2       = int(values[7])
-    particle = Particle(number, PID, name, status, m1, m2)
+    # Parse each line, looking for the start or end of event listing
+    strippedLine = line.strip()
+    if strippedLine.startswith(listingStart):
+        parseLine = True
+        continue
+    elif strippedLine.startswith(listingEnd):
+        parseLine = False
+        if not doneHardEvent:
+            doneHardEvent = True
+        elif not doneFullEvent:
+            doneFullEvent = True
+        continue
 
-    if particle.isInitialState:
-        sameInitialOnes.append(particle)
+    if parseLine:
+        if verbose: print line
+        values = line.split()
+        number = int(values[0])
+        PID = int(values[1])
+        name = values[2]
+        status = int(values[3])
+        m1 = int(values[4])
+        m2 = int(values[5])
+        # d1       = int(values[6])
+        # d2       = int(values[7])
+        particle = Particle(number, PID, name, status, m1, m2)
 
-    event.append(particle)
+        if particle.isInitialState:
+            sameInitialOnes.append(particle)
+
+        if not doneHardEvent:
+            hardEvent.append(particle)
+        elif not doneFullEvent:
+            fullEvent.append(particle)
+
+print "Done reading file"
 
 # Add references to mothers
-for p in event:
+for p in fullEvent:
     for m in range(p.m1, p.m2+1):
-        p.mothers.append(event[m])
+        p.mothers.append(fullEvent[m])
 
 # Add references to daughters
 # Don't use the daughters in the pythia output, they aren't complete
 # Instead use the mother relationships
-for p in event:
-    for pp in event:
+for p in fullEvent:
+    for pp in fullEvent:
         if p in pp.mothers and p != pp:
             p.daughters.append(pp)
 
 # Get rid of redundant particles
 # and rewrite mothers
 if removeRedundants:
-    for p in event:
+    for p in fullEvent:
 
         if not p.skip and not p.isInitialState and len(p.mothers) == 1:
 
@@ -148,10 +180,12 @@ if removeRedundants:
                 # both with same PID. If it does, then it's redundant
                 # and we can skip it in future. If not, it's a suitable mother
                 # for Particle p
-                if (len(mum.mothers) == 1
+                if (
+                    len(mum.mothers) == 1
                     and len(mum.daughters) == 1
                     and mum.PID == mum.mothers[0].PID
-                    and mum.PID == current.PID):
+                    and mum.PID == current.PID
+                ):
 
                     mum.skip = True
                     current = mum
@@ -166,7 +200,7 @@ if removeRedundants:
 # Start from the end and work backwards to pick up all connections
 # (doesn't work if you start at beginning and follow daughters)
 outFile.write("digraph g {\n    rankdir = RL;\n")
-for p in reversed(event):
+for p in reversed(fullEvent):
     # if p.number < 901:
     if p.skip:
         continue
