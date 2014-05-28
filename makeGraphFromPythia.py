@@ -82,6 +82,9 @@ event = []
 # To hold all the initial state particles that should be aligned
 sameInitialOnes = []
 
+# For debugging - print output to screen as well as file
+verbose = False
+
 # Open input/output files
 try:    
     inputFile = open(inputFilename, "r")
@@ -176,7 +179,7 @@ for p in reversed(event):
 
     entry += "} [dir=\"back\"]\n"
 
-    print entry
+    if verbose: print entry
     outFile.write(entry)
 
     # Define special features for initial, final state & interesting particles
@@ -199,7 +202,7 @@ for p in reversed(event):
 
     if config:
         outFile.write(config)
-        print config
+        if verbose: print config
 
 # Set all initial particles to be level in diagram
 rank = "    {rank=same;"
