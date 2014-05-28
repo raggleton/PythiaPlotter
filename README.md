@@ -26,7 +26,7 @@ By default, the incoming protons are coloured green, and the final-state particl
 - Edit the `makeGraphFromPythia.py` script for correct input and output filenames
 - Run the script to produce a GraphViz file:
 	```
-	./makeGraphFromPythia.py
+	python makeGraphFromPythia.py
 	```
 - Run `dot` over your GraphViz file to make the plot:
 	```

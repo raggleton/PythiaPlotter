@@ -2,11 +2,11 @@
 # into a Graphviz file to be plotted with dot
 # e.g.
 # python makeGraphFromPythia.py
-# dot -Tpdf myEvent.gv -o myEvent.pdf
+# dot -Tpdf myEvent2.gv -o myEvent2.pdf
 
-############################################################################
+###############################################################################
 # Edit the following:
-############################################################################
+###############################################################################
 #
 # Filename for output graphviz file
 outputFilename = "myEvent2.gv"
@@ -18,9 +18,13 @@ inputFilename = "testLine.txt"
 # include antiparticles
 interesting = ["tau+", "tau-", "mu+", "mu-"]
 #
-############################################################################
+# Option to remove redundant particles from graph.
+# Useful for cleaning up the graph, but don't enable if you want to debug the 
+# event listing or see where recoil/shower gluons are.
+removeRedundants = True
+###############################################################################
 # DO NOT EDIT ANYTHING BELOW HERE
-############################################################################
+###############################################################################
 
 
 class Particle:
@@ -62,9 +66,9 @@ class Particle:
         # Get name without any ( or )
         return self.name.translate(None, '()')
 
-############################################################################
+###############################################################################
 # MAIN BODY OF CODE HERE
-############################################################################
+###############################################################################
 
 # List of Particle objects in event, in order of number in event listing
 # So the object at event[i] has self.number = i
@@ -110,31 +114,30 @@ for p in event:
 
 # Get rid of redundant particles
 # and rewrite mothers
-for p in event:
+if removeRedundants:
+    for p in event:
 
-    if not p.skip and not p.isInitialState and len(p.mothers) == 1:
+        if not p.skip and not p.isInitialState and len(p.mothers) == 1:
 
-        current = p
-        mum = p.mothers[0]
-        foundSuitableMother = False
-        while not foundSuitableMother:
+            current = p
+            mum = p.mothers[0]
+            foundSuitableMother = False
+            while not foundSuitableMother:
 
-            # Check if mother of current has 1 parent and 1 child, 
-            # both with same PID. If it does, then it's redundant 
-            # and we can skip it in future
-            if (len(mum.mothers) == 1 and
-                len(mum.daughters) == 1 and
-                mum.PID == mum.mothers[0].PID and
-                mum.PID == current.PID):
+                # Check if mother of current has 1 parent and 1 child,
+                # both with same PID. If it does, then it's redundant
+                # and we can skip it in future. If not, it's a suitable mother for
+                # Particle p
+                if (len(mum.mothers) == 1 and len(mum.daughters) == 1 and mum.PID == mum.mothers[0].PID and mum.PID == current.PID):
 
-                mum.skip = True
-                current = mum
-                mum = current.mothers[0]
-            else:
-                foundSuitableMother = True
+                    mum.skip = True
+                    current = mum
+                    mum = current.mothers[0]
+                else:
+                    foundSuitableMother = True
 
-        # whatever is stored in mum is the suitable mother for p
-        p.mothers[0] = mum
+            # whatever is stored in mum is the suitable mother for p
+            p.mothers[0] = mum
 
 # Now process all the particles and add appropriate links to graphviz file
 # Start from the end and work backwards to pick up all connections
