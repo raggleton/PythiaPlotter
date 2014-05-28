@@ -19,20 +19,21 @@ inputFilename = "testLine.txt"
 interesting = ["tau+", "tau-", "mu+", "mu-"]
 #
 # Option to remove redundant particles from graph.
-# Useful for cleaning up the graph, but don't enable if you want to debug the 
+# Useful for cleaning up the graph, but don't enable if you want to debug the
 # event listing or see where recoil/shower gluons are.
 removeRedundants = True
+#
 ###############################################################################
 # DO NOT EDIT ANYTHING BELOW HERE
 ###############################################################################
 
 
 class Particle:
-    'Class to hold particle info in an event listing'
+    """Class to hold particle info in an event listing"""
 
     def __init__(self, number, PID, name, status, m1, m2):
         # Class instance variables
-        self.number = number  # number in event listing
+        self.number = number  # number in event listing - unique
         self.PID = PID  # PDGID value
         self.name = name  # particle name e.b nu_mu
         self.status = status  # status of particle. If > 0, final state
@@ -63,7 +64,7 @@ class Particle:
         return self.number == other.number
 
     def getRawName(self):
-        # Get name without any ( or )
+        """Get name without any ( or )"""
         return self.name.translate(None, '()')
 
 ###############################################################################
@@ -126,9 +127,12 @@ if removeRedundants:
 
                 # Check if mother of current has 1 parent and 1 child,
                 # both with same PID. If it does, then it's redundant
-                # and we can skip it in future. If not, it's a suitable mother for
-                # Particle p
-                if (len(mum.mothers) == 1 and len(mum.daughters) == 1 and mum.PID == mum.mothers[0].PID and mum.PID == current.PID):
+                # and we can skip it in future. If not, it's a suitable mother
+                # for Particle p
+                if (len(mum.mothers) == 1
+                    and len(mum.daughters) == 1
+                    and mum.PID == mum.mothers[0].PID
+                    and mum.PID == current.PID):
 
                     mum.skip = True
                     current = mum
@@ -163,19 +167,23 @@ for p in reversed(event):
     # Final state: box, yellow fill
     # Initial state: circle (default), green fill
     # Interesting: red fill (overrides green/yellow fill)
-    conf = ""
-    if p.isInteresting:
-        conf = '    %s [label=%s, shape=box, style=filled, fillcolor=red]\n' % (pNumName, pNumName)
-    else:
-        if p.isFinalState:
-            conf = '    %s [label=%s, shape=box, style=filled, fillcolor=yellow]\n' % (pNumName, pNumName)
-        elif p.isInitialState:
-            conf = '    %s [label=%s, shape=box, style=filled, fillcolor=green]\n' % (pNumName, pNumName)
+    config = ""
+    if p.isInteresting or p.isFinalState or p.isInitialState:
+        colour = ""
+        if p.isInteresting:
+            colour = "red"
+        else:
+            if p.isFinalState:
+                colour = "yellow"
+            elif p.isInitialState:
+                colour = "green"
 
-    if conf:
-        outFile.write(conf)
-        print conf
+        config = '    %s [label=%s, shape=box, style=filled, fillcolor=%s]\n' \
+            % (pNumName, pNumName, colour)
 
+    if config:
+        outFile.write(config)
+        print config
 
 # Set all initial particles to be level in diagram
 rank = "    {rank=same;"
