@@ -108,6 +108,34 @@ for p in event:
         if p in pp.mothers and p != pp:
             p.daughters.append(pp)
 
+# Get rid of redundant particles
+# and rewrite mothers
+for p in event:
+
+    if not p.skip and not p.isInitialState and len(p.mothers) == 1:
+
+        current = p
+        mum = p.mothers[0]
+        foundSuitableMother = False
+        while not foundSuitableMother:
+
+            # Check if mother of current has 1 parent and 1 child, 
+            # both with same PID. If it does, then it's redundant 
+            # and we can skip it in future
+            if (len(mum.mothers) == 1 and
+                len(mum.daughters) == 1 and
+                mum.PID == mum.mothers[0].PID and
+                mum.PID == current.PID):
+
+                mum.skip = True
+                current = mum
+                mum = current.mothers[0]
+            else:
+                foundSuitableMother = True
+
+        # whatever is stored in mum is the suitable mother for p
+        p.mothers[0] = mum
+
 # Now process all the particles and add appropriate links to graphviz file
 # Start from the end and work backwards to pick up all connections
 # (doesn't work if you start at beginning and follow daughters)
