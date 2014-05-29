@@ -1,2 +1,8 @@
-myEvent.gv
-myEvent.pdf
+*.aux
+*.dvi
+*.log
+*.ps
+*.eps
+*.pdf
+*.gv
+*.txt
