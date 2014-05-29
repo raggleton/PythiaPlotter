@@ -1,12 +1,15 @@
 #!/usr/bin/python
 #
 import sys
+import os
 #
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
 # e.g.
 # python makeGraphFromPythia.py
 # dot -Tpdf myExampleEvent.gv -o myExampleEvent.pdf
+#
+# Note, you can get this script to do both steps for you!
 #
 ###############################################################################
 # Edit the following:
@@ -17,7 +20,15 @@ import sys
 inputFilename = "qcdScatterSmall.txt"
 #
 # Filename for output graphviz file
-outputFilename = "myExampleEvent.gv"
+outputFilename = "myExampleEventTest.gv"
+#
+# Option to do the dot stage as well
+doDot = True
+#
+# Filename for output PDF
+# Note, if you don't define one but doDot == True, it will automatically create
+# a filename using outputFilename
+pdfFilename = ""
 #
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -249,3 +260,11 @@ outFile.write("}")
 # Clean up
 inputFile.close()
 outFile.close()
+
+# Run dot to produce the PDF
+if pdfFilename == "":
+    pdfFilename = outputFilename.replace(".gv",".pdf")
+if doDot:
+    print "Producing PDF %s" % pdfFilename
+    os.system("dot -Tpdf %s -o %s" % (outputFilename, pdfFilename))
+
