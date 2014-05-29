@@ -100,8 +100,9 @@ sameInitialOnes = []
 verbose = False
 
 # Open input file & parse event info
-try:
-    inputFile = open(inputFilename, "r")
+with open(inputFilename, "r") as inputFile:
+
+    print "Reading event listing from %s" % inputFilename
 
     # For processing the full output from Pythia - need to know where
     # event listing starts and stops
@@ -151,11 +152,6 @@ try:
                 fullEvent.append(particle)
 
     print "Done reading file"
-except IOError:
-    sys.exit("Error opening %s: can\'t find file or read data"
-             % inputFilename)
-else:
-    print "Reading event listing from %s" % inputFilename
 
 # Add references to mothers
 for p in fullEvent:
@@ -201,8 +197,11 @@ if removeRedundants:
 
             # whatever is stored in mum is the suitable mother for p
             p.mothers[0] = mum
-try:
-    gvFile = open(gvFilename, "w")
+
+# Write relationships to graphviz file
+with open(gvFilename, "w") as gvFile:
+
+    print "Writing graphviz file to %s" % gvFilename
 
     # Now process all the particles and add appropriate links to graphviz file
     # Start from the end and work backwards to pick up all connections
@@ -254,15 +253,6 @@ try:
         rank += '"%s:%s" ' % (s.number, s.name)
     gvFile.write(rank+"} // Put initial particles on same level\n")
     gvFile.write("}")
-
-except IOError:
-    sys.exit("Error opening %s: can\'t find file or write data" % gvFilename)
-else:
-    print "Writing graphviz file to %s" % gvFilename
-
-# Clean up
-inputFile.close()
-gvFile.close()
 
 # Run dot to produce the PDF
 if pdfFilename == "":
