@@ -358,10 +358,10 @@ digraph g {
     "4:(ubar)" -> { "9:(ubar)" } [dir="back"]
     "3:(g)" -> { "14:(g)" } [dir="back"]
     "2:(p+)" -> { "0:(system)" } [dir="back"]
-    "2:(p+)" [label="2:(p+)", shape=box, style=filled, fillcolor=green]
+    "2:(p+)" [label="2:(p+)", shape=circle, style=filled, fillcolor=green]
     "1:(p+)" -> { "0:(system)" } [dir="back"]
-    "1:(p+)" [label="1:(p+)", shape=box, style=filled, fillcolor=green]
+    "1:(p+)" [label="1:(p+)", shape=circle, style=filled, fillcolor=green]
     "0:(system)" -> { "0:(system)" } [dir="back"]
-    "0:(system)" [label="0:(system)", shape=box, style=filled, fillcolor=green]
+    "0:(system)" [label="0:(system)", shape=circle, style=filled, fillcolor=green]
     {rank=same;"0:(system)" "1:(p+)" "2:(p+)" "0:(system)" "1:(p+)" "2:(p+)" } // Put initial particles on same level
 }

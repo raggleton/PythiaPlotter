@@ -20,7 +20,7 @@ import os
 inputFilename = "qcdScatterSmall.txt"
 #
 # Filename for output graphviz file
-gvFilename = "myExampleEventTest.gv"
+gvFilename = "myExampleEvent.gv"
 #
 # Option to do the dot stage as well
 doDot = True
@@ -99,10 +99,12 @@ sameInitialOnes = []
 # For debugging - print output to screen as well as file
 verbose = False
 
-# Open input/output files
+# Open input file & parse event info
 try:
     inputFile = open(inputFilename, "r")
-    # For processing the full Pythia output
+
+    # For processing the full output from Pythia - need to know where
+    # event listing starts and stops
     listingStart = """no        id"""
     listingEnd = """Charge sum"""
 
@@ -126,7 +128,9 @@ try:
             continue
 
         if parseLine:
+
             if verbose: print line
+
             values = line.split()
             number = int(values[0])
             PID = int(values[1])
@@ -152,8 +156,6 @@ except IOError:
              % inputFilename)
 else:
     print "Reading event listing from %s" % inputFilename
-
-
 
 # Add references to mothers
 for p in fullEvent:
@@ -212,7 +214,7 @@ try:
             continue
 
         pNumName = '"%s:%s"' % (p.number, p.name)
-        entry = '    %s -> { ' % pNumName
+        entry = '  %s -> { ' % pNumName
 
         for m in p.mothers:
             entry += '"%s:%s" ' % (m.number, m.name)
@@ -222,13 +224,14 @@ try:
         if verbose: print entry
         gvFile.write(entry)
 
-        # Define special features for initial, final state & interesting particles
+        # Set special features for initial/final state & interesting particles
         # Final state: box, yellow fill
         # Initial state: circle (default), green fill
         # Interesting: red fill (overrides green/yellow fill)
         config = ""
         if p.isInteresting or p.isFinalState or p.isInitialState:
             colour = ""
+            shape = "box"
             if p.isInteresting:
                 colour = "red"
             else:
@@ -236,20 +239,20 @@ try:
                     colour = "yellow"
                 elif p.isInitialState:
                     colour = "green"
+                    shape = "circle"
 
-            config = '    %s [label=%s, shape=box, style=filled, fillcolor=%s]\n' \
-                % (pNumName, pNumName, colour)
+            config = '  %s [label=%s, shape=%s, style=filled, fillcolor=%s]\n'\
+                % (pNumName, pNumName, shape, colour)
 
         if config:
             gvFile.write(config)
             if verbose: print config
 
     # Set all initial particles to be level in diagram
-    rank = "    {rank=same;"
+    rank = "  {rank=same;"
     for s in sameInitialOnes:
         rank += '"%s:%s" ' % (s.number, s.name)
     gvFile.write(rank+"} // Put initial particles on same level\n")
-
     gvFile.write("}")
 
 except IOError:
@@ -263,8 +266,7 @@ gvFile.close()
 
 # Run dot to produce the PDF
 if pdfFilename == "":
-    pdfFilename = gvFilename.replace(".gv",".pdf")
+    pdfFilename = gvFilename.replace(".gv", ".pdf")
 if doDot:
     print "Producing PDF %s" % pdfFilename
     os.system("dot -Tpdf %s -o %s" % (gvFilename, pdfFilename))
-
