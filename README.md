@@ -2,7 +2,7 @@
 
 This is a little script that uses GraphViz to plot Feynman-esque diagrams of Pythia 8 event listings. Very handy to figure out what is actually going on!
 
-By default, the incoming protons are coloured green, and the final-state particles are in yellow boxes, to aid quick recognition.
+By default, the incoming protons are green circles, and the final-state particles are in yellow boxes, to aid quick recognition. The user can also highlist specific particle types in red boxes (e.g. all muons).
 
 For examples, see `myEventExample.pdf` and `myExmpleEvent.gv`, which use the Pythia output in `qcdScatterSmall.txt`
 
@@ -10,7 +10,7 @@ For examples, see `myEventExample.pdf` and `myExmpleEvent.gv`, which use the Pyt
 - graphviz http://www.graphviz.org/Download..php
 
 ## Optional:
-- Pythia 8 
+- Pythia 8 http://home.thep.lu.se/~torbjorn/Pythia.html
 
 ## Instructions:
 
@@ -31,14 +31,16 @@ For examples, see `myEventExample.pdf` and `myExmpleEvent.gv`, which use the Pyt
 	./makeGraphFromPythia.py
 
 	```
-- Run `dot` over your GraphViz file to make the plot:
+	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, set `doDot = False` in the script.
+
+- [Optional] Run `dot` over your GraphViz file to make the plot:
 	```
 	dot -Tpdf myExampleEvent.gv -o myExampleEvent.pdf
 	
 	```
 This will output a PDF file of the event. Change filenames as necessary.
 
-- Note, there's a bash script, `makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity.
+- Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
 - [ ] Combine with Latex to represent particle names properly
