@@ -20,14 +20,14 @@ import os
 inputFilename = "qcdScatterSmall.txt"
 #
 # Filename for output graphviz file
-outputFilename = "myExampleEventTest.gv"
+gvFilename = "myExampleEventTest.gv"
 #
 # Option to do the dot stage as well
 doDot = True
 #
 # Filename for output PDF
 # Note, if you don't define one but doDot == True, it will automatically create
-# a filename using outputFilename
+# a filename using gvFilename
 pdfFilename = ""
 #
 # Interesting particles we wish to highlight
@@ -200,12 +200,12 @@ if removeRedundants:
             # whatever is stored in mum is the suitable mother for p
             p.mothers[0] = mum
 try:
-    outFile = open(outputFilename, "w")
+    gvFile = open(gvFilename, "w")
 
     # Now process all the particles and add appropriate links to graphviz file
     # Start from the end and work backwards to pick up all connections
     # (doesn't work if you start at beginning and follow daughters)
-    outFile.write("digraph g {\n    rankdir = RL;\n")
+    gvFile.write("digraph g {\n    rankdir = RL;\n")
     for p in reversed(fullEvent):
         # if p.number < 901:
         if p.skip:
@@ -220,7 +220,7 @@ try:
         entry += "} [dir=\"back\"]\n"
 
         if verbose: print entry
-        outFile.write(entry)
+        gvFile.write(entry)
 
         # Define special features for initial, final state & interesting particles
         # Final state: box, yellow fill
@@ -241,31 +241,30 @@ try:
                 % (pNumName, pNumName, colour)
 
         if config:
-            outFile.write(config)
+            gvFile.write(config)
             if verbose: print config
 
     # Set all initial particles to be level in diagram
     rank = "    {rank=same;"
     for s in sameInitialOnes:
         rank += '"%s:%s" ' % (s.number, s.name)
-    outFile.write(rank+"} // Put initial particles on same level\n")
+    gvFile.write(rank+"} // Put initial particles on same level\n")
 
-    outFile.write("}")
-    
+    gvFile.write("}")
+
 except IOError:
-    sys.exit("Error opening %s: can\'t find file or write data"
-             % outputFilename)
+    sys.exit("Error opening %s: can\'t find file or write data" % gvFilename)
 else:
-    print "Writing graphviz file to %s" % outputFilename
+    print "Writing graphviz file to %s" % gvFilename
 
 # Clean up
 inputFile.close()
-outFile.close()
+gvFile.close()
 
 # Run dot to produce the PDF
 if pdfFilename == "":
-    pdfFilename = outputFilename.replace(".gv",".pdf")
+    pdfFilename = gvFilename.replace(".gv",".pdf")
 if doDot:
     print "Producing PDF %s" % pdfFilename
-    os.system("dot -Tpdf %s -o %s" % (outputFilename, pdfFilename))
+    os.system("dot -Tpdf %s -o %s" % (gvFilename, pdfFilename))
 
