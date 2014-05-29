@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 import sys
-import os
+from subprocess import call
 #
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
@@ -9,7 +9,7 @@ import os
 # python makeGraphFromPythia.py
 # dot -Tpdf myExampleEvent.gv -o myExampleEvent.pdf
 #
-# Note, you can get this script to do both steps for you!
+# Note, you can get this script to do both steps for you! (see doDot option)
 #
 ###############################################################################
 # Edit the following:
@@ -269,4 +269,4 @@ if pdfFilename == "":
     pdfFilename = gvFilename.replace(".gv", ".pdf")
 if doDot:
     print "Producing PDF %s" % pdfFilename
-    os.system("dot -Tpdf %s -o %s" % (gvFilename, pdfFilename))
+    call(["dot","-Tpdf",gvFilename,"-o", pdfFilename])
