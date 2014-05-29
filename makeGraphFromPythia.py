@@ -102,65 +102,58 @@ verbose = False
 # Open input/output files
 try:
     inputFile = open(inputFilename, "r")
+    # For processing the full Pythia output
+    listingStart = """no        id"""
+    listingEnd = """Charge sum"""
+
+    doneHardEvent = False
+    doneFullEvent = False
+    parseLine = False
+
+    # Read in file to list of Particles
+    for line in inputFile:
+        # Parse each line, looking for the start or end of event listing
+        strippedLine = line.strip()
+        if strippedLine.startswith(listingStart):
+            parseLine = True
+            continue
+        elif strippedLine.startswith(listingEnd):
+            parseLine = False
+            if not doneHardEvent:
+                doneHardEvent = True
+            elif not doneFullEvent:
+                doneFullEvent = True
+            continue
+
+        if parseLine:
+            if verbose: print line
+            values = line.split()
+            number = int(values[0])
+            PID = int(values[1])
+            name = values[2]
+            status = int(values[3])
+            m1 = int(values[4])
+            m2 = int(values[5])
+            # d1       = int(values[6])
+            # d2       = int(values[7])
+            particle = Particle(number, PID, name, status, m1, m2)
+
+            if particle.isInitialState:
+                sameInitialOnes.append(particle)
+
+            if not doneHardEvent:
+                hardEvent.append(particle)
+            elif not doneFullEvent:
+                fullEvent.append(particle)
+
+    print "Done reading file"
 except IOError:
     sys.exit("Error opening %s: can\'t find file or read data"
              % inputFilename)
 else:
     print "Reading event listing from %s" % inputFilename
 
-try:
-    outFile = open(outputFilename, "w")
-except IOError:
-    sys.exit("Error opening %s: can\'t find file or write data"
-             % outputFilename)
-else:
-    print "Writing graphviz file to %s" % outputFilename
 
-# For processing the full Pythia output
-listingStart = """no        id"""
-listingEnd = """Charge sum"""
-
-doneHardEvent = False
-doneFullEvent = False
-parseLine = False
-
-# Read in file to list of Particles
-for line in inputFile:
-    # Parse each line, looking for the start or end of event listing
-    strippedLine = line.strip()
-    if strippedLine.startswith(listingStart):
-        parseLine = True
-        continue
-    elif strippedLine.startswith(listingEnd):
-        parseLine = False
-        if not doneHardEvent:
-            doneHardEvent = True
-        elif not doneFullEvent:
-            doneFullEvent = True
-        continue
-
-    if parseLine:
-        if verbose: print line
-        values = line.split()
-        number = int(values[0])
-        PID = int(values[1])
-        name = values[2]
-        status = int(values[3])
-        m1 = int(values[4])
-        m2 = int(values[5])
-        # d1       = int(values[6])
-        # d2       = int(values[7])
-        particle = Particle(number, PID, name, status, m1, m2)
-
-        if particle.isInitialState:
-            sameInitialOnes.append(particle)
-
-        if not doneHardEvent:
-            hardEvent.append(particle)
-        elif not doneFullEvent:
-            fullEvent.append(particle)
-
-print "Done reading file"
 
 # Add references to mothers
 for p in fullEvent:
@@ -206,56 +199,64 @@ if removeRedundants:
 
             # whatever is stored in mum is the suitable mother for p
             p.mothers[0] = mum
+try:
+    outFile = open(outputFilename, "w")
 
-# Now process all the particles and add appropriate links to graphviz file
-# Start from the end and work backwards to pick up all connections
-# (doesn't work if you start at beginning and follow daughters)
-outFile.write("digraph g {\n    rankdir = RL;\n")
-for p in reversed(fullEvent):
-    # if p.number < 901:
-    if p.skip:
-        continue
+    # Now process all the particles and add appropriate links to graphviz file
+    # Start from the end and work backwards to pick up all connections
+    # (doesn't work if you start at beginning and follow daughters)
+    outFile.write("digraph g {\n    rankdir = RL;\n")
+    for p in reversed(fullEvent):
+        # if p.number < 901:
+        if p.skip:
+            continue
 
-    pNumName = '"%s:%s"' % (p.number, p.name)
-    entry = '    %s -> { ' % pNumName
+        pNumName = '"%s:%s"' % (p.number, p.name)
+        entry = '    %s -> { ' % pNumName
 
-    for m in p.mothers:
-        entry += '"%s:%s" ' % (m.number, m.name)
+        for m in p.mothers:
+            entry += '"%s:%s" ' % (m.number, m.name)
 
-    entry += "} [dir=\"back\"]\n"
+        entry += "} [dir=\"back\"]\n"
 
-    if verbose: print entry
-    outFile.write(entry)
+        if verbose: print entry
+        outFile.write(entry)
 
-    # Define special features for initial, final state & interesting particles
-    # Final state: box, yellow fill
-    # Initial state: circle (default), green fill
-    # Interesting: red fill (overrides green/yellow fill)
-    config = ""
-    if p.isInteresting or p.isFinalState or p.isInitialState:
-        colour = ""
-        if p.isInteresting:
-            colour = "red"
-        else:
-            if p.isFinalState:
-                colour = "yellow"
-            elif p.isInitialState:
-                colour = "green"
+        # Define special features for initial, final state & interesting particles
+        # Final state: box, yellow fill
+        # Initial state: circle (default), green fill
+        # Interesting: red fill (overrides green/yellow fill)
+        config = ""
+        if p.isInteresting or p.isFinalState or p.isInitialState:
+            colour = ""
+            if p.isInteresting:
+                colour = "red"
+            else:
+                if p.isFinalState:
+                    colour = "yellow"
+                elif p.isInitialState:
+                    colour = "green"
 
-        config = '    %s [label=%s, shape=box, style=filled, fillcolor=%s]\n' \
-            % (pNumName, pNumName, colour)
+            config = '    %s [label=%s, shape=box, style=filled, fillcolor=%s]\n' \
+                % (pNumName, pNumName, colour)
 
-    if config:
-        outFile.write(config)
-        if verbose: print config
+        if config:
+            outFile.write(config)
+            if verbose: print config
 
-# Set all initial particles to be level in diagram
-rank = "    {rank=same;"
-for s in sameInitialOnes:
-    rank += '"%s:%s" ' % (s.number, s.name)
-outFile.write(rank+"} // Put initial particles on same level\n")
+    # Set all initial particles to be level in diagram
+    rank = "    {rank=same;"
+    for s in sameInitialOnes:
+        rank += '"%s:%s" ' % (s.number, s.name)
+    outFile.write(rank+"} // Put initial particles on same level\n")
 
-outFile.write("}")
+    outFile.write("}")
+    
+except IOError:
+    sys.exit("Error opening %s: can\'t find file or write data"
+             % outputFilename)
+else:
+    print "Writing graphviz file to %s" % outputFilename
 
 # Clean up
 inputFile.close()
