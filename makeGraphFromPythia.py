@@ -118,7 +118,8 @@ with open(inputFilename, "r") as inputFile:
         # Parse each line, looking for the start or end of event listing
         strippedLine = line.strip()
         if strippedLine.startswith(listingStart):
-            parseLine = True
+            if doneHardEvent:  # don't parse the hard event, for now
+                parseLine = True
             continue
         elif strippedLine.startswith(listingEnd):
             parseLine = False
@@ -143,7 +144,7 @@ with open(inputFilename, "r") as inputFile:
             # d2       = int(values[7])
             particle = Particle(number, PID, name, status, m1, m2)
 
-            if particle.isInitialState:
+            if particle.isInitialState and particle.getRawName() != "system":
                 sameInitialOnes.append(particle)
 
             if not doneHardEvent:
@@ -208,8 +209,8 @@ with open(gvFilename, "w") as gvFile:
     # (doesn't work if you start at beginning and follow daughters)
     gvFile.write("digraph g {\n    rankdir = RL;\n")
     for p in reversed(fullEvent):
-        # if p.number < 901:
-        if p.skip:
+
+        if p.skip or p.getRawName() == "system":
             continue
 
         pNumName = '"%s:%s"' % (p.number, p.name)
@@ -221,7 +222,7 @@ with open(gvFilename, "w") as gvFile:
         entry += "} [dir=\"back\"]\n"
 
         if verbose: print entry
-        gvFile.write(entry)
+        if p.number > 2: gvFile.write(entry)  # don't want p+ -> system entries
 
         # Set special features for initial/final state & interesting particles
         # Final state: box, yellow fill
@@ -259,4 +260,4 @@ if pdfFilename == "":
     pdfFilename = gvFilename.replace(".gv", ".pdf")
 if doDot:
     print "Producing PDF %s" % pdfFilename
-    call(["dot","-Tpdf",gvFilename,"-o", pdfFilename])
+    call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
