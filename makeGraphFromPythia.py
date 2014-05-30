@@ -1,7 +1,9 @@
 #!/usr/bin/python
 #
-import sys
 from subprocess import call
+# import numpy as np
+# import matplotlib.pyplot as plt
+import plotter
 #
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
@@ -83,6 +85,22 @@ class Particle:
         """Get name without any ( or )"""
         return self.name.translate(None, '()')
 
+
+def processLine(line):
+    if verbose: print line
+
+    values = line.split()
+    number = int(values[0])
+    PID = int(values[1])
+    name = values[2]
+    status = int(values[3])
+    m1 = int(values[4])
+    m2 = int(values[5])
+    # d1       = int(values[6])
+    # d2       = int(values[7])
+    particle = Particle(number, PID, name, status, m1, m2)
+    return particle
+
 ###############################################################################
 # MAIN BODY OF CODE HERE
 ###############################################################################
@@ -130,19 +148,7 @@ with open(inputFilename, "r") as inputFile:
             continue
 
         if parseLine:
-
-            if verbose: print line
-
-            values = line.split()
-            number = int(values[0])
-            PID = int(values[1])
-            name = values[2]
-            status = int(values[3])
-            m1 = int(values[4])
-            m2 = int(values[5])
-            # d1       = int(values[6])
-            # d2       = int(values[7])
-            particle = Particle(number, PID, name, status, m1, m2)
+            particle = processLine(line)
 
             if particle.isInitialState and particle.getRawName() != "system":
                 sameInitialOnes.append(particle)
@@ -261,3 +267,6 @@ if pdfFilename == "":
 if doDot:
     print "Producing PDF %s" % pdfFilename
     call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
+
+# Plot status codes for skipped and non-skipped particle
+plotter.plotStatuses(fullEvent)
