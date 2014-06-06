@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #
-import sys
+import os.path
 from subprocess import call
+import argparse
 #
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
@@ -12,33 +13,68 @@ from subprocess import call
 # Note, you can get this script to do both steps for you! (see doDot option)
 #
 ###############################################################################
-# Edit the following:
+# Setting up filename, options, etc
 ###############################################################################
-#
-# Filename for input txt file with Pythia listing
-# inputFilename = "testLine.txt"
-inputFilename = "qcdScatterSmall.txt"
-#
-# Filename for output graphviz file
-gvFilename = "myExampleEvent.gv"
-#
-# Option to do the dot stage as well
-doDot = True
-#
+
+## Setup commandline args parser
+parser = argparse.ArgumentParser(
+    description="Convert Pythia 8 event listing into graph using \
+    dot in Graphviz"
+)
+parser.add_argument("-i", "--input",
+                    help="input text file with Pythia 8 output \
+                    (if unspecified, defaults to qcdScatterSmall.txt)")
+parser.add_argument("-oGV", "--outputGV",
+                    help="output graphviz filename \
+                    (if unspecified, defaults to INPUT.gz)")
+parser.add_argument("-oPDF", "--outputPDF",
+                    help="output graph PDF filename \
+                    (if unspecified, defaults to INPUT.pdf)")
+parser.add_argument("-nD", "--noDot",
+                    help="don't get dot to plot the resultant Graphviz file",
+                    action="store_true")
+parser.add_argument("-v", "--verbose",
+                    help="print debug statements to screen",
+                    action="store_true")
+args = parser.parse_args()
+
+# Store filename for input txt file with Pythia listing
+# Default uses the example output in this repository
+inputFilename = args.input
+if not inputFilename:
+    inputFilename = "qcdScatterSmall.txt"
+
+# Store output graphviz filename
+# Default filename for output graphviz file based on inputFilename 
+# if user doesn't specify one
+gvFilename = args.outputGV
+if not gvFilename:
+    name = os.path.basename(inputFilename)
+    gvFilename = os.path.splitext(name)[0]+".gv" # make raw string?
+
 # Filename for output PDF
-# Note, if you don't define one but doDot == True, it will automatically create
-# a filename using gvFilename
-pdfFilename = ""
-#
+# Default filename for output PDF based on inputFilename 
+# if user doesn't specify one
+pdfFilename = args.outputPDF
+if not pdfFilename:
+    pdfFilename = gvFilename.replace(".gv", ".pdf")
+
+# Whether to do dot stage - by default it runs the dot command at the end
+doDot = not args.noDot
+
 # Interesting particles we wish to highlight
 # include antiparticles
+# Make list in args?
 interesting = ["tau+", "tau-", "mu+", "mu-"]
-#
+
 # Option to remove redundant particles from graph.
 # Useful for cleaning up the graph, but don't enable if you want to debug the
 # event listing or see where recoil/shower gluons are.
 removeRedundants = True
-#
+
+# For debugging - print output to screen as well as file
+verbose = args.verbose
+
 ###############################################################################
 # DO NOT EDIT ANYTHING BELOW HERE
 ###############################################################################
@@ -95,9 +131,6 @@ hardEvent = []
 
 # To hold all the initial state particles that should be aligned
 sameInitialOnes = []
-
-# For debugging - print output to screen as well as file
-verbose = False
 
 # Open input file & parse event info
 with open(inputFilename, "r") as inputFile:
@@ -256,8 +289,10 @@ with open(gvFilename, "w") as gvFile:
     gvFile.write("}")
 
 # Run dot to produce the PDF
-if pdfFilename == "":
-    pdfFilename = gvFilename.replace(".gv", ".pdf")
 if doDot:
     print "Producing PDF %s" % pdfFilename
     call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
+else:
+    print "Not doing dot stage. To do dot stage run:"
+    print
+    print "    dot -Tpdf %s -o %s" % (gvFilename, pdfFilename)
