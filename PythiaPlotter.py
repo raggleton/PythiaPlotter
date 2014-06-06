@@ -7,16 +7,21 @@ import argparse
 # Script that converts the event listing from Pythia
 # into a Graphviz file to be plotted with dot
 # e.g.
-# python makeGraphFromPythia.py
-# dot -Tpdf myExampleEvent.gv -o myExampleEvent.pdf
+# python PythiaPlotter.py
 #
-# Note, you can get this script to do both steps for you! (see doDot option)
+# Note, this script output graphviz file and plots it using dot. 
+# If you don't want it to plot, use -nD|--noDot flag, and use dot command, 
+# e.g.
+# 
+# dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
+#
+# Robin Aggleton 2014
 #
 ###############################################################################
 # Setting up filename, options, etc
 ###############################################################################
 
-## Setup commandline args parser
+# Setup commandline args parser
 parser = argparse.ArgumentParser(
     description="Convert Pythia 8 event listing into graph using \
     dot in Graphviz"
@@ -45,15 +50,15 @@ if not inputFilename:
     inputFilename = "qcdScatterSmall.txt"
 
 # Store output graphviz filename
-# Default filename for output graphviz file based on inputFilename 
+# Default filename for output graphviz file based on inputFilename
 # if user doesn't specify one
 gvFilename = args.outputGV
 if not gvFilename:
     name = os.path.basename(inputFilename)
-    gvFilename = os.path.splitext(name)[0]+".gv" # make raw string?
+    gvFilename = os.path.splitext(name)[0]+".gv"
 
 # Filename for output PDF
-# Default filename for output PDF based on inputFilename 
+# Default filename for output PDF based on inputFilename
 # if user doesn't specify one
 pdfFilename = args.outputPDF
 if not pdfFilename:

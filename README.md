@@ -27,13 +27,13 @@ For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the 
 - Copy the entire Pythia output into a text file, e.g. see `qcdScatterSmall.txt`. Note, you don't have to edit the Pythia output at all - the script will automatically find the hard and full event listings from the output.
 - Have a look at possible options/flags:
 	```
-	python makeGraphFromPythia.py -h
+	python PythiaPlotter.py -h
 
 	```
 Outputs:
 
 	```
-	usage: makeGraphFromPythia.py [-h] [-i INPUT] [-oGV OUTPUTGV]
+	usage: PythiaPlotter.py [-h] [-i INPUT] [-oGV OUTPUTGV]
                               [-oPDF OUTPUTPDF] [-nD] [-v]
 
 	Convert Pythia 8 event listing into graph using dot in Graphviz
@@ -55,7 +55,7 @@ Outputs:
 
 - Run the script to produce a GraphViz file from example output:
 	```
-	python makeGraphFromPythia.py
+	python PythiaPlotter.py
 
 	```
 	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD` flag.
