@@ -28,7 +28,7 @@ For examples, see `myEventExample.pdf` and `myExmpleEvent.gv`, which use the Pyt
 - Edit the `makeGraphFromPythia.py` script for correct input and output filenames
 - Run the script to produce a GraphViz file:
 	```
-	./makeGraphFromPythia.py
+	python makeGraphFromPythia.py
 
 	```
 	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, set `doDot = False` in the script.
@@ -43,6 +43,7 @@ This will output a PDF file of the event. Change filenames as necessary.
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
+- [ ] Command-line option for input txt filename (and output?)
 - [ ] Combine with Latex to represent particle names properly
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [x] Parse full Pythia output
