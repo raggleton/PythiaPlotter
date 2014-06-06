@@ -36,22 +36,22 @@ Outputs:
 	usage: makeGraphFromPythia.py [-h] [-i INPUT] [-oGV OUTPUTGV]
                               [-oPDF OUTPUTPDF] [-nD] [-v]
 
-Convert Pythia 8 event listing into graph using dot in Graphviz
+	Convert Pythia 8 event listing into graph using dot in Graphviz
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        input text file with Pythia 8 output (if unspecified,
-                        defaults to qcdScatterSmall.txt)
-  -oGV OUTPUTGV, --outputGV OUTPUTGV
-                        output graphviz filename (if unspecified, defaults to
-                        INPUT.gz)
-  -oPDF OUTPUTPDF, --outputPDF OUTPUTPDF
-                        output graph PDF filename (if unspecified, defaults to
-                        INPUT.pdf)
-  -nD, --noDot          don't get dot to plot the resultant Graphviz file
-  -v, --verbose         print debug statements to screen
-  ```
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -i INPUT, --input INPUT
+	                        input text file with Pythia 8 output (if unspecified,
+	                        defaults to qcdScatterSmall.txt)
+	  -oGV OUTPUTGV, --outputGV OUTPUTGV
+	                        output graphviz filename (if unspecified, defaults to
+	                        INPUT.gz)
+	  -oPDF OUTPUTPDF, --outputPDF OUTPUTPDF
+	                        output graph PDF filename (if unspecified, defaults to
+	                        INPUT.pdf)
+	  -nD, --noDot          don't get dot to plot the resultant Graphviz file
+	  -v, --verbose         print debug statements to screen
+	```
 
 - Run the script to produce a GraphViz file from example output:
 	```
