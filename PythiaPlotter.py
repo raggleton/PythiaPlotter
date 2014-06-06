@@ -4,15 +4,15 @@ import os.path
 from subprocess import call
 import argparse
 #
-# Script that converts the event listing from Pythia
+# Script that converts the event listing from Pythia 8
 # into a Graphviz file to be plotted with dot
 # e.g.
 # python PythiaPlotter.py
 #
-# Note, this script output graphviz file and plots it using dot. 
-# If you don't want it to plot, use -nD|--noDot flag, and use dot command, 
+# Note, this script output graphviz file and plots it using dot.
+# If you don't want it to plot, use -nD|--noDot flag, and use dot command,
 # e.g.
-# 
+#
 # dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
 #
 # Robin Aggleton 2014
@@ -169,7 +169,7 @@ with open(inputFilename, "r") as inputFile:
 
         if parseLine:
 
-            if verbose: print line
+            if verbose: print line,
 
             values = line.split()
             number = int(values[0])
@@ -259,7 +259,7 @@ with open(gvFilename, "w") as gvFile:
 
         entry += "} [dir=\"back\"]\n"
 
-        if verbose: print entry
+        if verbose: print entry,
         if p.number > 2: gvFile.write(entry)  # don't want p+ -> system entries
 
         # Set special features for initial/final state & interesting particles
@@ -284,7 +284,7 @@ with open(gvFilename, "w") as gvFile:
 
         if config:
             gvFile.write(config)
-            if verbose: print config
+            if verbose: print config,
 
     # Set all initial particles to be level in diagram
     rank = "  {rank=same;"
