@@ -6,3 +6,5 @@
 *.pdf
 *.gv
 *.txt
+*.pyc
+*.png
