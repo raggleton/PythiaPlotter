@@ -68,9 +68,6 @@ pdfFilename = args.outputPDF
 if not pdfFilename:
     pdfFilename = gvFilename.replace(".gv", ".pdf")
 
-# Whether to do dot stage - by default it runs the dot command at the end
-doDot = not args.noDot
-
 # Interesting particles we wish to highlight
 # include antiparticles
 # Make list in args?
@@ -300,13 +297,13 @@ with open(gvFilename, "w") as gvFile:
     gvFile.write("}")
 
 # Run dot to produce the PDF
-if doDot:
-    print "Producing PDF %s" % pdfFilename
-    call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
-else:
+if args.noDot:
     print "Not doing dot stage. To do dot stage run:"
     print
     print "    dot -Tpdf %s -o %s" % (gvFilename, pdfFilename)
+else:
+    print "Producing PDF %s" % pdfFilename
+    call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
 
 # Automatically open the PDF on the user's system if desired
 if args.openPDF:
