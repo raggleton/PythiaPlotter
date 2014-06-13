@@ -50,6 +50,7 @@ Outputs:
 	                        output graph PDF filename (if unspecified, defaults to
 	                        INPUT.pdf)
 	  -nD, --noDot          don't get dot to plot the resultant Graphviz file
+      --openPDF             automatically open PDF once plotted
 	  -v, --verbose         print debug statements to screen
 	```
 
@@ -70,10 +71,11 @@ This will output a PDF file of the event.
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
-- [ ] Add check to see if PYTHIA output or not
-- [x] Command-line option for input txt filename (and output?)
-- [ ] Combine with Latex to represent particle names properly
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+- [ ] Add check to see if PYTHIA output or not
+- [ ] Combine with Latex to represent particle names properly
+- [x] Option to auto-open resultant PDF (make default?)
+- [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output
 - [x] Simplify particle lines where you get repeats e.g. `195:g -> 278:g -> 323:g -> 394:g` to become `195:g -> 394:g`
 - [x] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
