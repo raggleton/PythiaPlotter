@@ -74,7 +74,7 @@ doDot = not args.noDot
 # Interesting particles we wish to highlight
 # include antiparticles
 # Make list in args?
-interesting = ["tau+", "tau-", "mu+", "mu-"]
+interesting = ["tau+", "tau-", "mu+", "mu-", "b", "bbar", "c", "ccbar"]
 
 # Option to remove redundant particles from graph.
 # Useful for cleaning up the graph, but don't enable if you want to debug the
@@ -276,6 +276,8 @@ with open(gvFilename, "w") as gvFile:
             shape = "box"
             if p.isInteresting:
                 colour = "red"
+                if not p.isFinalState:
+                    shape = "\"\""
             else:
                 if p.isFinalState:
                     colour = "yellow"
