@@ -5,8 +5,8 @@ from subprocess import call
 from sys import platform as _platform
 import argparse
 #
-# Script that converts the event listing from Pythia 8 into a Graphviz 
-# file, which is then plotted with dot, and output as a PDF 
+# Script that converts the event listing from Pythia 8 into a Graphviz
+# file, which is then plotted with dot, and output as a PDF
 # e.g.
 # python PythiaPlotter.py
 #
@@ -308,12 +308,12 @@ else:
 
 # Automatically open the PDF on the user's system if desired
 if args.openPDF:
-    if _platform == "linux" or _platform == "linux2":
-    # linux
+    if _platform.startswith("linux"):
+        # linux
         call(["xdg-open", pdfFilename])
     elif _platform == "darwin":
-    # OS X
+        # OS X
         call(["open", pdfFilename])
     elif _platform == "win32":
-    # Windows
+        # Windows
         call(["start", pdfFilename])
