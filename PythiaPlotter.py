@@ -2,15 +2,16 @@
 #
 import os.path
 from subprocess import call
+from sys import platform as _platform
 import argparse
 #
-# Script that converts the event listing from Pythia 8
-# into a Graphviz file to be plotted with dot
+# Script that converts the event listing from Pythia 8 into a Graphviz 
+# file, which is then plotted with dot, and output as a PDF 
 # e.g.
 # python PythiaPlotter.py
 #
-# Note, this script output graphviz file and plots it using dot.
-# If you don't want it to plot, use -nD|--noDot flag, and use dot command,
+# Note this script outputs a graphviz file and automatically plots it with dot.
+# If you don't want it to, use -nD|--noDot flag, and use dot command manually,
 # e.g.
 #
 # dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
@@ -37,6 +38,9 @@ parser.add_argument("-oPDF", "--outputPDF",
                     (if unspecified, defaults to INPUT.pdf)")
 parser.add_argument("-nD", "--noDot",
                     help="don't get dot to plot the resultant Graphviz file",
+                    action="store_true")
+parser.add_argument("--openPDF",
+                    help="automatically open PDF once plotted",
                     action="store_true")
 parser.add_argument("-v", "--verbose",
                     help="print debug statements to screen",
@@ -301,3 +305,15 @@ else:
     print "Not doing dot stage. To do dot stage run:"
     print
     print "    dot -Tpdf %s -o %s" % (gvFilename, pdfFilename)
+
+# Automatically open the PDF on the user's system if desired
+if args.openPDF:
+    if _platform == "linux" or _platform == "linux2":
+    # linux
+        call(["xdg-open", pdfFilename])
+    elif _platform == "darwin":
+    # OS X
+        call(["open", pdfFilename])
+    elif _platform == "win32":
+    # Windows
+        call(["start", pdfFilename])
