@@ -11,15 +11,18 @@ with open("pdg_all.tex", "r") as particleList:
 		# print key, val,
 		pidDict[int(key)] = val.strip()
 
-# This converts from PDGID (see ) and returns a Latex form for the name,
+# This converts from PDGIDs and returns a Latex form for the name,
 # also deals with antiparticles
 def convertPIDToName(PID):
 	name = pidDict[abs(PID)]
+	# Remove those annoying masses in parentheses
+	name = re.sub(r"\([0-9]*\)", "", name)
+	
 	if PID < 0:
 		if "+" in name:
 			name = name.replace('+', '-')
 		elif "-" in name:
-			name = re.sub('-', r'+', name)
+			name = name.replace("-", "+")
 		else:
 			# Only want the bar over the main bit of text - ignore any _ or ^
 			pattern = re.compile(r"[_\^]")

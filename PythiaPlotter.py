@@ -340,12 +340,9 @@ if args.convertTex:
                     # The syntax of the "psfrag" command is:
                     #    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
                     # Change the "1.4" to whatever scale factor you want,
-                    # but 1.4 is pretty good :)
-                    texLine = '\psfrag{NumName}[C][C][1.4][0]{$pNum:texName$}\n'
+                    # but 1.5 is pretty good :)
                     pNumName = '%s:%s' % (p.number, p.name)
-                    texLine = texLine.replace("NumName", pNumName)
-                    texLine = texLine.replace("pNum", str(p.number))
-                    texLine = texLine.replace("texName", convertPIDToName(p.PID))
+                    texLine = '\psfrag{%s}[C][C][1.4][0]{$%s:%s$}\n' % (pNumName, str(p.number), convertPIDToName(p.PID))
                     if (verbose): print texLine,
                     texFile.write(texLine)
             else:
