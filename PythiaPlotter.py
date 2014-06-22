@@ -340,7 +340,7 @@ if args.convertTex:
                     # The syntax of the "psfrag" command is:
                     #    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
                     # Change the "1.4" to whatever scale factor you want,
-                    # but 1.5 is pretty good :)
+                    # but 1.4 is pretty good :)
                     pNumName = '%s:%s' % (p.number, p.name)
                     texLine = '\psfrag{%s}[C][C][1.4][0]{$%s:%s$}\n' % (pNumName, str(p.number), convertPIDToName(p.PID))
                     if (verbose): print texLine,
