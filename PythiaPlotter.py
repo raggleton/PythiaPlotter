@@ -319,18 +319,6 @@ else:
         print "Producing EPS %s" % epsFilename
         call(["dot", "-Teps", gvFilename, "-o", epsFilename])
 
-# Automatically open the PDF on the user's system if desired
-if args.openPDF:
-    if _platform.startswith("linux"):
-        # linux
-        call(["xdg-open", pdfFilename])
-    elif _platform == "darwin":
-        # OS X
-        call(["open", pdfFilename])
-    elif _platform == "win32":
-        # Windows
-        call(["start", pdfFilename])
-
 # Try and convert all particles into proper names using psfrag
 if args.convertTex:
     # Read in TeX template file
@@ -371,3 +359,15 @@ if args.convertTex:
 else:
     print "Not converting particle names in PDF to Latex equivalents"
     print "If you want to do this, please re-run with --convertTex option"
+
+# Automatically open the PDF on the user's system if desired
+if args.openPDF:
+    if _platform.startswith("linux"):
+        # linux
+        call(["xdg-open", pdfFilename])
+    elif _platform == "darwin":
+        # OS X
+        call(["open", pdfFilename])
+    elif _platform == "win32":
+        # Windows
+        call(["start", pdfFilename])
