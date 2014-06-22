@@ -2,7 +2,7 @@
 
 This is a little script that uses GraphViz to plot Feynman-esque diagrams of Pythia 8 event listings. Very handy to figure out what is actually going on!
 
-By default, the incoming protons are green circles, and the final-state particles are in yellow boxes, to aid quick recognition. The user can also highlist specific particle types in red boxes (e.g. all muons).
+By default, the incoming protons are green circles, and the final-state particles are in yellow boxes, to aid quick recognition. The user can also highlist specific particle types in red (e.g. all muons, b quarks).
 
 For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the Pythia output in `qcdScatterSmall.txt`
 
@@ -62,11 +62,13 @@ Outputs:
 
 	```
 	The output PDF file is `qcdScatterSmall.pdf`.
-	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD|--noDot` flag.
+	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD, --noDot` flag.
+
+## Notes:
 
 - If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF. For example, see `qcdScatterSmallConvert.pdf`, produced by running `python PythiaPlotter.py --convertTex`.
 
-- If you used the `-nD|--notDot` flag, to run `dot` over your GraphViz file to make the plot:
+- If you used the `-nD, --notDot` flag, to run `dot` over your GraphViz file to make the plot:
 	```
 	dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
 	
