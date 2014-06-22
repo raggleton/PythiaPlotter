@@ -61,9 +61,10 @@ Outputs:
 	python PythiaPlotter.py
 
 	```
+	The output PDF file is `qcdScatterSmall.pdf`.
 	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD|--noDot` flag.
 
-- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF.
+- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF. For example, see `qcdScatterSmallConvert.pdf`, produced by running `python PythiaPlotter.py --convertTex`.
 
 - If you used the `-nD|--notDot` flag, to run `dot` over your GraphViz file to make the plot:
 	```
