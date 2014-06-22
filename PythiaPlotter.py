@@ -1,10 +1,12 @@
 #!/usr/bin/python
-#
+
 import os.path
 from subprocess import call
 from sys import platform as _platform
 import argparse
-#
+import re
+from convertParticleName import convertPIDToName
+
 # Script that converts the event listing from Pythia 8 into a Graphviz
 # file, which is then plotted with dot, and output as a PDF
 # e.g.
@@ -42,6 +44,10 @@ parser.add_argument("-nD", "--noDot",
 parser.add_argument("--openPDF",
                     help="automatically open PDF once plotted",
                     action="store_true")
+parser.add_argument("--convertTex",
+                    help="convert to tex code using psfrag to represent\
+                    particle names properly",
+                    action="store_true")
 parser.add_argument("-v", "--verbose",
                     help="print debug statements to screen",
                     action="store_true")
@@ -53,20 +59,24 @@ inputFilename = args.input
 if not inputFilename:
     inputFilename = "qcdScatterSmall.txt"
 
+# Store path and stem filename (i.e. without .xyz bit)
+name = os.path.basename(inputFilename)
+stemName = os.path.splitext(name)[0]
+
 # Store output graphviz filename
 # Default filename for output graphviz file based on inputFilename
 # if user doesn't specify one
 gvFilename = args.outputGV
 if not gvFilename:
-    name = os.path.basename(inputFilename)
-    gvFilename = os.path.splitext(name)[0]+".gv"
+    gvFilename = stemName+".gv"
 
 # Filename for output PDF
 # Default filename for output PDF based on inputFilename
 # if user doesn't specify one
 pdfFilename = args.outputPDF
 if not pdfFilename:
-    pdfFilename = gvFilename.replace(".gv", ".pdf")
+    pdfFilename = stemName+".pdf"
+    epsFilename = stemName+".eps"
 
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -191,6 +201,7 @@ with open(inputFilename, "r") as inputFile:
             elif not doneFullEvent:
                 fullEvent.append(particle)
 
+    line = ""
     print "Done reading file"
 
 # Add references to mothers
@@ -265,8 +276,8 @@ with open(gvFilename, "w") as gvFile:
 
         # Set special features for initial/final state & interesting particles
         # Final state: box, yellow fill
-        # Initial state: circle (default), green fill
-        # Interesting: red fill (overrides green/yellow fill)
+        # Initial state: circle, green fill
+        # Interesting: red fill (overrides green/yellow fill), keep same shape
         config = ""
         if p.isInteresting or p.isFinalState or p.isInitialState:
             colour = ""
@@ -304,6 +315,9 @@ if args.noDot:
 else:
     print "Producing PDF %s" % pdfFilename
     call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
+    if args.convertTex:
+        print "Producing EPS %s" % epsFilename
+        call(["dot", "-Teps", gvFilename, "-o", epsFilename])
 
 # Automatically open the PDF on the user's system if desired
 if args.openPDF:
@@ -316,3 +330,44 @@ if args.openPDF:
     elif _platform == "win32":
         # Windows
         call(["start", pdfFilename])
+
+# Try and convert all particles into proper names using psfrag
+if args.convertTex:
+    # Read in TeX template file
+    with open("template.tex", "r") as texTemplate:
+        templateLines = texTemplate.readlines()
+
+    # Write new TeX file for the given input file
+    with open(stemName+".tex", "w") as texFile:
+        print "Writing to " + texFile.name
+        for l in templateLines:
+            if "ADDHERE" in l:
+                # Start adding all the relevent lines that psfrag will use
+                for p in fullEvent:
+                    if p.skip or p.getRawName() == "system":
+                        continue
+                    # Need to add a line to Tex file for each particle in PDF
+                    # using a "tag", here that's number:name 
+                    # (i.e. what's in each box in the un-latexed PDF)
+                    # The syntax of the "psfrag" command is:
+                    #    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
+                    # Change the "1.4" to whatever scale factor you want, 
+                    # but 1.4 is pretty good :)
+                    texLine = '\psfrag{NumName}[C][C][1.4][0]{$pNum:texName$}\n'
+                    pNumName = '%s:%s' % (p.number, p.name)
+                    texLine = texLine.replace("NumName", pNumName)
+                    texLine = texLine.replace("pNum", str(p.number))
+                    texLine = texLine.replace("texName", convertPIDToName(p.PID))
+                    if (verbose): print texLine,
+                    texFile.write(texLine)
+            else:
+                texFile.write(re.sub(r'stemName', stemName, l))
+
+    # Now run all the latex, dvips, etc commands to convert into PDF
+    # Unfortunately psfrag doesn't like pdflatex
+    call(["latex", stemName+".tex"])
+    call(["dvips", "-o", stemName+".ps", stemName+".dvi"])
+    call(["ps2pdf", stemName+".ps", pdfFilename])
+else:
+    print "Not converting particle names in PDF to Latex equivalents"
+    print "If you want to do this, please re-run with --convertTex option"

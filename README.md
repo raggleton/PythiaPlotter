@@ -33,8 +33,8 @@ For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the 
 Outputs:
 
 	```
-	usage: PythiaPlotter.py [-h] [-i INPUT] [-oGV OUTPUTGV]
-                              [-oPDF OUTPUTPDF] [-nD] [-v]
+	usage: PythiaPlotter.py [-h] [-i INPUT] [-oGV OUTPUTGV] [-oPDF OUTPUTPDF]
+	                        [-nD] [--openPDF] [--convertTex] [-v]
 
 	Convert Pythia 8 event listing into graph using dot in Graphviz
 
@@ -50,7 +50,9 @@ Outputs:
 	                        output graph PDF filename (if unspecified, defaults to
 	                        INPUT.pdf)
 	  -nD, --noDot          don't get dot to plot the resultant Graphviz file
-      --openPDF             automatically open PDF once plotted
+	  --openPDF             automatically open PDF once plotted
+	  --convertTex          convert to tex code using psfrag to represent particle
+	                        names properly
 	  -v, --verbose         print debug statements to screen
 	```
 
@@ -59,9 +61,11 @@ Outputs:
 	python PythiaPlotter.py
 
 	```
-	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD` flag.
+	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD|--noDot` flag.
 
-- [Optional] Run `dot` over your GraphViz file to make the plot:
+-If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF.
+
+- If you used the '-nD|--notDot' flag, to run `dot` over your GraphViz file to make the plot:
 	```
 	dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
 	
@@ -74,7 +78,7 @@ This will output a PDF file of the event.
 - [ ] Any way to optimise the diagram? Sometimes lines go in weird paths
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Add check to see if PYTHIA output or not
-- [ ] Combine with Latex to represent particle names properly
+- [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
 - [x] Option to auto-open resultant PDF (make default?)
 - [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output
