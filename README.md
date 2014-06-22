@@ -7,7 +7,7 @@ By default, the incoming protons are green circles, and the final-state particle
 For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the Pythia output in `qcdScatterSmall.txt`
 
 ## Requires:
-- graphviz http://www.graphviz.org/Download..php
+- GraphViz http://www.GraphViz.org/Download..php
 
 ## Optional:
 - Pythia 8 http://home.thep.lu.se/~torbjorn/Pythia.html
@@ -36,7 +36,7 @@ Outputs:
 	usage: PythiaPlotter.py [-h] [-i INPUT] [-oGV OUTPUTGV] [-oPDF OUTPUTPDF]
 	                        [-nD] [--openPDF] [--convertTex] [-v]
 
-	Convert Pythia 8 event listing into graph using dot in Graphviz
+	Convert Pythia 8 event listing into graph using dot in GraphViz
 
 	optional arguments:
 	  -h, --help            show this help message and exit
@@ -44,12 +44,12 @@ Outputs:
 	                        input text file with Pythia 8 output (if unspecified,
 	                        defaults to qcdScatterSmall.txt)
 	  -oGV OUTPUTGV, --outputGV OUTPUTGV
-	                        output graphviz filename (if unspecified, defaults to
+	                        output GraphViz filename (if unspecified, defaults to
 	                        INPUT.gz)
 	  -oPDF OUTPUTPDF, --outputPDF OUTPUTPDF
 	                        output graph PDF filename (if unspecified, defaults to
 	                        INPUT.pdf)
-	  -nD, --noDot          don't get dot to plot the resultant Graphviz file
+	  -nD, --noDot          don't get dot to plot the resultant GraphViz file
 	  --openPDF             automatically open PDF once plotted
 	  --convertTex          convert to tex code using psfrag to represent particle
 	                        names properly
