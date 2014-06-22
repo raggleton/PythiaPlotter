@@ -71,6 +71,7 @@ This will output a PDF file of the event.
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
+- [ ] Any way to optimise the diagram? Sometimes lines go in weird paths
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Add check to see if PYTHIA output or not
 - [ ] Combine with Latex to represent particle names properly
@@ -78,6 +79,7 @@ This will output a PDF file of the event.
 - [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output
 - [x] Simplify particle lines where you get repeats e.g. `195:g -> 278:g -> 323:g -> 394:g` to become `195:g -> 394:g`
+	- [ ] Fix - doesn't always work properly :(
 - [x] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
 	- [x] Improve by stripping any `()` from around the particle name to test if == one of interesting particles - allows exact matching (ATM does match to `*particleName*` which fails for say `b` quark)
 - [x] Make a bit more user-friendly
