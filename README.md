@@ -56,16 +56,16 @@ Outputs:
 	  -v, --verbose         print debug statements to screen
 	```
 
-- Run the script to produce a GraphViz file from example output:
+- Run the script to produce a GraphViz file from example PYTHIA8 output (in `qcdScatterSmall.txt`):
 	```
 	python PythiaPlotter.py
 
 	```
 	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD|--noDot` flag.
 
--If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF.
+- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF.
 
-- If you used the '-nD|--notDot' flag, to run `dot` over your GraphViz file to make the plot:
+- If you used the `-nD|--notDot` flag, to run `dot` over your GraphViz file to make the plot:
 	```
 	dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
 	
