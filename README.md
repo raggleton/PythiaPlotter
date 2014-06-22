@@ -79,7 +79,7 @@ This will output a PDF file of the event.
 - [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output
 - [x] Simplify particle lines where you get repeats e.g. `195:g -> 278:g -> 323:g -> 394:g` to become `195:g -> 394:g`
-	- [ ] Fix - doesn't always work properly :(
+	- [ ] Fix - doesn't always work properly :confused:
 - [x] Add option of highlighting user-specified particles in the graph (e.g. interested in production of certain particles)
 	- [x] Improve by stripping any `()` from around the particle name to test if == one of interesting particles - allows exact matching (ATM does match to `*particleName*` which fails for say `b` quark)
 - [x] Make a bit more user-friendly
