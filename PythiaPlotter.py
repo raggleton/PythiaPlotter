@@ -12,6 +12,10 @@ from convertParticleName import convertPIDToName
 # e.g.
 # python PythiaPlotter.py
 #
+# If you want the PDf to open automatically after processing, use --openPDF
+#
+# If you want nice looking particle names, use the --convertTex option.
+#
 # Note this script outputs a graphviz file and automatically plots it with dot.
 # If you don't want it to, use -nD|--noDot flag, and use dot command manually,
 # e.g.
