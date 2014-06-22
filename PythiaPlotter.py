@@ -7,7 +7,7 @@ import argparse
 import re
 from convertParticleName import convertPIDToName
 
-# Script that converts the event listing from Pythia 8 into a Graphviz
+# Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with dot, and output as a PDF
 # e.g.
 # python PythiaPlotter.py
@@ -16,8 +16,8 @@ from convertParticleName import convertPIDToName
 #
 # If you want nice looking particle names, use the --convertTex option.
 #
-# Note this script outputs a graphviz file and automatically plots it with dot.
-# If you don't want it to, use -nD|--noDot flag, and use dot command manually,
+# Note this script outputs a GraphViz file and automatically plots it with dot.
+# If you don't want it to, use -nD, --noDot flag, and use dot command manually,
 # e.g.
 #
 # dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
@@ -31,19 +31,19 @@ from convertParticleName import convertPIDToName
 # Setup commandline args parser
 parser = argparse.ArgumentParser(
     description="Convert Pythia 8 event listing into graph using \
-    dot in Graphviz"
+    dot in GraphViz"
 )
 parser.add_argument("-i", "--input",
                     help="input text file with Pythia 8 output \
                     (if unspecified, defaults to qcdScatterSmall.txt)")
 parser.add_argument("-oGV", "--outputGV",
-                    help="output graphviz filename \
+                    help="output GraphViz filename \
                     (if unspecified, defaults to INPUT.gz)")
 parser.add_argument("-oPDF", "--outputPDF",
                     help="output graph PDF filename \
                     (if unspecified, defaults to INPUT.pdf)")
 parser.add_argument("-nD", "--noDot",
-                    help="don't get dot to plot the resultant Graphviz file",
+                    help="don't get dot to plot the resultant GraphViz file",
                     action="store_true")
 parser.add_argument("--openPDF",
                     help="automatically open PDF once plotted",
@@ -67,8 +67,8 @@ if not inputFilename:
 name = os.path.basename(inputFilename)
 stemName = os.path.splitext(name)[0]
 
-# Store output graphviz filename
-# Default filename for output graphviz file based on inputFilename
+# Store output GraphViz filename
+# Default filename for output GraphViz file based on inputFilename
 # if user doesn't specify one
 gvFilename = args.outputGV
 if not gvFilename:
@@ -253,12 +253,12 @@ if removeRedundants:
             # whatever is stored in mum is the suitable mother for p
             p.mothers[0] = mum
 
-# Write relationships to graphviz file
+# Write relationships to GraphViz file
 with open(gvFilename, "w") as gvFile:
 
-    print "Writing graphviz file to %s" % gvFilename
+    print "Writing GraphViz file to %s" % gvFilename
 
-    # Now process all the particles and add appropriate links to graphviz file
+    # Now process all the particles and add appropriate links to GraphViz file
     # Start from the end and work backwards to pick up all connections
     # (doesn't work if you start at beginning and follow daughters)
     gvFile.write("digraph g {\n    rankdir = RL;\n")
@@ -346,7 +346,8 @@ if args.convertTex:
                     # Change the "1.4" to whatever scale factor you want,
                     # but 1.4 is pretty good :)
                     pNumName = '%s:%s' % (p.number, p.name)
-                    texLine = '\psfrag{%s}[C][C][1.4][0]{$%s:%s$}\n' % (pNumName, str(p.number), convertPIDToName(p.PID))
+                    texLine = '\psfrag{%s}[C][C][1.4][0]{$%s:%s$}\n' \
+                        % (pNumName, str(p.number), convertPIDToName(p.PID))
                     if (verbose): print texLine,
                     texFile.write(texLine)
             else:
@@ -354,7 +355,8 @@ if args.convertTex:
 
     # Now run all the latex, dvips, etc commands to convert into PDF
     # Unfortunately psfrag doesn't like pdflatex
-    call(["latex", "-interaction=nonstopmode", stemName+".tex"]) # nonstopmode ignores errors!!!
+    # nonstopmode ignores errors!!!
+    call(["latex", "-interaction=nonstopmode", stemName+".tex"])
     call(["dvips", "-o", stemName+".ps", stemName+".dvi"])
     call(["ps2pdf", stemName+".ps", pdfFilename])
 else:

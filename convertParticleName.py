@@ -6,29 +6,30 @@ import re
 # To add new particles, either add here or in pdg_all.tex
 pidDict = {}
 with open("pdg_all.tex", "r") as particleList:
-	for line in particleList:
-		(key, val) = line.split(" ",1) # split based on first occurence of " "
-		# print key, val,
-		pidDict[int(key)] = val.strip()
+    for line in particleList:
+        (key, val) = line.split(" ", 1)  # split based on 1st occurence of " "
+        # print key, val,
+        pidDict[int(key)] = val.strip()
+
 
 # This converts from PDGIDs and returns a Latex form for the name,
 # also deals with antiparticles
 def convertPIDToName(PID):
-	name = pidDict[abs(PID)]
-	# Remove those annoying masses in parentheses
-	name = re.sub(r"\([0-9]*\)", "", name)
-	
-	if PID < 0:
-		if "+" in name:
-			name = name.replace('+', '-')
-		elif "-" in name:
-			name = name.replace("-", "+")
-		else:
-			# Only want the bar over the main bit of text - ignore any _ or ^
-			pattern = re.compile(r"[_\^]")
-			stem = pattern.search(name)
-			if stem: 
-				name = "\\overline{"+name[:stem.start()]+"}"+name[stem.end()-1:]
-			else:
-				name = "\\overline{"+name+"}"
-	return name
+    name = pidDict[abs(PID)]
+    # Remove those annoying masses in parentheses
+    name = re.sub(r"\([0-9]*\)", "", name)
+
+    if PID < 0:
+        if "+" in name:
+            name = name.replace('+', '-')
+        elif "-" in name:
+            name = name.replace("-", "+")
+        else:
+            # Only want the bar over the main bit of text - ignore any _ or ^
+            pattern = re.compile(r"[_\^]")
+            stem = pattern.search(name)
+            if stem:
+                name = "\\overline{"+name[:stem.start()]+"}"+name[stem.end()-1:]
+            else:
+                name = "\\overline{"+name+"}"
+    return name
