@@ -66,7 +66,7 @@ Outputs:
 
 ## Notes:
 
-- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. Note that this is still experimental. In particular, running latex gives errors. Keep pressing `ENTER` though and it will still produce a nice PDF. For example, see `qcdScatterSmallConvert.pdf`, produced by running `python PythiaPlotter.py --convertTex`.
+- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. **Note that this is still experimental.** In particular, running latex gives errors. It will still produce a nice PDF. For example, see `qcdScatterSmallConvert.pdf`, produced by running `python PythiaPlotter.py --convertTex`.
 
 - If you used the `-nD, --notDot` flag, to run `dot` over your GraphViz file to make the plot:
 	```
@@ -78,10 +78,9 @@ This will output a PDF file of the event.
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
+- [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
 - [ ] Any way to optimise the diagram? Sometimes lines go in weird paths
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
-- [ ] Add check to see if PYTHIA output or not
-- [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
 - [x] Option to auto-open resultant PDF (make default?)
 - [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output

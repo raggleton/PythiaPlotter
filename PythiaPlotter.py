@@ -335,11 +335,11 @@ if args.convertTex:
                     if p.skip or p.getRawName() == "system":
                         continue
                     # Need to add a line to Tex file for each particle in PDF
-                    # using a "tag", here that's number:name 
+                    # using a "tag", here that's number:name
                     # (i.e. what's in each box in the un-latexed PDF)
                     # The syntax of the "psfrag" command is:
                     #    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
-                    # Change the "1.4" to whatever scale factor you want, 
+                    # Change the "1.4" to whatever scale factor you want,
                     # but 1.4 is pretty good :)
                     texLine = '\psfrag{NumName}[C][C][1.4][0]{$pNum:texName$}\n'
                     pNumName = '%s:%s' % (p.number, p.name)
@@ -353,7 +353,7 @@ if args.convertTex:
 
     # Now run all the latex, dvips, etc commands to convert into PDF
     # Unfortunately psfrag doesn't like pdflatex
-    call(["latex", stemName+".tex"])
+    call(["latex", "-interaction=nonstopmode", stemName+".tex"]) # nonstopmode ignores errors!!!
     call(["dvips", "-o", stemName+".ps", stemName+".dvi"])
     call(["ps2pdf", stemName+".ps", pdfFilename])
 else:

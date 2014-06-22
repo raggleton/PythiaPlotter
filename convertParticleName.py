@@ -21,5 +21,11 @@ def convertPIDToName(PID):
 		elif "-" in name:
 			name = re.sub('-', r'+', name)
 		else:
-			name = "\\bar{"+name+"}"
+			# Only want the bar over the main bit of text - ignore any _ or ^
+			pattern = re.compile(r"[_\^]")
+			stem = pattern.search(name)
+			if stem: 
+				name = "\\overline{"+name[:stem.start()]+"}"+name[stem.end()-1:]
+			else:
+				name = "\\overline{"+name+"}"
 	return name
