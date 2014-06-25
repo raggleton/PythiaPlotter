@@ -64,12 +64,13 @@ Outputs:
 	  -v, --verbose         print debug statements to screen
 	```
 
-- Run the script to produce a GraphViz PDF from example PYTHIA8 output (in `qcdScatterSmall.txt`):
+- Run the script to produce a GraphViz PDF from example PYTHIA8 output, using pdflatex (see `qcdScatterSmall.txt`):
 	```
 	python PythiaPlotter.py
 
 	```
-	The output PDF file is `qcdScatterSmall.pdf`.
+	The output PDF file is `qcdScatterSmall.pdf` unless the `-oPDF` option is used.
+
 	Note that by default, this will also create GraphViz and tex files. The latter uses the GraphViz file to produce a PDF with nice particle names. If you don't want nice names, or don't want to install all the extra stuff listed udner "Optional" then use `--rawNames` flag
 
 ## Notes:
@@ -83,6 +84,7 @@ Outputs:
 	- [ ] Do test to see if the necessary programs exist
 - [ ] Use pyparsing to ease parsing of file/event info?
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+- [ ] Improve parsing of input file eg if only full event, or other listings
 - [x] Any way to optimise the diagram? Sometimes lines go in weird paths *solved using `straightedges` option in dot*
 - [x] Option to auto-open resultant PDF (make default?)
 - [x] Command-line option for input txt filename (and output?)
