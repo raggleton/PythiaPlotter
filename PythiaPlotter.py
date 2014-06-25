@@ -152,7 +152,7 @@ class Particle:
         self.skip = False  # Whether to skip when writing nodes to file
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
-        self.isInteresting = True  # Whether the user wants this highlighted
+        self.isInteresting = False  # Whether the user wants this highlighted
         self.isFinalState = False
         self.isInitialState = False
 
@@ -168,8 +168,9 @@ class Particle:
             self.m2 = m1
 
         # Remove any () and test if name in user's interesting list
-        if self.name.translate(None, '()') in interesting:
-            self.isInteresting = True
+        for i in interesting:
+            if self.name.translate(None, '()') in i[1]:
+                self.isInteresting = True
 
     def __eq__(self, other):
         return self.number == other.number
@@ -336,10 +337,9 @@ with open(gvFilename, "w") as gvFile:
             
             if p.isInteresting:
                 for section in interesting:
-                    if p.name in section[1]:
+                    if p.getRawName() in section[1]:
                         colour = section[0]
-            if not colour:
-                colour = "\"\""
+
             # No $$ are required for tex names as mathmode enabled
             # so everything is mathmode
             config = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
