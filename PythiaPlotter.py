@@ -151,6 +151,7 @@ class Particle:
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
         self.isInteresting = False  # Whether the user wants this highlighted
+        self.nodeColour = ""
         self.isFinalState = False
         self.isInitialState = False
 
@@ -169,6 +170,7 @@ class Particle:
         for i in interesting:
             if self.name.translate(None, '()') in i[1]:
                 self.isInteresting = True
+                self.nodeColour = i[0]
 
     def __eq__(self, other):
         return self.number == other.number
@@ -334,9 +336,9 @@ with open(gvFilename, "w") as gvFile:
                 colour = "green"
             
             if p.isInteresting:
-                for section in interesting:
-                    if p.getRawName() in section[1]:
-                        colour = section[0]
+                colour = p.nodeColour
+            else:
+                p.nodeColour = colour
 
             # No $$ are required for tex names as mathmode enabled
             # so everything is mathmode
