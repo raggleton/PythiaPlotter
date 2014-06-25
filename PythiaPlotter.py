@@ -1,15 +1,17 @@
 #!/usr/bin/python
 import os.path
+import subprocess
 from subprocess import call
 from sys import platform as _platform
 import argparse
 import re
+import imp
 from convertParticleName import convertPIDToTexName
 #
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
 # e.g.
-# 
+#
 # python PythiaPlotter.py
 #
 # If you want the PDf to open automatically after processing, use --openPDF
@@ -83,7 +85,11 @@ if not pdfFilename:
 # include antiparticles
 # Make list in args?
 # And option for different colours?
-interesting = ["tau+", "tau-", "mu+", "mu-", "b", "bbar", "c", "ccbar"]
+# interesting = ["tau+", "tau-", "mu+", "mu-", "b", "bbar", "c", "ccbar"]
+
+interesting = [["cyan", ["mu+", "mu-"]],
+               ["red", ["b", "bbar"]]]
+
 
 # Option to remove redundant particles from graph.
 # Useful for cleaning up the graph, but don't enable if you want to debug the
@@ -96,6 +102,39 @@ verbose = args.verbose
 ###############################################################################
 # DO NOT EDIT ANYTHING BELOW HERE
 ###############################################################################
+
+# Check if necessary programs & modules exist/run properly
+def testProgramRuns(progName):
+    try:
+        # Storing in string stifles output
+        prog_out = subprocess.check_output([progName, "-h"], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as cpe:
+        args.rawNames = True
+        print(cpe.returncode)
+        print(cpe.output)
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            args.rawNames = True
+            print "You need to install " + progName + \
+                  "or add it to PATH variable"
+            print(e)
+        else:
+            # Something else went wrong while trying to run `wget`
+            print(e)
+
+
+def testModuleExists(mod):
+    try:
+        imp.find_module(mod)
+    except ImportError:
+        print "!!! Module " + mod + " doesn't exist"
+        print "No fancy particle names for you!"
+        args.rawNames = True
+
+
+testProgramRuns("dot2tex")
+testModuleExists("pydot")
+testModuleExists("pyparsing")
 
 
 class Particle:
@@ -113,7 +152,7 @@ class Particle:
         self.skip = False  # Whether to skip when writing nodes to file
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
-        self.isInteresting = False  # Whether the user wants this highlighted
+        self.isInteresting = True  # Whether the user wants this highlighted
         self.isFinalState = False
         self.isInitialState = False
 
@@ -296,7 +335,11 @@ with open(gvFilename, "w") as gvFile:
                 colour = "green"
             
             if p.isInteresting:
-                colour = "cyan"
+                for section in interesting:
+                    if p.name in section[1]:
+                        colour = section[0]
+            if not colour:
+                colour = "\"\""
             # No $$ are required for tex names as mathmode enabled
             # so everything is mathmode
             config = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
@@ -336,6 +379,8 @@ else:
             templateLines = texTemplate.readlines()
 
         # Write new TeX file for the given input file using the GraphViz file
+        # THIS IS SO HACKY - FIX ME
+        # MAYBE PASS PARAM TO TEX FILE?
         with open(stemName+".tex", "w") as texFile:
             print "Writing to " + texFile.name
             for l in templateLines:

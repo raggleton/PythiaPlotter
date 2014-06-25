@@ -8,15 +8,15 @@ For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the 
 
 ## Requires:
 - GraphViz http://www.GraphViz.org/Download..php
-Optional: (if you don't install these, you can only use `--rawNames` option)
-- dot2tex: `pip install dot2tex`
+
+## Optional: (if you don't install these, you can only use `--rawNames` option)
+
+- dot2tex: `pip install dot2tex` https://github.com/kjellmf/dot2tex
 - dot2texi: check if included in your TeX distribution (use TeX Live utility or equivalent)
 - TikZ: check if included in your TeX distribution (use TeX Live utility or equivalent)
-- pydot: `pip install pydot`
-- pyparsing: `pip install pyparsing`
-
-## Optional:
-- Pythia 8 http://home.thep.lu.se/~torbjorn/Pythia.html
+- pydot: `pip install pydot` https://code.google.com/p/pydot/
+- pyparsing: `pip install pyparsing` http://pyparsing.wikispaces.com/
+- Pythia 8 http://home.thep.lu.se/~torbjorn/Pythia.html (for actually generating events)
 
 ## Instructions:
 
@@ -85,7 +85,7 @@ Outputs:
 - [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
 	- [ ] Redo ugly rewriting gv into tex file by linking or something
 	- [ ] Add user option to pass options to dot2texi
-	- [ ] Do test to see if the necessary programs exist
+	- [x] Do test to see if the necessary programs exist
 - [ ] Use pyparsing to ease parsing of file/event info?
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Improve parsing of input file eg if only full event, or other listings
