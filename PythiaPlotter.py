@@ -82,14 +82,12 @@ if not pdfFilename:
     pdfFilename = stemName+".pdf"
 
 # Interesting particles we wish to highlight
+# Can do different particles in different colours
+# Relies on matching names though...
 # include antiparticles
 # Make list in args?
-# And option for different colours?
-# interesting = ["tau+", "tau-", "mu+", "mu-", "b", "bbar", "c", "ccbar"]
-
 interesting = [["cyan", ["mu+", "mu-"]],
                ["red", ["b", "bbar"]]]
-
 
 # Option to remove redundant particles from graph.
 # Useful for cleaning up the graph, but don't enable if you want to debug the
