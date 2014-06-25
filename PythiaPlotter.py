@@ -25,7 +25,7 @@ from convertParticleName import convertPIDToTexName
 # Setup commandline args parser
 parser = argparse.ArgumentParser(
     description="Convert Pythia 8 event listing into graph using \
-    dot in GraphViz"
+    dot/GraphViz/dot2tex/pdflatex"
 )
 parser.add_argument("-i", "--input",
                     help="input text file with Pythia 8 output \
@@ -46,8 +46,8 @@ parser.add_argument("--rawNames",
                     help="don't convert particle names to tex, use raw string \
                     names - faster but less pretty",
                     action="store_true")
-parser.add_argument("--noStraightLines",
-                    help="Don't use straight edges, curvy instead",
+parser.add_argument("--noStraightEdges",
+                    help="don't use straight edges, curvy instead",
                     action="store_true")
 parser.add_argument("-v", "--verbose",
                     help="print debug statements to screen",
@@ -81,6 +81,7 @@ if not pdfFilename:
 # Interesting particles we wish to highlight
 # include antiparticles
 # Make list in args?
+# And option for different colours?
 interesting = ["tau+", "tau-", "mu+", "mu-", "b", "bbar", "c", "ccbar"]
 
 # Option to remove redundant particles from graph.

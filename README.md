@@ -8,6 +8,12 @@ For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the 
 
 ## Requires:
 - GraphViz http://www.GraphViz.org/Download..php
+Optional: (if you don't install these, you can only use `--rawNames` option)
+- dot2tex: `pip install dot2tex`
+- dot2texi: check if included in your TeX distribution (use TeX Live utility or equivalent)
+- TikZ: check if included in your TeX distribution (use TeX Live utility or equivalent)
+- pydot: `pip install pydot`
+- pyparsing: `pip install pyparsing`
 
 ## Optional:
 - Pythia 8 http://home.thep.lu.se/~torbjorn/Pythia.html
@@ -34,9 +40,10 @@ Outputs:
 
 	```
 	usage: PythiaPlotter.py [-h] [-i INPUT] [-oGV OUTPUTGV] [-oPDF OUTPUTPDF]
-	                        [-nD] [--openPDF] [--convertTex] [-v]
+                        [--openPDF] [--noPDF] [--rawNames] [--noStraightEdges]
+                        [-v]
 
-	Convert Pythia 8 event listing into graph using dot in GraphViz
+	Convert Pythia 8 event listing into graph using dot/GraphViz/dot2tex/pdflatex
 
 	optional arguments:
 	  -h, --help            show this help message and exit
@@ -49,10 +56,11 @@ Outputs:
 	  -oPDF OUTPUTPDF, --outputPDF OUTPUTPDF
 	                        output graph PDF filename (if unspecified, defaults to
 	                        INPUT.pdf)
-	  -nD, --noDot          don't get dot to plot the resultant GraphViz file
 	  --openPDF             automatically open PDF once plotted
-	  --convertTex          convert to tex code using psfrag to represent particle
-	                        names properly
+	  --noPDF               don't convert to PDF
+	  --rawNames            don't convert particle names to tex, use raw string
+	                        names - faster but less pretty
+	  --noStraightEdges     don't use straight edges, curvy instead
 	  -v, --verbose         print debug statements to screen
 	```
 
@@ -79,8 +87,12 @@ This will output a PDF file of the event.
 
 ## Future plans
 - [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
-- [ ] Any way to optimise the diagram? Sometimes lines go in weird paths
+	- [ ] Redo ugly rewriting gv into tex file by linking or something
+	- [ ] Add user option to pass options to dot2texi
+	- [ ] Do test to see if the necessary programs exist
+- [ ] Use pyparsing to ease parsing of file/event info?
 - [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+- [x] Any way to optimise the diagram? Sometimes lines go in weird paths *solved using `straightedges` option in dot*
 - [x] Option to auto-open resultant PDF (make default?)
 - [x] Command-line option for input txt filename (and output?)
 - [x] Parse full Pythia output
