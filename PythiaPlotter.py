@@ -338,7 +338,7 @@ else:
         with open(stemName+".tex", "w") as texFile:
             print "Writing to " + texFile.name
             for l in templateLines:
-                if "straightedges" in l:
+                if "straightedges" in l and args.noStraightEdges:
                     texFile.write(re.sub(r'straightedges,', "", l))
                 elif "input" in l:
                     with open(gvFilename, "r") as gvFile:
