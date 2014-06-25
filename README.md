@@ -64,24 +64,15 @@ Outputs:
 	  -v, --verbose         print debug statements to screen
 	```
 
-- Run the script to produce a GraphViz file from example PYTHIA8 output (in `qcdScatterSmall.txt`):
+- Run the script to produce a GraphViz PDF from example PYTHIA8 output (in `qcdScatterSmall.txt`):
 	```
 	python PythiaPlotter.py
 
 	```
 	The output PDF file is `qcdScatterSmall.pdf`.
-	Note that by default, this will also run `dot` over the GraphViz file to produce a PDF plot. If you don't want it to, use `-nD, --noDot` flag.
+	Note that by default, this will also create GraphViz and tex files. The latter uses the GraphViz file to produce a PDF with nice particle names. If you don't want nice names, or don't want to install all the extra stuff listed udner "Optional" then use `--rawNames` flag
 
 ## Notes:
-
-- If you want all the particle names in the resultant PDF to look nice, use the `--convertTex` flag. **Note that this is still experimental.** In particular, running latex gives errors. It will still produce a nice PDF. For example, see `qcdScatterSmallConvert.pdf`, produced by running `python PythiaPlotter.py --convertTex`.
-
-- If you used the `-nD, --notDot` flag, to run `dot` over your GraphViz file to make the plot:
-	```
-	dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
-	
-	```
-This will output a PDF file of the event.
 
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
