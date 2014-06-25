@@ -71,9 +71,13 @@ Outputs:
 	```
 	The output PDF file is `qcdScatterSmall.pdf` unless the `-oPDF` option is used.
 
+	Note, if you have a lot of particles, this can take a little while, so be patient.
+
 	Note that by default, this will also create GraphViz and tex files. The latter uses the GraphViz file to produce a PDF with nice particle names. If you don't want nice names, or don't want to install all the extra stuff listed udner "Optional" then use `--rawNames` flag
 
 ## Notes:
+
+- Please run with `python PythiaPlotter.py` not `./PythiaPlotter.py`. For some reason, some things don't work properly using the latter **TO BE CONFIRMED**
 
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 

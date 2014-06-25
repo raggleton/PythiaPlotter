@@ -9,6 +9,7 @@ from convertParticleName import convertPIDToTexName
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
 # e.g.
+# 
 # python PythiaPlotter.py
 #
 # If you want the PDf to open automatically after processing, use --openPDF
@@ -24,7 +25,7 @@ from convertParticleName import convertPIDToTexName
 
 # Setup commandline args parser
 parser = argparse.ArgumentParser(
-    description="Convert Pythia 8 event listing into graph using \
+    description="Convert PYTHIA8 event listing into graph using \
     dot/GraphViz/dot2tex/pdflatex"
 )
 parser.add_argument("-i", "--input",
@@ -32,7 +33,7 @@ parser.add_argument("-i", "--input",
                     (if unspecified, defaults to qcdScatterSmall.txt)")
 parser.add_argument("-oGV", "--outputGV",
                     help="output GraphViz filename \
-                    (if unspecified, defaults to INPUT.gz)")
+                    (if unspecified, defaults to INPUT.gv)")
 parser.add_argument("-oPDF", "--outputPDF",
                     help="output graph PDF filename \
                     (if unspecified, defaults to INPUT.pdf)")
@@ -287,15 +288,15 @@ with open(gvFilename, "w") as gvFile:
         if args.rawNames:
             label = p.name
         if p.isInteresting or p.isInitialState or p.isFinalState:
+            if p.isFinalState:
+                shape = "box"
+                colour = "yellow"
+            elif p.isInitialState:
+                shape = "circle"
+                colour = "green"
+            
             if p.isInteresting:
                 colour = "cyan"
-            else:
-                if p.isFinalState:
-                    shape = "box"
-                    colour = "yellow"
-                elif p.isInitialState:
-                    shape = "circle"
-                    colour = "green"
             # No $$ are required for tex names as mathmode enabled
             # so everything is mathmode
             config = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
@@ -347,8 +348,8 @@ else:
                 else:
                     texFile.write(re.sub(r'stemName', stemName, l))
 
-        call(["pdflatex", "--shell-escape", "-jobname", \
-            os.path.splitext(pdfFilename)[0], stemName+".tex"])
+        call(["pdflatex", "--shell-escape", "-jobname",
+              os.path.splitext(pdfFilename)[0], stemName+".tex"])
 
     # Automatically open the PDF on the user's system if desired
     if args.openPDF:
