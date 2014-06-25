@@ -1,3 +1,11 @@
+% Run with:
+% pdflatex --shell-escape -jobname myPDF template.tex
+\documentclass{standalone}
+\usepackage{dot2texi}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+\begin{dot2tex}[dot,mathmode,straightedges,noautosize]
 digraph g {
     rankdir = RL;
     348 -> { 344 } [dir="back"]
@@ -531,4 +539,5 @@ digraph g {
     2 [label="2:p", shape=circle, style=filled, fillcolor=green]
     1 [label="1:p", shape=circle, style=filled, fillcolor=green]
   {rank=same;1 2 } // Put initial particles on same level
-}
+}\end{dot2tex}
+\end{document}
