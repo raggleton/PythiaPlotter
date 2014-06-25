@@ -1,26 +1,20 @@
 #!/usr/bin/python
-
 import os.path
 from subprocess import call
 from sys import platform as _platform
 import argparse
 import re
-from convertParticleName import convertPIDToName
-
+from convertParticleName import convertPIDToTexName
+#
 # Script that converts the event listing from Pythia 8 into a GraphViz
-# file, which is then plotted with dot, and output as a PDF
+# file, which is then plotted with either latex or dot, and output as a PDF
 # e.g.
 # python PythiaPlotter.py
 #
 # If you want the PDf to open automatically after processing, use --openPDF
 #
-# If you want nice looking particle names, use the --convertTex option.
-#
-# Note this script outputs a GraphViz file and automatically plots it with dot.
-# If you don't want it to, use -nD, --noDot flag, and use dot command manually,
-# e.g.
-#
-# dot -Tpdf qcdScatterSmall.gv -o qcdScatterSmall.pdf
+# This script outputs a GraphViz file and automatically plots it.
+# By defualt, it uses pdflatex and dot2tex(i) to make nice particle names.
 #
 # Robin Aggleton 2014
 #
@@ -42,15 +36,18 @@ parser.add_argument("-oGV", "--outputGV",
 parser.add_argument("-oPDF", "--outputPDF",
                     help="output graph PDF filename \
                     (if unspecified, defaults to INPUT.pdf)")
-parser.add_argument("-nD", "--noDot",
-                    help="don't get dot to plot the resultant GraphViz file",
-                    action="store_true")
 parser.add_argument("--openPDF",
                     help="automatically open PDF once plotted",
                     action="store_true")
-parser.add_argument("--convertTex",
-                    help="convert to tex code using psfrag to represent\
-                    particle names properly",
+parser.add_argument("--noPDF",
+                    help="don't convert to PDF",
+                    action="store_true")
+parser.add_argument("--rawNames",
+                    help="don't convert particle names to tex, use raw string \
+                    names - faster but less pretty",
+                    action="store_true")
+parser.add_argument("--noStraightLines",
+                    help="Don't use straight edges, curvy instead",
                     action="store_true")
 parser.add_argument("-v", "--verbose",
                     help="print debug statements to screen",
@@ -80,7 +77,6 @@ if not gvFilename:
 pdfFilename = args.outputPDF
 if not pdfFilename:
     pdfFilename = stemName+".pdf"
-    epsFilename = stemName+".eps"
 
 # Interesting particles we wish to highlight
 # include antiparticles
@@ -106,8 +102,9 @@ class Particle:
     def __init__(self, number, PID, name, status, m1, m2):
         # Class instance variables
         self.number = number  # number in fullEvent listing - unique
-        self.PID = PID  # PDGID value
+        self.PID = int(PID)  # PDGID value
         self.name = name  # particle name e.b nu_mu
+        self.texname = convertPIDToTexName(PID)  # name in tex e.g pi^0
         self.status = status  # status of particle. If > 0, final state
         self.m1 = m1  # number of mother 1
         self.m2 = m2  # number of mother 2
@@ -129,6 +126,7 @@ class Particle:
         if ((m1 != 0) and (m2 == 0)):
             self.m2 = m1
 
+        # Remove any () and test if name in user's interesting list
         if self.name.translate(None, '()') in interesting:
             self.isInteresting = True
 
@@ -257,7 +255,6 @@ if removeRedundants:
 with open(gvFilename, "w") as gvFile:
 
     print "Writing GraphViz file to %s" % gvFilename
-
     # Now process all the particles and add appropriate links to GraphViz file
     # Start from the end and work backwards to pick up all connections
     # (doesn't work if you start at beginning and follow daughters)
@@ -267,110 +264,99 @@ with open(gvFilename, "w") as gvFile:
         if p.skip or p.getRawName() == "system":
             continue
 
-        pNumName = '"%s:%s"' % (p.number, p.name)
-        entry = '  %s -> { ' % pNumName
+        entry = '    %s -> { ' % p.number
 
         for m in p.mothers:
-            entry += '"%s:%s" ' % (m.number, m.name)
+            entry += '%s ' % m.number
 
         entry += "} [dir=\"back\"]\n"
 
         if verbose: print entry,
         if p.number > 2: gvFile.write(entry)  # don't want p+ -> system entries
 
+        # Write labels for text for each node (raw name or tex)
         # Set special features for initial/final state & interesting particles
         # Final state: box, yellow fill
         # Initial state: circle, green fill
-        # Interesting: red fill (overrides green/yellow fill), keep same shape
+        # Interesting: cyan fill (overrides green/yellow fill), keep same shape
         config = ""
-        if p.isInteresting or p.isFinalState or p.isInitialState:
-            colour = ""
-            shape = "box"
+        colour = "\"\""
+        shape = "\"\""
+        label = p.texname
+        if args.rawNames:
+            label = p.name
+        if p.isInteresting or p.isInitialState or p.isFinalState:
             if p.isInteresting:
-                colour = "red"
-                if not p.isFinalState:
-                    shape = "\"\""
+                colour = "cyan"
             else:
                 if p.isFinalState:
+                    shape = "box"
                     colour = "yellow"
                 elif p.isInitialState:
-                    colour = "green"
                     shape = "circle"
-
-            config = '  %s [label=%s, shape=%s, style=filled, fillcolor=%s]\n'\
-                % (pNumName, pNumName, shape, colour)
-
-        if config:
-            gvFile.write(config)
-            if verbose: print config,
+                    colour = "green"
+            # No $$ are required for tex names as mathmode enabled
+            # so everything is mathmode
+            config = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
+                % (p.number, p.number, label, shape, colour)
+        else:
+            config = '    %s [label="%s:%s"]\n'\
+                % (p.number, p.number, label)
+        gvFile.write(config)
+        if verbose: print config,
 
     # Set all initial particles to be level in diagram
     rank = "  {rank=same;"
     for s in sameInitialOnes:
-        rank += '"%s:%s" ' % (s.number, s.name)
+        rank += '%s ' % (s.number)
     gvFile.write(rank+"} // Put initial particles on same level\n")
     gvFile.write("}")
+    gvFile.write("")
 
-# Run dot to produce the PDF
-if args.noDot:
-    print "Not doing dot stage. To do dot stage run:"
-    print
-    print "    dot -Tpdf %s -o %s" % (gvFilename, pdfFilename)
+# Run pdflatex or dot to produce the PDF
+if args.noPDF:
+    print ""
+    print "Not converting to PDF"
+    print "If you want a PDF, run without --noPDF"
+    print "and if you only want the raw names (faster to produce),"
+    print " then run with --rawNames"
+    print ""
 else:
-    print "Producing PDF %s" % pdfFilename
-    call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
-    if args.convertTex:
-        print "Producing EPS %s" % epsFilename
-        call(["dot", "-Teps", gvFilename, "-o", epsFilename])
+    if args.rawNames:
+        # Just use dot to make a pdf quickly
+        print "Producing PDF %s" % pdfFilename
+        call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
 
-# Try and convert all particles into proper names using psfrag
-if args.convertTex:
-    # Read in TeX template file
-    with open("template.tex", "r") as texTemplate:
-        templateLines = texTemplate.readlines()
+    else:
+        # Convert all particles into proper names using dot2texi & dot2tex
+        # Read in TeX template file
+        with open("template.tex", "r") as texTemplate:
+            templateLines = texTemplate.readlines()
 
-    # Write new TeX file for the given input file
-    with open(stemName+".tex", "w") as texFile:
-        print "Writing to " + texFile.name
-        for l in templateLines:
-            if "ADDHERE" in l:
-                # Start adding all the relevent lines that psfrag will use
-                for p in fullEvent:
-                    if p.skip or p.getRawName() == "system":
-                        continue
-                    # Need to add a line to Tex file for each particle in PDF
-                    # using a "tag", here that's number:name
-                    # (i.e. what's in each box in the un-latexed PDF)
-                    # The syntax of the "psfrag" command is:
-                    #    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
-                    # Change the "1.4" to whatever scale factor you want,
-                    # but 1.4 is pretty good :)
-                    pNumName = '%s:%s' % (p.number, p.name)
-                    texLine = '\psfrag{%s}[C][C][1.4][0]{$%s:%s$}\n' \
-                        % (pNumName, str(p.number), convertPIDToName(p.PID))
-                    if (verbose): print texLine,
-                    texFile.write(texLine)
-            else:
-                texFile.write(re.sub(r'stemName', stemName, l))
+        # Write new TeX file for the given input file using the GraphViz file
+        with open(stemName+".tex", "w") as texFile:
+            print "Writing to " + texFile.name
+            for l in templateLines:
+                if "straightedges" in l:
+                    texFile.write(re.sub(r'straightedges,', "", l))
+                elif "input" in l:
+                    with open(gvFilename, "r") as gvFile:
+                        for line in gvFile:
+                            texFile.write(line)
+                else:
+                    texFile.write(re.sub(r'stemName', stemName, l))
 
-    # Now run all the latex, dvips, etc commands to convert into PDF
-    # Unfortunately psfrag doesn't like pdflatex
-    # nonstopmode ignores errors!!!
-    call(["latex", "-interaction=nonstopmode", stemName+".tex"])
-    call(["dvips", "-o", stemName+".ps", stemName+".dvi"])
-    call(["ps2pdf", stemName+".ps", pdfFilename])
-else:
-    print "Not converting particle names in PDF to Latex equivalents"
-    print "If you want to do this, please re-run with --convertTex option"
+        call(["pdflatex", "--shell-escape", "-jobname", \
+            os.path.splitext(pdfFilename)[0], stemName+".tex"])
 
-# Automatically open the PDF on the user's system if desired
-if args.openPDF:
-    if _platform.startswith("linux"):
-        # linux
-        call(["xdg-open", pdfFilename])
-    elif _platform == "darwin":
-        # OS X
-        call(["open", pdfFilename])
-    elif _platform == "win32":
-        # Windows
-        call(["start", pdfFilename])
+    # Automatically open the PDF on the user's system if desired
+    if args.openPDF:
+        if _platform.startswith("linux"):
+            # linux
+            call(["xdg-open", pdfFilename])
+        elif _platform == "darwin":
+            # OS X
+            call(["open", pdfFilename])
+        elif _platform == "win32":
+            # Windows
+            call(["start", pdfFilename])

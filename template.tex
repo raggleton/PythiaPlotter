@@ -1,15 +1,11 @@
+% Run with:
+% pdflatex --shell-escape -jobname myPDF template.tex
 \documentclass{standalone}
-\usepackage{psfrag}
-\usepackage{graphicx}
-% \pagestyle{empty}
+\usepackage{dot2texi}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 \begin{document}
-% The syntax of the "psfrag" command is:
-%    \psfrag{tag}[<posn>][<psposn>][<scale>][<rot>]{replacement}
-% See the file pfgguide.ps for full documentation.
-\begin{figure}
-\standaloneconfig{preview=true}
-% Automatically add particle content below. DO NOT change the following lines
-% ADDHERE
-\includegraphics{stemName.eps}
-\end{figure}
+\begin{dot2tex}[dot,mathmode,straightedges,noautosize]
+\input{newBB.gv}
+\end{dot2tex}
 \end{document}

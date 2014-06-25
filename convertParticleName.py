@@ -14,11 +14,16 @@ with open("pdg_all.tex", "r") as particleList:
 
 # This converts from PDGIDs and returns a Latex form for the name,
 # also deals with antiparticles
-def convertPIDToName(PID):
-    name = pidDict[abs(PID)]
+def convertPIDToTexName(PID):
+    if PID != 90: # PYTHIA makes 90 = system, not in PDG
+        name = pidDict[abs(PID)]
+    else:
+        name = "PYTHIA system"
+    
     # Remove those annoying masses in parentheses
     name = re.sub(r"\([0-9]*\)", "", name)
 
+    # Deal with antiparticles
     if PID < 0:
         if "+" in name:
             name = name.replace('+', '-')
