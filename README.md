@@ -9,7 +9,7 @@ For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the 
 ## Requires:
 - GraphViz http://www.GraphViz.org/Download..php
 
-## Optional: (if you don't install these, you can only use `--rawNames` option)
+Optional: (if you don't install these, you can only use `--rawNames` option)
 
 - dot2tex: `pip install dot2tex` https://github.com/kjellmf/dot2tex
 - dot2texi: check if included in your TeX distribution (use TeX Live utility or equivalent)

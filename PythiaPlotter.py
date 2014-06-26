@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import shlex
 import os.path
 import subprocess
 from subprocess import call
@@ -325,8 +326,10 @@ with open(gvFilename, "w") as gvFile:
         colour = "\"\""
         shape = "\"\""
         label = p.texname
+        
         if args.rawNames:
             label = p.name
+
         if p.isInteresting or p.isInitialState or p.isFinalState:
             if p.isFinalState:
                 shape = "box"
@@ -364,37 +367,19 @@ if args.noPDF:
     print "Not converting to PDF"
     print "If you want a PDF, run without --noPDF"
     print "and if you only want the raw names (faster to produce),"
-    print " then run with --rawNames"
+    print "then run with --rawNames"
     print ""
 else:
     if args.rawNames:
         # Just use dot to make a pdf quickly
         print "Producing PDF %s" % pdfFilename
         call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
-
     else:
-        # Convert all particles into proper names using dot2texi & dot2tex
-        # Read in TeX template file
-        with open("template.tex", "r") as texTemplate:
-            templateLines = texTemplate.readlines()
-
-        # Write new TeX file for the given input file using the GraphViz file
-        # THIS IS SO HACKY - FIX ME
-        # MAYBE PASS PARAM TO TEX FILE?
-        with open(stemName+".tex", "w") as texFile:
-            print "Writing to " + texFile.name
-            for l in templateLines:
-                if "straightedges" in l and args.noStraightEdges:
-                    texFile.write(re.sub(r'straightedges,', "", l))
-                elif "input" in l:
-                    with open(gvFilename, "r") as gvFile:
-                        for line in gvFile:
-                            texFile.write(line)
-                else:
-                    texFile.write(re.sub(r'stemName', stemName, l))
-
-        call(["pdflatex", "--shell-escape", "-jobname",
-              os.path.splitext(pdfFilename)[0], stemName+".tex"])
+        # Use latex to make particle names nice.
+        # Pass in GraphViz file as parameter to TeX file
+        texargs = ["pdflatex", '-jobname', os.path.splitext(pdfFilename)[0], 
+                   '\def\dotfile{"'+gvFilename+'"} \input template.tex']
+        call(texargs)
 
     # Automatically open the PDF on the user's system if desired
     if args.openPDF:
