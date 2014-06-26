@@ -395,7 +395,7 @@ else:
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \begin{document}
-\begin{dot2tex}[dot,mathmode,noautosize,"""+dttOpts+r"""]
+\begin{dot2tex}[dot,mathmode,"""+dttOpts+r"""]
 \input{"""+gvFilename+r"""}
 \end{dot2tex}
 \end{document}
@@ -403,9 +403,7 @@ else:
         with open(stemName+".tex", "w") as texFile:
             texFile.write(texTemplate)
 
-        print ""
         print "Producing tex file and running pdflatex (may take a while)"
-        print ""
 
         if verbose: print texTemplate,
 
