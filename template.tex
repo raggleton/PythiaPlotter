@@ -1,11 +1,12 @@
 % Run with:
-% pdflatex --shell-escape -jobname myPDF template.tex
+% pdflatex -jobname myPDF \def\dotfile{"qcdScatterSmall.gv"} \input template.tex
+% May or may not need --shell-escape option
 \documentclass{standalone}
 \usepackage{dot2texi}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \begin{document}
 \begin{dot2tex}[dot,mathmode,straightedges,noautosize]
-\input{newBB.gv}
+\input{\dotfile}
 \end{dot2tex}
 \end{document}
