@@ -376,9 +376,30 @@ else:
         call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
     else:
         # Use latex to make particle names nice.
-        # Pass in GraphViz file as parameter to TeX file
-        texargs = ["pdflatex", '-jobname', os.path.splitext(pdfFilename)[0], 
-                   '\def\dotfile{"'+gvFilename+'"} \input template.tex']
+        if not args.noStraightEdges:
+            dttOpts = "straightedges"
+        else:
+            dttOpts = ""
+
+        texTemplate = r"""
+\documentclass{standalone}
+\usepackage{dot2texi}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+\begin{dot2tex}[dot,mathmode,noautosize,"""+dttOpts+r"""]
+\input{"""+gvFilename+r"""}
+\end{dot2tex}
+\end{document}
+"""
+        with open(stemName+".tex", "w") as texFile:
+            texFile.write(texTemplate)
+
+        if verbose: print texTemplate,
+
+        texargs = ["pdflatex", "--shell-escape", '-jobname', os.path.splitext(pdfFilename)[0], stemName+".tex"] 
+        # texargs = ["pdflatex", '-jobname', os.path.splitext(pdfFilename)[0], 
+                   # '\def\dttopts{"'+dttOpts+'"} \def\dotfile{"'+gvFilename+'"} \input template.tex']
         call(texargs)
 
     # Automatically open the PDF on the user's system if desired
