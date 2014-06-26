@@ -102,11 +102,13 @@ verbose = args.verbose
 # DO NOT EDIT ANYTHING BELOW HERE
 ###############################################################################
 
+
 # Check if necessary programs & modules exist/run properly
 def testProgramRuns(progName):
     try:
         # Storing in string stifles output
-        prog_out = subprocess.check_output([progName, "-h"], stderr=subprocess.STDOUT)
+        prog_out = subprocess.check_output([progName, "-h"],
+                                           stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as cpe:
         args.rawNames = True
         print(cpe.returncode)
@@ -326,7 +328,7 @@ with open(gvFilename, "w") as gvFile:
         colour = "\"\""
         shape = "\"\""
         label = p.texname
-        
+
         if args.rawNames:
             label = p.name
 
@@ -337,7 +339,7 @@ with open(gvFilename, "w") as gvFile:
             elif p.isInitialState:
                 shape = "circle"
                 colour = "green"
-            
+
             if p.isInteresting:
                 colour = p.nodeColour
             else:
@@ -370,16 +372,22 @@ if args.noPDF:
     print "then run with --rawNames"
     print ""
 else:
+    print "Writing PDF to", pdfFilename
+
     if args.rawNames:
         # Just use dot to make a pdf quickly
         print "Producing PDF %s" % pdfFilename
         call(["dot", "-Tpdf", gvFilename, "-o", pdfFilename])
     else:
         # Use latex to make particle names nice.
+        # Make a tex file for the job so can add user args, etc
+        # Too difficult to use \def on command line
         if not args.noStraightEdges:
             dttOpts = "straightedges"
         else:
             dttOpts = ""
+
+        # print args.__dict__
 
         texTemplate = r"""
 \documentclass{standalone}
@@ -395,13 +403,23 @@ else:
         with open(stemName+".tex", "w") as texFile:
             texFile.write(texTemplate)
 
+        print ""
+        print "Producing tex file and running pdflatex (may take a while)"
+        print ""
+
         if verbose: print texTemplate,
 
-        texargs = ["pdflatex", "--shell-escape", '-jobname', os.path.splitext(pdfFilename)[0], stemName+".tex"] 
-        # texargs = ["pdflatex", '-jobname', os.path.splitext(pdfFilename)[0], 
-                   # '\def\dttopts{"'+dttOpts+'"} \def\dotfile{"'+gvFilename+'"} \input template.tex']
-        call(texargs)
+        texargs = ["pdflatex", "--shell-escape", '-jobname',
+                   os.path.splitext(pdfFilename)[0], stemName+".tex"]
+        texout = subprocess.check_output(texargs)
+        
+        if verbose: print texout,
 
+        print ""
+        print "If you want to re-make the tex file for whatever reason, run:"
+        print ' '.join(texargs)
+        print ""
+    
     # Automatically open the PDF on the user's system if desired
     if args.openPDF:
         if _platform.startswith("linux"):
