@@ -88,6 +88,7 @@ if not pdfFilename:
 # User must include antiparticles
 # Make list in args?
 interesting = [["cyan", ["mu+", "mu-"]],
+               ["cornflowerblue", ["tau+", "tau-"]],
                ["red", ["b", "bbar"]]]
 
 # Option to remove redundant particles from graph.
