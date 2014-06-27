@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import shlex
 import os.path
 import subprocess
 from subprocess import call
@@ -83,9 +82,10 @@ if not pdfFilename:
     pdfFilename = stemName+".pdf"
 
 # Interesting particles we wish to highlight
-# Can do different particles in different colours
-# Relies on matching names though...
-# include antiparticles
+# Can do different particles in different colours,
+# see www.graphviz.org/doc/info/colors.html
+# Relies on matching names though...better method?
+# User must include antiparticles
 # Make list in args?
 interesting = [["cyan", ["mu+", "mu-"]],
                ["red", ["b", "bbar"]]]
@@ -389,8 +389,7 @@ else:
 
         # print args.__dict__
 
-        texTemplate = r"""
-\documentclass{standalone}
+        texTemplate = r"""\documentclass{standalone}
 \usepackage{dot2texi}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
