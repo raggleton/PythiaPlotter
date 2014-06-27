@@ -4,12 +4,12 @@ This is a little script that uses GraphViz to plot Feynman-esque diagrams of Pyt
 
 By default, the incoming protons are green circles, and the final-state particles are in yellow boxes, to aid quick recognition. The user can also highlist specific particle types in red (e.g. all muons, b quarks).
 
-For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the Pythia output in `qcdScatterSmall.txt`
+For examples, see `qcdScatterSmall.pdf` and `qcdScatterSmall.gv`, which use the Pythia output in `qcdScatterSmall.txt`. This is a simulation of a pp -> g ubar scatter -> b bbar ubar, with subsequent hadronisation.
 
 ## Requires:
 - GraphViz http://www.GraphViz.org/Download..php
 
-Optional: (if you don't install these, you can only use `--rawNames` option)
+**Optional:** (if you don't install these, you can only use `--rawNames` option)
 
 - dot2tex: `pip install dot2tex` https://github.com/kjellmf/dot2tex
 - dot2texi: check if included in your TeX distribution (use TeX Live utility or equivalent)
@@ -71,9 +71,12 @@ Outputs:
 	```
 	The output PDF file is `qcdScatterSmall.pdf` unless the `-oPDF` option is used.
 
-	Note, if you have a lot of particles, this can take a little while, so be patient.
+	Note, if you have a lot of particles, this can take a little while, so be patient. The program automatically highlights and changes node shapes for certain particles:
+	- Incoming protons are in green circles
+	- Final state particles are in yellow boxes
+	- Any "interesting" particles are highlighted in a colour of user's choice, by default b/bbar quarks are in red, muons in cyan.
 
-	Note that by default, this will also create GraphViz and tex files. The latter uses the GraphViz file to produce a PDF with nice particle names. If you don't want nice names, or don't want to install all the extra stuff listed udner "Optional" then use `--rawNames` flag
+	Note that by default, this will also create GraphViz and tex files. The latter uses the GraphViz file to produce a PDF with nice particle names. If you don't want nice names, or don't want to install all the extra stuff listed under "Optional" then use `--rawNames` flag
 
 ## Notes:
 
@@ -82,8 +85,8 @@ Outputs:
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
 ## Future plans
-- [ ] Combine with Latex to represent particle names properly **FIRST ATTEMPT DONE - STILL WORK IN PROGRESS**
-	- [ ] Redo ugly rewriting gv into tex file by linking or something
+- [x] Combine with Latex to represent particle names properly
+	- [x] Redo ugly rewriting gv into tex file by linking or something
 	- [ ] Add user option to pass options to dot2texi
 	- [x] Do test to see if the necessary programs exist
 - [ ] Use pyparsing to ease parsing of file/event info?
