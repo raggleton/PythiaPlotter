@@ -8,7 +8,7 @@ from convertParticleName import convertPIDToTexName
 class Event:
     """Class to hold all info about an event"""
 
-    def __init__():
+    def __init__(self):
         print an
 
 class Particle:
@@ -54,19 +54,19 @@ class EventHeader:
     """Class to hold event header info (GenEventInfo, Weights...),
      not Vertex or Particle"""
 
-    def __init__():
+    def __init__(self):
         # PUT STUFF HERE
 
 class GenEventInfo:
     """Class to hold general event info, e.g. evt number, scales, beam IDs"""
 
-    def __init__():
+    def __init__(self):
 
 
 class Weights:
     """Class to store named event weights"""
     
-    def __init__():
+    def __init__(self):
 
 
 class Units:
@@ -94,20 +94,23 @@ class GenCrossSection:
     """Class to store cross section + error for event. Units: pb."""
     
     def __init__(self, crossSection=0.0, crossSectionErr=0.0):
-        self.crossSection = crossSection
-        self.crossSectionErr = crossSectionErr
-
-    def setCrossSection(self, crossSection):
-        self.crossSection = crossSection
-
-    def setCrossSectionErr(self, crossSectionErr):
-        self.crossSectionErr = crossSectionErr
+        self.crossSection = crossSection  # cross section in pb
+        self.crossSectionErr = crossSectionErr  # error associated with this cross section in pb
 
 
 class PdfInfo:
     """Class to store parton info (Q scale, momenta, LHAPDF set"""
     
-    def __init__():
+    def __init__(self, id1=0, id2=0, pdf_id1=0, pdf_id2=0, x1=0, x2=0, scalePDF=0, pdf1=0, pdf2=0):
+        self.id1 = id1  # flavour code of first parton
+        self.id2 = id2  # flavour code of second parton
+        self.pdf_id1 = pdf_id1  # LHAPDF set id of first parton
+        self.pdf_id2 = pdf_id2  # LHAPDF set id of second parton
+        self.x1 = x1  # fraction of beam momentum carried by first parton ("beam side")
+        self.x2 = x2  # fraction of beam momentum carried by second parton ("target side")
+        self.scalePDF = scalePDF  # Q-scale used in evaluation of PDFs (in GeV)
+        self.pdf1 = pdf1  # PDF (id1, x1, Q) This should be of the form x*f(x)
+        self.pdf2 = pdf2  # PDF (id2, x2, Q) This should be of the form x*f(x)
 
 
 class GenVertex:
