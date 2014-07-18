@@ -84,14 +84,20 @@ Outputs:
 
 - Note, there's a bash script, `DO_NOT_USE_makeGraphFromPythia.sh`, that is old and out of date. Only kept for posterity, and as a reminder of how painful bash can be.
 
+- There's a not totally dissimilar program, HepMC Visual, that does somethign similar but requires ROOT, and you have to write your own script. So YMMV.
+
 ## Future plans
 - [x] Combine with Latex to represent particle names properly
 	- [x] Redo ugly rewriting gv into tex file by linking or something
 	- [ ] Add user option to pass options to dot2texi
 	- [x] Do test to see if the necessary programs exist
 - [ ] Use pyparsing to ease parsing of file/event info?
-- [ ] Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Improve parsing of input file eg if only full event, or other listings
+- [ ] **_BIG_** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
+	- [ ] Allow user to select which event to look at in HepMC file
+- [ ] **_BIG_** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+
+### * DONE * (well, mostly...)
 - [x] Any way to optimise the diagram? Sometimes lines go in weird paths *solved using `straightedges` option in dot*
 - [x] Option to auto-open resultant PDF (make default?)
 - [x] Command-line option for input txt filename (and output?)
