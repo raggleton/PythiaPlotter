@@ -84,12 +84,17 @@ if not pdfFilename:
 # Interesting particles we wish to highlight
 # Can do different particles in different colours,
 # see www.graphviz.org/doc/info/colors.html
+# although requires xcolor latex package
 # Relies on matching names though...better method?
 # User must include antiparticles
 # Make list in args?
-interesting = [["cyan", ["mu+", "mu-"]],
-               ["cornflowerblue", ["tau+", "tau-"]],
-               ["red", ["b", "bbar"]]]
+interesting = [
+               ["cyan", ["mu+", "mu-"]],
+               ["blue", ["tau+", "tau-"]],
+               ["red", ["b", "bbar"]],
+               ["orange", ["c", "cbar"]],
+               ["yellow", ["s", "sbar"]]
+              ]
 
 # Option to remove redundant particles from graph.
 # Useful for cleaning up the graph, but don't enable if you want to debug the
@@ -393,6 +398,7 @@ else:
         texTemplate = r"""\documentclass{standalone}
 \usepackage{dot2texi}
 \usepackage{tikz}
+\usepackage{xcolor}
 \usetikzlibrary{shapes,arrows}
 \begin{document}
 \begin{dot2tex}[dot,mathmode,"""+dttOpts+r"""]
