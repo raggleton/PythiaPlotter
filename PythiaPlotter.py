@@ -5,8 +5,8 @@ from subprocess import call
 from sys import platform as _platform
 import argparse
 import re
-import imp
-from particle import Particle  # Particle class
+import imp  # For testing if modules exist
+from eventClasses import Particle  # Particle class
 
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
@@ -89,11 +89,11 @@ if not pdfFilename:
 # User must include antiparticles
 # Make list in args?
 interesting = [
-               ["cyan", ["mu+", "mu-"]],
-               ["blue", ["tau+", "tau-"]],
-               ["red", ["b", "bbar"]],
-               ["orange", ["c", "cbar"]],
-               ["yellow", ["s", "sbar"]]
+              ["cyan", ["mu+", "mu-"]],
+              ["blue", ["tau+", "tau-"]],
+              ["red", ["b", "bbar"]],
+              ["orange", ["c", "cbar"]],
+              ["yellow", ["s", "sbar"]]
               ]
 
 # Option to remove redundant particles from graph.
@@ -142,8 +142,6 @@ def testModuleExists(mod):
 testProgramRuns(progName="dot2tex")
 testModuleExists(mod="pydot")
 testModuleExists(mod="pyparsing")
-
-
 
 ###############################################################################
 # MAIN BODY OF CODE HERE
@@ -380,14 +378,14 @@ else:
         texargs = ["pdflatex", "--shell-escape", '-jobname',
                    os.path.splitext(pdfFilename)[0], stemName+".tex"]
         texout = subprocess.check_output(texargs)
-        
+
         if verbose: print texout,
 
         print ""
         print "If you want to re-make the tex file for whatever reason, run:"
         print ' '.join(texargs)
         print ""
-    
+
     # Automatically open the PDF on the user's system if desired
     if args.openPDF:
         if _platform.startswith("linux"):

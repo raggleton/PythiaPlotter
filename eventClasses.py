@@ -1,4 +1,10 @@
+"""
+    This stores all the classes used in event handling, e.g. particle class,
+    event class.
+"""
+
 from convertParticleName import convertPIDToTexName
+
 
 class Particle:
     """Class to hold particle info in an event listing"""
@@ -16,7 +22,7 @@ class Particle:
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
         self.isInteresting = False  # Whether the user wants this highlighted
-        self.nodeColour = ""
+        self.nodeColour = ""  # What colour to highlight the node
         self.isFinalState = False
         self.isInitialState = False
 
@@ -30,8 +36,6 @@ class Particle:
         # This causes looping issues, so set m2 = m1 if that's the case
         if ((m1 != 0) and (m2 == 0)):
             self.m2 = m1
-
-
 
     def __eq__(self, other):
         return self.number == other.number
