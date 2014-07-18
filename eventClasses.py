@@ -1,10 +1,15 @@
 """
     This stores all the classes used in event handling, e.g. particle class,
-    event class.
+    event class. Based on HepMC, so lots of classes should have similar names
 """
 
 from convertParticleName import convertPIDToTexName
 
+class Event:
+    """Class to hold all info about an event"""
+
+    def __init__():
+        print an
 
 class Particle:
     """Class to hold particle info in an event listing"""
@@ -43,3 +48,61 @@ class Particle:
     def getRawName(self):
         """Get name without any ( or )"""
         return self.name.translate(None, '()')
+
+
+class EventHeader:
+    """Class to hold event header info (GenEventInfo, Weights...),
+     not Vertex or Particle"""
+
+    def __init__():
+        # PUT STUFF HERE
+
+class GenEventInfo:
+    """Class to hold general event info, e.g. evt number, scales, beam IDs"""
+
+    def __init__():
+
+
+class Weights:
+    """Class to store named event weights"""
+    
+    def __init__():
+
+
+class Units:
+    """Class to store momentum and position units"""
+    
+    def __init__(momentum, position):
+        # TODO: enums?
+        self.momentumUnit = "GEV"  # Default to GeV
+        self.positionUnit = "MM"  # Default to MM
+        
+        # Check if momentum in MEV or GEV
+        if (upper(momentum) == "MEV" or upper(momentum) == "GEV"):
+            self.momentumUnit = upper(momentum)
+        else:
+            print "Momentum must be either MEV or GEV. Defaulting to GEV."
+        
+        # Check if momentum in MM or CM
+        if (upper(position) == "MM" or upper(position) == "CM"):
+            self.positionUnit = upper(position)
+        else:
+            print "Position must be either MM or CM. Defaulting to MM."
+
+
+class GenCrossSection:
+    """Class to store cross section + error for event"""
+    
+    def __init__():
+
+
+class PdfInfo:
+    """Class to store parton info (Q scale, momenta, LHAPDF set"""
+    
+    def __init__():
+
+
+class GenVertex:
+    """Class to store info about vertex"""
+    
+    def __init__():
