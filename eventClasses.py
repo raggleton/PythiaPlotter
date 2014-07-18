@@ -72,10 +72,10 @@ class Weights:
 class Units:
     """Class to store momentum and position units"""
     
-    def __init__(momentum, position):
+    def __init__(self, momentum="GEV", position="MM"):
         # TODO: enums?
-        self.momentumUnit = "GEV"  # Default to GeV
-        self.positionUnit = "MM"  # Default to MM
+        # self.momentumUnit = "GEV"  # Default to GeV
+        # self.positionUnit = "MM"  # Default to MM
         
         # Check if momentum in MEV or GEV
         if (upper(momentum) == "MEV" or upper(momentum) == "GEV"):
@@ -91,9 +91,17 @@ class Units:
 
 
 class GenCrossSection:
-    """Class to store cross section + error for event"""
+    """Class to store cross section + error for event. Units: pb."""
     
-    def __init__():
+    def __init__(self, crossSection=0.0, crossSectionErr=0.0):
+        self.crossSection = crossSection
+        self.crossSectionErr = crossSectionErr
+
+    def setCrossSection(self, crossSection):
+        self.crossSection = crossSection
+
+    def setCrossSectionErr(self, crossSectionErr):
+        self.crossSectionErr = crossSectionErr
 
 
 class PdfInfo:
