@@ -15,6 +15,7 @@ with open("pdg_all.tex", "r") as particleList:
 # This converts from PDGIDs and returns a Latex form for the name,
 # also deals with antiparticles
 def convertPIDToTexName(PID):
+    """Convert PDGID to TeX-compatible name"""
     if PID != 90:  # PYTHIA makes 90 = system, not in PDG
         name = pidDict[abs(PID)]
     else:

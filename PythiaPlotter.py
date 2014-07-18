@@ -7,7 +7,7 @@ import argparse
 import re
 import imp
 from convertParticleName import convertPIDToTexName
-#
+
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
 # e.g.
@@ -139,9 +139,9 @@ def testModuleExists(mod):
         args.rawNames = True
 
 
-testProgramRuns("dot2tex")
-testModuleExists("pydot")
-testModuleExists("pyparsing")
+testProgramRuns(progName="dot2tex")
+testModuleExists(mod="pydot")
+testModuleExists(mod="pyparsing")
 
 
 class Particle:
