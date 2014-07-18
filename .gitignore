@@ -11,3 +11,5 @@
 pyhepmc-0.3.2
 hepmc2root.py
 *.hepmc
+*.dot
+*.tex
