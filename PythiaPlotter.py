@@ -6,7 +6,7 @@ from sys import platform as _platform
 import argparse
 import re
 import imp
-from convertParticleName import convertPIDToTexName
+from particle import Particle  # Particle class
 
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
@@ -144,49 +144,6 @@ testModuleExists(mod="pydot")
 testModuleExists(mod="pyparsing")
 
 
-class Particle:
-    """Class to hold particle info in an event listing"""
-
-    def __init__(self, number, PID, name, status, m1, m2):
-        # Class instance variables
-        self.number = number  # number in fullEvent listing - unique
-        self.PID = int(PID)  # PDGID value
-        self.name = name  # particle name e.b nu_mu
-        self.texname = convertPIDToTexName(PID)  # name in tex e.g pi^0
-        self.status = status  # status of particle. If > 0, final state
-        self.m1 = m1  # number of mother 1
-        self.m2 = m2  # number of mother 2
-        self.skip = False  # Whether to skip when writing nodes to file
-        self.mothers = []  # list of Particle objects that are its mother
-        self.daughters = []  # list of Particle objects that are its daughters
-        self.isInteresting = False  # Whether the user wants this highlighted
-        self.nodeColour = ""
-        self.isFinalState = False
-        self.isInitialState = False
-
-        if (status > 0):
-            self.isFinalState = True
-
-        if ((m1 == 0) and (m2 == 0)):
-            self.isInitialState = True
-
-        # Sometimes Pythia sets m2 == 0 if only 1 mother & particle from shower
-        # This causes looping issues, so set m2 = m1 if that's the case
-        if ((m1 != 0) and (m2 == 0)):
-            self.m2 = m1
-
-        # Remove any () and test if name in user's interesting list
-        for i in interesting:
-            if self.name.translate(None, '()') in i[1]:
-                self.isInteresting = True
-                self.nodeColour = i[0]
-
-    def __eq__(self, other):
-        return self.number == other.number
-
-    def getRawName(self):
-        """Get name without any ( or )"""
-        return self.name.translate(None, '()')
 
 ###############################################################################
 # MAIN BODY OF CODE HERE
@@ -256,6 +213,13 @@ with open(inputFilename, "r") as inputFile:
 
     line = ""
     print "Done reading file"
+
+for p in fullEvent:
+    # Remove any () and test if name in user's interesting list
+    for i in interesting:
+        if p.getRawName() in i[1]:
+            p.isInteresting = True
+            p.nodeColour = i[0]
 
 # Add references to mothers
 for p in fullEvent:
