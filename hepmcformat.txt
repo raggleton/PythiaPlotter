@@ -1,0 +1,100 @@
+See Section 6 of the HepMC2 User Manual.
+
+Defined to be:
+
+Block Keys:
+- begin event block: HepMC::IO GenEvent-START EVENT LISTING 
+- end event block: HepMC::IO GenEvent-END EVENT LISTING
+
+Line Keys:
+- E: general GenEvent information
+- N: named weights
+- U: momentum and position units
+- C: GenCrossSection information: This line will appear ONLY if GenCrossSection is defined.
+- H: HeavyIon information: This line will contain zeros if there is no associated HeavyIon object. 
+- F: PdfInfo information: This line will contain zeros if there is no associated PdfInfo object.
+- V: GenVertex information 
+- P: GenParticle information
+
+And what they mean:
+
+E - general GenEvent information
+- int: event number
+- int: number of multi paricle interactions
+- double: event scale
+- double: alpha QCD
+- double: alpha QED
+- int: signal process id
+- int: barcode for signal process vertex
+- int: number of vertices in this event
+- int: barcode for beam particle 1
+- int: barcode for beam particle 2
+- int: number of entries in random state list (may be zero) 
+- long: optional list of random state integers
+- int: number of entries in weight list (may be zero)
+- double: optional list of weights
+
+N - weight names
+- int: number of entries in weight name list. Note that the number of entries here and on the E line are required to be exactly the same and in the same order.
+- std::string: list of weight names enclosed in quotes
+
+U - momentum and position units
+- std::string: momentum units (MEV or GEV) 
+- std::string: length units (MM or CM)
+
+C - GenCrossSection information
+- double: cross section in pb
+- double: error associated with this cross section in pb
+
+H - HeavyIon information
+- int: Number of hard scatterings
+- int: Number of projectile participants
+- int: Number of target participants
+- int: Number of NN (nucleon-nucleon) collisions
+- int: Number of spectator neutrons
+- int: Number of spectator protons
+- int: Number of N-Nwounded collisions
+- int: Number of Nwounded-N collisons
+- int: Number of Nwounded-Nwounded collisions
+- float: Impact Parameter(fm) of collision
+- float: Azimuthal angle of event plane
+- float: eccentricity of participating nucleons in the transverse plane 
+- float: nucleon-nucleon inelastic cross-section
+
+F - PdfInfo information
+- int: flavour code of first parton
+- int: flavour code of second parton
+- double: fraction of beam momentum carried by first parton
+- double: fraction of beam momentum carried by second parton 
+- double: Q-scale used in evaluation of PDF’s (in GeV)
+- double: x*f(x) for id1, x1, Q
+- double: x*f(x) for id2, x2, Q
+- int: LHAPDF set id of first parton (zero by default)
+- int: LHAPDF set id of second parton (zero by default)
+￼￼￼￼￼￼
+V - GenVertex information
+- int: barcode
+- int: id
+- double: x
+- double: y
+- double: z
+- double: ctau
+- int: number of ”orphan” incoming particles 
+- int: number of outgoing particles
+- int: number of entries in weight list (may be zero) 
+- double: optional list of weights
+
+P - GenParticle information
+- int: barcode
+- int: PDG id
+- double: px
+- double: py
+- double: pz
+- double: energy
+- double: generated mass 
+- int: status code
+- double: Polarization theta
+- double: Polarization phi
+- int: barcode for vertex that has this particle as an incoming particle 
+- int: number of entries in flow list (may be zero)
+- int, int: optional code index and code for each entry in the flow list
