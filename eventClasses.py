@@ -147,7 +147,7 @@ class GenVertex:
         self.y = float(y)  # y
         self.z = float(z)  # z
         self.ctau = float(ctau)  # ctau
-        self.numOrphans = int(numOrphans)  # number of ”orphan” incoming particles
+        self.numOrphans = int(numOrphans)  # number of "orphan" incoming particles
         self.numOutgoing = int(numOutgoing)  # number of outgoing particles
         self.numWeights = int(numWeights)  # number of entries in weight list (may be zero)
         self.weights = float(weights)  # optional list of weights
