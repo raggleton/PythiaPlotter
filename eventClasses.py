@@ -5,11 +5,12 @@
 
 from convertParticleName import convertPIDToTexName
 
+
 class Event:
     """Class to hold all info about an event"""
 
-    def __init__(self):
-        print an
+    pass
+
 
 class Particle:
     """Class to hold particle info in an event listing"""
@@ -21,8 +22,8 @@ class Particle:
         self.name = name  # particle name e.b nu_mu
         self.texname = convertPIDToTexName(PID)  # name in tex e.g pi^0
         self.status = status  # status of particle. If > 0, final state
-        self.m1 = m1  # number of mother 1
-        self.m2 = m2  # number of mother 2
+        self.m1 = int(m1)  # number of mother 1
+        self.m2 = int(m2)  # number of mother 2
         self.skip = False  # Whether to skip when writing nodes to file
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
@@ -54,39 +55,60 @@ class EventHeader:
     """Class to hold event header info (GenEventInfo, Weights...),
      not Vertex or Particle"""
 
-    def __init__(self):
-        # PUT STUFF HERE
+    pass        # PUT STUFF HERE
+
 
 class GenEventInfo:
     """Class to hold general event info, e.g. evt number, scales, beam IDs"""
 
-    def __init__(self):
+    def __init__(self, eventNum=0, numMPI=0, scale=0.0, alphaQCD=0.0,
+                 alphaQED=0.0, signalID=0, signalBarcode=0, numVertices=0,
+                 beam1Barcode=0, beam2Barcode=0, numRandomState=0,
+                 randomInts=None, numWeights=0, weights=None):
+        self.eventNum = int(eventNum)  # event number
+        self.numMPI = int(numMPI)  # number of multi paricle interactions
+        self.scale = float(scale)  # event scale
+        self.alphaQCD = float(alphaQCD)  # alpha QCD
+        self.alphaQED = float(alphaQED)  # alpha QED
+        self.signalID = int(signalID)  # signal process id
+        self.signalBarcode = int(signalBarcode)  # barcode for signal process vertex
+        self.numVertices = int(numVertices)  # number of vertices in this event
+        self.beam1Barcode = int(beam1Barcode)  # barcode for beam particle 1
+        self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
+        self.numRandomState = int(numRandomState)  # number of entries in random state list (may be zero)
+        self.randomInts = randomInts  # optional list of random state integers
+        self.numWeights = int(numWeights)  # number of entries in weight list (may be zero)
+        self.weights = weights  # optional list of weights
 
 
 class Weights:
     """Class to store named event weights"""
     
-    def __init__(self):
+    pass
 
 
 class Units:
     """Class to store momentum and position units"""
     
-    def __init__(self, momentum="GEV", position="MM"):
+    def __init__(self, momentum=None, position=None):
         # TODO: enums?
         # self.momentumUnit = "GEV"  # Default to GeV
         # self.positionUnit = "MM"  # Default to MM
         
+        momentum = momentum.upper()
         # Check if momentum in MEV or GEV
-        if (upper(momentum) == "MEV" or upper(momentum) == "GEV"):
-            self.momentumUnit = upper(momentum)
+        if (momentum == "MEV" or momentum == "GEV"):
+            self.momentumUnit = momentum
         else:
+            self.momentumUnit = "GEV"
             print "Momentum must be either MEV or GEV. Defaulting to GEV."
         
         # Check if momentum in MM or CM
-        if (upper(position) == "MM" or upper(position) == "CM"):
-            self.positionUnit = upper(position)
+        position = position.upper()
+        if (position == "MM" or position == "CM"):
+            self.positionUnit = position
         else:
+            self.positionUnit = "MM"  # Default to MM
             print "Position must be either MM or CM. Defaulting to MM."
 
 
@@ -94,26 +116,38 @@ class GenCrossSection:
     """Class to store cross section + error for event. Units: pb."""
     
     def __init__(self, crossSection=0.0, crossSectionErr=0.0):
-        self.crossSection = crossSection  # cross section in pb
-        self.crossSectionErr = crossSectionErr  # error associated with this cross section in pb
+        self.crossSection = float(crossSection)  # cross section in pb
+        self.crossSectionErr = float(crossSectionErr)  # error associated with this cross section in pb
 
 
 class PdfInfo:
     """Class to store parton info (Q scale, momenta, LHAPDF set"""
     
-    def __init__(self, id1=0, id2=0, pdf_id1=0, pdf_id2=0, x1=0, x2=0, scalePDF=0, pdf1=0, pdf2=0):
-        self.id1 = id1  # flavour code of first parton
-        self.id2 = id2  # flavour code of second parton
-        self.pdf_id1 = pdf_id1  # LHAPDF set id of first parton
-        self.pdf_id2 = pdf_id2  # LHAPDF set id of second parton
-        self.x1 = x1  # fraction of beam momentum carried by first parton ("beam side")
-        self.x2 = x2  # fraction of beam momentum carried by second parton ("target side")
-        self.scalePDF = scalePDF  # Q-scale used in evaluation of PDFs (in GeV)
-        self.pdf1 = pdf1  # PDF (id1, x1, Q) This should be of the form x*f(x)
-        self.pdf2 = pdf2  # PDF (id2, x2, Q) This should be of the form x*f(x)
+    def __init__(self, id1=0, id2=0, pdf_id1=0, pdf_id2=0, 
+                 x1=0, x2=0, scalePDF=0, pdf1=0, pdf2=0):
+        self.id1 = int(id1)  # flavour code of first parton
+        self.id2 = int(id2)  # flavour code of second parton
+        self.pdf_id1 = int(pdf_id1)  # LHAPDF set id of first parton
+        self.pdf_id2 = int(pdf_id2)  # LHAPDF set id of second parton
+        self.x1 = float(x1)  # fraction of beam momentum carried by first parton ("beam side")
+        self.x2 = float(x2)  # fraction of beam momentum carried by second parton ("target side")
+        self.scalePDF = float(scalePDF)  # Q-scale used in evaluation of PDFs (in GeV)
+        self.pdf1 = float(pdf1)  # PDF (id1, x1, Q) This should be of the form x*f(x)
+        self.pdf2 = float(pdf2)  # PDF (id2, x2, Q) This should be of the form x*f(x)
 
 
 class GenVertex:
     """Class to store info about vertex"""
     
-    def __init__():
+    def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0, 
+                 numOrphans=0, numOutgoing=0, numWeights=0, weights=None):
+        self.barcode = int(barcode) # barcode
+        self.id = int(id)  # id
+        self.x = float(x)  # x
+        self.y = float(y)  # y
+        self.z = float(z)  # z
+        self.ctau = float(ctau)  # ctau
+        self.numOrphans = int(numOrphans)  # number of ”orphan” incoming particles
+        self.numOutgoing = int(numOutgoing)  # number of outgoing particles
+        self.numWeights = int(numWeights)  # number of entries in weight list (may be zero)
+        self.weights = float(weights)  # optional list of weights
