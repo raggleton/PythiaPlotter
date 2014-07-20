@@ -4,7 +4,7 @@
     See hepmcformat.txt for reminder, or section 6 of hepMC2 user manual
 """
 
-# from eventClasses import Particle
+from eventClasses import *
 
 verbose = True
 
@@ -54,7 +54,7 @@ def parse(fileName="testSS_HLT.hepmc"):
                 pass
 
             # PdfInfo information: 
-            # This line will contain zeros if there is no associated PdfInfo object.
+            # This line will contain 0s if there is no associated PdfInfo obj
             if line.startswith("F"):
                 pdfInfo = parsePdfInfoLine(line)
 
@@ -63,23 +63,50 @@ def parse(fileName="testSS_HLT.hepmc"):
                 print "End parsing event listing"
 
 
+def tidyLineRemoveKey(line, key):
+    """Tidy up line from file for searching (extra spaces, etc) and remove
+    the Line Key (e.g. P, V) from the start to allow further processing"""
+
+    strippedline = line.strip()
+
+
 def parseGenEventLine(line):
-    # Parse line from HepMC file containting GenEvent info
+    """Parse line from HepMC file containting GenEvent info
+    e.g. """
+    parts = line.split()
 
-    
+
 def parseWeightsLine(line):
-    # Parse line from HepMC file containting Weights info
+    """Parse line from HepMC file containting Weights info
+    e.g."""
+    parts = line.split()
 
-    
+
 def parseUnitsLine(line):
-    # Parse line from HepMC file containting Units info
+    """Parse line from HepMC file containting Units info
+    e.g. U MEV MM"""
+    parts = line.split()
+    units = Units(parts[1], parts[2])
+    return units
 
-    
+
 def parseCrossSectionLine(line):
-    # Parse line from HepMC file containting CrossSection info
+    """Parse line from HepMC file containting CrossSection info
+    e.g. C 1.5299242538371922e+06 4.4721515953955459e+04"""
+    parts = line.split()
 
-    
+
 def parsePdfInfoLine(line):
-    # Parse line from HepMC file containting PdfInfo info
+    """Parse line from HepMC file containting PdfInfo info
+    e.g."""
+    parts = line.split()
 
-    
+def parseGenVertexLine(line):
+    """Parse line from HepMC file containing GenVertex info
+    e.g."""
+    pass
+
+
+def parseGenParticleLine(line):
+    """Parse line from HepMC file containing GenParticle info"""
+    pass
