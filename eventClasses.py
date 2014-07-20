@@ -64,7 +64,7 @@ class GenEventInfo:
     def __init__(self, eventNum=0, numMPI=0, scale=0.0, alphaQCD=0.0,
                  alphaQED=0.0, signalID=0, signalBarcode=0, numVertices=0,
                  beam1Barcode=0, beam2Barcode=0, numRandomState=0,
-                 randomInts=None, numWeights=0, weights=None):
+                 randomInts=None, weights=None):
         self.eventNum = int(eventNum)  # event number
         self.numMPI = int(numMPI)  # number of multi paricle interactions
         self.scale = float(scale)  # event scale
@@ -76,9 +76,15 @@ class GenEventInfo:
         self.beam1Barcode = int(beam1Barcode)  # barcode for beam particle 1
         self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
         self.numRandomState = int(numRandomState)  # number of entries in random state list (may be zero)
-        self.randomInts = randomInts  # optional list of random state integers
-        self.numWeights = int(numWeights)  # number of entries in weight list (may be zero)
-        self.weights = weights  # optional list of weights
+        if not randomInts:
+            self.randomInts = []
+        else:
+            self.randomInts = randomInts  # optional list of random state integers
+        self.numWeights = len(weights)  # number of entries in weight list (may be zero)
+        if not weights:
+            self.weights = []
+        else:
+            self.weights = weights  # optional list of weights
 
 
 class Weights:
@@ -149,5 +155,8 @@ class GenVertex:
         self.ctau = float(ctau)  # ctau
         self.numOrphans = int(numOrphans)  # number of "orphan" incoming particles
         self.numOutgoing = int(numOutgoing)  # number of outgoing particles
-        self.numWeights = int(numWeights)  # number of entries in weight list (may be zero)
-        self.weights = float(weights)  # optional list of weights
+        self.numWeights = len(numWeights)  # number of entries in weight list (may be zero)
+        if not weights:
+            self.weights = []
+        else:
+            self.weights = weights  # optional list of weights
