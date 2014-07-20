@@ -6,12 +6,6 @@
 from convertParticleName import convertPIDToTexName
 
 
-class Event:
-    """Class to hold all info about an event"""
-
-    pass
-
-
 class Particle:
     """Class to hold particle info in an event listing"""
 
@@ -58,7 +52,7 @@ class EventHeader:
     pass        # PUT STUFF HERE
 
 
-class GenEventInfo:
+class GenEvent:
     """Class to hold general event info, e.g. evt number, scales, beam IDs"""
 
     def __init__(self, eventNum=0, numMPI=0, scale=0.0, alphaQCD=0.0,
@@ -127,17 +121,17 @@ class GenCrossSection:
 class PdfInfo:
     """Class to store parton info (Q scale, momenta, LHAPDF set"""
     
-    def __init__(self, id1=0, id2=0, pdf_id1=0, pdf_id2=0, 
-                 x1=0, x2=0, scalePDF=0, pdf1=0, pdf2=0):
+    def __init__(self, id1=0, id2=0, x1=0, x2=0, scalePDF=0, 
+                 pdf1=0, pdf2=0, pdf_id1=0, pdf_id2=0):
         self.id1 = int(id1)  # flavour code of first parton
         self.id2 = int(id2)  # flavour code of second parton
-        self.pdf_id1 = int(pdf_id1)  # LHAPDF set id of first parton
-        self.pdf_id2 = int(pdf_id2)  # LHAPDF set id of second parton
         self.x1 = float(x1)  # fraction of beam momentum carried by first parton ("beam side")
         self.x2 = float(x2)  # fraction of beam momentum carried by second parton ("target side")
         self.scalePDF = float(scalePDF)  # Q-scale used in evaluation of PDFs (in GeV)
         self.pdf1 = float(pdf1)  # PDF (id1, x1, Q) This should be of the form x*f(x)
         self.pdf2 = float(pdf2)  # PDF (id2, x2, Q) This should be of the form x*f(x)
+        self.pdf_id1 = int(pdf_id1)  # LHAPDF set id of first parton
+        self.pdf_id2 = int(pdf_id2)  # LHAPDF set id of second parton
 
 
 class GenVertex:
