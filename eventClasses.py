@@ -77,14 +77,12 @@ class GenEventInfo:
         self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
         self.numRandomState = int(numRandomState)  # number of entries in random state list (may be zero)
         if not randomInts:
-            self.randomInts = []
-        else:
-            self.randomInts = randomInts  # optional list of random state integers
+            randomInts = []
+        self.randomInts = randomInts  # optional list of random state integers
         self.numWeights = len(weights)  # number of entries in weight list (may be zero)
         if not weights:
-            self.weights = []
-        else:
-            self.weights = weights  # optional list of weights
+            weights = []
+        self.weights = weights  # optional list of weights
 
 
 class Weights:
@@ -157,6 +155,5 @@ class GenVertex:
         self.numOutgoing = int(numOutgoing)  # number of outgoing particles
         self.numWeights = len(numWeights)  # number of entries in weight list (may be zero)
         if not weights:
-            self.weights = []
-        else:
-            self.weights = weights  # optional list of weights
+            weights = []
+        self.weights = weights  # optional list of weights
