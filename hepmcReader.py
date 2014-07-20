@@ -65,14 +65,6 @@ def parse(fileName="testSS_HLT.hepmc"):
                 print "End parsing event listing"
 
 
-def tidyLineRemoveKey(line, key):
-    # Do I need this?
-    """Tidy up line from file for searching (extra spaces, etc) and remove
-    the Line Key (e.g. P, V) from the start to allow further processing"""
-
-    strippedline = line.strip()
-
-
 def parseGenEventLine(line):
     """Parse line from HepMC file containting GenEvent info
     e.g. E 0 -1 3.4651814800093540e+01 1.6059648651865022e-01 7.7326991537120665e-03 123 0 707 1 2 0 1 1.0000000000000000e+00 """
