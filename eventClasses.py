@@ -53,31 +53,45 @@ class EventHeader:
 
 
 class GenEvent:
-    """Class to hold general event info, e.g. evt number, scales, beam IDs"""
+    """Class to hold complete event info, e.g. evt number, scales, beam IDs
+    as well as list of all particles and vertices"""
 
-    def __init__(self, eventNum=0, numMPI=0, scale=0.0, alphaQCD=0.0,
-                 alphaQED=0.0, signalID=0, signalBarcode=0, numVertices=0,
-                 beam1Barcode=0, beam2Barcode=0, numRandomState=0,
+    def __init__(self, eventNum=0, numMPI=0, scale=-1.0, alphaQCD=-1.0,
+                 alphaQED=-1.0, signalProcessID=0, signalProcessBarcode=0, 
+                 numVertices=0, beam1Barcode=0, beam2Barcode=0, 
                  randomInts=None, weights=None):
         self.eventNum = int(eventNum)  # event number
         self.numMPI = int(numMPI)  # number of multi paricle interactions
         self.scale = float(scale)  # event scale
         self.alphaQCD = float(alphaQCD)  # alpha QCD
         self.alphaQED = float(alphaQED)  # alpha QED
-        self.signalID = int(signalID)  # signal process id
-        self.signalBarcode = int(signalBarcode)  # barcode for signal process vertex
+        self.signalProcessID = int(signalProcessID)  # signal process id
+        self.signalProcessBarcode = int(signalProcessBarcode)  # barcode for signal process vertex
         self.numVertices = int(numVertices)  # number of vertices in this event
         self.beam1Barcode = int(beam1Barcode)  # barcode for beam particle 1
         self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
-        self.numRandomState = int(numRandomState)  # number of entries in random state list (may be zero)
         if not randomInts:
             randomInts = []
         self.randomInts = randomInts  # optional list of random state integers
-        self.numWeights = len(weights)  # number of entries in weight list (may be zero)
+        self.numRandomState = len(self.randomInts)  # number of entries in random state list (may be zero)
+        # Bit complicated - need to coordinate with Weights class as the 
+        # weight slist in constructor here is actual weight values, 
+        # but Weight class stores weight names...
         if not weights:
             weights = []
         self.weights = weights  # optional list of weights
+        self.numWeights = len(weights)  # number of entries in weight list (may be zero)
+        
+        # To hold future objects that conatin info about event e.g. PdfInfo
+        self.pdf_info = None
+        self.cross_section = None
+        self.units = None
 
+        # To hold list of vertices and particles
+        self.vertices = None
+        self.particles = None
+
+    # TODO: add methods for adding particles and vertices?
 
 class Weights:
     """Class to store named event weights"""

@@ -16,6 +16,8 @@ def parse(fileName="testSS_HLT.hepmc"):
 
     with open(fileName, 'r') as file:
 
+        currentEvent = None  # to hold the current event, to add particles, etc
+
         for line in file:
             if verbose: print line,
 
@@ -30,20 +32,21 @@ def parse(fileName="testSS_HLT.hepmc"):
 
             # general GenEvent information            
             if line.startswith("E"):
-                genEvent = parseGenEventLine(line)
+                currentEvent = parseGenEventLine(line)
 
             # named weights
             if line.startswith("N"):
+                # make GenEvent deal with this?
                 weights = parseWeightsLine(line)
 
             # momentum and position units
             if line.startswith("U"):
-                units = parseUnitsLine(line)
+                currentEvent.units = parseUnitsLine(line)
 
             # GenCrossSection information: 
             # This line will appear ONLY if GenCrossSection is defined.
             if line.startswith("C"):
-                genCrossSection = parseCrossSectionLine(line)
+                currentEvent.cross_section = parseCrossSectionLine(line)
 
             # HeavyIon information: 
             # This line will contain zeros if there is no associated 
@@ -56,7 +59,7 @@ def parse(fileName="testSS_HLT.hepmc"):
             # PdfInfo information: 
             # This line will contain 0s if there is no associated PdfInfo obj
             if line.startswith("F"):
-                pdfInfo = parsePdfInfoLine(line)
+                currentEvent.pdf_info = parsePdfInfoLine(line)
 
             # Need to deal with repetitive vertex and particle                
 
@@ -85,7 +88,7 @@ def parseUnitsLine(line):
     """Parse line from HepMC file containting Units info
     e.g. U MEV MM """
     parts = line.split()
-    u = Units(parts[1], parts[2])
+    u = Units(momentum=parts[1], position=parts[2])
     return u
 
 
@@ -93,14 +96,16 @@ def parseCrossSectionLine(line):
     """Parse line from HepMC file containting CrossSection info
     e.g. C 1.5299242538371922e+06 4.4721515953955459e+04 """
     parts = line.split()
-    c = GenCrossSection(parts[1], parts[2])
+    c = GenCrossSection(crossSection=parts[1], crossSectionErr=parts[2])
     return c
 
 
 def parsePdfInfoLine(line):
     """Parse line from HepMC file containting PdfInfo info
     e.g. F 21 21 2.9758908919249000e-03 7.3389857579700624e-02 3.4651814800093540e+01 1.7560069564760610e+01 1.3634687138200170e+00 0 0 """
-    parts = line.split()
+    parts = line.split(id1=parts[1], id2=parts[2], x1=parts[3], x2=parts[4], 
+                       scalePDF=parts[5], pdf1=parts[6], pdf2=parts[7], 
+                       pdf_id1=parts[8], pdf_id2=parts[9])
     f = PdfInfo()
     return f
 
