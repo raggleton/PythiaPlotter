@@ -102,10 +102,10 @@ def parseCrossSectionLine(line):
 def parsePdfInfoLine(line):
     """Parse line from HepMC file containting PdfInfo info
     e.g. F 21 21 2.9758908919249000e-03 7.3389857579700624e-02 3.4651814800093540e+01 1.7560069564760610e+01 1.3634687138200170e+00 0 0 """
-    parts = line.split(id1=parts[1], id2=parts[2], x1=parts[3], x2=parts[4], 
-                       scalePDF=parts[5], pdf1=parts[6], pdf2=parts[7], 
-                       pdf_id1=parts[8], pdf_id2=parts[9])
-    f = PdfInfo()
+    parts = line.split()
+    f = PdfInfo(id1=parts[1], id2=parts[2], x1=parts[3], x2=parts[4], 
+                scalePDF=parts[5], pdf1=parts[6], pdf2=parts[7], 
+                pdf_id1=parts[8], pdf_id2=parts[9])
     return f
 
 
