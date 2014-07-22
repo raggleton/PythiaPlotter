@@ -7,6 +7,7 @@ import argparse
 import re
 import imp  # For testing if modules exist
 from eventClasses import Particle  # Particle class
+import config  # Global definitions
 
 # Script that converts the event listing from Pythia 8 into a GraphViz
 # file, which is then plotted with either latex or dot, and output as a PDF
@@ -102,7 +103,7 @@ interesting = [
 removeRedundants = True
 
 # For debugging - print output to screen as well as file
-verbose = args.verbose
+config.VERBOSE = args.verbose
 
 ###############################################################################
 # DO NOT EDIT ANYTHING BELOW HERE
@@ -111,6 +112,7 @@ verbose = args.verbose
 
 # Check if necessary programs & modules exist/run properly
 def testProgramRuns(progName):
+    """Test if external program runs"""
     try:
         # Storing in string stifles output
         prog_out = subprocess.check_output([progName, "-h"],
@@ -131,6 +133,7 @@ def testProgramRuns(progName):
 
 
 def testModuleExists(mod):
+    """Test if Python module exists"""
     try:
         imp.find_module(mod)
     except ImportError:
@@ -188,7 +191,7 @@ with open(inputFilename, "r") as inputFile:
 
         if parseLine:
 
-            if verbose: print line,
+            if config.VERBOSE: print line,
 
             values = line.split()
             number = int(values[0])
@@ -284,7 +287,7 @@ with open(gvFilename, "w") as gvFile:
 
         entry += "} [dir=\"back\"]\n"
 
-        if verbose: print entry,
+        if config.VERBOSE: print entry,
         if p.number > 2: gvFile.write(entry)  # don't want p+ -> system entries
 
         # Write labels for text for each node (raw name or tex)
@@ -321,7 +324,7 @@ with open(gvFilename, "w") as gvFile:
             config = '    %s [label="%s:%s"]\n'\
                 % (p.number, p.number, label)
         gvFile.write(config)
-        if verbose: print config,
+        if config.VERBOSE: print config,
 
     # Set all initial particles to be level in diagram
     rank = "  {rank=same;"
@@ -373,13 +376,13 @@ else:
 
         print "Producing tex file and running pdflatex (may take a while)"
 
-        if verbose: print texTemplate,
+        if config.VERBOSE: print texTemplate,
 
         texargs = ["pdflatex", "--shell-escape", '-jobname',
                    os.path.splitext(pdfFilename)[0], stemName+".tex"]
         texout = subprocess.check_output(texargs)
 
-        if verbose: print texout,
+        if config.VERBOSE: print texout,
 
         print ""
         print "If you want to re-make the tex file for whatever reason, run:"

@@ -5,8 +5,7 @@
 """
 
 from eventClasses import *
-
-verbose = True
+import config  # Global definitions
 
 
 def parse(fileName="testSS_HLT.hepmc"):
@@ -19,7 +18,7 @@ def parse(fileName="testSS_HLT.hepmc"):
         currentEvent = None  # to hold the current event, to add particles, etc
 
         for line in file:
-            if verbose: print line,
+            if config.VERBOSE: print line,
 
             # Get HepMC version
             if line.startswith("HepMC::Version"):

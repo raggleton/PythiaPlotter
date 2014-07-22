@@ -3,6 +3,7 @@
     event class. Based on HepMC, so lots of classes should have similar names
 """
 
+import config  # Global definitions
 from convertParticleName import convertPIDToTexName
 
 
