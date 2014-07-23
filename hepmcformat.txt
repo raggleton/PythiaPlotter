@@ -1,5 +1,11 @@
 See Section 6 of the HepMC2 User Manual.
 
+Note that the E, N, U, C, H, and F lines contain event header information. There will be one and only one of these lines per event. Other lines with keys not specified above may be interspersed with the header information. The N, U, C, H, and F lines must lie between the E line and the first V line for each event. N, U, C, H, and F lines can appear in any order. 
+
+The header information is followed immediately by a V (vertex) line. Each vertex line is immediately followed by the P (particle) lines for particles associated with that vertex. For purposes of IO, particles are associated with a vertex if they are in the list of outgoing particles. In addition, if an incoming particle is not an outgoing particle of some other vertex, then it is classified as an ”orphan” incoming particle and associated with the vertex IO. In this way, each particle appears only once in the Ascii listing.
+
+So P contains barcode for vertex that has this particle as an incoming particle, whilst the order of listing in the ASCII file gives us the outgoing particles. This way,w e can hook up both ends of the particles.
+
 Defined to be:
 
 Block Keys:
