@@ -15,7 +15,8 @@ def parse(fileName="testSS_HLT.hepmc"):
 
     with open(fileName, 'r') as file:
 
-        currentEvent = None  # to hold the current event, to add particles, etc
+        eventList = []  # To hold all events
+        currentEvent = None  # to hold the current GenEvent, to add particles, etc
 
         for line in file:
             if config.VERBOSE: print line,
@@ -32,11 +33,14 @@ def parse(fileName="testSS_HLT.hepmc"):
             # general GenEvent information            
             if line.startswith("E"):
                 currentEvent = parseGenEventLine(line)
+                # Done with the old event, add it to the list, start a new one
+                if not currentEvent:
+                    eventList.append(currentEvent)
 
             # named weights
-            if line.startswith("N"):
+            # if line.startswith("N"):
                 # make GenEvent deal with this?
-                weights = parseWeightsLine(line)
+                # weights = parseWeightsLine(line)
 
             # momentum and position units
             if line.startswith("U"):
@@ -50,10 +54,9 @@ def parse(fileName="testSS_HLT.hepmc"):
             # HeavyIon information: 
             # This line will contain zeros if there is no associated 
             # HeavyIon object. 
-            # We don't use this so ignore (for now)
+            # We don't use this so ignore (for now). Or throw exception?
             if line.startswith("H"):
                 print "We don't deal with this"
-                pass
 
             # PdfInfo information: 
             # This line will contain 0s if there is no associated PdfInfo obj
@@ -68,14 +71,15 @@ def parse(fileName="testSS_HLT.hepmc"):
 
 
 def parseGenEventLine(line):
+    # TODO
     """Parse line from HepMC file containting GenEvent info
     e.g. E 0 -1 3.4651814800093540e+01 1.6059648651865022e-01 7.7326991537120665e-03 123 0 707 1 2 0 1 1.0000000000000000e+00 """
     parts = line.split()
     genE = GenEvent()
     return genE
 
-
 def parseWeightsLine(line):
+    # TODO - not vital
     """Parse line from HepMC file containting Weights info
     e.g. N 1 "0" """
     parts = line.split()
@@ -113,7 +117,11 @@ def parseGenVertexLine(line):
     """Parse line from HepMC file containing GenVertex info
     e.g. V -3 0 0 0 0 0 0 2 0 """
     parts = line.split()
-    v = GenVertex()
+    v = GenVertex(barcode=parts[1], id=parts[2],
+                  x=parts[3], y=parts[4], z=parts[5], ctau=parts[6],
+                  numOrphans=parts[7], numOutgoing=parts[8],
+                  numWeights=parts[9], weights=parts[10:])
+
     return v
 
 
@@ -121,5 +129,14 @@ def parseGenParticleLine(line):
     """Parse line from HepMC file containing GenParticle info
     e.g. P 4 21 0 0 -2.9355943031880248e+05 2.9355943031880248e+05 0 21 0 0 -3 2 1 102 2 103 """
     parts = line.split()
-    p = GenParticle()
+    
+    # TODO: implement optional code index and code for each entry in the flow list
+    if parts[13]:
+        pass
+    # flowDict = {}
+
+    p = GenParticle(barcode=parts[1], pdgid=parts[2],
+                    px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
+                    mass=parts[7], status=parts[8], polTheta=parts[9],
+                    polPhi=parts[10], vertexBarcode=parts[11])
     return p
