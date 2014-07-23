@@ -51,7 +51,7 @@ def parse(fileName="testSS_HLT.hepmc"):
             elif line.startswith("N"):
                 # line.split()[1] has the number of weights
                 # line.split()[2:] has all the weight names
-                currentEvent.fillWeights(line.split()[2:])
+                currentEvent.setWeightNames(line.split()[2:])
                 if config.VERBOSE: print "Adding weights info"
                 if config.VERBOSE: print vars(currentEvent.weights)
 

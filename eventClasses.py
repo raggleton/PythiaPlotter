@@ -96,7 +96,7 @@ class GenEvent:
         self.vertices = []
         self.particles = []
 
-    def fillWeights(self, weightNames=None):
+    def setWeightNames(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the 
         weightNames pased in, and weightValues already stored"""
 
