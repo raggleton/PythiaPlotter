@@ -52,7 +52,8 @@ def parse(fileName="testSS_HLT.hepmc"):
                 # line.split()[1] has the number of weights
                 # line.split()[2:] has all the weight names
                 currentEvent.fillWeights(line.split()[2:])
-                # print vars(weights)
+                if config.VERBOSE: print "Adding weights info"
+                if config.VERBOSE: print vars(currentEvent.weights)
 
             # momentum and position units
             elif line.startswith("U"):

@@ -90,7 +90,7 @@ class GenEvent:
         self.pdf_info = None
         self.cross_section = None
         self.units = None
-        self.weight = None
+        self.weights = None
 
         # To hold list of vertices and particles
         self.vertices = []
@@ -99,7 +99,7 @@ class GenEvent:
     def fillWeights(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the 
         weightNames pased in, and weightValues already stored"""
-        
+
         if not weightNames:
             weightNames = []
         # TODO: strip " " from weight names
