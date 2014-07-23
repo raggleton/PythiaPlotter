@@ -75,7 +75,18 @@ def parseGenEventLine(line):
     """Parse line from HepMC file containting GenEvent info
     e.g. E 0 -1 3.4651814800093540e+01 1.6059648651865022e-01 7.7326991537120665e-03 123 0 707 1 2 0 1 1.0000000000000000e+00 """
     parts = line.split()
-    genE = GenEvent()
+
+    # parts[11] tells us number of random ints that follow
+    # parts[12] to parts[11+numRandom] are the random ints
+    # parts[12+numRandom] tells us the number of weights that follow
+    # parts[13+numrandom] to the end are the weights
+    numRandoms = parts[11]
+    genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3], 
+                    alphaQCD=parts[4], alphaQED=parts[5], 
+                    signalProcessID=parts[6], signalProcessBarcode=parts[7], 
+                    numVertices=parts[8], beam1Barcode=parts[9], 
+                    beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms], 
+                    weights=parts[13+numRandoms:])
     return genE
 
 def parseWeightsLine(line):
