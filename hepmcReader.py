@@ -48,9 +48,10 @@ def parse(fileName="testSS_HLT.hepmc"):
                 currentEvent = parseGenEventLine(line)
 
             # named weights
-            # elif line.startswith("N"):
-                # make GenEvent deal with this?
-                # weights = parseWeightsLine(line)
+            elif line.startswith("N"):
+                # line.split()[1] has the number of weights
+                # line.split()[2:] has all the weight names
+                currentEvent.fillWeights(line.split()[2:])
                 # print vars(weights)
 
             # momentum and position units
@@ -84,7 +85,6 @@ def parse(fileName="testSS_HLT.hepmc"):
 
 
 def parseGenEventLine(line):
-    # TODO
     """Parse line from HepMC file containting GenEvent info
     e.g. E 0 -1 3.4651814800093540e+01 1.6059648651865022e-01 7.7326991537120665e-03 123 0 707 1 2 0 1 1.0000000000000000e+00 """
     parts = line.split()
@@ -99,16 +99,16 @@ def parseGenEventLine(line):
                     signalProcessID=parts[6], signalProcessBarcode=parts[7], 
                     numVertices=parts[8], beam1Barcode=parts[9], 
                     beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms], 
-                    weights=parts[13+numRandoms:])
+                    weightValues=parts[13+numRandoms:])
     return genE
 
-def parseWeightsLine(line):
-    # TODO - not vital
-    """Parse line from HepMC file containting Weights info
-    e.g. N 1 "0" """
-    parts = line.split()
-    w = Weights()
-    return w
+# def parseWeightsLine(line):
+#     # TODO - not vital
+#     """Parse line from HepMC file containting Weights info
+#     e.g. N 1 "0" """
+#     parts = line.split()
+#     w = Weights()
+#     return w
 
 
 def parseUnitsLine(line):
