@@ -89,8 +89,8 @@ class GenEvent:
         self.units = None
 
         # To hold list of vertices and particles
-        self.vertices = None
-        self.particles = None
+        self.vertices = []
+        self.particles = []
 
     # TODO: add methods for adding particles and vertices?
 
@@ -166,3 +166,25 @@ class GenVertex:
         if not weights:
             weights = []
         self.weights = weights  # optional list of weights
+
+
+class GenParticle:
+    """Class to store info about GenParticle in event"""
+
+    # TODO: implement optional code index and code for each entry in the flow list
+    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, 
+                 energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0, 
+                 vertexBarcode=0, numFlowList=0):
+        self.barcode = int(barcode)
+        self.pdgid = int(pdgid)
+        self.px = float(px)
+        self.py = float(py)
+        self.pz = float(pz)
+        self.energy = float(energy)
+        self.mass = float(mass)
+        self.status = int(status)
+        self.polTheta = float(polTheta)  # polarization theta
+        self.polPhi = float(polPhi)  # polarization phi
+        self.vertexBarcode = int(vertexBarcode)
+        # self.numFlowList = int(numFlowList)  # number of entries in flow list
+
