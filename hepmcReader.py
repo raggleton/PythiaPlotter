@@ -11,7 +11,7 @@ import config  # Global definitions
 def parse(fileName="testSS_HLT.hepmc"):
     """Parse HepMCfile and return collection of events"""
 
-    print "Parsing events from ", fileName
+    print "Parsing events from", fileName
 
     with open(fileName, 'r') as file:
 
@@ -27,47 +27,52 @@ def parse(fileName="testSS_HLT.hepmc"):
                 print "Using HepMC version", version
 
             # Get start of event block
-            if line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
+            elif line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
                 print "Start parsing event listing"
+            
+            # Get end of event block
+            elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
+                print "End parsing event listing"
 
             # general GenEvent information            
-            if line.startswith("E"):
+            elif line.startswith("E"):
+                print "Adding GenEvent info"
                 currentEvent = parseGenEventLine(line)
                 # Done with the old event, add it to the list, start a new one
                 if not currentEvent:
                     eventList.append(currentEvent)
 
             # named weights
-            # if line.startswith("N"):
+            # elif line.startswith("N"):
                 # make GenEvent deal with this?
                 # weights = parseWeightsLine(line)
 
             # momentum and position units
-            if line.startswith("U"):
+            elif line.startswith("U"):
+                print "Adding units info"
                 currentEvent.units = parseUnitsLine(line)
 
             # GenCrossSection information: 
             # This line will appear ONLY if GenCrossSection is defined.
-            if line.startswith("C"):
+            elif line.startswith("C"):
+                print "Adding cross-section info"
                 currentEvent.cross_section = parseCrossSectionLine(line)
 
             # HeavyIon information: 
             # This line will contain zeros if there is no associated 
             # HeavyIon object. 
             # We don't use this so ignore (for now). Or throw exception?
-            if line.startswith("H"):
+            elif line.startswith("H"):
                 print "We don't deal with this"
 
             # PdfInfo information: 
             # This line will contain 0s if there is no associated PdfInfo obj
-            if line.startswith("F"):
+            elif line.startswith("F"):
+                print "Adding pdf info"
                 currentEvent.pdf_info = parsePdfInfoLine(line)
 
             # Need to deal with repetitive vertex and particle                
 
-            # Get end of event block
-            if line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
-                print "End parsing event listing"
 
 
 def parseGenEventLine(line):
@@ -80,7 +85,7 @@ def parseGenEventLine(line):
     # parts[12] to parts[11+numRandom] are the random ints
     # parts[12+numRandom] tells us the number of weights that follow
     # parts[13+numrandom] to the end are the weights
-    numRandoms = parts[11]
+    numRandoms = int(parts[11])
     genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3], 
                     alphaQCD=parts[4], alphaQED=parts[5], 
                     signalProcessID=parts[6], signalProcessBarcode=parts[7], 
