@@ -19,58 +19,66 @@ def parse(fileName="testSS_HLT.hepmc"):
         currentEvent = None  # to hold the current GenEvent, to add particles, etc
 
         for line in file:
-            if config.VERBOSE: print line,
+            # if config.VERBOSE: print line,
 
             # Get HepMC version
             if line.startswith("HepMC::Version"):
                 version = line.split()[1]
-                print "Using HepMC version", version
+                if config.VERBOSE: print "Using HepMC version", version
 
             # Get start of event block
             elif line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
                 print "Start parsing event listing"
             
-            # Get end of event block
+            # Get end of event block, add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
+                eventList.append(currentEvent)
+                if config.VERBOSE: print vars(currentEvent)
+                if config.VERBOSE: print "Adding GenEvent to list"
                 print "End parsing event listing"
 
             # general GenEvent information            
             elif line.startswith("E"):
-                print "Adding GenEvent info"
-                currentEvent = parseGenEventLine(line)
                 # Done with the old event, add it to the list, start a new one
-                if not currentEvent:
+                if currentEvent:
                     eventList.append(currentEvent)
+                    if config.VERBOSE: print vars(currentEvent)
+                    if config.VERBOSE: print "Adding GenEvent to list"
+                if config.VERBOSE: print "*** EVENT: Adding GenEvent info"
+                currentEvent = parseGenEventLine(line)
 
             # named weights
             # elif line.startswith("N"):
                 # make GenEvent deal with this?
                 # weights = parseWeightsLine(line)
+                # print vars(weights)
 
             # momentum and position units
             elif line.startswith("U"):
-                print "Adding units info"
                 currentEvent.units = parseUnitsLine(line)
+                if config.VERBOSE: print "Adding units info"
+                if config.VERBOSE: print vars(currentEvent.units)
 
             # GenCrossSection information: 
             # This line will appear ONLY if GenCrossSection is defined.
             elif line.startswith("C"):
-                print "Adding cross-section info"
                 currentEvent.cross_section = parseCrossSectionLine(line)
+                if config.VERBOSE: print "Adding cross-section info"
+                if config.VERBOSE: print vars(currentEvent.cross_section)
 
             # HeavyIon information: 
             # This line will contain zeros if there is no associated 
             # HeavyIon object. 
             # We don't use this so ignore (for now). Or throw exception?
             elif line.startswith("H"):
-                print "We don't deal with this"
+                if config.VERBOSE: print "We don't deal with this"
 
             # PdfInfo information: 
             # This line will contain 0s if there is no associated PdfInfo obj
             elif line.startswith("F"):
-                print "Adding pdf info"
                 currentEvent.pdf_info = parsePdfInfoLine(line)
-
+                if config.VERBOSE: print "Adding pdf info"
+                if config.VERBOSE: print vars(currentEvent.pdf_info)
             # Need to deal with repetitive vertex and particle                
 
 
