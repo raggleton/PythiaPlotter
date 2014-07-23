@@ -87,16 +87,22 @@ Outputs:
 - There's a not totally dissimilar program, HepMC Visual, that does something similar but requires ROOT, and you have to write your own script. So YMMV.
 
 ## Future plans/TODO
-- [ ] Let pdflatex run normally instead of tryign to hide output, otherwise can look like it hangs for no reason
+
+(not in any particular order)
+
+- [ ] Let pdflatex run normally instead of trying to hide output, otherwise can look like it hangs for no reason
 - [x] **_BIG_** Combine with Latex to represent particle names properly
 	- [x] Redo ugly rewriting gv into tex file by linking or something
 	- [ ] Add user option to pass options to dot2texi
 	- [x] Do test to see if the necessary programs exist
-- [ ] Use pyparsing to ease parsing of file/event info?
-- [ ] Improve parsing of input file eg if only full event, or other listings
 - [ ] **_BIG_** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
+	- [ ] Draw like normal Feynman diagram, not the current inverse look. Or give user the choice
+	- [ ] Use pyparsing to ease parsing of file/event info?
 	- [ ] Allow user to select which event to look at in HepMC file
+	- [ ] Auto determine if output of Pythia, or HepMC (and act accordingly)
+	- [ ] Just wrap HepMC instead of implementing subset/whole of it?
 - [ ] **_BIG_** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+- [ ] Improve parsing of input file eg if only full event, or other listings
 
 ### DONE (well, mostly...)
 - [x] Any way to optimise the diagram? Sometimes lines go in weird paths *solved using `straightedges` option in dot*
