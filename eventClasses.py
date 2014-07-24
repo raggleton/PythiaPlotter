@@ -48,13 +48,6 @@ class Particle:
         return self.name.translate(None, '()')
 
 
-class EventHeader:
-    """Class to hold event header info (GenEventInfo, Weights...),
-     not Vertex or Particle"""
-
-    pass        # PUT STUFF HERE
-
-
 class GenEvent:
     """Class to hold complete event info, e.g. evt number, scales, beam IDs
     as well as list of all particles and vertices"""
