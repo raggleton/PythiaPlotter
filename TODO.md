@@ -3,22 +3,23 @@
 (not in any particular order)
 
 - [ ] Let pdflatex run normally instead of trying to hide output, otherwise can look like it hangs for no reason
-- [x] **_BIG_** Combine with Latex to represent particle names properly
+- [x] **_BIG_ - and mostly done (in master branch)** Combine with Latex to represent particle names properly
     - [x] Redo ugly rewriting gv into tex file by linking or something
     - [ ] Add user option to pass options to dot2texi
     - [x] Do test to see if the necessary programs exist
-- [ ] **_BIG_** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
+- [ ] **_BIG_ - see hepmcReader branch** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
     - [ ] Draw like normal Feynman diagram, not the current inverse look. Or give user the choice
     - [ ] Use pyparsing to ease parsing of file/event info?
     - [ ] Allow user to select which event to look at in HepMC file
     - [ ] Auto determine if output of Pythia, or HepMC (and act accordingly)
     - [ ] Just wrap HepMC instead of implementing subset/whole of it?
     - [ ] Unify a_variable and aVariable (hangover from HepMC?)
+    - [ ] Throw some exceptions (e.g. HeavyIon lines, wrong units)
     - [ ] Test, test, test!!!
-        1. Test after parsing each line implemented, before worrying about all the connections
-        2. Test the connections
-        3. Test the writing to GraphViz format
-- [ ] **_BIG_** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
+        - [x] Test after parsing each line implemented, before worrying about all the connections
+        - [ ] Implement/Test the connections
+        - [ ] Test the writing to GraphViz format
+- [ ] **_BIG_ - slow start, see siteDev branch** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Improve parsing of input file eg if only full event, or other listings
 
 ## DONE (well, mostly...)
