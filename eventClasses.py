@@ -76,15 +76,17 @@ class GenEvent:
         if not randomInts:
             randomInts = []
         self.randomInts = randomInts  # optional list of random state integers
-        self.numRandomState = len(self.randomInts)  # number of entries in random state list (may be zero)
+        # self.numRandomState = len(self.randomInts)  # number of entries in random state list (may be zero) - in HepMC but not needed?
         
         # Bit complicated - need to coordinate with Weights class as the 
         # weights list in constructor here is actual weight values, 
-        # but Weight class stores weight names & values as dictionary
+        # but Weight class stores weight names & values as dictionary.
+        # Hangover from HepMC
         if not weightValues:
             weightValues = []
+        weightValues = [ float(w) for w in weightValues ]  # convert weight values to floats
         self.weightValues = weightValues  # optional list of weights
-        # self.numWeights = len(weights)  # number of entries in weight list (may be zero)
+        # self.numWeights = len(weights)  # number of entries in weight list (may be zero) 0 - in HepMC but not needed?
 
         # To hold future objects that conatin info about event e.g. PdfInfo
         self.pdf_info = None
@@ -98,14 +100,17 @@ class GenEvent:
 
     def setWeightNames(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the 
-        weightNames pased in, and weightValues already stored"""
+        weightNames pased in, and weightValues already stored. Stores 
+        resultant Weights object as GenEvent.weights"""
 
         if not weightNames:
             weightNames = []
-        # TODO: strip " " from weight names
         if len(weightNames) != len(self.weightValues):
             print "ERROR mismatch in number of weight names/values"
         else:
+            # strip off annoying leading and trailing " "
+            # lovely list comprhension!
+            weightNames = [ w.strip('"') for w in weightNames ]
             # construct a dictionary from weightNames and self.weightValues 
             # easy with izip!
             self.weights = Weights(dict(izip(weightNames, self.weightValues)))
@@ -119,7 +124,7 @@ class Weights:
     def __init__(self, weightDict=None):
         if not weightDict:
             weightDict={}
-        self.weightDict = weightDict  # Dictionatry of weight names and values
+        self.weightDict = weightDict  # Dictionary of weight names and values
 
 
 class Units:
@@ -127,11 +132,8 @@ class Units:
     
     def __init__(self, momentum=None, position=None):
         # TODO: enums?
-        # self.momentumUnit = "GEV"  # Default to GeV
-        # self.positionUnit = "MM"  # Default to MM
-        
-        momentum = momentum.upper()
         # Check if momentum in MEV or GEV
+        momentum = momentum.upper()
         if (momentum == "MEV" or momentum == "GEV"):
             self.momentumUnit = momentum
         else:
@@ -187,6 +189,7 @@ class GenVertex:
         self.numWeights = len(numWeights)  # number of entries in weight list (may be zero)
         if not weights:
             weights = []
+        weights = [ float(w) for w in weights ]  # makes sure they're floats not strings!
         self.weights = weights  # optional list of weights
 
 
