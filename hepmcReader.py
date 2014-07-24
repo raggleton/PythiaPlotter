@@ -9,6 +9,8 @@ from itertools import izip, tee
 from eventClasses import *
 import config  # Global definitions
 
+# TODO: delete all the unnecessary if config.VERBSOE lines
+
 
 def parse(fileName="testSS_HLT.hepmc"):
     """Parse HepMCfile and return collection of events"""
@@ -32,13 +34,11 @@ def parse(fileName="testSS_HLT.hepmc"):
             elif line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
                 print "Start parsing event listing"
 
-            # Get end of event block, add the last GenEvent
-            # and add vertex references to GenParticles
+            # Get end of event block,
+            # add vertex references to GenParticles & vice versa,
+            # and add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
-                for p in currentEvent.particles:
-                    if p.inVertexBarcode != 0:
-                        p.inVertex = currentEvent.vertices[abs(p.inVertexBarcode)-1]
-                    print vars(p)
+                postProcessEvent(currentEvent)
                 eventList.append(currentEvent)
                 if config.VERBOSE: print "Adding GenEvent to list"
                 if config.VERBOSE: print len(currentEvent.particles), len(currentEvent.vertices)
@@ -131,6 +131,24 @@ def parseGenEventLine(line):
                     weightValues=parts[13+numRandoms:])
     return genE
 
+
+def postProcessEvent(event):
+    """After getting all GenVertices and Particles from file,
+    loop over and sort out Particle/Vertex relationships,
+    so that each has lists with references to
+    connected Vertices/Particles, respectively."""
+    # Add vertex reference to particles using stored barcode
+    for p in event.particles:
+        if p.inVertexBarcode != 0:
+            p.inVertex = event.vertices[abs(p.inVertexBarcode)-1]
+            print vars(p)
+    # Add particle reference to vertices using stored barcodes
+    for v in event.vertices:
+        for p in event.particles:
+            if p.inVertexBarcode == v.barcode:
+                v.inParticles.append(p)
+            if p.outVertexBarcode == v.barcode:
+                v.outParticles.append(p)
 
 def parseUnitsLine(line):
     """Parse line from HepMC file containting Units info
