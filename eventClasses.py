@@ -69,14 +69,13 @@ class GenEvent:
         self.alphaQCD = float(alphaQCD)  # alpha QCD
         self.alphaQED = float(alphaQED)  # alpha QED
         self.signalProcessID = int(signalProcessID)  # signal process id
-        self.signalProcessBarcode = int(signalProcessBarcode)  # barcode for signal process vertex
+        self.signalProcessBarcode = int(signalProcessBarcode)  # signal process vertex barcode
         self.numVertices = int(numVertices)  # number of vertices in this event
         self.beam1Barcode = int(beam1Barcode)  # barcode for beam particle 1
         self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
         if not randomInts:
             randomInts = []
         self.randomInts = randomInts  # optional list of random state integers
-        # self.numRandomState = len(self.randomInts)  # number of entries in random state list (may be zero) - in HepMC but not needed?
 
         # Bit complicated - need to coordinate with Weights class as the
         # weights list in constructor here is actual weight values,
@@ -84,9 +83,8 @@ class GenEvent:
         # Hangover from HepMC
         if not weightValues:
             weightValues = []
-        weightValues = [ float(w) for w in weightValues ]  # convert weight values to floats
+        weightValues = [float(w) for w in weightValues]
         self.weightValues = weightValues  # optional list of weights
-        # self.numWeights = len(weights)  # number of entries in weight list (may be zero) 0 - in HepMC but not needed?
 
         # To hold future objects that conatin info about event e.g. PdfInfo
         self.pdf_info = None
@@ -110,20 +108,20 @@ class GenEvent:
         else:
             # strip off annoying leading and trailing " "
             # lovely list comprhension!
-            weightNames = [ w.strip('"') for w in weightNames ]
+            weightNames = [w.strip('"') for w in weightNames]
             # construct a dictionary from weightNames and self.weightValues
             # easy with izip!
             self.weights = Weights(dict(izip(weightNames, self.weightValues)))
 
-
     # TODO: add methods for adding particles and vertices?
+
 
 class Weights:
     """Class to store event weight names and values as dictionary"""
 
     def __init__(self, weightDict=None):
         if not weightDict:
-            weightDict={}
+            weightDict = {}
         self.weightDict = weightDict  # Dictionary of weight names and values
 
 
@@ -154,7 +152,7 @@ class GenCrossSection:
 
     def __init__(self, crossSection=0.0, crossSectionErr=0.0):
         self.crossSection = float(crossSection)  # cross section in pb
-        self.crossSectionErr = float(crossSectionErr)  # error associated with this cross section in pb
+        self.crossSectionErr = float(crossSectionErr)  # error on xsec in pb
 
 
 class PdfInfo:
@@ -164,11 +162,11 @@ class PdfInfo:
                  pdf1=0, pdf2=0, pdf_id1=0, pdf_id2=0):
         self.id1 = int(id1)  # flavour code of first parton
         self.id2 = int(id2)  # flavour code of second parton
-        self.x1 = float(x1)  # fraction of beam momentum carried by first parton ("beam side")
-        self.x2 = float(x2)  # fraction of beam momentum carried by second parton ("target side")
-        self.scalePDF = float(scalePDF)  # Q-scale used in evaluation of PDFs (in GeV)
-        self.pdf1 = float(pdf1)  # PDF (id1, x1, Q) This should be of the form x*f(x)
-        self.pdf2 = float(pdf2)  # PDF (id2, x2, Q) This should be of the form x*f(x)
+        self.x1 = float(x1)  # fraction of beam momentum carried by 1st parton ("beam side")
+        self.x2 = float(x2)  # fraction of beam momentum carried by 2nd parton ("target side")
+        self.scalePDF = float(scalePDF)  # Q-scale used in PDFs (in GeV)
+        self.pdf1 = float(pdf1)  # PDF (id1, x1, Q) of the form x*f(x)
+        self.pdf2 = float(pdf2)  # PDF (id2, x2, Q) of the form x*f(x)
         self.pdf_id1 = int(pdf_id1)  # LHAPDF set id of first parton
         self.pdf_id2 = int(pdf_id2)  # LHAPDF set id of second parton
 
@@ -178,18 +176,18 @@ class GenVertex:
 
     def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
                  numOrphans=0, numOutgoing=0, numWeights=0, weights=None):
-        self.barcode = int(barcode) # barcode
+        self.barcode = int(barcode)  # barcode
         self.id = int(id)  # id
         self.x = float(x)  # x
         self.y = float(y)  # y
         self.z = float(z)  # z
         self.ctau = float(ctau)  # ctau
-        self.numOrphans = int(numOrphans)  # number of "orphan" incoming particles
-        self.numOutgoing = int(numOutgoing)  # number of outgoing particles
-        self.numWeights = len(numWeights)  # number of entries in weight list (may be zero)
+        self.numOrphans = int(numOrphans)  # no. of "orphan" incoming particles
+        self.numOutgoing = int(numOutgoing)  # no. of outgoing particles
+        self.numWeights = len(numWeights)  # no. of entries in weight list
         if not weights:
             weights = []
-        weights = [ float(w) for w in weights ]  # makes sure they're floats not strings!
+        weights = [float(w) for w in weights]  # floats not strings!
         self.weights = weights  # optional list of weights
 
 
@@ -200,18 +198,16 @@ class GenParticle:
                  energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0,
                  inVertexBarcode=0, flowDict=None):
         self.barcode = int(barcode)  # particle barcode
-        self.pdgid = int(pdgid)
+        self.pdgid = int(pdgid)  # PDGID - see seciton 43 (?) in PDGID
         self.px = float(px)
         self.py = float(py)
         self.pz = float(pz)
-        self.energy = float(energy)
+        self.energy = float(energy)  # Units specified in Units.momentumUnit
         self.mass = float(mass)
         self.status = int(status)  # status code
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
         self.inVertexBarcode = int(inVertexBarcode)  # Barcode of vertex that has this particle as an incoming particle
-        # Remove numFlowDict - could just do len(flowDict) - hangover from HepMC
-        # self.numFlowDict = int(numFlowDict)  # number of entries in flow dictionary (call it dictionary, as it's a python dictionary, not list!)
         if not flowDict:
-            flowDict ={}
+            flowDict = {}
         self.flowDict = flowDict

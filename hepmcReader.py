@@ -18,7 +18,7 @@ def parse(fileName="testSS_HLT.hepmc"):
     with open(fileName, 'r') as file:
 
         eventList = []  # To hold all events
-        currentEvent = None  # to hold the current GenEvent, to add particles, etc
+        currentEvent = None  # to hold the current GenEvent, add particles, etc
 
         for line in file:
             # if config.VERBOSE: print line,
@@ -83,7 +83,8 @@ def parse(fileName="testSS_HLT.hepmc"):
                 currentEvent.pdf_info = parsePdfInfoLine(line)
                 if config.VERBOSE: print "Adding pdf info"
                 if config.VERBOSE: print vars(currentEvent.pdf_info)
-            # Need to deal with repetitive vertex and particle
+
+            # TODO: Need to deal with repetitive vertex and particle
 
 
 def parseGenEventLine(line):
@@ -157,13 +158,14 @@ def parseGenParticleLine(line):
     parts = line.split()
     # Handle flow entries at end, e.g. 2 1 102 2 103 from above
     # The first number (parts[12]) is the number of entries in flow list
-    # The following numbers (parts[13:]) are pairs of code index and code for 
-    # each entry in the flow list. We use the "stride" feature of ranges, 
-    # [start:stop:step], and izip to turn into pairs, then cast to dictionary. 
+    # The following numbers (parts[13:]) are pairs of code index and code for
+    # each entry in the flow list. We use the "stride" feature of ranges,
+    # [start:stop:step], and izip to turn into pairs, then cast to dictionary.
     # Sweet!
     flowDict = dict(izip(parts[13::2], parts[14::2]))
     p = GenParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
-                    polPhi=parts[10], inVertexBarcode=parts[11], flowDict=flowDict)
+                    polPhi=parts[10], inVertexBarcode=parts[11],
+                    flowDict=flowDict)
     return p
