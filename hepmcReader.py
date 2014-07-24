@@ -4,12 +4,12 @@
     See hepmcformat.txt for reminder, or section 6 of hepMC2 user manual
 """
 
-from itertools import izip, tee
+from itertools import izip
 
 from eventClasses import *
 import config  # Global definitions
 
-# TODO: delete all the unnecessary if config.VERBSOE lines
+# TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
 
 def parse(fileName="testSS_HLT.hepmc"):
@@ -38,7 +38,7 @@ def parse(fileName="testSS_HLT.hepmc"):
             # add vertex references to GenParticles & vice versa,
             # and add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
-                postProcessEvent(currentEvent)
+                currentEvent.connectParticlesVertices()
                 eventList.append(currentEvent)
                 if config.VERBOSE: print "Adding GenEvent to list"
                 if config.VERBOSE: print len(currentEvent.particles), len(currentEvent.vertices)
@@ -111,6 +111,7 @@ def parse(fileName="testSS_HLT.hepmc"):
                 if config.VERBOSE: print vars(p)
 
         if config.VERBOSE: print len(eventList)
+    return eventList
 
 
 def parseGenEventLine(line):
@@ -131,24 +132,6 @@ def parseGenEventLine(line):
                     weightValues=parts[13+numRandoms:])
     return genE
 
-
-def postProcessEvent(event):
-    """After getting all GenVertices and Particles from file,
-    loop over and sort out Particle/Vertex relationships,
-    so that each has lists with references to
-    connected Vertices/Particles, respectively."""
-    # Add vertex reference to particles using stored barcode
-    for p in event.particles:
-        if p.inVertexBarcode != 0:
-            p.inVertex = event.vertices[abs(p.inVertexBarcode)-1]
-            print vars(p)
-    # Add particle reference to vertices using stored barcodes
-    for v in event.vertices:
-        for p in event.particles:
-            if p.inVertexBarcode == v.barcode:
-                v.inParticles.append(p)
-            if p.outVertexBarcode == v.barcode:
-                v.outParticles.append(p)
 
 def parseUnitsLine(line):
     """Parse line from HepMC file containting Units info

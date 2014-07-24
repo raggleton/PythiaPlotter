@@ -106,7 +106,23 @@ class GenEvent:
             # easy with izip!
             self.weights = Weights(dict(izip(weightNames, self.weightValues)))
 
-    # TODO: add methods for adding particles and vertices?
+    def connectParticlesVertices(self):
+        """After getting all GenVertices and Particles from file,
+        loop over and sort out Particle/Vertex relationships,
+        so that each has lists with references to
+        connected Vertices/Particles, respectively."""
+        # Add vertex reference to particles using stored barcode
+        for p in self.particles:
+            if p.inVertexBarcode != 0:
+                p.inVertex = self.vertices[abs(p.inVertexBarcode)-1]
+                print vars(p)
+        # Add particle reference to vertices using stored barcodes
+        for v in self.vertices:
+            for p in self.particles:
+                if p.inVertexBarcode == v.barcode:
+                    v.inParticles.append(p)
+                if p.outVertexBarcode == v.barcode:
+                    v.outParticles.append(p)
 
 
 class Weights:
