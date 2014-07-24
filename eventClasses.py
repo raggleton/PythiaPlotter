@@ -60,8 +60,8 @@ class GenEvent:
     as well as list of all particles and vertices"""
 
     def __init__(self, eventNum=0, numMPI=0, scale=-1.0, alphaQCD=-1.0,
-                 alphaQED=-1.0, signalProcessID=0, signalProcessBarcode=0, 
-                 numVertices=0, beam1Barcode=0, beam2Barcode=0, 
+                 alphaQED=-1.0, signalProcessID=0, signalProcessBarcode=0,
+                 numVertices=0, beam1Barcode=0, beam2Barcode=0,
                  randomInts=None, weightValues=None):
         self.eventNum = int(eventNum)  # event number
         self.numMPI = int(numMPI)  # number of multi paricle interactions
@@ -77,9 +77,9 @@ class GenEvent:
             randomInts = []
         self.randomInts = randomInts  # optional list of random state integers
         # self.numRandomState = len(self.randomInts)  # number of entries in random state list (may be zero) - in HepMC but not needed?
-        
-        # Bit complicated - need to coordinate with Weights class as the 
-        # weights list in constructor here is actual weight values, 
+
+        # Bit complicated - need to coordinate with Weights class as the
+        # weights list in constructor here is actual weight values,
         # but Weight class stores weight names & values as dictionary.
         # Hangover from HepMC
         if not weightValues:
@@ -99,8 +99,8 @@ class GenEvent:
         self.particles = []
 
     def setWeightNames(self, weightNames=None):
-        """Create Weights object atttribute for GenEvent object using the 
-        weightNames pased in, and weightValues already stored. Stores 
+        """Create Weights object atttribute for GenEvent object using the
+        weightNames pased in, and weightValues already stored. Stores
         resultant Weights object as GenEvent.weights"""
 
         if not weightNames:
@@ -111,7 +111,7 @@ class GenEvent:
             # strip off annoying leading and trailing " "
             # lovely list comprhension!
             weightNames = [ w.strip('"') for w in weightNames ]
-            # construct a dictionary from weightNames and self.weightValues 
+            # construct a dictionary from weightNames and self.weightValues
             # easy with izip!
             self.weights = Weights(dict(izip(weightNames, self.weightValues)))
 
@@ -120,7 +120,7 @@ class GenEvent:
 
 class Weights:
     """Class to store event weight names and values as dictionary"""
-    
+
     def __init__(self, weightDict=None):
         if not weightDict:
             weightDict={}
@@ -129,7 +129,7 @@ class Weights:
 
 class Units:
     """Class to store momentum and position units"""
-    
+
     def __init__(self, momentum=None, position=None):
         # TODO: enums?
         # Check if momentum in MEV or GEV
@@ -139,7 +139,7 @@ class Units:
         else:
             self.momentumUnit = "GEV"
             print "Momentum must be either MEV or GEV. Defaulting to GEV."
-        
+
         # Check if momentum in MM or CM
         position = position.upper()
         if (position == "MM" or position == "CM"):
@@ -151,7 +151,7 @@ class Units:
 
 class GenCrossSection:
     """Class to store cross section + error for event. Units: pb."""
-    
+
     def __init__(self, crossSection=0.0, crossSectionErr=0.0):
         self.crossSection = float(crossSection)  # cross section in pb
         self.crossSectionErr = float(crossSectionErr)  # error associated with this cross section in pb
@@ -159,8 +159,8 @@ class GenCrossSection:
 
 class PdfInfo:
     """Class to store parton info (Q scale, momenta, LHAPDF set"""
-    
-    def __init__(self, id1=0, id2=0, x1=0, x2=0, scalePDF=0, 
+
+    def __init__(self, id1=0, id2=0, x1=0, x2=0, scalePDF=0,
                  pdf1=0, pdf2=0, pdf_id1=0, pdf_id2=0):
         self.id1 = int(id1)  # flavour code of first parton
         self.id2 = int(id2)  # flavour code of second parton
@@ -175,8 +175,8 @@ class PdfInfo:
 
 class GenVertex:
     """Class to store info about vertex"""
-    
-    def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0, 
+
+    def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
                  numOrphans=0, numOutgoing=0, numWeights=0, weights=None):
         self.barcode = int(barcode) # barcode
         self.id = int(id)  # id
@@ -196,9 +196,9 @@ class GenVertex:
 class GenParticle:
     """Class to store info about GenParticle in event"""
 
-    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, 
-                 energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0, 
-                 vertexBarcode=0, numFlowDict=0, flowDict=None):
+    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0,
+                 energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0,
+                 inVertexBarcode=0, flowDict=None):
         self.barcode = int(barcode)  # particle barcode
         self.pdgid = int(pdgid)
         self.px = float(px)
@@ -209,9 +209,9 @@ class GenParticle:
         self.status = int(status)  # status code
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
-        self.vertexBarcode = int(vertexBarcode)  # Barcode of vertex that has this particle as an incoming particle
-        # Remove numFlowDict - could just do len(flowDict)
-        self.numFlowDict = int(numFlowDict)  # number of entries in flow dictionary (call it dictionary, as it's a python dictionary, not list!)
+        self.inVertexBarcode = int(inVertexBarcode)  # Barcode of vertex that has this particle as an incoming particle
+        # Remove numFlowDict - could just do len(flowDict) - hangover from HepMC
+        # self.numFlowDict = int(numFlowDict)  # number of entries in flow dictionary (call it dictionary, as it's a python dictionary, not list!)
         if not flowDict:
             flowDict ={}
         self.flowDict = flowDict

@@ -4,6 +4,8 @@
     See hepmcformat.txt for reminder, or section 6 of hepMC2 user manual
 """
 
+from itertools import izip, tee
+
 from eventClasses import *
 import config  # Global definitions
 
@@ -29,7 +31,7 @@ def parse(fileName="testSS_HLT.hepmc"):
             # Get start of event block
             elif line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
                 print "Start parsing event listing"
-            
+
             # Get end of event block, add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
                 eventList.append(currentEvent)
@@ -37,7 +39,7 @@ def parse(fileName="testSS_HLT.hepmc"):
                 if config.VERBOSE: print "Adding GenEvent to list"
                 print "End parsing event listing"
 
-            # general GenEvent information            
+            # general GenEvent information
             elif line.startswith("E"):
                 # Done with the old event, add it to the list, start a new one
                 if currentEvent:
@@ -61,28 +63,27 @@ def parse(fileName="testSS_HLT.hepmc"):
                 if config.VERBOSE: print "Adding units info"
                 if config.VERBOSE: print vars(currentEvent.units)
 
-            # GenCrossSection information: 
+            # GenCrossSection information:
             # This line will appear ONLY if GenCrossSection is defined.
             elif line.startswith("C"):
                 currentEvent.cross_section = parseCrossSectionLine(line)
                 if config.VERBOSE: print "Adding cross-section info"
                 if config.VERBOSE: print vars(currentEvent.cross_section)
 
-            # HeavyIon information: 
-            # This line will contain zeros if there is no associated 
-            # HeavyIon object. 
+            # HeavyIon information:
+            # This line will contain zeros if there is no associated
+            # HeavyIon object.
             # We don't use this so ignore (for now). Or throw exception?
             elif line.startswith("H"):
                 if config.VERBOSE: print "We don't deal with this"
 
-            # PdfInfo information: 
+            # PdfInfo information:
             # This line will contain 0s if there is no associated PdfInfo obj
             elif line.startswith("F"):
                 currentEvent.pdf_info = parsePdfInfoLine(line)
                 if config.VERBOSE: print "Adding pdf info"
                 if config.VERBOSE: print vars(currentEvent.pdf_info)
-            # Need to deal with repetitive vertex and particle                
-
+            # Need to deal with repetitive vertex and particle
 
 
 def parseGenEventLine(line):
@@ -95,11 +96,11 @@ def parseGenEventLine(line):
     # parts[12+numRandom] tells us the number of weights that follow
     # parts[13+numrandom] to the end are the weights
     numRandoms = int(parts[11])
-    genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3], 
-                    alphaQCD=parts[4], alphaQED=parts[5], 
-                    signalProcessID=parts[6], signalProcessBarcode=parts[7], 
-                    numVertices=parts[8], beam1Barcode=parts[9], 
-                    beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms], 
+    genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3],
+                    alphaQCD=parts[4], alphaQED=parts[5],
+                    signalProcessID=parts[6], signalProcessBarcode=parts[7],
+                    numVertices=parts[8], beam1Barcode=parts[9],
+                    beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms],
                     weightValues=parts[13+numRandoms:])
     return genE
 
@@ -132,8 +133,8 @@ def parsePdfInfoLine(line):
     """Parse line from HepMC file containting PdfInfo info
     e.g. F 21 21 2.9758908919249000e-03 7.3389857579700624e-02 3.4651814800093540e+01 1.7560069564760610e+01 1.3634687138200170e+00 0 0 """
     parts = line.split()
-    f = PdfInfo(id1=parts[1], id2=parts[2], x1=parts[3], x2=parts[4], 
-                scalePDF=parts[5], pdf1=parts[6], pdf2=parts[7], 
+    f = PdfInfo(id1=parts[1], id2=parts[2], x1=parts[3], x2=parts[4],
+                scalePDF=parts[5], pdf1=parts[6], pdf2=parts[7],
                 pdf_id1=parts[8], pdf_id2=parts[9])
     return f
 
@@ -154,14 +155,15 @@ def parseGenParticleLine(line):
     """Parse line from HepMC file containing GenParticle info
     e.g. P 4 21 0 0 -2.9355943031880248e+05 2.9355943031880248e+05 0 21 0 0 -3 2 1 102 2 103 """
     parts = line.split()
-    
-    # TODO: implement optional code index and code for each entry in the flow list
-    if parts[13]:
-        pass
-    # flowDict = {}
-
+    # Handle flow entries at end, e.g. 2 1 102 2 103 from above
+    # The first number (parts[12]) is the number of entries in flow list
+    # The following numbers (parts[13:]) are pairs of code index and code for 
+    # each entry in the flow list. We use the "stride" feature of ranges, 
+    # [start:stop:step], and izip to turn into pairs, then cast to dictionary. 
+    # Sweet!
+    flowDict = dict(izip(parts[13::2], parts[14::2]))
     p = GenParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
-                    polPhi=parts[10], vertexBarcode=parts[11])
+                    polPhi=parts[10], inVertexBarcode=parts[11], flowDict=flowDict)
     return p
