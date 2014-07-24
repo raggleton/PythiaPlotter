@@ -18,8 +18,8 @@ def parse(fileName="testSS_HLT.hepmc"):
     with open(fileName, 'r') as file:
 
         eventList = []  # To hold all events
-        currentEvent = None  # to hold the current GenEvent, add particles, etc
-
+        currentEvent = None  # hold current GenEvent, add particles, etc
+        currentVertex = None  # hold current vertex, to add ref to particles
         for line in file:
             # if config.VERBOSE: print line,
 
@@ -33,10 +33,15 @@ def parse(fileName="testSS_HLT.hepmc"):
                 print "Start parsing event listing"
 
             # Get end of event block, add the last GenEvent
+            # and add vertex references to GenParticles
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
+                for p in currentEvent.particles:
+                    if p.inVertexBarcode != 0:
+                        p.inVertex = currentEvent.vertices[abs(p.inVertexBarcode)-1]
+                    print vars(p)
                 eventList.append(currentEvent)
-                if config.VERBOSE: print vars(currentEvent)
                 if config.VERBOSE: print "Adding GenEvent to list"
+                if config.VERBOSE: print len(currentEvent.particles), len(currentEvent.vertices)
                 print "End parsing event listing"
 
             # general GenEvent information
@@ -44,8 +49,10 @@ def parse(fileName="testSS_HLT.hepmc"):
                 # Done with the old event, add it to the list, start a new one
                 if currentEvent:
                     eventList.append(currentEvent)
-                    if config.VERBOSE: print vars(currentEvent)
+                    # if config.VERBOSE: print vars(currentEvent)
                     if config.VERBOSE: print "Adding GenEvent to list"
+                    if config.VERBOSE: print len(currentEvent.particles),
+                    len(currentEvent.vertices)
                 if config.VERBOSE: print "*** EVENT: Adding GenEvent info"
                 currentEvent = parseGenEventLine(line)
 
@@ -84,7 +91,26 @@ def parse(fileName="testSS_HLT.hepmc"):
                 if config.VERBOSE: print "Adding pdf info"
                 if config.VERBOSE: print vars(currentEvent.pdf_info)
 
-            # TODO: Need to deal with repetitive vertex and particle
+            # GenVertex information:
+            # Need to keep track of last process vertex to add to GenParticle
+            elif line.startswith("V"):
+                v = parseGenVertexLine(line)
+                currentEvent.vertices.append(v)
+                currentVertex = v
+                if config.VERBOSE: print "Adding GenVertex info"
+                if config.VERBOSE: print vars(v)
+
+            # GenParticle information:
+            # The GenVertex line before this has this particle as outgoing
+            elif line.startswith("P"):
+                p = parseGenParticleLine(line)
+                p.outVertexBarcode = currentVertex.barcode
+                p.outVertex = currentVertex
+                currentEvent.particles.append(p)
+                if config.VERBOSE: print "Adding GenParticle info"
+                if config.VERBOSE: print vars(p)
+
+        if config.VERBOSE: print len(eventList)
 
 
 def parseGenEventLine(line):
@@ -104,14 +130,6 @@ def parseGenEventLine(line):
                     beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms],
                     weightValues=parts[13+numRandoms:])
     return genE
-
-# def parseWeightsLine(line):
-#     # TODO - not vital
-#     """Parse line from HepMC file containting Weights info
-#     e.g. N 1 "0" """
-#     parts = line.split()
-#     w = Weights()
-#     return w
 
 
 def parseUnitsLine(line):

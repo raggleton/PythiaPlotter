@@ -84,7 +84,7 @@ class GenEvent:
         if not weightValues:
             weightValues = []
         weightValues = [float(w) for w in weightValues]
-        self.weightValues = weightValues  # optional list of weights
+        self.weightValues = weightValues
 
         # To hold future objects that conatin info about event e.g. PdfInfo
         self.pdf_info = None
@@ -162,8 +162,10 @@ class PdfInfo:
                  pdf1=0, pdf2=0, pdf_id1=0, pdf_id2=0):
         self.id1 = int(id1)  # flavour code of first parton
         self.id2 = int(id2)  # flavour code of second parton
-        self.x1 = float(x1)  # fraction of beam momentum carried by 1st parton ("beam side")
-        self.x2 = float(x2)  # fraction of beam momentum carried by 2nd parton ("target side")
+        # fraction of beam momentum carried by 1st parton ("beam side")
+        self.x1 = float(x1)
+        # fraction of beam momentum carried by 2nd parton ("target side")
+        self.x2 = float(x2)
         self.scalePDF = float(scalePDF)  # Q-scale used in PDFs (in GeV)
         self.pdf1 = float(pdf1)  # PDF (id1, x1, Q) of the form x*f(x)
         self.pdf2 = float(pdf2)  # PDF (id2, x2, Q) of the form x*f(x)
@@ -190,13 +192,16 @@ class GenVertex:
         weights = [float(w) for w in weights]  # floats not strings!
         self.weights = weights  # optional list of weights
 
+        self.inParticles = []  # Incoming GenParticles
+        self.outParticles = []  # Outgoing GenParticles
+
 
 class GenParticle:
     """Class to store info about GenParticle in event"""
 
     def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0,
                  energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0,
-                 inVertexBarcode=0, flowDict=None):
+                 inVertexBarcode=0, outVertexBarcode=0, flowDict=None):
         self.barcode = int(barcode)  # particle barcode
         self.pdgid = int(pdgid)  # PDGID - see seciton 43 (?) in PDGID
         self.px = float(px)
@@ -207,7 +212,14 @@ class GenParticle:
         self.status = int(status)  # status code
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
-        self.inVertexBarcode = int(inVertexBarcode)  # Barcode of vertex that has this particle as an incoming particle
+        # Barcode of vertex that has this particle as an incoming particle
+        self.inVertexBarcode = int(inVertexBarcode)
+        # Reference to GenVertex where this particle is incoming
+        self.inVertex = None
+        # Barcode of vertex that has this particle as an outgoing particle
+        self.outVertexBarcode = int(outVertexBarcode)
+        # Reference to GenVertex where this particle is outgoing
+        self.outVertex = None
         if not flowDict:
             flowDict = {}
         self.flowDict = flowDict
