@@ -5,14 +5,14 @@
 """
 
 from itertools import izip
-
+from pprint import pprint
 from eventClasses import *
 import config  # Global definitions
 
 # TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
 
-def parse(fileName="testSS_HLT.hepmc"):
+def parse(fileName="testing/testSS_HLT.hepmc"):
     """Parse HepMCfile and return collection of events"""
 
     print "Parsing events from", fileName
@@ -62,20 +62,20 @@ def parse(fileName="testSS_HLT.hepmc"):
                 # line.split()[2:] has all the weight names
                 currentEvent.setWeightNames(line.split()[2:])
                 if config.VERBOSE: print "Adding weights info"
-                if config.VERBOSE: print vars(currentEvent.weights)
+                if config.VERBOSE: print pprint(vars(currentEvent.weights))
 
             # momentum and position units
             elif line.startswith("U"):
                 currentEvent.units = parseUnitsLine(line)
                 if config.VERBOSE: print "Adding units info"
-                if config.VERBOSE: print vars(currentEvent.units)
+                if config.VERBOSE: print pprint(vars(currentEvent.units))
 
             # GenCrossSection information:
             # This line will appear ONLY if GenCrossSection is defined.
             elif line.startswith("C"):
                 currentEvent.cross_section = parseCrossSectionLine(line)
                 if config.VERBOSE: print "Adding cross-section info"
-                if config.VERBOSE: print vars(currentEvent.cross_section)
+                if config.VERBOSE: print pprint(vars(currentEvent.cross_section))
 
             # HeavyIon information:
             # This line will contain zeros if there is no associated
@@ -89,7 +89,7 @@ def parse(fileName="testSS_HLT.hepmc"):
             elif line.startswith("F"):
                 currentEvent.pdf_info = parsePdfInfoLine(line)
                 if config.VERBOSE: print "Adding pdf info"
-                if config.VERBOSE: print vars(currentEvent.pdf_info)
+                if config.VERBOSE: print pprint(vars(currentEvent.pdf_info))
 
             # GenVertex information:
             # Need to keep track of last process vertex to add to GenParticle
@@ -98,7 +98,7 @@ def parse(fileName="testSS_HLT.hepmc"):
                 currentEvent.vertices.append(v)
                 currentVertex = v
                 if config.VERBOSE: print "Adding GenVertex info"
-                if config.VERBOSE: print vars(v)
+                # if config.VERBOSE: pprint(vars(v))
 
             # GenParticle information:
             # The GenVertex line before this has this particle as outgoing
@@ -108,9 +108,10 @@ def parse(fileName="testSS_HLT.hepmc"):
                 p.outVertex = currentVertex
                 currentEvent.particles.append(p)
                 if config.VERBOSE: print "Adding GenParticle info"
-                if config.VERBOSE: print vars(p)
+                # if config.VERBOSE: pprint(vars(p))
 
         if config.VERBOSE: print len(eventList)
+        if config.VERBOSE: pprint(vars(currentEvent))
     return eventList
 
 
@@ -120,15 +121,16 @@ def parseGenEventLine(line):
     parts = line.split()
 
     # parts[11] tells us number of random ints that follow
-    # parts[12] to parts[11+numRandom] are the random ints
+    # parts[12] to parts[11+numRandom] are random ints (end value is exclusive)
     # parts[12+numRandom] tells us the number of weights that follow
     # parts[13+numrandom] to the end are the weights
     numRandoms = int(parts[11])
+    print "numRandoms:",numRandoms,parts[12:12+numRandoms]
     genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3],
                     alphaQCD=parts[4], alphaQED=parts[5],
                     signalProcessID=parts[6], signalProcessBarcode=parts[7],
                     numVertices=parts[8], beam1Barcode=parts[9],
-                    beam2Barcode=parts[10], randomInts=parts[12:11+numRandoms],
+                    beam2Barcode=parts[10], randomInts=parts[12:12+numRandoms],
                     weightValues=parts[13+numRandoms:])
     return genE
 
