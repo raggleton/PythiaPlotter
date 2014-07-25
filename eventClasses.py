@@ -4,6 +4,8 @@
 """
 
 from itertools import izip
+from pprint import pprint
+import operator
 
 import config  # Global definitions
 from convertParticleName import convertPIDToTexName
@@ -110,12 +112,16 @@ class GenEvent:
         """After getting all GenVertices and Particles from file,
         loop over and sort out Particle/Vertex relationships,
         so that each has lists with references to
-        connected Vertices/Particles, respectively."""
+        connected Vertices/Particles, respectively.
+        Then sort particle list by ascending barcode"""
         # Add vertex reference to particles using stored barcode
         for p in self.particles:
             if p.inVertexBarcode != 0:
                 p.inVertex = self.vertices[abs(p.inVertexBarcode)-1]
-                print vars(p)
+            if config.VERBOSE: p.printParticle()
+
+        self.particles.sort(key=operator.attrgetter('barcode'))
+
         # Add particle reference to vertices using stored barcodes
         for v in self.vertices:
             for p in self.particles:
@@ -123,6 +129,7 @@ class GenEvent:
                     v.inParticles.append(p)
                 if p.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
+            if config.VERBOSE: v.printVertex()
 
 
 class Weights:
@@ -204,6 +211,14 @@ class GenVertex:
         self.inParticles = []  # Incoming GenParticles
         self.outParticles = []  # Outgoing GenParticles
 
+    def printVertex(self):
+        pprint(vars(self))
+        print "inParticles barcodes:"
+        for pi in self.inParticles:
+            print(pi.barcode)
+            print "outParticles barcodes:"
+        for po in self.outParticles:
+            print(po.barcode)
 
 class GenParticle:
     """Class to store info about GenParticle in event"""
@@ -232,3 +247,10 @@ class GenParticle:
         if not flowDict:
             flowDict = {}
         self.flowDict = flowDict
+
+    def printParticle(self):
+        pprint(vars(self))
+        if self.outVertex:
+            print self.outVertex.barcode
+        if self.inVertex:
+            print self.inVertex.barcode
