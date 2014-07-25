@@ -181,9 +181,9 @@ def parseGenParticleLine(line):
     # The first number (parts[12]) is the number of entries in flow list
     # The following numbers (parts[13:]) are pairs of code index and code for
     # each entry in the flow list. We use the "stride" feature of ranges,
-    # [start:stop:step], and izip to turn into pairs, then cast to dictionary.
-    # Sweet!
-    flowDict = dict(izip(parts[13::2], parts[14::2]))
+    # [start:stop:step], list comprehension to convert to ints,
+    # izip to turn into pairs, then cast to dictionary. Sweet!
+    flowDict = dict(izip([int(x) for x in parts[13::2]], [int(y) for y in parts[14::2]]))
     p = GenParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
