@@ -4,20 +4,18 @@ import re
 # Taken from http://cepa.fnal.gov/psm/stdhep/numbers.shtml
 # Although based on 2006 PDG, so bit out of date!
 # To add new particles, either add here or in pdg_all.tex
-pidDict = {}
+pidTexDict = {}
 with open("pdg_all.tex", "r") as particleList:
     for line in particleList:
         (key, val) = line.split(" ", 1)  # split based on 1st occurence of " "
         # print key, val,
-        pidDict[int(key)] = val.strip()
+        pidTexDict[int(key)] = val.strip()
 
 
-# This converts from PDGIDs and returns a Latex form for the name,
-# also deals with antiparticles
 def convertPIDToTexName(PID):
     """Convert PDGID to TeX-compatible name"""
     if PID != 90:  # PYTHIA makes 90 = system, not in PDG
-        name = pidDict[abs(PID)]
+        name = pidTexDict[abs(PID)]
     else:
         name = "PYTHIA system"
 
@@ -39,3 +37,7 @@ def convertPIDToTexName(PID):
             else:
                 name = "\\overline{"+name+"}"
     return name
+
+
+def convertPIDToRawName(PID):
+    pass

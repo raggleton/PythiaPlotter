@@ -8,7 +8,7 @@ from pprint import pprint
 import operator
 
 import config  # Global definitions
-from convertParticleName import convertPIDToTexName
+from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
 
 class Particle:
@@ -220,12 +220,14 @@ class GenVertex:
         for po in self.outParticles:
             print(po.barcode)
 
+
 class GenParticle:
     """Class to store info about GenParticle in event"""
 
     def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0,
                  energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0,
-                 inVertexBarcode=0, outVertexBarcode=0, flowDict=None):
+                 inVertexBarcode=0, outVertexBarcode=0, flowDict=None,
+                 mother1=0, mother2=0):
         self.barcode = int(barcode)  # particle barcode
         self.pdgid = int(pdgid)  # PDGID - see seciton 43 (?) in PDGID
         self.px = float(px)
@@ -246,7 +248,32 @@ class GenParticle:
         self.outVertex = None
         if not flowDict:
             flowDict = {}
-        self.flowDict = flowDict
+        self.flowDict = flowDict  # colour flow
+        # For reading in from Pythia screen output, need to read in mother(s)
+        # of particle. Can then infer daughters once gathered all particles
+        self.m1 = int(mother1)  # barcode of mother 1
+        self.m2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
+        self.mothers = []  # list of Particle objects that are its mother
+        self.daughters = []  # list of Particle objects that are its daughters
+        self.skip = False  # Whether to skip when writing nodes to file
+        self.isFinalState = False
+        self.isInitialState = False
+        self.displayAttributes = DisplayAttributes()
+
+        # Following only true if reading from Pythia screen output.
+        if (status > 0):
+            self.isFinalState = True
+
+        if ((self.mother1 == 0) and (self.mother2 == 0)):
+            self.isInitialState = True
+
+        # Sometimes Pythia sets m2 == 0 if only 1 mother & particle from shower
+        # This causes looping issues, so set m2 = m1 if that's the case
+        if ((self.mother1 != 0) and (self.mother2 == 0)):
+            self.mother2 = self.mother1
+
+    def __eq__(self, other):
+        return self.barcode == other.barcode
 
     def printParticle(self):
         pprint(vars(self))
@@ -254,3 +281,17 @@ class GenParticle:
             print self.outVertex.barcode
         if self.inVertex:
             print self.inVertex.barcode
+
+
+class DisplayAttributes:
+    """Class to store attributes about node/edge representation
+    of a particle, e.g. node shape, colour"""
+
+    def __init__(self):
+        self.isInteresting = False  # Whether the user wants this highlighted
+        self.colour = ""  # What colour to highlight the node/edge
+        self.isFinalState = False
+        self.isInitialState = False
+        self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0
+        self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
+        self.isNode = True  # whether particle is node or edge
