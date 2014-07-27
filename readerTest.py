@@ -8,6 +8,8 @@ import hepmcReader as h
 import config
 
 
-config.VERBOSE = True
-# h.parse()
-h.parse("5evt_HLT.hepmc")
+config.VERBOSE = False
+# eventList = h.parse()
+eventList = h.parse("testing/testSimple.hepmc")
+# eventList = h.parse("5evt_HLT.hepmc")
+print "Parsed",len(eventList),"events"
