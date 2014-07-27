@@ -33,3 +33,12 @@
     - [x] Improve by stripping any `()` from around the particle name to test if == one of interesting particles - allows exact matching (ATM does match to `*particleName*` which fails for say `b` quark)
 - [x] Make a bit more user-friendly
 - [x] Redo in python!
+
+### Current work 
+
+_hepmcReader_:
+- [x] construct test hepmc file (short)
+- [x] run progrma to test connections all filled correctly
+- [x] sort particles list by barcode? or by order in hepmc file? (probably former)
+- [ ] add other necessary fields Particle -> GenParticle
+- [ ] write connections to file in GraphViz
