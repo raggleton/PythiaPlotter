@@ -1,0 +1,9 @@
+digraph g {
+    rankdir = LR;
+    fixedsize=true;
+    a->b[label=" ", texlbl="$\overline{\nu}_{\mu}$"]
+    a->c[label="p^-"]
+    d->c[label="p^-", texlbl="$\Sigma^{*+}$"]
+    b -> { d e } [label=" ", texlbl="$\overline{p}$"]
+    a [label="",shape=point, width=0.01,fixedsize=true]
+}
