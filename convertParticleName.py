@@ -1,4 +1,12 @@
 import re
+import xml.etree.ElementTree as ET
+
+"""
+Functions to provide TeX and normal ("raw") particle names for a given PDGID.
+Uses the PDGID for TeX names, and Pythia8 for normal names.
+
+TODO: unify into one dictionary. Rename "RawName" to "PythiaName"?
+"""
 
 # Load up dictionary with PDGIDs and corresponding LaTeX names
 # Taken from http://cepa.fnal.gov/psm/stdhep/numbers.shtml
@@ -11,9 +19,25 @@ with open("pdg_all.tex", "r") as particleList:
         # print key, val,
         pidTexDict[int(key)] = val.strip()
 
+# Load up dictionary with PDGIDs and corresponding "raw" string names 
+# (e.g. K_L0). Uses the ParticleData.xml file from Pythia8/xmldoc. 
+# Have copied it into repo, although should probably ask user to link to it.
+# BUT: 
+#   - it has lots of standard text crap before it
+#   - there are typos where <particle ... ends with />, not > giving error !
+# So maybe stick with mine for now...
+# For each PDGID key, there is a corresponding pair of strings, 
+# the first is the paricle name, the second is the antiparticle name.
+ParticleDataFile = "ParticleData.xml"
+tree = ET.parse(ParticleDataFile)
+root = tree.getroot()
+pidRawDict = {}
+for child in root:
+    pidRawDict[int(child.get('id'))] = child.get('name'), child.get('antiName')
+
 
 def convertPIDToTexName(PID):
-    """Convert PDGID to TeX-compatible name"""
+    """Convert PDGID to TeX-compatible name e.g. \pi^0"""
     if PID != 90:  # PYTHIA makes 90 = system, not in PDG
         name = pidTexDict[abs(PID)]
     else:
@@ -40,4 +64,10 @@ def convertPIDToTexName(PID):
 
 
 def convertPIDToRawName(PID):
-    pass
+    """Convert PDGID to readable string (raw) name e.g. pi0"""
+    if int(PID) > 0:
+        name = pidRawDict[abs(int(PID))][0]
+    else:
+        name = pidRawDict[abs(int(PID))][1]
+
+    return name
