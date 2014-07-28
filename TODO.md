@@ -7,7 +7,7 @@
     - [x] Redo ugly rewriting gv into tex file by linking or something
     - [ ] Add user option to pass options to dot2texi
     - [x] Do test to see if the necessary programs exist
-- [ ] **_BIG_ - see hepmcReader branch** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
+- [ ] **_BIG_ - see hepmcParser branch** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
     - [ ] Draw like normal Feynman diagram, not the current inverse look. Or give user the choice
     - [ ] Use pyparsing to ease parsing of file/event info?
     - [ ] Allow user to select which event to look at in HepMC file
@@ -36,7 +36,7 @@
 
 ### Current work 
 
-_hepmcReader_:
+_hepmcParser_:
 - [x] construct test hepmc file (short)
 - [x] run progrma to test connections all filled correctly
 - [x] sort particles list by barcode? or by order in hepmc file? (probably former)

@@ -125,7 +125,6 @@ def parseGenEventLine(line):
     # parts[12+numRandom] tells us the number of weights that follow
     # parts[13+numrandom] to the end are the weights
     numRandoms = int(parts[11])
-    print "numRandoms:",numRandoms,parts[12:12+numRandoms]
     genE = GenEvent(eventNum=parts[1], numMPI=parts[2], scale=parts[3],
                     alphaQCD=parts[4], alphaQED=parts[5],
                     signalProcessID=parts[6], signalProcessBarcode=parts[7],
