@@ -28,7 +28,7 @@ import config as c  # Global definitions
 
 # Setup commandline args parser
 parser = argparse.ArgumentParser(
-    description="Convert PYTHIA8 event listing into graph using \
+    description="Convert PYTHIA8 or HepMC event listing into graph using \
     dot/GraphViz/dot2tex/pdflatex"
 )
 parser.add_argument("-i", "--input",
@@ -302,7 +302,7 @@ with open(gvFilename, "w") as gvFile:
         # Final state: box, yellow fill
         # Initial state: circle, green fill
         # Interesting: cyan fill (overrides green/yellow fill), keep same shape
-        config = ""
+        nodeConfig = ""
         colour = "\"\""
         shape = "\"\""
         label = p.texname
@@ -325,13 +325,13 @@ with open(gvFilename, "w") as gvFile:
 
             # No $$ are required for tex names as mathmode enabled
             # so everything is mathmode
-            config = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
+            nodeConfig = '    %s [label="%s:%s", shape=%s, style=filled, fillcolor=%s]\n'\
                 % (p.number, p.number, label, shape, colour)
         else:
-            config = '    %s [label="%s:%s"]\n'\
+            nodeConfig = '    %s [label="%s:%s"]\n'\
                 % (p.number, p.number, label)
-        gvFile.write(config)
-        if c.VERBOSE: print config,
+        gvFile.write(nodeConfig)
+        if c.VERBOSE: print nodeConfig,
 
     # Set all initial particles to be level in diagram
     rank = "  {rank=same;"
