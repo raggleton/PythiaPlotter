@@ -35,6 +35,12 @@ parser.add_argument("-i", "--input",
                     help="input text file with Pythia 8 output \
                     (if unspecified, defaults to qcdScatterSmall.txt)",
                     default="qcdScatterSmall.txt")
+parser.add_argument("--inputType",
+                    help="input type, either HEPMC or PYTHIA \
+                    (latter for the *direct* output from Pythia8 on screen).\
+                    If unspecified, will try and make an educated guess,\
+                    but could fail!",
+                    choices=["HEPMC","PYTHIA"])
 parser.add_argument("-oGV", "--outputGV",
                     help="output GraphViz filename \
                     (if unspecified, defaults to INPUT.gv)")
@@ -69,6 +75,17 @@ inputFilename = args.input
 # Store path and stem filename (i.e. without .xyz bit)
 name = os.path.basename(inputFilename)
 stemName = os.path.splitext(name)[0]
+
+# Try and guess input type if not specified, based on file extension.
+# (could be done more sophisticatedly, I guess)
+# NO checking done if user option =/= actual file type!
+inputType = args.inputType
+if not args.inputType:
+    if os.path.splitext(name)[1].lower() == ".hepmc":
+        inputType = "HEPMC"
+    else:
+        inputType = "PYTHIA"
+print "Assuming input type", inputType
 
 # Store output GraphViz filename
 # Default filename for output GraphViz file based on inputFilename
