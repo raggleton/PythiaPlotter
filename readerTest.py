@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 """
-Tester for routines in hepmcReader.py
+Tester for routines in hepmcParser.py
 """
 
-import hepmcReader as h
+import hepmcParser as h
 import config
 
 
