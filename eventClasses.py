@@ -118,7 +118,6 @@ class GenEvent:
         for p in self.particles:
             if p.inVertexBarcode != 0:
                 p.inVertex = self.vertices[abs(p.inVertexBarcode)-1]
-            if config.VERBOSE: p.printParticle()
 
         self.particles.sort(key=operator.attrgetter('barcode'))
 
@@ -129,7 +128,6 @@ class GenEvent:
                     v.inParticles.append(p)
                 if p.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
-            if config.VERBOSE: v.printVertex()
 
 
 class Weights:
@@ -145,8 +143,7 @@ class Units:
     """Class to store momentum and position units"""
 
     def __init__(self, momentum=None, position=None):
-        # TODO: enums?
-        # Check if momentum in MEV or GEV
+        # Check if momentum in MEV or GEV, default to GEV if neither.
         momentum = momentum.upper()
         if (momentum in ("MEV", "GEV")):
             self.momentumUnit = momentum
@@ -154,7 +151,7 @@ class Units:
             self.momentumUnit = "GEV"
             print "Momentum must be either MEV or GEV. Defaulting to GEV."
 
-        # Check if momentum in MM or CM
+        # Check if momentum in MM or CM, default to MM if neither.
         position = position.upper()
         if (position in ("MM", "CM")):
             self.positionUnit = position
@@ -211,12 +208,12 @@ class GenVertex:
         self.inParticles = []  # Incoming GenParticles
         self.outParticles = []  # Outgoing GenParticles
 
-    def printVertex(self):
+    def __str__(self):
         pprint(vars(self))
         print "inParticles barcodes:"
         for pi in self.inParticles:
             print(pi.barcode)
-            print "outParticles barcodes:"
+        print "outParticles barcodes:"
         for po in self.outParticles:
             print(po.barcode)
 
@@ -224,12 +221,10 @@ class GenVertex:
 class GenParticle:
     """Class to store info about GenParticle in event"""
 
-    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0,
-                 energy=0.0, mass=0.0, status=0, polTheta=0.0, polPhi=0.0,
-                 inVertexBarcode=0, outVertexBarcode=0, flowDict=None,
-                 mother1=0, mother2=0):
-        self.barcode = int(barcode)  # particle barcode
-        self.pdgid = int(pdgid)  # PDGID - see seciton 43 (?) in PDGID
+    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
+                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None):
+        self.barcode = int(barcode)  # particle barcode - unique
+        self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.px = float(px)
         self.py = float(py)
         self.pz = float(pz)
@@ -238,30 +233,49 @@ class GenParticle:
         self.status = int(status)  # status code
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
-        # Barcode of vertex that has this particle as an incoming particle
-        self.inVertexBarcode = int(inVertexBarcode)
-        # Reference to GenVertex where this particle is incoming
-        self.inVertex = None
-        # Barcode of vertex that has this particle as an outgoing particle
-        self.outVertexBarcode = int(outVertexBarcode)
-        # Reference to GenVertex where this particle is outgoing
-        self.outVertex = None
+        self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0
+        self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
         if not flowDict:
             flowDict = {}
         self.flowDict = flowDict  # colour flow
+        self.skip = False  # Whether to skip when writing nodes to file
+        self.isFinalState = False
+        self.isInitialState = False
+        self.displayAttributes = DisplayAttributes()
+
+        # Note that other attributes (like in/out vertices,
+        # or mother/daughters), are stored in sub-classes Node/EdgeParticle.
+        # This is a base class for common attributes.
+
+    def __eq__(self, other):
+        return self.barcode == other.barcode
+
+    def __str__(self):
+        pprint(vars(self))
+
+
+class NodeParticle(GenParticle):
+    """Subclass to store attributes specially for when particle is represented
+    by node, e.g. from Pythia screen output"""
+
+    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
+                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
+                 mother1=0, mother2=0):
+
+        GenParticle.__init__(barcode=barcode, pdgid=pdgid, px=px, py=py,
+                             pz=pz, energy=energy, mass=mass, status=status,
+                             polTheta=polTheta, polPhi=polPhi,
+                             flowDict=flowDict)
+
         # For reading in from Pythia screen output, need to read in mother(s)
         # of particle. Can then infer daughters once gathered all particles
         self.m1 = int(mother1)  # barcode of mother 1
         self.m2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
-        self.skip = False  # Whether to skip when writing nodes to file
-        self.isFinalState = False
-        self.isInitialState = False
-        self.displayAttributes = DisplayAttributes()
 
         # Following only true if reading from Pythia screen output.
-        if (status > 0):
+        if (self.status > 0):
             self.isFinalState = True
 
         if ((self.mother1 == 0) and (self.mother2 == 0)):
@@ -272,15 +286,32 @@ class GenParticle:
         if ((self.mother1 != 0) and (self.mother2 == 0)):
             self.mother2 = self.mother1
 
-    def __eq__(self, other):
-        return self.barcode == other.barcode
+    def getRawName(self):
+        """Get name without any ( or )"""
+        return self.name.translate(None, '()')
 
-    def printParticle(self):
-        pprint(vars(self))
-        if self.outVertex:
-            print self.outVertex.barcode
-        if self.inVertex:
-            print self.inVertex.barcode
+
+class EdgeParticle(GenParticle):
+    """Subclass to store attributes specially for when particle is represented
+    by edge, e.g. from HepMC"""
+
+    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
+                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
+                 inVertexBarcode=0, outVertexBarcode=0):
+
+        GenParticle.__init__(barcode=barcode, pdgid=pdgid, px=px, py=py,
+                             pz=pz, energy=energy, mass=mass, status=status,
+                             polTheta=polTheta, polPhi=polPhi,
+                             flowDict=flowDict)
+
+        # Barcode of vertex that has this particle as an incoming particle
+        self.inVertexBarcode = int(inVertexBarcode)
+        # Reference to GenVertex where this particle is incoming
+        self.inVertex = None
+        # Barcode of vertex that has this particle as an outgoing particle
+        self.outVertexBarcode = int(outVertexBarcode)
+        # Reference to GenVertex where this particle is outgoing
+        self.outVertex = None
 
 
 class DisplayAttributes:
@@ -290,8 +321,5 @@ class DisplayAttributes:
     def __init__(self):
         self.isInteresting = False  # Whether the user wants this highlighted
         self.colour = ""  # What colour to highlight the node/edge
-        self.isFinalState = False
-        self.isInitialState = False
-        self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0
-        self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
-        self.isNode = True  # whether particle is node or edge
+        self.shape = "Circle"
+
