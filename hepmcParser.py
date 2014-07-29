@@ -6,13 +6,15 @@
 
 from itertools import izip
 from pprint import pprint
+
+# PythiaPlotter files
 from eventClasses import *
 import config  # Global definitions
 
 # TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
 
-def parse(fileName="testing/testSS_HLT.hepmc"):
+def parse(fileName="test/testSS_HLT.hepmc"):
     """Parse HepMCfile and return collection of events"""
 
     print "Parsing events from", fileName

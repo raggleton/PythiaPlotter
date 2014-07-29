@@ -10,6 +10,6 @@ import config
 
 config.VERBOSE = False
 # eventList = h.parse()
-eventList = h.parse("testing/testSimple.hepmc")
+eventList = h.parse("test/testSimple.hepmc")
 # eventList = h.parse("5evt_HLT.hepmc")
 print "Parsed",len(eventList),"events"
