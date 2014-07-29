@@ -9,9 +9,9 @@ import imp  # For testing if modules exist
 from eventClasses import Particle  # Particle class
 import config as c  # Global definitions
 
-# Script that converts the event listing from either Pythia 8 output or 
-# standard HepMC file into a GraphViz file, which is then plotted with 
-# either latex (nice particle symbols) or dot (faster, less nice), 
+# Script that converts the event listing from either Pythia 8 output or
+# standard HepMC file into a GraphViz file, which is then plotted with
+# either latex (nice particle symbols) or dot (faster, less nice),
 # and output as a PDF.
 # e.g.
 #
@@ -37,6 +37,7 @@ def get_parser():
         description="Convert PYTHIA8 or HepMC event listing into graph using \
         dot/GraphViz/dot2tex/pdflatex"
     )
+    # TODO: improve multi-line strings. This sucks!
     parser.add_argument("-i", "--input",
                         help="input text file with Pythia 8 output \
                         (if unspecified, defaults to qcdScatterSmall.txt)",
@@ -76,7 +77,7 @@ def get_parser():
     return parser
 
 
-def testProgramRuns(progName):
+def check_program_exists(progName):
     """Test if external program runs"""
     try:
         # Storing in string stifles output
@@ -97,7 +98,7 @@ def testProgramRuns(progName):
             print(e)
 
 
-def testModuleExists(mod):
+def check_module_exists(mod):
     """Test if Python module exists"""
     try:
         imp.find_module(mod)
@@ -113,10 +114,14 @@ def testModuleExists(mod):
 
 if __name__ == "__main__":
 
+    #############################################
+    # SETUP - process user args, setup filenames
+    #############################################
+
     # Check correct packages/programs installed
-    testProgramRuns(progName="dot2tex")
-    testModuleExists(mod="pydot")
-    testModuleExists(mod="pyparsing")
+    check_program_exists(progName="dot2tex")
+    check_module_exists(mod="pydot")
+    check_module_exists(mod="pyparsing")
 
     # Get command line arguments, parse them
     args = get_parser().parse_args()
@@ -182,9 +187,9 @@ if __name__ == "__main__":
     # For debugging - print output & various debug messages to screen
     c.VERBOSE = args.verbose
 
-    ##########################
-    # START OF MAIN PROCESSING
-    ##########################
+    ####################################
+    # Start of main processing routines
+    ####################################
 
     ########################################################################
     # Parse input file, depending on file contents (HepMC or Pythia8 output)
