@@ -9,17 +9,19 @@ from pprint import pprint
 
 # PythiaPlotter files
 from eventClasses import *
-import config  # Global definitions
+import config as C  # For my Global definitions
 
 # TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
 
-def parse(fileName="test/testSS_HLT.hepmc"):
-    """Parse HepMCfile and return collection of events"""
+def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
+    """Parse HepMCfile and return eventNumber event.
+    Note that eventNumber starts at 0, not 1.
+    Defaults to first event if eventNumber unspecified."""
 
-    print "Parsing events from", fileName
+    with open(filename, 'r') as file:
 
-    with open(fileName, 'r') as file:
+        print "Parsing events from", filename
 
         eventList = []  # To hold all events
         currentEvent = None  # hold current GenEvent, add particles, etc
@@ -114,7 +116,8 @@ def parse(fileName="test/testSS_HLT.hepmc"):
 
         if config.VERBOSE: print len(eventList)
         if config.VERBOSE: pprint(vars(currentEvent))
-    return eventList
+    
+    return eventList[eventNumber]
 
 
 def parseGenEventLine(line):
@@ -140,7 +143,7 @@ def parseUnitsLine(line):
     """Parse line from HepMC file containting Units info
     e.g. U MEV MM """
     parts = line.split()
-    u = Units(momentum=parts[1], position=parts[2])
+    u = Units(momentumUnit=parts[1], positionUnit=parts[2])
     return u
 
 
