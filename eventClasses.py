@@ -148,7 +148,7 @@ class Units:
         # TODO: enums?
         # Check if momentum in MEV or GEV
         momentum = momentum.upper()
-        if (momentum == "MEV" or momentum == "GEV"):
+        if (momentum in ("MEV", "GEV")):
             self.momentumUnit = momentum
         else:
             self.momentumUnit = "GEV"
@@ -156,10 +156,10 @@ class Units:
 
         # Check if momentum in MM or CM
         position = position.upper()
-        if (position == "MM" or position == "CM"):
+        if (position in ("MM", "CM")):
             self.positionUnit = position
         else:
-            self.positionUnit = "MM"  # Default to MM
+            self.positionUnit = "MM"
             print "Position must be either MM or CM. Defaulting to MM."
 
 
