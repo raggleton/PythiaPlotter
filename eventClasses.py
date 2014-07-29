@@ -7,7 +7,7 @@ from itertools import izip
 from pprint import pprint
 import operator
 
-import config  # Global definitions
+import config  as C # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
 
@@ -142,9 +142,10 @@ class Weights:
 class Units:
     """Class to store momentum and position units"""
 
-    def __init__(self, momentum=None, position=None):
+    def __init__(self, momentum="GEV", position="MM"):
         # Check if momentum in MEV or GEV, default to GEV if neither.
-        momentum = momentum.upper()
+        if momentum:
+            momentum = momentum.upper()
         if (momentum in ("MEV", "GEV")):
             self.momentumUnit = momentum
         else:
@@ -152,7 +153,8 @@ class Units:
             print "Momentum must be either MEV or GEV. Defaulting to GEV."
 
         # Check if momentum in MM or CM, default to MM if neither.
-        position = position.upper()
+        if position:
+            position = position.upper()
         if (position in ("MM", "CM")):
             self.positionUnit = position
         else:
