@@ -13,7 +13,7 @@ TODO: unify into one dictionary. Rename "RawName" to "PythiaName"?
 # Although based on 2006 PDG, so bit out of date!
 # To add new particles, either add here or in pdg_all.tex
 pidTexDict = {}
-with open("pdg_all.tex", "r") as particleList:
+with open("data/pdg_all.tex", "r") as particleList:
     for line in particleList:
         (key, val) = line.split(" ", 1)  # split based on 1st occurence of " "
         # print key, val,
@@ -28,7 +28,7 @@ with open("pdg_all.tex", "r") as particleList:
 # So maybe stick with mine for now...
 # For each PDGID key, there is a corresponding pair of strings, 
 # the first is the paricle name, the second is the antiparticle name.
-ParticleDataFile = "ParticleData.xml"
+ParticleDataFile = "data/PythiaParticleData.xml"
 tree = ET.parse(ParticleDataFile)
 root = tree.getroot()
 pidRawDict = {}
