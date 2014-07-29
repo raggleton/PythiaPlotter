@@ -6,8 +6,8 @@ from sys import platform as _platform
 import argparse
 import re
 import imp  # For testing if modules exist
-from eventClasses import Particle  # Particle class
-import config as c  # Global definitions
+# from eventClasses import Particle  # Particle class
+import config as C  # Global definitions
 
 # Script that converts the event listing from either Pythia 8 output or
 # standard HepMC file into a GraphViz file, which is then plotted with
@@ -48,6 +48,9 @@ def get_parser():
                         If unspecified, will try and make an educated guess,\
                         but could fail!",
                         choices=["HEPMC", "PYTHIA"])
+    parser.add_argument("--eventNumber",
+                        help="For HepMC file, select event number to plot",
+                        type=int)
     parser.add_argument("-oGV", "--outputGV",
                         help="output GraphViz filename \
                         (if unspecified, defaults to INPUT.gv)")
@@ -145,6 +148,10 @@ if __name__ == "__main__":
             inputType = "PYTHIA"
     print "Assuming input type", inputType
 
+    eventNumber = args.eventNumber
+    if inputType == "PYTHIA":
+        print "Ignoring --eventNumber option as not relevant"
+
     # Store output GraphViz filename
     # Default filename for output GraphViz file based on inputFilename
     # if user doesn't specify one
@@ -160,8 +167,7 @@ if __name__ == "__main__":
         pdfFilename = stemName+".pdf"
 
     # Store representation mode
-    # Check if edge or node only.
-    # Need enums here?
+    # Arg Parser checks if NODE or EDGE only
     particleRepr = args.mode
 
     # Interesting particles we wish to highlight
@@ -185,15 +191,17 @@ if __name__ == "__main__":
     removeRedundants = True
 
     # For debugging - print output & various debug messages to screen
-    c.VERBOSE = args.verbose
+    C.VERBOSE = args.verbose
 
-    ####################################
-    # Start of main processing routines
-    ####################################
+    ###########################################
+    # MAIN - Start of file processing routines
+    ###########################################
 
     ########################################################################
     # Parse input file, depending on file contents (HepMC or Pythia8 output)
     ########################################################################
+    event = None
+    
     if inputType == "PYTHIA":
         pass
     else:
@@ -237,8 +245,6 @@ if __name__ == "__main__":
             else:
                 dttOpts = ""
 
-            # print args.__dict__
-
             texTemplate = r"""\documentclass{standalone}
     \usepackage{dot2texi}
     \usepackage{tikz}
@@ -255,13 +261,13 @@ if __name__ == "__main__":
 
             print "Producing tex file and running pdflatex (may take a while)"
 
-            if c.VERBOSE: print texTemplate,
+            if C.VERBOSE: print texTemplate,
 
             texargs = ["pdflatex", "--shell-escape", '-jobname',
                        os.path.splitext(pdfFilename)[0], stemName+".tex"]
             texout = subprocess.check_output(texargs)
 
-            if c.VERBOSE: print texout,
+            if C.VERBOSE: print texout,
 
             print ""
             print "If you want to rerun the tex file for whatever reason, do:"
