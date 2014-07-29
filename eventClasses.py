@@ -142,21 +142,21 @@ class Weights:
 class Units:
     """Class to store momentum and position units"""
 
-    def __init__(self, momentum="GEV", position="MM"):
+    def __init__(self, momentumUnit="GEV", positionUnit="MM"):
         # Check if momentum in MEV or GEV, default to GEV if neither.
-        if momentum:
-            momentum = momentum.upper()
-        if (momentum in ("MEV", "GEV")):
-            self.momentumUnit = momentum
+        if momentumUnit:
+            momentumUnit = momentumUnit.upper()
+        if (momentumUnit in ("MEV", "GEV")):
+            self.momentumUnit = momentumUnit
         else:
             self.momentumUnit = "GEV"
             print "Momentum must be either MEV or GEV. Defaulting to GEV."
 
         # Check if momentum in MM or CM, default to MM if neither.
-        if position:
-            position = position.upper()
-        if (position in ("MM", "CM")):
-            self.positionUnit = position
+        if positionUnit:
+            positionUnit = positionUnit.upper()
+        if (positionUnit in ("MM", "CM")):
+            self.positionUnit = positionUnit
         else:
             self.positionUnit = "MM"
             print "Position must be either MM or CM. Defaulting to MM."
@@ -255,6 +255,9 @@ class GenParticle:
     def __str__(self):
         pprint(vars(self))
 
+    def getRawName(self):
+        """Get name without any ( or )"""
+        return self.name.translate(None, '()')
 
 class NodeParticle(GenParticle):
     """Subclass to store attributes specially for when particle is represented
@@ -273,8 +276,8 @@ class NodeParticle(GenParticle):
         # of particle. Can then infer daughters once gathered all particles
         self.m1 = int(mother1)  # barcode of mother 1
         self.m2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
-        self.mothers = []  # list of Particle objects that are its mother
-        self.daughters = []  # list of Particle objects that are its daughters
+        self.mothers = []  # list of NodeParticle objects that are its mother
+        self.daughters = []  # list of NodeParticle objects that are its daughters
 
         # Following only true if reading from Pythia screen output.
         if (self.status > 0):
@@ -287,10 +290,6 @@ class NodeParticle(GenParticle):
         # This causes looping issues, so set m2 = m1 if that's the case
         if ((self.mother1 != 0) and (self.mother2 == 0)):
             self.mother2 = self.mother1
-
-    def getRawName(self):
-        """Get name without any ( or )"""
-        return self.name.translate(None, '()')
 
 
 class EdgeParticle(GenParticle):
