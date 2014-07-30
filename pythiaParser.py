@@ -3,6 +3,7 @@ For parsing the output of PYTHIA8 that it prints to screen.
 
 """
 from pprint import pprint
+import re
 
 # PythiaPlotter files
 from eventClasses import *
@@ -17,6 +18,7 @@ def parse(filename="qcdScatterSmall.txt"):
     # List of Particle objects in full event,
     # in order of number in event listing.
     # So the object at fullEvent[i] has self.barcode = i
+    # Can then add to GenEvent at the end
     fullEvent = []
 
     # Open input file & parse event info
@@ -24,7 +26,7 @@ def parse(filename="qcdScatterSmall.txt"):
 
         print "Reading event listing from %s" % filename
 
-        # For processing the full output from Pythia, triggers where blocks 
+        # For processing the full output from Pythia, triggers where blocks
         # of info start/stop. Use `if <trigger> in line:`
         infoStart = "-  PYTHIA Info Listing"
         infoEnd = "End PYTHIA Info Listing"
@@ -38,22 +40,18 @@ def parse(filename="qcdScatterSmall.txt"):
         statsStart = "-  PYTHIA Event and Cross Section Statistics"
         statsEnd = "End PYTHIA Event and Cross Section Statistics"
 
-        doneHardEvent = False
-        doneFullEvent = False
-        parseLine = False
-
         # To hold list of lines for parsing in separate methods
         addToBlock = False
         block = []
 
         # Read in file to list of Particles
         for line in inputFile:
-            strippedLine = line.strip()
 
             if addToBlock:
                 block.append(line)
-            
+
             # Go through file, looking for matches to triggers
+            # Must be a more succint way to do this
             # Look for event info listing
             if infoStart in line:
                 addToBlock = True
@@ -66,7 +64,7 @@ def parse(filename="qcdScatterSmall.txt"):
                 if config.VERBOSE: pprint(block)
                 if config.VERBOSE: print len(block)
                 del block[:]  # empty list of lines
-                
+
             # Look for cross-section & events stats
             elif statsStart in line:
                 addToBlock = True
@@ -79,7 +77,7 @@ def parse(filename="qcdScatterSmall.txt"):
                 if config.VERBOSE: pprint(block)
                 if config.VERBOSE: print len(block)
                 del block[:]
-            
+
             # Look for event particle listing
             elif fullEventStart in line:
                 addToBlock = True
@@ -87,7 +85,7 @@ def parse(filename="qcdScatterSmall.txt"):
 
             elif addToBlock and fullEventEnd in line:
                 addToBlock = False
-                parseEventListing(block, currentEvent)
+                # currentEvent.particles = parseEventListing(block)
                 if config.VERBOSE: print "Event Listing Ends"
                 if config.VERBOSE: print len(block)
                 del block[:]
@@ -109,19 +107,59 @@ def parse(filename="qcdScatterSmall.txt"):
 
 def parseInfo(block):
     """Parse Event Info listing block, return """
-    pass
+    currentEvent = GenEvent()
+    currentPdf = PdfInfo()
+
+    # CHECK UNITS
+    # Must be a better way than this?
+    for line in block:
+        line = line.strip()
+        line = re.sub(",", "", line)  # Remove comma separation
+        parts = line.split()
+        if line.startswith("Beam A") or line.startswith("Beam B"):
+            pass  # Info about incoming protons
+        elif line.startswith("In 1"):  # Parton 1 info
+            currentPdf.id1 = int(parts[4])
+            currentPdf.x1 = float(parts[7])
+            currentPdf.pdf1 = float(parts[10])
+            currentPdf.scalePDF = float(parts[-1].strip("."))
+        elif line.startswith("In 2"):  # Parton 2 info
+            currentPdf.id2 = int(parts[4])
+            currentPdf.x2 = float(parts[7])
+            currentPdf.pdf2 = float(parts[10])
+        elif line.startswith("Subprocess"):
+            m = re.search('code ([0-9]*)', line)  # Gets signal process ID
+            currentEvent.signalProcessID = int(m.group(1))
+        elif line.startswith("It has"):
+            pass
+        elif line.startswith("alphaEM"):
+            currentEvent.alphaEM = float(parts[2])
+            currentEvent.alphaQCD = float(parts[5])
+            currentEvent.scale = float(parts[-1].strip("."))
+        elif line.startswith("Impact"):
+            pass  # Info about impact param
+        elif line.startswith("Max"):
+            pass  # Info about Max pT scale for MPI
+        elif line.startswith("Number of MPI"):
+            currentEvent.numMPI = int(parts[4])
+
+    currentEvent.pdf_info = currentPdf
+    return currentEvent
 
 
 def parseStats(block):
     """Parse cross section information, and return object"""
     pass
 
-def parseEventListing(block, genEvent):
-    """Parse full event particle listing"""
-    
+
+def parseEventListing(block):
+    """Parse full event particle listing, returns list of NodeParticles"""
+
     # Where particle listing starts and stops
     listingStart = """no        id"""
     listingEnd = """Charge sum"""
+
+    fullEvent = []
 
     parseLine = False
     for line in block:
@@ -135,7 +173,9 @@ def parseEventListing(block, genEvent):
 
         if parseLine:
             print line
-            # genEvent.particles.append(parseParticleLine(line))
+            fullEvent.append(parseParticleLine(line))
+
+    return fullEvent
 
 
 def parseParticleLine(line):
