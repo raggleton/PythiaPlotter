@@ -9,7 +9,7 @@ from pprint import pprint
 
 # PythiaPlotter files
 from eventClasses import *
-import config as C  # For my Global definitions
+import config  # For my Global definitions
 
 # TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
@@ -112,7 +112,7 @@ def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
                 p.outVertex = currentVertex
                 currentEvent.particles.append(p)
                 if config.VERBOSE: print "Adding GenParticle info"
-                # if config.VERBOSE: pprint(vars(p))
+                if config.VERBOSE: pprint(vars(p))
 
         if config.VERBOSE: print len(eventList)
         if config.VERBOSE: pprint(vars(currentEvent))
@@ -188,7 +188,7 @@ def parseGenParticleLine(line):
     # [start:stop:step], list comprehension to convert to ints,
     # izip to turn into pairs, then cast to dictionary. Sweet!
     flowDict = dict(izip([int(x) for x in parts[13::2]], [int(y) for y in parts[14::2]]))
-    p = GenParticle(barcode=parts[1], pdgid=parts[2],
+    p = EdgeParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
                     polPhi=parts[10], inVertexBarcode=parts[11],

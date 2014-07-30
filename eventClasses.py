@@ -7,7 +7,7 @@ from itertools import izip
 from pprint import pprint
 import operator
 
-import config  as C # Global definitions
+import config as C  # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
 
@@ -259,6 +259,7 @@ class GenParticle:
         """Get name without any ( or )"""
         return self.name.translate(None, '()')
 
+
 class NodeParticle(GenParticle):
     """Subclass to store attributes specially for when particle is represented
     by node, e.g. from Pythia screen output"""
@@ -267,15 +268,15 @@ class NodeParticle(GenParticle):
                  mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
                  mother1=0, mother2=0):
 
-        GenParticle.__init__(barcode=barcode, pdgid=pdgid, px=px, py=py,
+        GenParticle.__init__(self, barcode=barcode, pdgid=pdgid, px=px, py=py,
                              pz=pz, energy=energy, mass=mass, status=status,
                              polTheta=polTheta, polPhi=polPhi,
                              flowDict=flowDict)
 
         # For reading in from Pythia screen output, need to read in mother(s)
         # of particle. Can then infer daughters once gathered all particles
-        self.m1 = int(mother1)  # barcode of mother 1
-        self.m2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
+        self.mother1 = int(mother1)  # barcode of mother 1
+        self.mother2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
         self.mothers = []  # list of NodeParticle objects that are its mother
         self.daughters = []  # list of NodeParticle objects that are its daughters
 
@@ -300,7 +301,7 @@ class EdgeParticle(GenParticle):
                  mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
                  inVertexBarcode=0, outVertexBarcode=0):
 
-        GenParticle.__init__(barcode=barcode, pdgid=pdgid, px=px, py=py,
+        GenParticle.__init__(self, barcode=barcode, pdgid=pdgid, px=px, py=py,
                              pz=pz, energy=energy, mass=mass, status=status,
                              polTheta=polTheta, polPhi=polPhi,
                              flowDict=flowDict)
@@ -323,4 +324,3 @@ class DisplayAttributes:
         self.isInteresting = False  # Whether the user wants this highlighted
         self.colour = ""  # What colour to highlight the node/edge
         self.shape = "Circle"
-
