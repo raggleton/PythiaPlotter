@@ -5,11 +5,13 @@ Tester for routines in hepmcParser.py
 """
 
 import hepmcParser as h
+import pythiaParser as p
 import config
 
 
-config.VERBOSE = False
+config.VERBOSE = True
 # eventList = h.parse()
-eventList = h.parse("test/testSimple.hepmc")
+# eventList = h.parse("test/testSimple.hepmc")
 # eventList = h.parse("5evt_HLT.hepmc")
-print "Parsed",len(eventList),"events"
+p.parse()
+# print "Parsed",len(eventList),"events"

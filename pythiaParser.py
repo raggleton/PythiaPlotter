@@ -9,7 +9,7 @@ from eventClasses import *
 import config  # For my Global definitions
 
 
-def parse(filename):
+def parse(filename="qcdScatterSmall.txt"):
     """Parse PYTHIA8 screen output and return event full of NodeParticles"""
 
     currentEvent = GenEvent()
@@ -24,55 +24,118 @@ def parse(filename):
 
         print "Reading event listing from %s" % filename
 
-        # For processing the full output from Pythia - need to know where
-        # event listing starts and stops
-        listingStart = """no        id"""
-        listingEnd = """Charge sum"""
+        # For processing the full output from Pythia, triggers where blocks 
+        # of info start/stop. Use `if <trigger> in line:`
+        infoStart = "-  PYTHIA Info Listing"
+        infoEnd = "End PYTHIA Info Listing"
+
+        fullEventStart = "-  PYTHIA Event Listing  (complete event)"
+        fullEventEnd = "End PYTHIA Event Listing"
+
+        hardEventStart = "-  PYTHIA Event Listing  (hard process)"
+        hardEventEnd = "End PYTHIA Event Listing"
+
+        statsStart = "-  PYTHIA Event and Cross Section Statistics"
+        statsEnd = "End PYTHIA Event and Cross Section Statistics"
 
         doneHardEvent = False
         doneFullEvent = False
         parseLine = False
 
+        # To hold list of lines for parsing in separate methods
+        addToBlock = False
+        block = []
+
         # Read in file to list of Particles
         for line in inputFile:
-            # Parse each line, looking for the start or end of event listing
             strippedLine = line.strip()
-            if strippedLine.startswith(listingStart):
-                if doneHardEvent:  # don't parse the hard event, for now
-                    parseLine = True
-                continue
-            elif strippedLine.startswith(listingEnd):
-                parseLine = False
-                if not doneHardEvent:
-                    doneHardEvent = True
-                elif not doneFullEvent:
-                    doneFullEvent = True
-                continue
 
-            if parseLine:
-                if not doneHardEvent:
-                    pass
-                elif not doneFullEvent:
-                    fullEvent.append(parseParticleLine(line))
+            if addToBlock:
+                block.append(line)
+            
+            # Go through file, looking for matches to triggers
+            # Look for event info listing
+            if infoStart in line:
+                addToBlock = True
+                if config.VERBOSE: print "Event Info start"
+
+            elif addToBlock and infoEnd in line:
+                addToBlock = False
+                parseInfo(block)
+                if config.VERBOSE: print "Event Info end"
+                if config.VERBOSE: pprint(block)
+                if config.VERBOSE: print len(block)
+                del block[:]  # empty list of lines
+                
+            # Look for cross-section & events stats
+            elif statsStart in line:
+                addToBlock = True
+                if config.VERBOSE: print "Event Stats Start"
+
+            elif addToBlock and statsEnd in line:
+                addToBlock = False
+                parseStats(block)
+                if config.VERBOSE: print "Event Stats End"
+                if config.VERBOSE: pprint(block)
+                if config.VERBOSE: print len(block)
+                del block[:]
+            
+            # Look for event particle listing
+            elif fullEventStart in line:
+                addToBlock = True
+                if config.VERBOSE: print "Event Listing Starts"
+
+            elif addToBlock and fullEventEnd in line:
+                addToBlock = False
+                parseEventListing(block, currentEvent)
+                if config.VERBOSE: print "Event Listing Ends"
+                if config.VERBOSE: print len(block)
+                del block[:]
 
         line = ""
         print "Done reading file"
 
-    markInteresting(fullEvent=fullEvent, interestingList=config.interesting)
+    # markInteresting(fullEvent=fullEvent, interestingList=config.interesting)
 
-    addMothers(fullEvent=fullEvent)
+    # addMothers(fullEvent=fullEvent)
 
-    addDaughters(fullEvent=fullEvent)
+    # addDaughters(fullEvent=fullEvent)
 
-    if config.removeRedundants:
-        removeRedundants(fullEvent=fullEvent)
+    # if config.removeRedundants:
+    #     removeRedundants(fullEvent=fullEvent)
 
     return currentEvent
 
 
-def parseCrossSection(line):
-    """Parse cross section information, and return GenCrossSection object"""
+def parseInfo(block):
+    """Parse Event Info listing block, return """
     pass
+
+
+def parseStats(block):
+    """Parse cross section information, and return object"""
+    pass
+
+def parseEventListing(block, genEvent):
+    """Parse full event particle listing"""
+    
+    # Where particle listing starts and stops
+    listingStart = """no        id"""
+    listingEnd = """Charge sum"""
+
+    parseLine = False
+    for line in block:
+        line = line.strip()
+        if line.startswith(listingStart):
+            parseLine = True
+            continue
+        elif line.startswith(listingEnd):
+            parseLine = False
+            continue
+
+        if parseLine:
+            print line
+            # genEvent.particles.append(parseParticleLine(line))
 
 
 def parseParticleLine(line):
