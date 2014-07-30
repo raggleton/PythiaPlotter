@@ -10,15 +10,14 @@ import config  # For my Global definitions
 
 
 def parse(filename):
-    """Parse PYTHIA8 screen output and return event"""
+    """Parse PYTHIA8 screen output and return event full of NodeParticles"""
+
+    currentEvent = GenEvent()
 
     # List of Particle objects in full event,
     # in order of number in event listing.
     # So the object at fullEvent[i] has self.barcode = i
     fullEvent = []
-
-    # To hold all the initial state particles that should be aligned
-    sameInitialOnes = []
 
     # Open input file & parse event info
     with open(filename, "r") as inputFile:
@@ -51,33 +50,10 @@ def parse(filename):
                 continue
 
             if parseLine:
-
-                if config.VERBOSE: print line,
-
-                parts = line.split()
-                # name = parts[2]
-                # d1       = int(parts[6])
-                # d2       = int(parts[7])
-                flowDict = {}
-                if int(parts[8]) or int(parts[9]):
-                    flowDict[1] = int(parts[8])
-                    flowDict[2] = int(parts[9])
-                particle = NodeParticle(barcode=int(parts[0]), 
-                                        pdgid=int(parts[1]), 
-                                        status=int(parts[3]), 
-                                        mother1=int(parts[4]),
-                                        mother2=int(parts[5]),
-                                        px=parts[10],
-                                        py=parts[11],
-                                        pz=parts[12],
-                                        energy=parts[13],
-                                        mass=parts[14],
-                                        flowDict=flowDict)
-
                 if not doneHardEvent:
                     pass
                 elif not doneFullEvent:
-                    fullEvent.append(particle)
+                    fullEvent.append(parseParticleLine(line))
 
         line = ""
         print "Done reading file"
@@ -91,11 +67,46 @@ def parse(filename):
     if config.removeRedundants:
         removeRedundants(fullEvent=fullEvent)
 
+    return currentEvent
+
+
+def parseCrossSection(line):
+    """Parse cross section information, and return GenCrossSection object"""
+    pass
+
+
+def parseParticleLine(line):
+    """Parse line with particle info, and return NodeParticle object"""
+
+    if config.VERBOSE: print line,
+
+    parts = line.split()
+    # name = parts[2]
+    # d1       = int(parts[6])
+    # d2       = int(parts[7])
+    flowDict = {}
+    if int(parts[8]) or int(parts[9]):
+        flowDict[1] = int(parts[8])
+        flowDict[2] = int(parts[9])
+    particle = NodeParticle(barcode=int(parts[0]),
+                            pdgid=int(parts[1]),
+                            status=int(parts[3]),
+                            mother1=int(parts[4]),
+                            mother2=int(parts[5]),
+                            px=parts[10],
+                            py=parts[11],
+                            pz=parts[12],
+                            energy=parts[13],
+                            mass=parts[14],
+                            flowDict=flowDict)
+
+    return particle
+
 
 def markInteresting(fullEvent, interestingList):
     """Check if particle is in user's interesting list, and if so set colour to
     whatever the ever wanted"""
-    
+
     for p in fullEvent:
         # Remove any () and test if name in user's interesting list
         for i in interesting:
@@ -124,16 +135,14 @@ def addDaughters(fullEvent):
 
 def removeRedundants(fullEvent):
     """Get rid of redundant particles and rewrite relationships"""
-    
+
     for p in fullEvent:
 
         if not p.skip and not p.isInitialState and len(p.mothers) == 1:
-
             current = p
             mum = p.mothers[0]
             foundSuitableMother = False
             while not foundSuitableMother:
-
                 # Check if mother of current has 1 parent and 1 child,
                 # both with same PID. If it does, then it's redundant
                 # and we can skip it in future. If not, it's a suitable mother
@@ -153,5 +162,3 @@ def removeRedundants(fullEvent):
 
             # whatever is stored in mum is the suitable mother for p
             p.mothers[0] = mum
-
-            
