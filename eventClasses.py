@@ -10,7 +10,7 @@ import operator
 import config as C  # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
-
+# TODO: Depreciate me
 class Particle:
     """Class to hold particle info in an event listing"""
 
@@ -81,7 +81,7 @@ class GenEvent:
         weightValues = [float(w) for w in weightValues]
         self.weightValues = weightValues
 
-        # To hold future objects that conatin info about event e.g. PdfInfo
+        # To hold future objects that contain info about event e.g. PdfInfo
         self.pdf_info = None
         self.cross_section = None
         self.units = None
@@ -128,6 +128,62 @@ class GenEvent:
                     v.inParticles.append(p)
                 if p.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
+
+    def addNodeMothers(self):
+        """Add references to mothers based on mother1/2 indicies"""
+
+        for p in self.particles:
+            p.nodeAttributes.addMothers(particleList=self.particles)
+
+    def addNodeDaughters(self):
+        """Add references to daughters based on mother relationships"""
+        # Don't use the daughters in the pythia output, they aren't complete
+        # Instead use the mother relationships
+        for p in self.particles:
+            p.nodeAttributes.addDaughters(particleList=self.particles)
+
+    def markInteresting(self, interestingList):
+        """Check if particle is in user's interesting list, and if so set colour
+        to whatever the ever wanted"""
+        for p in self.particles:
+            p.markInteresting(interestingList)
+
+    def removeRedundantNodes(self):
+        """Get rid of redundant particles and rewrite relationships
+        for particles as Nodes"""
+
+        for p in self.particles:
+
+            if (not p.skip and not p.isInitialState
+                    and len(p.nodeAttributes.mothers) == 1):
+                current = p
+                mum = p.nodeAttributes.mothers[0]
+                foundSuitableMother = False
+                while not foundSuitableMother:
+                    # Check if mother of current has 1 parent and 1 child,
+                    # both with same PID. If it does, then it's redundant
+                    # and we can skip it in future. If not, then suitable mother
+                    # for Particle p
+                    if (len(mum.nodeAttributes.mothers) == 1
+                        and len(mum.daughters) == 1
+                        and mum.PID == mum.nodeAttributes.mothers[0].PID
+                        and mum.PID == current.PID
+                    ):
+
+                        mum.skip = True
+                        current = mum
+                        mum = current.nodeAttributes.mothers[0]
+                    else:
+                        foundSuitableMother = True
+
+                # whatever is stored in mum is the suitable mother for p
+                p.nodeAttributes.mothers[0] = mum
+
+    def removeRedundantEdges(self):
+        """Get rid of redundant particles and rewrite relationships
+        for particles as Edges"""
+        # TODO: write this. Could be hard!
+        pass
 
 
 class Weights:
@@ -243,11 +299,11 @@ class GenParticle:
         self.skip = False  # Whether to skip when writing nodes to file
         self.isFinalState = False
         self.isInitialState = False
-        self.displayAttributes = DisplayAttributes()
 
-        # Note that other attributes (like in/out vertices,
-        # or mother/daughters), are stored in sub-classes Node/EdgeParticle.
-        # This is a base class for common attributes.
+        self.displayAttributes = DisplayAttributes()  # Store colour, shape, etc
+        self.edgeAttributes = None  # Store in/out vertices
+        self.nodeAttributes = None  # Store mother/daughters
+
 
     def __eq__(self, other):
         return self.barcode == other.barcode
@@ -259,52 +315,49 @@ class GenParticle:
         """Get name without any ( or )"""
         return self.name.translate(None, '()')
 
+    def markInteresting(self, interestingList):
+        """Check if particle is in user's interesting list, and if so set
+        colour to whatever they wanted"""
 
-class NodeParticle(GenParticle):
-    """Subclass to store attributes specially for when particle is represented
+        # Remove any () and test if name in user's interesting list
+        for i in interestingList:
+            if self.getRawName() in i[1]:
+                self.isInteresting = True
+                self.displayAttributes.colour = i[0]
+
+
+class NodeAttributes:
+    """Class to store attributes specially for when particle is represented
     by node, e.g. from Pythia screen output"""
 
-    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
-                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
-                 mother1=0, mother2=0):
-
-        GenParticle.__init__(self, barcode=barcode, pdgid=pdgid, px=px, py=py,
-                             pz=pz, energy=energy, mass=mass, status=status,
-                             polTheta=polTheta, polPhi=polPhi,
-                             flowDict=flowDict)
+    def __init__(self, mother1=0, mother2=0):
 
         # For reading in from Pythia screen output, need to read in mother(s)
         # of particle. Can then infer daughters once gathered all particles
         self.mother1 = int(mother1)  # barcode of mother 1
         self.mother2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
         self.mothers = []  # list of NodeParticle objects that are its mother
-        self.daughters = []  # list of NodeParticle objects that are its daughters
+        self.daughters = []  # list of GenParticles that are its daughters
 
-        # Following only true if reading from Pythia screen output.
-        if (self.status > 0):
-            self.isFinalState = True
+    def addMothers(self, particleList):
+        """Add references to mothers based on mother1/2 indicies"""
+        for m in range(self.mother1, self.mother2+1):
+            self.mothers.append(particleList[m])
 
-        if ((self.mother1 == 0) and (self.mother2 == 0)):
-            self.isInitialState = True
+    def addDaughters(self, particleList):
+        """Add references to daughters based on mother relationships"""
+        # Don't use the daughters in the pythia output, they aren't complete
+        # Instead use the mother relationships
+        for pp in particleList:
+            if self in pp.modeAttributes.mothers and self != pp:
+                self.daughters.append(pp)
 
-        # Sometimes Pythia sets m2 == 0 if only 1 mother & particle from shower
-        # This causes looping issues, so set m2 = m1 if that's the case
-        if ((self.mother1 != 0) and (self.mother2 == 0)):
-            self.mother2 = self.mother1
 
-
-class EdgeParticle(GenParticle):
-    """Subclass to store attributes specially for when particle is represented
+class EdgeAttributes:
+    """To store attributes specially for when particle is represented
     by edge, e.g. from HepMC"""
 
-    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
-                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None,
-                 inVertexBarcode=0, outVertexBarcode=0):
-
-        GenParticle.__init__(self, barcode=barcode, pdgid=pdgid, px=px, py=py,
-                             pz=pz, energy=energy, mass=mass, status=status,
-                             polTheta=polTheta, polPhi=polPhi,
-                             flowDict=flowDict)
+    def __init__(self, inVertexBarcode=0, outVertexBarcode=0):
 
         # Barcode of vertex that has this particle as an incoming particle
         self.inVertexBarcode = int(inVertexBarcode)

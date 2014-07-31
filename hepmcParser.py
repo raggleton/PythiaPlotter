@@ -108,15 +108,16 @@ def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
             # The GenVertex line before this has this particle as outgoing
             elif line.startswith("P"):
                 p = parseGenParticleLine(line)
-                p.outVertexBarcode = currentVertex.barcode
-                p.outVertex = currentVertex
+                # Add outVertices and barcodes
+                p.edgeAttributes.outVertexBarcode = currentVertex.barcode
+                p.edgeAttributes.outVertex = currentVertex
                 currentEvent.particles.append(p)
                 if config.VERBOSE: print "Adding GenParticle info"
                 if config.VERBOSE: pprint(vars(p))
 
         if config.VERBOSE: print len(eventList)
         if config.VERBOSE: pprint(vars(currentEvent))
-    
+
     return eventList[eventNumber]
 
 
@@ -188,9 +189,11 @@ def parseGenParticleLine(line):
     # [start:stop:step], list comprehension to convert to ints,
     # izip to turn into pairs, then cast to dictionary. Sweet!
     flowDict = dict(izip([int(x) for x in parts[13::2]], [int(y) for y in parts[14::2]]))
-    p = EdgeParticle(barcode=parts[1], pdgid=parts[2],
+    p = GenParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
-                    polPhi=parts[10], inVertexBarcode=parts[11],
-                    flowDict=flowDict)
+                    polPhi=parts[10], flowDict=flowDict)
+
+    p.edgeAttributes = EdgeAttributes(inVertexBarcode=parts[11])
+
     return p

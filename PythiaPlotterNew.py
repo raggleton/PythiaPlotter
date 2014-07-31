@@ -208,8 +208,19 @@ if __name__ == "__main__":
 
     if inputType == "PYTHIA":
         event = pythiaParser.parse(filename=inputFilename)
+        if removeRedundants:
+            event.removeRedundantsNodes()
     else:
-        event = hepmcParser.parse(filename=inputFilename, eventNumber=eventNumber)
+        event = hepmcParser.parse(filename=inputFilename,
+                                  eventNumber=eventNumber)
+        if removeRedundants:
+            event.removeRedundantsEdges()
+
+    event.markInteresting(C.interesting)
+
+    ##########################################
+    # TODO: Need some bit to convert Node <=> Edges
+    ##########################################
 
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
