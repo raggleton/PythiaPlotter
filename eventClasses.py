@@ -189,6 +189,14 @@ class GenEvent:
         # TODO: write this. Could be hard!
         pass
 
+    def getInitialParticles(self):
+        """Return list of particles that are initial state"""
+        initials = []
+        for p in self.particles:
+            if p.isInitialState and p.pdgid != 90:
+                initials.append(p)
+        return initials
+
 
 class Weights:
     """Class to store event weight names and values as dictionary"""
@@ -345,19 +353,6 @@ class NodeAttributes:
         self.mother2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
         self.mothers = []  # list of NodeParticle objects that are its mother
         self.daughters = []  # list of GenParticles that are its daughters
-
-    # def addMothers(self, particleList):
-    #     """Add references to mothers based on mother1/2 indicies"""
-    #     for m in range(self.mother1, self.mother2+1):
-    #         self.mothers.append(particleList[m])
-
-    # def addDaughters(self, particleList):
-    #     """Add references to daughters based on mother relationships"""
-    #     # Don't use the daughters in the pythia output, they aren't complete
-    #     # Instead use the mother relationships
-    #     for pp in particleList:
-    #         if self in pp.nodeAttributes.mothers and self != pp:
-    #             self.daughters.append(pp)
 
     def __str__(self):
         pprint(vars(self))
