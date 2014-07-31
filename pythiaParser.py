@@ -59,7 +59,7 @@ def parse(filename="qcdScatterSmall.txt"):
 
             elif addToBlock and infoEnd in line:
                 addToBlock = False
-                parseInfo(block)
+                currentEvent = parseInfo(block)
                 if config.VERBOSE: print "Event Info end"
                 if config.VERBOSE: pprint(block)
                 if config.VERBOSE: print len(block)
@@ -72,7 +72,7 @@ def parse(filename="qcdScatterSmall.txt"):
 
             elif addToBlock and statsEnd in line:
                 addToBlock = False
-                parseStats(block)
+                # parseStats(block)
                 if config.VERBOSE: print "Event Stats End"
                 if config.VERBOSE: pprint(block)
                 if config.VERBOSE: print len(block)
@@ -95,6 +95,9 @@ def parse(filename="qcdScatterSmall.txt"):
     # Once got all particles, add mothers/daughters
     currentEvent.addNodeMothers()
     currentEvent.addNodeDaughters()
+
+    for p in currentEvent.particles:
+        pprint(vars(p))
 
     # Things like mark interesting, remove redundants done in main script, as
     # required for both HepMC and Pythia
@@ -169,7 +172,6 @@ def parseEventListing(block):
 
         if parseLine:
             print line
-            pprint(vars(parseParticleLine(line)))
             particleList.append(parseParticleLine(line))
 
     # Note, adding of daughters/mothers done in main parse() method

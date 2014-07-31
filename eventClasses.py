@@ -131,16 +131,20 @@ class GenEvent:
 
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
-
         for p in self.particles:
-            p.nodeAttributes.addMothers(particleList=self.particles)
+            print "mother1, mother2", p.nodeAttributes.mother1, p.nodeAttributes.mother2
+            for m in range(p.nodeAttributes.mother1, p.nodeAttributes.mother2+1):
+                print m,
+                p.nodeAttributes.mothers.append(self.particles[m])
 
     def addNodeDaughters(self):
         """Add references to daughters based on mother relationships"""
         # Don't use the daughters in the pythia output, they aren't complete
         # Instead use the mother relationships
         for p in self.particles:
-            p.nodeAttributes.addDaughters(particleList=self.particles)
+            for pp in self.particles:
+                if p in pp.nodeAttributes.mothers and p != pp:
+                    p.nodeAttributes.daughters.append(pp)
 
     def markInteresting(self, interestingList):
         """Check if particle is in user's interesting list, and if so set colour
@@ -311,6 +315,9 @@ class GenParticle:
     def __str__(self):
         pprint(vars(self))
 
+    def __repr__(self):
+        return '%s' % pprint(vars(self))
+
     def getRawName(self):
         """Get name without any ( or )"""
         return self.name.translate(None, '()')
@@ -322,7 +329,7 @@ class GenParticle:
         # Remove any () and test if name in user's interesting list
         for i in interestingList:
             if self.getRawName() in i[1]:
-                self.isInteresting = True
+                self.displayAttributes.isInteresting = True
                 self.displayAttributes.colour = i[0]
 
 
@@ -339,18 +346,24 @@ class NodeAttributes:
         self.mothers = []  # list of NodeParticle objects that are its mother
         self.daughters = []  # list of GenParticles that are its daughters
 
-    def addMothers(self, particleList):
-        """Add references to mothers based on mother1/2 indicies"""
-        for m in range(self.mother1, self.mother2+1):
-            self.mothers.append(particleList[m])
+    # def addMothers(self, particleList):
+    #     """Add references to mothers based on mother1/2 indicies"""
+    #     for m in range(self.mother1, self.mother2+1):
+    #         self.mothers.append(particleList[m])
 
-    def addDaughters(self, particleList):
-        """Add references to daughters based on mother relationships"""
-        # Don't use the daughters in the pythia output, they aren't complete
-        # Instead use the mother relationships
-        for pp in particleList:
-            if self in pp.modeAttributes.mothers and self != pp:
-                self.daughters.append(pp)
+    # def addDaughters(self, particleList):
+    #     """Add references to daughters based on mother relationships"""
+    #     # Don't use the daughters in the pythia output, they aren't complete
+    #     # Instead use the mother relationships
+    #     for pp in particleList:
+    #         if self in pp.nodeAttributes.mothers and self != pp:
+    #             self.daughters.append(pp)
+
+    def __str__(self):
+        pprint(vars(self))
+
+    def __repr__(self):
+        return "%s, %s, %s" % (self.mother1, self.mother2, self.mothers[0].barcode)
 
 
 class EdgeAttributes:
@@ -368,6 +381,9 @@ class EdgeAttributes:
         # Reference to GenVertex where this particle is outgoing
         self.outVertex = None
 
+    def __str__(self):
+        pprint(vars(self))
+
 
 class DisplayAttributes:
     """Class to store attributes about node/edge representation
@@ -377,3 +393,9 @@ class DisplayAttributes:
         self.isInteresting = False  # Whether the user wants this highlighted
         self.colour = ""  # What colour to highlight the node/edge
         self.shape = "Circle"
+
+    def __str__(self):
+        pprint(vars(self))
+
+    def __repr__(self):
+        return '%s' % pprint(vars(self))
