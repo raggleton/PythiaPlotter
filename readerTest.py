@@ -13,5 +13,10 @@ config.VERBOSE = True
 # eventList = h.parse()
 # eventList = h.parse("test/testSimple.hepmc")
 # eventList = h.parse("5evt_HLT.hepmc")
-p.parse()
+e = p.parse("test/testEvent.txt")
 # print "Parsed",len(eventList),"events"
+e.markInteresting(config.interesting)
+
+for p in e.particles:
+    from pprint import pprint
+    pprint(vars(p))
