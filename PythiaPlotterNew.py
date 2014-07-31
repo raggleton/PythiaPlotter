@@ -6,8 +6,12 @@ from sys import platform as _platform
 import argparse
 import re
 import imp  # For testing if modules exist
-# from eventClasses import Particle  # Particle class
+
+# PythiaPlotter files:
 import config as C  # Global definitions
+import pythiaParser
+import hepmcParser
+import eventClasses
 
 # Script that converts the event listing from either Pythia 8 output or
 # standard HepMC file into a GraphViz file, which is then plotted with
@@ -200,12 +204,12 @@ if __name__ == "__main__":
     ########################################################################
     # Parse input file, depending on file contents (HepMC or Pythia8 output)
     ########################################################################
-    event = None
-    
+    event = None  # Hold GenEvent as result fo file parsing
+
     if inputType == "PYTHIA":
-        pass
+        event = pythiaParser.parse(filename=inputFilename)
     else:
-        pass
+        event = hepmcParser.parse(filename=inputFilename, eventNumber=eventNumber)
 
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
@@ -245,17 +249,18 @@ if __name__ == "__main__":
             else:
                 dttOpts = ""
 
-            texTemplate = r"""\documentclass{standalone}
+            texTemplate = (r"""\documentclass{standalone}
     \usepackage{dot2texi}
     \usepackage{tikz}
     \usepackage{xcolor}
     \usetikzlibrary{shapes,arrows}
     \begin{document}
-    \begin{dot2tex}[dot,mathmode,"""+dttOpts+r"""]
-    \input{"""+gvFilename+r"""}
+    \begin{dot2tex}[dot,mathmode,$s]
+    \input{$s}
     \end{dot2tex}
     \end{document}
-    """
+    """ % dttOpts, gvFilename)
+
             with open(stemName+".tex", "w") as texFile:
                 texFile.write(texTemplate)
 
@@ -263,6 +268,7 @@ if __name__ == "__main__":
 
             if C.VERBOSE: print texTemplate,
 
+            # TODO: show output otherwise can hang wihtout sayign anything
             texargs = ["pdflatex", "--shell-escape", '-jobname',
                        os.path.splitext(pdfFilename)[0], stemName+".tex"]
             texout = subprocess.check_output(texargs)
