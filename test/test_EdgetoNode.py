@@ -23,33 +23,33 @@ class TestEdgeToNode(unittest.TestCase):
         e = h.parse("test/testSamples/test_2to1.hepmc")
         mothersKnown = [1, 2]  # barcodes of mothers
         particle = e.particles[2]
-        results = testParticleMothers(particle, mothersKnown)  # Get left over mothers
-        self.failIf(results)
+        unmatched = testParticleMothers(particle, mothersKnown)  # Get left over mothers
+        self.failIf(unmatched)
 
     def test_2to1_conversion_daughters(self):
         e = h.parse("test/testSamples/test_2to1.hepmc")
         daughtersKnown = [3]  # barcodes of daughters
         particle1 = e.particles[0]
         particle2 = e.particles[1]
-        results1 = testParticleDaughters(particle1, daughtersKnown)  # Get left over daughters
-        results2 = testParticleDaughters(particle2, daughtersKnown)  # Get left over daughters
-        self.failIf(results1 or results2)
+        unmatched1 = testParticleDaughters(particle1, daughtersKnown)  # Get left over daughters
+        unmatched2 = testParticleDaughters(particle2, daughtersKnown)  # Get left over daughters
+        self.failIf(unmatched1 or unmatched2)
 
     def test_1to2_conversion_mothers(self):
         e = h.parse("test/testSamples/test_1to2.hepmc")
         mothersKnown = [1]  # barcodes of mothers
         particle2 = e.particles[1]
-        results2 = testParticleMothers(particle2, mothersKnown)
+        unmatched2 = testParticleMothers(particle2, mothersKnown)
         particle3 = e.particles[2]
-        results3 = testParticleMothers(particle3, mothersKnown)
-        self.failIf(results2 or results3)
+        unmatched3 = testParticleMothers(particle3, mothersKnown)
+        self.failIf(unmatched2 or unmatched3)
 
     def test_1to2_conversion_daughters(self):
         e = h.parse("test/testSamples/test_1to2.hepmc")
         daughtersKnown = [2, 3]  # barcodes of daughters
         particle = e.particles[0]
-        results = testParticleDaughters(particle, daughtersKnown)
-        self.failIf(results)
+        unmatched = testParticleDaughters(particle, daughtersKnown)
+        self.failIf(unmatched)
 
     def test_3to1to2_conversion_mothers(self):
         """Test conversion with simple sample"""
@@ -59,10 +59,10 @@ class TestEdgeToNode(unittest.TestCase):
         particle4 = e.particles[3]
         particle5 = e.particles[4]
         particle6 = e.particles[5]
-        results4 = testParticleMothers(particle4, mothers4)
-        results5 = testParticleMothers(particle5, mothers5)
-        results6 = testParticleMothers(particle6, mothers5)
-        self.failIf(results4 or results5 or results6)
+        unmatched4 = testParticleMothers(particle4, mothers4)
+        unmatched5 = testParticleMothers(particle5, mothers5)
+        unmatched6 = testParticleMothers(particle6, mothers5)
+        self.failIf(unmatched4 or unmatched5 or unmatched6)
 
     def test_3to1to2_conversion_daughters(self):
         """Test conversion with simple sample"""
@@ -73,11 +73,11 @@ class TestEdgeToNode(unittest.TestCase):
         particle2 = e.particles[1]
         particle3 = e.particles[2]
         particle4 = e.particles[3]
-        results1 = testParticleDaughters(particle1, daughters1)
-        results2 = testParticleDaughters(particle2, daughters1)
-        results3 = testParticleDaughters(particle3, daughters1)
-        results4 = testParticleDaughters(particle4, daughters4)
-        self.failIf(results4 or results1 or results2 or results3)
+        unmatched1 = testParticleDaughters(particle1, daughters1)
+        unmatched2 = testParticleDaughters(particle2, daughters1)
+        unmatched3 = testParticleDaughters(particle3, daughters1)
+        unmatched4 = testParticleDaughters(particle4, daughters4)
+        self.failIf(unmatched4 or unmatched1 or unmatched2 or unmatched3)
 
 def testParticleMothers(particle, motherList):
     """Compare motherList to mothers of particle"""
