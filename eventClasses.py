@@ -116,25 +116,23 @@ class GenEvent:
         Then sort particle list by ascending barcode"""
         # Add vertex reference to particles using stored barcode
         for p in self.particles:
-            if p.inVertexBarcode != 0:
-                p.inVertex = self.vertices[abs(p.inVertexBarcode)-1]
+            if p.edgeAttributes.inVertexBarcode != 0:
+                p.edgeAttributes.inVertex = self.vertices[abs(p.edgeAttributes.inVertexBarcode)-1]
 
         self.particles.sort(key=operator.attrgetter('barcode'))
 
         # Add particle reference to vertices using stored barcodes
         for v in self.vertices:
             for p in self.particles:
-                if p.inVertexBarcode == v.barcode:
+                if p.edgeAttributes.inVertexBarcode == v.barcode:
                     v.inParticles.append(p)
-                if p.outVertexBarcode == v.barcode:
+                if p.edgeAttributes.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
 
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
         for p in self.particles:
-            print "mother1, mother2", p.nodeAttributes.mother1, p.nodeAttributes.mother2
             for m in range(p.nodeAttributes.mother1, p.nodeAttributes.mother2+1):
-                print m,
                 p.nodeAttributes.mothers.append(self.particles[m])
 
     def addNodeDaughters(self):
@@ -340,6 +338,39 @@ class GenParticle:
                 self.displayAttributes.isInteresting = True
                 self.displayAttributes.colour = i[0]
 
+    def convertNodeToEdge(self):
+        """Convert NodeAttributes object to EdgeAttributes object"""
+        pass
+
+    def convertEdgeToNodeAttributes(self):
+        """Convert EdgeAttributes obj to NodeAttributes object"""
+        # Add mother barcodes and references first
+        mother1 = 0
+        mother2 = 0
+        mothers = []
+        if self.edgeAttributes.outVertex:  # Get vertex where this is outgoing
+            for i in self.edgeAttributes.outVertex.inParticles:  # Get incoming
+                mothers.append(i)
+            if mothers:
+                mothers = sorted(mothers, key=lambda particle: particle.barcode)
+                mother1 = mothers[0].barcode
+                mother2 = mothers[-1].barcode
+                # Check that we can safely do mothers = mother1, ..., mother2
+                for i in mothers:
+                    if i.barcode not in range(mother1, mother2+1):
+                        print "ERROR: ", i.barcode
+                        raise Exception("barcode not in range mother1->mother2")
+                self.nodeAttributes = NodeAttributes(mother1, mother2)
+                self.nodeAttributes.mothers = mothers
+
+        # Now add daughter references. Don't do barcodes,
+        # they aren't guaranteed to be sequential
+        if self.edgeAttributes.inVertex:
+            for i in self.edgeAttributes.inVertex.outParticles:
+                if not self.nodeAttributes:
+                    self.nodeAttributes = NodeAttributes()
+                self.nodeAttributes.daughters.append(i)
+
 
 class NodeAttributes:
     """Class to store attributes specially for when particle is represented
@@ -358,7 +389,9 @@ class NodeAttributes:
         pprint(vars(self))
 
     def __repr__(self):
-        return "%s, %s, %s" % (self.mother1, self.mother2, self.mothers[0].barcode)
+        return "%s, %s, %s" % (self.mother1,
+                               self.mother2,
+                               self.mothers[0].barcode)
 
 
 class EdgeAttributes:
