@@ -132,8 +132,9 @@ class GenEvent:
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
         for p in self.particles:
-            for m in range(p.nodeAttributes.mother1, p.nodeAttributes.mother2+1):
-                p.nodeAttributes.mothers.append(self.particles[m])
+            if not p.isInitialState:
+                for m in range(p.nodeAttributes.mother1, p.nodeAttributes.mother2+1):
+                    p.nodeAttributes.mothers.append(self.particles[m])
 
     def addNodeDaughters(self):
         """Add references to daughters based on mother relationships"""
@@ -267,7 +268,7 @@ class GenVertex:
         self.ctau = float(ctau)  # ctau
         self.numOrphans = int(numOrphans)  # no. of "orphan" incoming particles
         self.numOutgoing = int(numOutgoing)  # no. of outgoing particles
-        self.numWeights = len(numWeights)  # no. of entries in weight list
+        self.numWeights = int(numWeights)  # no. of entries in weight list
         if not weights:
             weights = []
         weights = [float(w) for w in weights]  # floats not strings!
