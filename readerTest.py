@@ -9,14 +9,17 @@ import pythiaParser as p
 import config
 
 
-config.VERBOSE = True
+config.VERBOSE = False
 # eventList = h.parse()
-# eventList = h.parse("test/testSimple.hepmc")
+# eventList = h.parse("test/testSamples/testSimple.hepmc")
+eventList = h.parse("test/testSamples/test_3to1to2.hepmc")
 # eventList = h.parse("5evt_HLT.hepmc")
-e = p.parse("test/testEvent.txt")
+# e = p.parse("test/testSamples/testEvent.txt")
 # print "Parsed",len(eventList),"events"
-e.markInteresting(config.interesting)
+# e.markInteresting(config.interesting)
 
-for p in e.particles:
-    from pprint import pprint
-    pprint(vars(p))
+# for p in e.particles:
+#     from pprint import pprint
+#     pprint(vars(p))
+#
+# print e.getInitialParticles()
