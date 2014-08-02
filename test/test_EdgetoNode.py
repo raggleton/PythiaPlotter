@@ -17,13 +17,15 @@ sys.path.append(
 import eventClasses as e
 import hepmcParser as h
 
+
 class TestEdgeToNode(unittest.TestCase):
 
     def test_2to1_conversion_mothers(self):
         e = h.parse("test/testSamples/test_2to1.hepmc")
         mothersKnown = [1, 2]  # barcodes of mothers
         particle = e.particles[2]
-        unmatched = testParticleMothers(particle, mothersKnown)  # Get left over mothers
+        # Get left over mothers
+        unmatched = testParticleMothers(particle, mothersKnown)
         self.failIf(unmatched)
 
     def test_2to1_conversion_daughters(self):
@@ -31,8 +33,8 @@ class TestEdgeToNode(unittest.TestCase):
         daughtersKnown = [3]  # barcodes of daughters
         particle1 = e.particles[0]
         particle2 = e.particles[1]
-        unmatched1 = testParticleDaughters(particle1, daughtersKnown)  # Get left over daughters
-        unmatched2 = testParticleDaughters(particle2, daughtersKnown)  # Get left over daughters
+        unmatched1 = testParticleDaughters(particle1, daughtersKnown)
+        unmatched2 = testParticleDaughters(particle2, daughtersKnown)
         self.failIf(unmatched1 or unmatched2)
 
     def test_1to2_conversion_mothers(self):
@@ -79,10 +81,11 @@ class TestEdgeToNode(unittest.TestCase):
         unmatched4 = testParticleDaughters(particle4, daughters4)
         self.failIf(unmatched4 or unmatched1 or unmatched2 or unmatched3)
 
+
 def testParticleMothers(particle, motherList):
     """Compare motherList to mothers of particle"""
-    leftovers = []
-    print "Particle barcode:", particle.barcode, len(particle.nodeAttributes.mothers), "mothers"
+    print ("Particle barcode:", particle.barcode,
+           len(particle.nodeAttributes.mothers), "mothers")
     mums = [m.barcode for m in particle.nodeAttributes.mothers]
     print mums
     leftovers = set(motherList).difference(set(mums))
@@ -90,10 +93,11 @@ def testParticleMothers(particle, motherList):
         print "LEFTOVER:", leftovers
     return leftovers
 
+
 def testParticleDaughters(particle, daughterList):
     """Compare daughterList to daughters of particle"""
-    leftovers = []
-    print "Particle barcode:", particle.barcode, len(particle.nodeAttributes.daughters), "daughters"
+    print ("Particle barcode:", particle.barcode,
+           len(particle.nodeAttributes.daughters), "daughters")
     daughters = [m.barcode for m in particle.nodeAttributes.daughters]
     print daughters
     leftovers = set(daughterList).difference(set(daughters))
