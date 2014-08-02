@@ -1,0 +1,29 @@
+
+ --------  PYTHIA Info Listing  ----------------------------------------
+
+ Beam A: id =   2212, pz =  4.000e+03, e =  4.000e+03, m =  9.383e-01.
+ Beam B: id =   2212, pz = -4.000e+03, e =  4.000e+03, m =  9.383e-01.
+
+ In 1: id =   21, x =  1.471e-02, pdf =  6.095e+00 at Q2 =  5.085e+02.
+ In 2: id =    4, x =  7.699e-02, pdf =  4.273e-02 at same Q2.
+
+ Subprocess q g -> q q' qbar' with code 139 is 2 -> 3.
+ It has sHat =  7.250e+04, <pTHat> =  3.363e+01.
+     alphaEM =  7.716e-03,  alphaS =  1.669e-01    at Q2 =  8.160e+02.
+
+ Impact parameter b =  9.971e-01 gives enhancement factor =  7.119e-01.
+ Max pT scale for MPI =  2.255e+01, ISR =  2.255e+01, FSR =  2.255e+01.
+ Number of MPI =     3, ISR =     8, FSRproc =    71, FSRreson =     0.
+
+ --------  End PYTHIA Info Listing  ------------------------------------
+
+
+ --------  PYTHIA Event Listing  (complete event)  ---------------------------------------------------------------------------------
+
+    no        id   name            status     mothers   daughters     colours      p_x        p_y        p_z         e          m
+     1      2212   (p+)               -12     0     0     2     2     0     0      0.000      0.000   4000.000   4000.000      0.938
+     2      2212   (p+)               -12     0     0     2     2     0     0      0.000      0.000  -4000.000   4000.000      0.938
+     3        -1   (dbar)             -21     1     2     0     0     0   103      0.000      0.000    696.776    696.776      0.000
+                                   Charge sum:  2.000           Momentum sum:      0.000      0.000      0.000   8000.000   8000.000
+
+ --------  End PYTHIA Event Listing  -----------------------------------------------------------------------------------------------

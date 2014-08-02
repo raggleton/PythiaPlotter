@@ -339,15 +339,55 @@ class GenParticle:
                 self.displayAttributes.isInteresting = True
                 self.displayAttributes.colour = i[0]
 
-    def convertNodeToEdge(self):
+    def convertNodeToEdgeAttributes(self, event):
         """Convert NodeAttributes object to EdgeAttributes object"""
-        pass
+        # Is there an existing vertex that our particle is outgoing from?
+        # (Look in mothers)
+        # If there isn't, then create one.
+        # - If the particle has mother(s) then assign that new vertex to
+        #   be in inVertex of all those mother(s). And do the wiring (set
+        #   vertex inParticles = mothers, mothers.inVertex,
+        #   mothers.inVertex.barcode)
+        # In either scenario, we have a target vertex, and need to set
+        # this particle to be the outgoing Particle from that vertex
+        #
+        # Set vertex barcode as highest vtx barcode in GenEvent+1
+        #
+        print "ConvertNodeToEdges for particle barcode", self.barcode
+        self.edgeAttributes = EdgeAttributes()
+        v = None
+        mumInVtx = None
+        if self.nodeAttributes.mothers:
+            mumInVtx = \
+                [m.edgeAttributes.inVertex for m in self.nodeAttributes.mothers if m.edgeAttributes.inVertex]  # need the if statement as default is None which is an object!
+            print "Num inVtx in", len(self.nodeAttributes.mothers), "mothers", len(mumInVtx)
+            # find unique ones - could get repetitions
+            if len(mumInVtx) > 1:
+                for m in mumInVtx:
+                    print m.barcode
+                raise Exception("Mothers have >1 invertices!")
+            elif len(mumInVtx) == 1:
+                v = mumInVtx[0]
+        if not v: # none of mothers has invertex, so set one up
+            print "creating vertex"
+            v = GenVertex(barcode=-1*len(event.vertices), numOutgoing=0)
+            for m in self.nodeAttributes.mothers:
+                m.edgeAttributes.inVertex = v
+                m.edgeAttributes.inVertexBarcode = v.barcode
+                v.inParticles.append(m)
+            event.vertices.append(v)
+
+        # make sure all mothers wired up to vertex
+        v.numOutgoing += 1
+        v.outParticles.append(self)
+        self.edgeAttributes.outVertex = v
+        self.edgeAttributes.outVertexBarcode = v.barcode
+
+
 
     def convertEdgeToNodeAttributes(self):
         """Convert EdgeAttributes obj to NodeAttributes object"""
         # Add mother barcodes and references first
-        mother1 = 0
-        mother2 = 0
         mothers = []
         if self.edgeAttributes.outVertex:  # Get vertex where this is outgoing
             for i in self.edgeAttributes.outVertex.inParticles:  # Get incoming
