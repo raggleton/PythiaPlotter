@@ -96,8 +96,8 @@ def parse(filename="qcdScatterSmall.txt"):
     currentEvent.addNodeMothers()
     currentEvent.addNodeDaughters()
 
-    for p in currentEvent.particles:
-        pprint(vars(p))
+    print len(currentEvent.particles)
+    [p.convertNodeToEdgeAttributes(currentEvent) for p in currentEvent.particles]
 
     # Things like mark interesting, remove redundants done in main script, as
     # required for both HepMC and Pythia
@@ -168,6 +168,9 @@ def parseEventListing(block):
             continue
         elif line.startswith(listingEnd):
             parseLine = False
+            continue
+
+        if "system" in line:
             continue
 
         if parseLine:
