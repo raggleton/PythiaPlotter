@@ -14,7 +14,7 @@ import config  # For my Global definitions
 # TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
 
 
-def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
+def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
     """Parse HepMCfile and return eventNumber event.
     Note that eventNumber starts at 0, not 1.
     Defaults to first event if eventNumber unspecified."""
@@ -43,6 +43,8 @@ def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
             # and add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
                 currentEvent.connectParticlesVertices()
+                for p in currentEvent.particles:
+                        p.convertEdgeToNodeAttributes()
                 eventList.append(currentEvent)
                 if config.VERBOSE: print "Adding GenEvent to list"
                 if config.VERBOSE: print len(currentEvent.particles), len(currentEvent.vertices)
@@ -52,13 +54,15 @@ def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
             elif line.startswith("E"):
                 # Done with the old event, add it to the list, start a new one
                 if currentEvent:
+                    for p in currentEvent.particles:
+                        p.convertEdgeToNodeAttributes()
                     eventList.append(currentEvent)
                     # if config.VERBOSE: print vars(currentEvent)
                     if config.VERBOSE: print "Adding GenEvent to list"
                     if config.VERBOSE: print len(currentEvent.particles),
                     len(currentEvent.vertices)
-                if config.VERBOSE: print "*** EVENT: Adding GenEvent info"
                 currentEvent = parseGenEventLine(line)
+                if config.VERBOSE: print "*** EVENT: Adding GenEvent info"
 
             # named weights
             elif line.startswith("N"):
@@ -113,7 +117,7 @@ def parse(filename="test/testSS_HLT.hepmc", eventNumber=0):
                 p.edgeAttributes.outVertex = currentVertex
                 currentEvent.particles.append(p)
                 if config.VERBOSE: print "Adding GenParticle info"
-                if config.VERBOSE: pprint(vars(p))
+                # if config.VERBOSE: pprint(vars(p))
 
         if config.VERBOSE: print len(eventList)
         if config.VERBOSE: pprint(vars(currentEvent))
