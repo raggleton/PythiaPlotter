@@ -212,7 +212,10 @@ class Units:
     def __init__(self, momentumUnit="GEV", positionUnit="MM"):
         # Check if momentum in MEV or GEV, default to GEV if neither.
         if momentumUnit:
-            momentumUnit = momentumUnit.upper()
+            try:
+                momentumUnit = momentumUnit.upper()
+            except AttributeError:
+                print "ERROR: momentumUnit arg needs to be a string!"
         if (momentumUnit in ("MEV", "GEV")):
             self.momentumUnit = momentumUnit
         else:
@@ -221,7 +224,10 @@ class Units:
 
         # Check if momentum in MM or CM, default to MM if neither.
         if positionUnit:
-            positionUnit = positionUnit.upper()
+            try:
+                positionUnit = positionUnit.upper()
+            except AttributeError:
+                print "ERROR: positionUnit arg needs to be a string!"
         if (positionUnit in ("MM", "CM")):
             self.positionUnit = positionUnit
         else:
