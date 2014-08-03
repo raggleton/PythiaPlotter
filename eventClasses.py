@@ -87,9 +87,26 @@ class GenEvent:
         self.units = None
         self.weights = None
 
-        # To hold list of vertices and particles
+        # To hold list of vertices and particles for easy
+        # Or iterate over dictionary?
         self.vertices = []
         self.particles = []
+
+        # To hold dictionary of particles & vertices by barcode
+        # key = barcode, value = ref to object
+        # self.pDict = {}
+        # self.vDict = {}
+
+    # TODO: decorator? See raymond talk
+    def getParticle(self, barcode):
+        """Get particle by its barcode, safer than particles[i].
+        Returns None if no match."""
+        return next((x for x in self.particles if x.barcode == barcode), None)
+
+    def getVertex(self, barcode):
+        """Get vertex by its barcode, safer than vertices[i].
+        Returns None if no match."""
+        return next((x for x in self.vertices if x.barcode == barcode), None)
 
     def setWeightNames(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the
