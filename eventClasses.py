@@ -378,26 +378,29 @@ class GenParticle:
         #
         print "ConvertNodeToEdges for particle barcode", self.barcode
         self.edgeAttributes = EdgeAttributes()
-        v = None
-        mumInVtx = None
+        v = None  # hold vertex where this particle is outgoing from
         if self.nodeAttributes.mothers:
-            mumInVtx = \
-                [m.edgeAttributes.inVertex for m in self.nodeAttributes.mothers if m.edgeAttributes.inVertex]  # need the if statement as default is None which is an object!
-            print "Num inVtx in", len(self.nodeAttributes.mothers), "mothers", len(mumInVtx)
+            mumVtx = []
+            for m in self.nodeAttributes.mothers:
+                print "mother barcode:", m.barcode
+                if m.edgeAttributes.inVertex:
+                    mumVtx.append(m.edgeAttributes.inVertex)
+            # need the if statement as default is None which is an object!
             # find unique ones - could get repetitions
-            if len(mumInVtx) > 1:
-                for m in mumInVtx:
+            if len(mumVtx) > 1:
+                for m in mumVtx:
                     print m.barcode
                 raise Exception("Mothers have >1 invertices!")
-            elif len(mumInVtx) == 1:
-                v = mumInVtx[0]
-        if not v: # none of mothers has invertex, so set one up
+            elif len(mumVtx) == 1:
+                v = mumVtx[0]
+
+        if not v:  # none of mothers has inVertex, so set one up
             print "creating vertex"
-            v = GenVertex(barcode=-1*len(event.vertices), numOutgoing=0)
+            v = GenVertex(barcode=(-1*len(event.vertices))-1, numOutgoing=0)
             for m in self.nodeAttributes.mothers:
-                m.edgeAttributes.inVertex = v
-                m.edgeAttributes.inVertexBarcode = v.barcode
-                v.inParticles.append(m)
+                if m.edgeAttributes.inVertex != v or not m.edgeAttributes.inVertex:
+                    m.edgeAttributes.setInVertex(v)
+                    v.inParticles.append(m)
             event.vertices.append(v)
 
         # make sure all mothers wired up to vertex
