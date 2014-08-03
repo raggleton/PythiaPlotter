@@ -476,6 +476,14 @@ class EdgeAttributes:
     def __str__(self):
         pprint(vars(self))
 
+    def setInVertex(self, v):
+        self.inVertex = v
+        self.inVertexBarcode = v.barcode
+
+    def setOutVertex(self, v):
+        self.outVertex = v
+        self.outVertexBarcode = v.barcode
+
 
 class DisplayAttributes:
     """Class to store attributes about node/edge representation
