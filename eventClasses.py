@@ -146,12 +146,30 @@ class GenEvent:
                 if p.edgeAttributes.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
 
+    def addVerticesForFinalState(self):
+        """Add inVertex for final state particles so they can be drawn later."""
+        for p in self.particles:
+            print "particle barcode:", p.barcode, ", isFinal:", p.isFinalState
+            if p.isFinalState:
+                if p.edgeAttributes:
+
+                    if not p.edgeAttributes.inVertex:
+                        v = GenVertex(barcode=(-1*len(self.vertices))-1)
+                        v.inParticles.append(p)
+                        self.vertices.append(v)
+                    else:
+                        print "has inVertex"
+                else:
+                    raise Exception(
+                        "ERROR: you haven't given particle EdgeAttributes obj")
+
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
         for p in self.particles:
             if not p.isInitialState:
-                for m in range(p.nodeAttributes.mother1, p.nodeAttributes.mother2+1):
-                    p.nodeAttributes.mothers.append(self.particles[m])
+                for m in range(p.nodeAttributes.mother1,
+                               p.nodeAttributes.mother2+1):
+                    p.nodeAttributes.mothers.append(self.getParticle(barcode=m))
 
     def addNodeDaughters(self):
         """Add references to daughters based on mother relationships"""
