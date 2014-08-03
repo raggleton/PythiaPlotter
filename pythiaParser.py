@@ -101,6 +101,8 @@ def parse(filename="qcdScatterSmall.txt"):
     print len(currentEvent.particles)
     [p.convertNodeToEdgeAttributes(currentEvent)
      for p in currentEvent.particles]
+    
+    currentEvent.addVerticesForFinalState()
 
     # Things like mark interesting, remove redundants done in main script, as
     # required for both HepMC and Pythia
