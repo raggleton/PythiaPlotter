@@ -10,6 +10,7 @@ import operator
 import config as C  # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
+
 # TODO: Depreciate me
 class Particle:
     """Class to hold particle info in an event listing"""
@@ -63,8 +64,8 @@ class GenEvent:
         self.scale = float(scale)  # event scale
         self.alphaQCD = float(alphaQCD)  # alpha QCD
         self.alphaQED = float(alphaQED)  # alpha QED
-        self.signalProcessID = int(signalProcessID)  # signal process id
-        self.signalProcessBarcode = int(signalProcessBarcode)  # signal process vertex barcode
+        self.signalProcessID = int(signalProcessID)  # hard process id
+        self.signalProcessBarcode = int(signalProcessBarcode)  # & vtx barcode
         self.numVertices = int(numVertices)  # number of vertices in this event
         self.beam1Barcode = int(beam1Barcode)  # barcode for beam particle 1
         self.beam2Barcode = int(beam2Barcode)  # barcode for beam particle 2
@@ -134,7 +135,8 @@ class GenEvent:
         # Add vertex reference to particles using stored barcode
         for p in self.particles:
             if p.edgeAttributes.inVertexBarcode != 0:
-                p.edgeAttributes.inVertex = self.vertices[abs(p.edgeAttributes.inVertexBarcode)-1]
+                p.edgeAttributes.inVertex = \
+                    self.vertices[abs(p.edgeAttributes.inVertexBarcode)-1]
 
         self.particles.sort(key=operator.attrgetter('barcode'))
 
@@ -200,7 +202,7 @@ class GenEvent:
                 while not foundSuitableMother:
                     # Check if mother of current has 1 parent and 1 child,
                     # both with same PID. If it does, then it's redundant
-                    # and we can skip it in future. If not, then suitable mother
+                    # and we can skip it in future. If not then suitable mother
                     # for Particle p
                     if (len(mum.nodeAttributes.mothers) == 1
                         and len(mum.daughters) == 1
@@ -352,10 +354,9 @@ class GenParticle:
         self.isFinalState = False
         self.isInitialState = False
 
-        self.displayAttributes = DisplayAttributes()  # Store colour, shape, etc
+        self.displayAttributes = DisplayAttributes()  # Store colour, shape etc
         self.edgeAttributes = None  # Store in/out vertices
         self.nodeAttributes = None  # Store mother/daughters
-
 
     def __eq__(self, other):
         return self.barcode == other.barcode
@@ -426,8 +427,6 @@ class GenParticle:
         v.outParticles.append(self)
         self.edgeAttributes.outVertex = v
         self.edgeAttributes.outVertexBarcode = v.barcode
-
-
 
     def convertEdgeToNodeAttributes(self):
         """Convert EdgeAttributes obj to NodeAttributes object"""

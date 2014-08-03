@@ -93,11 +93,14 @@ def parse(filename="qcdScatterSmall.txt"):
         print "Done reading file"
 
     # Once got all particles, add mothers/daughters
+    if config.VERBOSE: print "Adding mothers"
     currentEvent.addNodeMothers()
+    if config.VERBOSE: print "Adding daughters"
     currentEvent.addNodeDaughters()
 
     print len(currentEvent.particles)
-    [p.convertNodeToEdgeAttributes(currentEvent) for p in currentEvent.particles]
+    [p.convertNodeToEdgeAttributes(currentEvent)
+     for p in currentEvent.particles]
 
     # Things like mark interesting, remove redundants done in main script, as
     # required for both HepMC and Pythia
