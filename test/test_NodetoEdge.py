@@ -26,12 +26,14 @@ class TestNodeToEdge(unittest.TestCase):
     # have correct in/out barcodes
 
     def test_2to1_conversion_vertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_2to1.txt")
         print "number vertices:", len(e.vertices)
         [printVertex(v) for v in e.vertices]
         self.assertEqual(len(e.vertices), 3)
 
     def test_2to1_conversion_addFinalVertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_2to1.txt")
         print "number vertices before doing finals:", len(e.vertices)
         e.addVerticesForFinalState()
@@ -40,6 +42,7 @@ class TestNodeToEdge(unittest.TestCase):
         self.assertEqual(len(e.vertices), 4)
 
     def test_1to2_conversion_vertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_1to2.txt")
         print "number vertices:", len(e.vertices)
         [printVertex(v) for v in e.vertices]
@@ -47,6 +50,7 @@ class TestNodeToEdge(unittest.TestCase):
         self.assertEqual(len(e.vertices), 2)
 
     def test_1to2_conversion_addFinalVertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_1to2.txt")
         print "number vertices before doing finals:", len(e.vertices)
         e.addVerticesForFinalState()
@@ -55,12 +59,14 @@ class TestNodeToEdge(unittest.TestCase):
         self.assertEqual(len(e.vertices), 4)
 
     def test_3to1to2_conversion_vertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_3to1to2.txt")
         print "number vertices:", len(e.vertices)
         [printVertex(v) for v in e.vertices]
         self.assertEqual(len(e.vertices), 5)
 
     def test_3to1to2_conversion_addFinalVertices(self):
+        printTestHeader(self)
         e = P.parse("test/testSamples/test_3to1to2.txt")
         print "number vertices before doing finals:", len(e.vertices)
         e.addVerticesForFinalState()
@@ -79,6 +85,11 @@ def printParticle(p):
     print ("p barcode:",p.barcode,
            "in vtx barcode:", p.edgeAttributes.inVertexBarcode,
            "out vtx barcode:", p.edgeAttributes.outVertexBarcode)
+
+def printTestHeader(t):
+    print "--------------------------------------------------------------------"
+    print "Doing:", t.id()
+    print ""
 
 def main():
     unittest.main()

@@ -21,46 +21,51 @@ import hepmcParser as h
 class TestEdgeToNode(unittest.TestCase):
 
     def test_2to1_conversion_mothers(self):
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_2to1.hepmc")
         mothersKnown = [1, 2]  # barcodes of mothers
-        particle = e.particles[2]
+        particle = e.getParticle(3)
         # Get left over mothers
         unmatched = testParticleMothers(particle, mothersKnown)
         self.failIf(unmatched)
 
     def test_2to1_conversion_daughters(self):
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_2to1.hepmc")
         daughtersKnown = [3]  # barcodes of daughters
-        particle1 = e.particles[0]
-        particle2 = e.particles[1]
+        particle1 = e.getParticle(1)
+        particle2 = e.getParticle(2)
         unmatched1 = testParticleDaughters(particle1, daughtersKnown)
         unmatched2 = testParticleDaughters(particle2, daughtersKnown)
         self.failIf(unmatched1 or unmatched2)
 
     def test_1to2_conversion_mothers(self):
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_1to2.hepmc")
         mothersKnown = [1]  # barcodes of mothers
-        particle2 = e.particles[1]
+        particle2 = e.getParticle(2)
         unmatched2 = testParticleMothers(particle2, mothersKnown)
-        particle3 = e.particles[2]
+        particle3 = e.getParticle(3)
         unmatched3 = testParticleMothers(particle3, mothersKnown)
         self.failIf(unmatched2 or unmatched3)
 
     def test_1to2_conversion_daughters(self):
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_1to2.hepmc")
         daughtersKnown = [2, 3]  # barcodes of daughters
-        particle = e.particles[0]
+        particle = e.getParticle(1)
         unmatched = testParticleDaughters(particle, daughtersKnown)
         self.failIf(unmatched)
 
     def test_3to1to2_conversion_mothers(self):
         """Test conversion with simple sample"""
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_3to1to2.hepmc")
         mothers4 = [1, 2, 3]
         mothers5 = [4]
-        particle4 = e.particles[3]
-        particle5 = e.particles[4]
-        particle6 = e.particles[5]
+        particle4 = e.getParticle(4)
+        particle5 = e.getParticle(5)
+        particle6 = e.getParticle(6)
         unmatched4 = testParticleMothers(particle4, mothers4)
         unmatched5 = testParticleMothers(particle5, mothers5)
         unmatched6 = testParticleMothers(particle6, mothers5)
@@ -68,13 +73,14 @@ class TestEdgeToNode(unittest.TestCase):
 
     def test_3to1to2_conversion_daughters(self):
         """Test conversion with simple sample"""
+        printTestHeader(self)
         e = h.parse("test/testSamples/test_3to1to2.hepmc")
         daughters1 = [4]
         daughters4 = [5, 6]
-        particle1 = e.particles[0]
-        particle2 = e.particles[1]
-        particle3 = e.particles[2]
-        particle4 = e.particles[3]
+        particle1 = e.getParticle(1)
+        particle2 = e.getParticle(2)
+        particle3 = e.getParticle(3)
+        particle4 = e.getParticle(4)
         unmatched1 = testParticleDaughters(particle1, daughters1)
         unmatched2 = testParticleDaughters(particle2, daughters1)
         unmatched3 = testParticleDaughters(particle3, daughters1)
@@ -104,6 +110,11 @@ def testParticleDaughters(particle, daughterList):
     if leftovers:
         print "LEFTOVER:", leftovers
     return leftovers
+
+def printTestHeader(t):
+    print "--------------------------------------------------------------------"
+    print "Doing:", t.id()
+    print ""
 
 
 def main():
