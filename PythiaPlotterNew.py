@@ -216,7 +216,9 @@ if __name__ == "__main__":
         if removeRedundants:
             event.removeRedundantsEdges()
 
-    event.markInteresting(C.interesting)
+    # Post processing - don't like this being here, move it!
+    event.addVerticesForFinalState()
+    event.markInteresting(config.interesting)
 
     ##########################################
     # TODO: Need some bit to convert Node <=> Edges

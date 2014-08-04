@@ -159,6 +159,7 @@ class GenEvent:
                         v = GenVertex(barcode=(-1*len(self.vertices))-1)
                         v.inParticles.append(p)
                         self.vertices.append(v)
+                        p.edgeAttributes.setInVertex(v)
                     else:
                         print "has inVertex"
                 else:
