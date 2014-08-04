@@ -9,10 +9,10 @@ import operator
 
 import config as C  # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
-
+import weakref
 
 # TODO: Depreciate me
-class Particle:
+class Particle(object):
     """Class to hold particle info in an event listing"""
 
     def __init__(self, number, PID, name, status, m1, m2):
@@ -51,7 +51,7 @@ class Particle:
         return self.name.translate(None, '()')
 
 
-class GenEvent:
+class GenEvent(object):
     """Class to hold complete event info, e.g. evt number, scales, beam IDs
     as well as list of all particles and vertices"""
 
@@ -235,7 +235,7 @@ class GenEvent:
         return initials
 
 
-class Weights:
+class Weights(object):
     """Class to store event weight names and values as dictionary"""
 
     def __init__(self, weightDict=None):
@@ -244,7 +244,7 @@ class Weights:
         self.weightDict = weightDict  # Dictionary of weight names and values
 
 
-class Units:
+class Units(object):
     """Class to store momentum and position units"""
 
     def __init__(self, momentumUnit="GEV", positionUnit="MM"):
@@ -273,15 +273,15 @@ class Units:
             print "Position must be either MM or CM. Defaulting to MM."
 
 
-class GenCrossSection:
-    """Class to store cross section + error for event. Units: pb."""
+class GenCrossSection(object):
+    """class to store cross section + error for event. Units: pb."""
 
     def __init__(self, crossSection=0.0, crossSectionErr=0.0):
         self.crossSection = float(crossSection)  # cross section in pb
         self.crossSectionErr = float(crossSectionErr)  # error on xsec in pb
 
 
-class PdfInfo:
+class PdfInfo(object):
     """Class to store parton info (Q scale, momenta, LHAPDF set"""
 
     def __init__(self, id1=0, id2=0, x1=0, x2=0, scalePDF=0,
@@ -299,7 +299,7 @@ class PdfInfo:
         self.pdf_id2 = int(pdf_id2)  # LHAPDF set id of second parton
 
 
-class GenVertex:
+class GenVertex(object):
     """Class to store info about vertex"""
 
     def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
@@ -331,7 +331,7 @@ class GenVertex:
             print(po.barcode)
 
 
-class GenParticle:
+class GenParticle(object):
     """Class to store info about GenParticle in event"""
 
     def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
@@ -457,7 +457,7 @@ class GenParticle:
                 self.nodeAttributes.daughters.append(i)
 
 
-class NodeAttributes:
+class NodeAttributes(object):
     """Class to store attributes specially for when particle is represented
     by node, e.g. from Pythia screen output"""
 
@@ -479,7 +479,7 @@ class NodeAttributes:
                                self.mothers[0].barcode)
 
 
-class EdgeAttributes:
+class EdgeAttributes(object):
     """To store attributes specially for when particle is represented
     by edge, e.g. from HepMC"""
 
