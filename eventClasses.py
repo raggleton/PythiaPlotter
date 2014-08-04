@@ -355,9 +355,14 @@ class GenParticle(object):
         self.isFinalState = False
         self.isInitialState = False
 
-        self.displayAttributes = DisplayAttributes()  # Store colour, shape etc
-        self.edgeAttributes = None  # Store in/out vertices
-        self.nodeAttributes = None  # Store mother/daughters
+        # Use weakrefs here as we don't want circular references,
+        # and the Attributes only make sense if the parent particle exists
+        # Store colour, shape, label, etc
+        self.displayAttributes = DisplayAttributes(self)
+        # Store in/out vertices
+        self.edgeAttributes = EdgeAttributes(self)
+        # Store mother/daughters
+        self.nodeAttributes = NodeAttributes(self)
 
     def __eq__(self, other):
         return self.barcode == other.barcode
@@ -395,9 +400,6 @@ class GenParticle(object):
         # this particle to be the outgoing Particle from that vertex
         #
         # Set vertex barcode as highest vtx barcode in GenEvent+1
-        #
-        print "ConvertNodeToEdges for particle barcode", self.barcode
-        self.edgeAttributes = EdgeAttributes()
         v = None  # hold vertex where this particle is outgoing from
         if self.nodeAttributes.mothers:
             mumVtx = []
@@ -445,7 +447,8 @@ class GenParticle(object):
                     if i.barcode not in range(mother1, mother2+1):
                         print "ERROR: ", i.barcode
                         raise Exception("barcode not in range mother1->mother2")
-                self.nodeAttributes = NodeAttributes(mother1, mother2)
+                self.nodeAttributes.mother1 = mother1
+                self.nodeAttributes.mother2 = mother2
                 self.nodeAttributes.mothers = mothers
 
         # Now add daughter references. Don't do barcodes,
@@ -461,8 +464,8 @@ class NodeAttributes(object):
     """Class to store attributes specially for when particle is represented
     by node, e.g. from Pythia screen output"""
 
-    def __init__(self, mother1=0, mother2=0):
-
+    def __init__(self, parent, mother1=0, mother2=0):
+        self.particle = parent  # ref to parent particle
         # For reading in from Pythia screen output, need to read in mother(s)
         # of particle. Can then infer daughters once gathered all particles
         self.mother1 = int(mother1)  # barcode of mother 1
@@ -483,8 +486,8 @@ class EdgeAttributes(object):
     """To store attributes specially for when particle is represented
     by edge, e.g. from HepMC"""
 
-    def __init__(self, inVertexBarcode=0, outVertexBarcode=0):
-
+    def __init__(self, parent, inVertexBarcode=0, outVertexBarcode=0):
+        self.particle = parent  # ref to parent particle
         # Barcode of vertex that has this particle as an incoming particle
         self.inVertexBarcode = int(inVertexBarcode)
         # Reference to GenVertex where this particle is incoming
@@ -506,14 +509,16 @@ class EdgeAttributes(object):
         self.outVertexBarcode = v.barcode
 
 
-class DisplayAttributes:
+class DisplayAttributes(object):
     """Class to store attributes about node/edge representation
     of a particle, e.g. node shape, colour"""
 
-    def __init__(self):
+    def __init__(self, parent):
+        self.particle = parent  # ref to parent particle
         self.isInteresting = False  # Whether the user wants this highlighted
         self.colour = ""  # What colour to highlight the node/edge
-        self.shape = "Circle"
+        self.shape = ""  # Shape, only for node
+        self.label = ""  # Particle/edge name to display (TeX or raw)
 
     def __str__(self):
         pprint(vars(self))

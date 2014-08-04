@@ -198,6 +198,6 @@ def parseGenParticleLine(line):
                     mass=parts[7], status=parts[8], polTheta=parts[9],
                     polPhi=parts[10], flowDict=flowDict)
 
-    p.edgeAttributes = EdgeAttributes(inVertexBarcode=parts[11])
+    p.edgeAttributes.inVertexBarcode = int(parts[11])
 
     return p
