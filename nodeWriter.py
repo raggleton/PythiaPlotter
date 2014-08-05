@@ -1,6 +1,6 @@
 """
 Prints relationships to GraphViz file when representing particles as nodes
-(for edges see edgePrinter.py)
+(for edges see edgeWriter.py)
 """
 
 import eventClasses
