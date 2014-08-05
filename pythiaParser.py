@@ -98,8 +98,10 @@ def parse(filename="qcdScatterSmall.txt"):
     if config.VERBOSE: print "Adding daughters"
     currentEvent.addNodeDaughters()
 
+    # Convert Node to Edge repr for all particles so we can plot either later
     [p.convertNodeToEdgeAttributes(currentEvent)
     for p in currentEvent.particles]
+    # currentEvent.markInitialHepMC()
 
     # Things like mark interesting, remove redundants done in main script, as
     # required for both HepMC and Pythia
