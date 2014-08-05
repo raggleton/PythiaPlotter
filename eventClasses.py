@@ -151,17 +151,13 @@ class GenEvent(object):
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""
         for p in self.particles:
-            print "particle barcode:", p.barcode, ", isFinal:", p.isFinalState
             if p.isFinalState:
                 if p.edgeAttributes:
-
                     if not p.edgeAttributes.inVertex:
                         v = GenVertex(barcode=(-1*len(self.vertices))-1)
                         v.inParticles.append(p)
                         self.vertices.append(v)
                         p.edgeAttributes.setInVertex(v)
-                    else:
-                        print "has inVertex"
                 else:
                     raise Exception(
                         "ERROR: you haven't given particle EdgeAttributes obj")
@@ -376,7 +372,6 @@ class GenParticle(object):
         if self.nodeAttributes.mothers:
             mumVtx = []
             for m in self.nodeAttributes.mothers:
-                print "mother barcode:", m.barcode
                 if m.edgeAttributes.inVertex:
                     mumVtx.append(m.edgeAttributes.inVertex)
             # need the if statement as default is None which is an object!
@@ -389,7 +384,6 @@ class GenParticle(object):
                 v = mumVtx[0]
 
         if not v:  # none of mothers has inVertex, so set one up
-            print "creating vertex"
             v = GenVertex(barcode=(-1*len(event.vertices))-1, numOutgoing=0)
             for m in self.nodeAttributes.mothers:
                 if m.edgeAttributes.inVertex != v or not m.edgeAttributes.inVertex:

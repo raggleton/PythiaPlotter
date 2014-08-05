@@ -3,8 +3,8 @@ This file contains global definitions. These can be used in a python file by:
 
 import config
 
-Since there is only one instance of each module, 
-any changes made to the module object get reflected everywhere. 
+Since there is only one instance of each module,
+any changes made to the module object get reflected everywhere.
 So can use for global variables e.g.
 
 config.VERBOSE
@@ -29,7 +29,6 @@ interesting = [
               ["orange", ["c", "cbar"]],
               ["yellow", ["s", "sbar"]]
               ]
-
 
 #############################################################
 # DO NOT EDIT BELOW HERE (unless you know what you're doing)

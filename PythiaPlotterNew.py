@@ -218,11 +218,6 @@ if __name__ == "__main__":
 
     # Post processing - don't like this being here, move it!
     event.addVerticesForFinalState()
-    event.markInteresting(config.interesting)
-
-    ##########################################
-    # TODO: Need some bit to convert Node <=> Edges
-    ##########################################
 
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
