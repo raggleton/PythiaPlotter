@@ -170,11 +170,7 @@ if __name__ == "__main__":
     # if user doesn't specify one
     pdfFilename = args.outputPDF
     if not pdfFilename:
-        pdfFilename = stemName+".pdf"
-
-    # Store representation mode
-    # Arg Parser checks if NODE or EDGE only
-    particleRepr = args.mode
+        pdfFilename = stemName+"_"+args.mode+".pdf"
 
     # Interesting particles we wish to highlight
     # Can do different particles in different colours,
