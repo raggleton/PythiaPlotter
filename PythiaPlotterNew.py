@@ -8,10 +8,11 @@ import re
 import imp  # For testing if modules exist
 
 # PythiaPlotter files:
-import config as C  # Global definitions
+import config  # Global definitions
 import pythiaParser
 import hepmcParser
 import eventClasses
+import nodeWriter
 
 # Script that converts the event listing from either Pythia 8 output or
 # standard HepMC file into a GraphViz file, which is then plotted with
@@ -195,7 +196,7 @@ if __name__ == "__main__":
     removeRedundants = True
 
     # For debugging - print output & various debug messages to screen
-    C.VERBOSE = args.verbose
+    config.VERBOSE = args.verbose
 
     ###########################################
     # MAIN - Start of file processing routines
@@ -222,14 +223,13 @@ if __name__ == "__main__":
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
     ########################################################################
-    with open(gvFilename, "w") as gvFile:
+    print "Writing GraphViz file to %s" % gvFilename
 
-        print "Writing GraphViz file to %s" % gvFilename
-
-        if particleRepr == "NODE":
-            pass
-        else:
-            pass
+    if particleRepr == "NODE":
+        nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
+                                        useRawNames=args.rawNames)
+    else:
+        pass
 
     ########################################
     # Run pdflatex or dot to produce the PDF
@@ -274,14 +274,14 @@ if __name__ == "__main__":
 
             print "Producing tex file and running pdflatex (may take a while)"
 
-            if C.VERBOSE: print texTemplate,
+            if config.VERBOSE: print texTemplate,
 
             # TODO: show output otherwise can hang wihtout sayign anything
             texargs = ["pdflatex", "--shell-escape", '-jobname',
                        os.path.splitext(pdfFilename)[0], stemName+".tex"]
             texout = subprocess.check_output(texargs)
 
-            if C.VERBOSE: print texout,
+            if config.VERBOSE: print texout,
 
             print ""
             print "If you want to rerun the tex file for whatever reason, do:"

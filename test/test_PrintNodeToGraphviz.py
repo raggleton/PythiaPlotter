@@ -1,10 +1,10 @@
 __author__ = 'robina'
 
 
-"""Test nodePrinter.py"""
+"""Test nodeWriter.py"""
 
 import unittest
-import nodePrinter
+import nodeWriter
 import pythiaParser
 import hepmcParser
 import config
@@ -33,7 +33,7 @@ def parseAndPrintFile(filename):
     e = pythiaParser.parse("test/testSamples/"+filename)
     postProcess(e)
     stemName = os.path.splitext(filename)[0]
-    nodePrinter.printNodeToGraphViz(e, "test/testSamples/"+stemName+".gv",
+    nodeWriter.printNodeToGraphViz(e, "test/testSamples/"+stemName+".gv",
                                         useRawNames=True)
 
 def postProcess(e):
