@@ -476,7 +476,7 @@ class EdgeAttributes(object):
 
 
 class DisplayAttributes(object):
-    """Class to store attributes about node/edge representation
+    """Class to store attributes about visual node/edge representation
     of a particle, e.g. node shape, colour"""
 
     def __init__(self, parent, rawNames=False):
@@ -484,6 +484,7 @@ class DisplayAttributes(object):
         self.isInteresting = False  # Whether the user wants this highlighted
         self.colour = "\"\""  # What colour to highlight the node/edge
         self.shape = "circle"  # Shape, only for node
+        self.style = "\"\""  # Fill style
         self.label = parent.texname  # Particle name to display (TeX or raw)
         if rawNames:
             self.label = parent.name  # TODO: change this, ugly
@@ -501,15 +502,18 @@ class DisplayAttributes(object):
         if self.particle.isInitialState:
             self.colour = "green"
             self.shape = "circle"
+            self.style = "filled"
         elif self.particle.isFinalState:
             self.colour = "yellow"
             self.shape = "box"
+            self.style = "filled"
         # Set interesting or not
         if interestingList:
             for i in interestingList:
                 if self.particle.name in i[1]:
                     self.isInteresting = True
                     self.colour = i[0]
+                    self.style = "filled"
         # Set label
         if useRawName:
             self.label = self.particle.name
@@ -518,9 +522,9 @@ class DisplayAttributes(object):
 
     def getNodeString(self):
         """Returns string that can be used in GraphViz to describe the node"""
-        return '%s [label="%s: %s", shape=%s, style=filled, fillcolor=%s]\n' \
+        return '    %s [label="%s: %s", shape=%s, style=%s, fillcolor=%s]\n' \
                % (self.particle.barcode, self.particle.barcode,
-                  self.label, self.shape, self.colour)
+                  self.label, self.shape, self.style, self.colour)
 
     def setAttributesForEdge(self, interestingList=None, useRawName=False):
         pass
