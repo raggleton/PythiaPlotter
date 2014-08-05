@@ -220,14 +220,6 @@ class GenEvent(object):
         # TODO: write this. Could be hard!
         pass
 
-    def getInitialParticles(self):
-        """Return list of particles that are initial state"""
-        initials = []
-        for p in self.particles:
-            if p.isInitialState and p.pdgid != 90:
-                initials.append(p)
-        return initials
-
 
 class Weights(object):
     """Class to store event weight names and values as dictionary"""

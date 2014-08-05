@@ -18,11 +18,7 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
         # (doesn't work if you start at beginning and follow daughters)
         gvFile.write("digraph g {\n    rankdir = RL;\n")
 
-        # Set all initial particles to be level in diagram
-        rank = "  {rank=same;"
-
-        particles = event.particles
-        for p in reversed(particles):
+        for p in reversed(event.particles):
 
             if p.skip or p.name == "system":
                 continue
@@ -41,10 +37,8 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
 
             if not p.isInitialState:
                 gvFile.write(entry)  # don't want p+ -> system entries
-                if config.VERBOSE: print entry,
-            else:
-                rank += '%s ' % (p.barcode)
-
+                if config.VERBOSE:
+                    print entry,
             # Write labels for text for each node (raw name or tex)
             # Set special features for initial/final state & interesting ones
             # Final state: box, yellow fill
@@ -56,8 +50,13 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
             if config.VERBOSE:
                 print nodeConfig,
 
+        # Set all initial particles to be level in diagram
+        rank = "  {rank=same;"
+        rank += ' '.join([str(p.barcode) for p in event.particles
+                          if p.isInitialState and p.pdgid != 90])
         rank += "} // Put initial particles on same level\n"
         if config.VERBOSE: print rank,
         gvFile.write(rank)
+
         gvFile.write("}")
         gvFile.write("")
