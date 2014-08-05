@@ -501,7 +501,7 @@ class DisplayAttributes(object):
         so doesn't occur all over the place"""
         # Set color and shape for initial/final states
         if self.particle.isInitialState:
-            self.color = "green"
+            self.color = "green3"
             self.shape = "circle"
             self.style = "filled"
         elif self.particle.isFinalState:
