@@ -28,7 +28,7 @@ class Particle(object):
         self.mothers = []  # list of Particle objects that are its mother
         self.daughters = []  # list of Particle objects that are its daughters
         self.isInteresting = False  # Whether the user wants this highlighted
-        self.nodeColour = ""  # What colour to highlight the node
+        self.nodeColour = ""  # What color to highlight the node
         self.isFinalState = False
         self.isInitialState = False
 
@@ -150,7 +150,6 @@ class GenEvent(object):
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""
-        print "Adding final state vertices"
         for p in self.particles:
             # if p.isFinalState:
             if p.edgeAttributes:
@@ -335,14 +334,13 @@ class GenParticle(object):
         self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
         if not flowDict:
             flowDict = {}
-        self.flowDict = flowDict  # colour flow
+        self.flowDict = flowDict  # color flow
         self.skip = False  # Whether to skip when writing nodes to file
         self.isFinalState = False
         self.isInitialState = False
+        self.event = None  # parent event
 
-        # Use weakrefs here as we don't want circular references,
-        # and the Attributes only make sense if the parent particle exists
-        # Store colour, shape, label, etc
+        # Store color, shape, label, etc
         self.displayAttributes = DisplayAttributes(self)
         # Store in/out vertices
         self.edgeAttributes = EdgeAttributes(self)
@@ -480,12 +478,12 @@ class EdgeAttributes(object):
 
 class DisplayAttributes(object):
     """Class to store attributes about visual node/edge representation
-    of a particle, e.g. node shape, colour"""
+    of a particle, e.g. node shape, color"""
 
     def __init__(self, parent, rawNames=False):
         self.particle = parent  # ref to parent particle
         self.isInteresting = False  # Whether the user wants this highlighted
-        self.colour = "\"\""  # What colour to highlight the node/edge
+        self.color = "\"\""  # What color to highlight the node/edge
         self.shape = "circle"  # Shape, only for node
         self.style = "\"\""  # Fill style
         self.label = parent.texname  # Particle name to display (TeX or raw)
@@ -501,13 +499,13 @@ class DisplayAttributes(object):
     def setAttributesForNode(self, interestingList=None, useRawName=False):
         """Set all display attributes to automated values,
         so doesn't occur all over the place"""
-        # Set colour and shape for initial/final states
+        # Set color and shape for initial/final states
         if self.particle.isInitialState:
-            self.colour = "green"
+            self.color = "green"
             self.shape = "circle"
             self.style = "filled"
         elif self.particle.isFinalState:
-            self.colour = "yellow"
+            self.color = "orange"
             self.shape = "box"
             self.style = "filled"
         # Set interesting or not
@@ -515,7 +513,7 @@ class DisplayAttributes(object):
             for i in interestingList:
                 if self.particle.name in i[1]:
                     self.isInteresting = True
-                    self.colour = i[0]
+                    self.color = i[0]
                     self.style = "filled"
         # Set label
         if useRawName:
@@ -527,15 +525,15 @@ class DisplayAttributes(object):
         """Returns string that can be used in GraphViz to describe the node"""
         return '    %s [label="%s: %s", shape=%s, style=%s, fillcolor=%s]\n' \
                % (self.particle.barcode, self.particle.barcode,
-                  self.label, self.shape, self.style, self.colour)
+                  self.label, self.shape, self.style, self.color)
 
     def setAttributesForEdge(self, interestingList=None, useRawName=False):
         pass
 
     def getEdgeString(self):
         """Returns string that can be used in GraphViz to describe the edge"""
-        if self.colour == "\"\"":
-            self.colour = ""
+        if self.color == "\"\"":
+            self.color = ""
         return '[label="%s: %s", color="%s", fontcolor="%s", arrowsize=0.8 ]\n'\
                % (self.particle.barcode, self.label,
-                  self.colour, self.colour)
+                  self.color, self.color)
