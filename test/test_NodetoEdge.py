@@ -8,15 +8,17 @@ from pprint import pprint
 # To import from directory above test/
 # Doing:
 # from .. import eventclasses
-# doens't work as doens't think it's a package
+# doens't work as doesn't think it's a package
 import sys
-import os.path
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+# import os.path
+# sys.path.append(
+#     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 import eventClasses as e
 import pythiaParser as P
 import config
+from common_test import printTestHeader
+
 
 class TestNodeToEdge(unittest.TestCase):
 
@@ -85,11 +87,6 @@ def printParticle(p):
     print ("p barcode:",p.barcode,
            "in vtx barcode:", p.edgeAttributes.inVertexBarcode,
            "out vtx barcode:", p.edgeAttributes.outVertexBarcode)
-
-def printTestHeader(t):
-    print "--------------------------------------------------------------------"
-    print "Doing:", t.id()
-    print ""
 
 def main():
     unittest.main()

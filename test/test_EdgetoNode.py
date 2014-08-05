@@ -8,14 +8,16 @@ from pprint import pprint
 # To import from directory above test/
 # Doing:
 # from .. import eventclasses
-# doens't work as doens't think it's a package
-import sys
-import os.path
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+# doesn't work as doesn't think it's a package
+# OR run it from the main dir, not test/
+# import sys
+# import os.path
+# sys.path.append(
+#     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 import eventClasses as e
 import hepmcParser as h
+from common_test import printTestHeader
 
 
 class TestEdgeToNode(unittest.TestCase):
@@ -110,12 +112,6 @@ def testParticleDaughters(particle, daughterList):
     if leftovers:
         print "LEFTOVER:", leftovers
     return leftovers
-
-def printTestHeader(t):
-    print "--------------------------------------------------------------------"
-    print "Doing:", t.id()
-    print ""
-
 
 def main():
     unittest.main()
