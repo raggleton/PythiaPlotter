@@ -4,21 +4,18 @@
 
 - [ ] Let pdflatex run normally instead of trying to hide output, otherwise can look like it hangs for no reason
 - [x] **_BIG_ - and mostly done (in master branch)** Combine with Latex to represent particle names properly
-    - [x] Redo ugly rewriting gv into tex file by linking or something
     - [ ] Add user option to pass options to dot2texi
+    - [x] Redo ugly rewriting gv into tex file by linking or something
     - [x] Do test to see if the necessary programs exist
 - [ ] **_BIG_ - see hepmcParser branch** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
     - [ ] Draw like normal Feynman diagram, not the current inverse look. Or give user the choice
     - [ ] Use pyparsing to ease parsing of file/event info?
-    - [ ] Allow user to select which event to look at in HepMC file
-    - [ ] Auto determine if output of Pythia, or HepMC (and act accordingly)
     - [ ] Just wrap HepMC instead of implementing subset/whole of it?
     - [ ] Unify a_variable and aVariable (hangover from HepMC?)
     - [ ] Throw some exceptions (e.g. HeavyIon lines, wrong units)
     - [ ] Test, test, test!!!
-        - [x] Test after parsing each line implemented, before worrying about all the connections
-        - [ ] Implement/Test the connections
-        - [ ] Test the writing to GraphViz format
+    - [x] Auto determine if output of Pythia, or HepMC (and act accordingly)
+    - [x] Allow user to select which event to look at in HepMC file
 - [ ] **_BIG_ - slow start, see siteDev branch** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] Improve parsing of input file eg if only full event, or other listings
 
@@ -37,8 +34,20 @@
 ### Current work 
 
 _hepmcParser_:
-- [x] construct test hepmc file (short)
-- [x] run progrma to test connections all filled correctly
-- [x] sort particles list by barcode? or by order in hepmc file? (probably former)
-- [ ] add other necessary fields Particle -> GenParticle
-- [ ] write connections to file in GraphViz
+- [ ] Rename all functions/attributes from `camelCase` to `underscore_rulez`
+- [ ] add proton beam info to GenEvent?
+- [ ] `__repr__` functions better
+- [ ] Add test to parse() methods to check if suitable format or not
+- [ ] Add more tests for all classes/methods
+- [ ] Some way to type check ints - use constructors again? OR decorators?  
+- [ ] Event post-processing common for both parsers - hide away? do separately?
+- [x] Restructure PythiaPlotter (see PythiaPlotterNew.py)
+- [x] Subclass GenParticle for Edge/Node specifics. Or have attribute classes
+- [x] redo sameInitialOnes in nodeParser.py
+- [x] Create GenEvent object in pythiaParser, fill it with particles, return it.
+- [x] Add more tests for conversions
+- [x] Add conversions from NodeAttributes to EdgeAttributes **test**
+- [x] How to run all tests in pycharm? **easy: http://www.jetbrains.com/pycharm/webhelp/creating-run-debug-configuration-for-tests.html**
+- [x] Add invertices to final states particles so that we can draw them
+- [x] Redo add NodeMothers to correct particles[m]. Use dictionary in GenEvent? Or Getter?
+- [x] Need some SetDisplayAttributes method to centralise it.
