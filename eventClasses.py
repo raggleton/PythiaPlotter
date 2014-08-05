@@ -148,13 +148,15 @@ class GenEvent(object):
                 if p.edgeAttributes.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
 
-    def markInitialEdges(self):
-        """After parsing from hepmc, mark initial state vertices/particles"""
-        for v in self.vertices:
-            if len(v.inParticles) == 0:
-                v.isInitialState = True
-                for p in v.outParticles:
-                    p.isInitialState = True
+    def markInitialHepMC(self):
+        """After parsing from hepmc, mark initial state vertices/particles.
+        These have status = 4"""
+        # I guess we could use beam1/2barcode from GenEvent as well?
+        for p in self.particles:
+            if p.status == 4:
+                p.isInitialState = True
+                p.edgeAttributes.outVertex = True
+
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""

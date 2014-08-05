@@ -207,5 +207,5 @@ def postProcessEvent(currentEvent, eventList):
     currentEvent.connectParticlesVertices()
     for p in currentEvent.particles:
         p.convertEdgeToNodeAttributes()
-    currentEvent.markInitialEdges()
+    # currentEvent.markInitialHepMC()
     eventList.append(currentEvent)

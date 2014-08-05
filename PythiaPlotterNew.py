@@ -216,14 +216,14 @@ if __name__ == "__main__":
 
     # Post processing - don't like this being here, move it!
     event.addVerticesForFinalState()
-    event.markInitialEdges()
+    event.markInitialHepMC()
 
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
     ########################################################################
     if args.mode == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
-                                        useRawNames=args.rawNames)
+                                       useRawNames=args.rawNames)
     else:
         edgeWriter.printEdgeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
