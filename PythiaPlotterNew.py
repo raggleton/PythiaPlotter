@@ -220,11 +220,12 @@ if __name__ == "__main__":
 
     # Post processing - don't like this being here, move it!
     event.addVerticesForFinalState()
+    event.markInitialEdges()
 
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
     ########################################################################
-    if particleRepr == "NODE":
+    if args.mode == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
                                         useRawNames=args.rawNames)
     else:

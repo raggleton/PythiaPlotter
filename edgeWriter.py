@@ -37,18 +37,24 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
         # Print vertex display attributes, all the same for now
         for v in event.vertices:
-            entry = '    %s [label="",shape=point, size=0.1]\n' % str(v.barcode).replace("-","V")
+            color = "black"
+            if v.isInitialState or v.isFinalState:
+                color = "transparent"
+
+            entry = '    %s [label="",shape=point, size=0.1, color=%s]\n' \
+                    % (str(v.barcode).replace("-", "V"), color)
             gvFile.write(entry)
             if config.VERBOSE:
                 print entry,
 
-            # Set all initial vertices to be level in diagram
-            # rank = "  {rank=same;"
-            # rank += ' '.join([str(p.barcode) for p in event.particles
-            #                   if p.isInitialState and p.pdgid != 90])
-            # rank += "} // Put initial particles on same level\n"
-            # if config.VERBOSE: print rank,
-            # gvFile.write(rank)
+        # Set all initial vertices to be level in diagram
+        rank = "  {rank=same;"
+        initial = [str(p.edgeAttributes.outVertexBarcode).replace("-", "V")
+                   for p in event.particles if p.isInitialState]
+        rank += ' '.join(initial)
+        rank += "} // Put initial particles on same level\n"
+        if config.VERBOSE: print rank,
+        # gvFile.write(rank)
 
         gvFile.write("}")
         gvFile.write("")

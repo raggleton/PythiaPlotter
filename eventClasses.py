@@ -148,6 +148,14 @@ class GenEvent(object):
                 if p.edgeAttributes.outVertexBarcode == v.barcode:
                     v.outParticles.append(p)
 
+    def markInitialEdges(self):
+        """After parsing from hepmc, mark initial state vertices/particles"""
+        for v in self.vertices:
+            if len(v.inParticles) == 0:
+                v.isInitialState = True
+                for p in v.outParticles:
+                    p.isInitialState = True
+
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""
         for p in self.particles:
@@ -156,6 +164,7 @@ class GenEvent(object):
                 if not p.edgeAttributes.inVertex:
                     v = GenVertex(barcode=(-1*len(self.vertices))-1)
                     v.inParticles.append(p)
+                    v.isFinalState = True
                     self.vertices.append(v)
                     p.edgeAttributes.setInVertex(v)
                     p.isFinalState = True
@@ -301,7 +310,8 @@ class GenVertex(object):
             weights = []
         weights = [float(w) for w in weights]  # floats not strings!
         self.weights = weights  # optional list of weights
-
+        self.isInitialState = False
+        self.isFinalState = False
         self.inParticles = []  # Incoming GenParticles
         self.outParticles = []  # Outgoing GenParticles
 
