@@ -183,12 +183,6 @@ class GenEvent(object):
                 if p in pp.nodeAttributes.mothers and p != pp:
                     p.nodeAttributes.daughters.append(pp)
 
-    def markInteresting(self, interestingList):
-        """Check if particle is in user's interesting list, and if so set colour
-        to whatever the ever wanted"""
-        for p in self.particles:
-            p.markInteresting(interestingList)
-
     def removeRedundantNodes(self):
         """Get rid of redundant particles and rewrite relationships
         for particles as Nodes"""
@@ -343,7 +337,7 @@ class GenParticle(object):
         self.pz = float(pz)
         self.energy = float(energy)  # Units specified in Units.momentumUnit
         self.mass = float(mass)
-        self.status = int(status)  # status code
+        self.status = int(status)  # status code - diff for Pythia output and hepmc
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
         self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0
@@ -372,20 +366,6 @@ class GenParticle(object):
 
     def __repr__(self):
         return '%s' % pprint(vars(self))
-
-    def getRawName(self):
-        """Get name without any ( or )"""
-        return self.name.translate(None, '()')
-
-    def markInteresting(self, interestingList):
-        """Check if particle is in user's interesting list, and if so set
-        colour to whatever they wanted"""
-
-        # Remove any () and test if name in user's interesting list
-        for i in interestingList:
-            if self.getRawName() in i[1]:
-                self.displayAttributes.isInteresting = True
-                self.displayAttributes.colour = i[0]
 
     def convertNodeToEdgeAttributes(self, event):
         """Convert NodeAttributes object to EdgeAttributes object"""
@@ -513,15 +493,52 @@ class DisplayAttributes(object):
     """Class to store attributes about node/edge representation
     of a particle, e.g. node shape, colour"""
 
-    def __init__(self, parent):
+    def __init__(self, parent, rawNames=False):
         self.particle = parent  # ref to parent particle
         self.isInteresting = False  # Whether the user wants this highlighted
-        self.colour = ""  # What colour to highlight the node/edge
-        self.shape = ""  # Shape, only for node
-        self.label = ""  # Particle/edge name to display (TeX or raw)
+        self.colour = "\"\""  # What colour to highlight the node/edge
+        self.shape = "circle"  # Shape, only for node
+        self.label = parent.texname  # Particle name to display (TeX or raw)
+        if rawNames:
+            self.label = parent.name  # TODO: change this, ugly
 
     def __str__(self):
         pprint(vars(self))
 
     def __repr__(self):
         return '%s' % pprint(vars(self))
+
+    def setAttributesForNode(self, interestingList=None, useRawName=False):
+        """Set all display attributes to automated values,
+        so doesn't occur all over the place"""
+        # Set colour and shape for initial/final states
+        if self.particle.isInitialState:
+            self.colour = "green"
+            self.shape = "circle"
+        elif self.particle.isFinalState:
+            self.colour = "yellow"
+            self.shape = "box"
+        # Set interesting or not
+        if interestingList:
+            for i in interestingList:
+                if self.particle.name in i[1]:
+                    self.isInteresting = True
+                    self.colour = i[0]
+        # Set label
+        if useRawName:
+            self.label = self.particle.name
+        else:
+            self.label = self.particle.texname
+
+    def getNodeString(self):
+        """Returns string that can be used in GraphViz to describe the node"""
+        return '%s [label="%s: %s", shape=%s, style=filled, fillcolor=%s]\n' \
+               % (self.particle.barcode, self.particle.barcode,
+                  self.label, self.shape, self.colour)
+
+    def setAttributesForEdge(self, interestingList=None, useRawName=False):
+        pass
+
+    def getEdgeString(self):
+        """Reurns string that can be used in GraphViz to describe the edge"""
+        pass
