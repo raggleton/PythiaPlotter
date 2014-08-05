@@ -171,7 +171,7 @@ def parseGenVertexLine(line):
     """Parse line from HepMC file containing GenVertex info
     e.g. V -3 0 0 0 0 0 0 2 0 """
     parts = line.split()
-    v = GenVertex(barcode=parts[1], id=parts[2],
+    v = GenVertex(barcode=parts[1].replace("-", "V"), id=parts[2],
                   x=parts[3], y=parts[4], z=parts[5], ctau=parts[6],
                   numOrphans=parts[7], numOutgoing=parts[8],
                   numWeights=parts[9], weights=parts[10:])
@@ -182,6 +182,7 @@ def parseGenVertexLine(line):
 def parseGenParticleLine(line):
     """Parse line from HepMC file containing GenParticle info
     e.g. P 4 21 0 0 -2.9355943031880248e+05 2.9355943031880248e+05 0 21 0 0 -3 2 1 102 2 103 """
+    print line,
     parts = line.split()
     # Handle flow entries at end, e.g. 2 1 102 2 103 from above
     # The first number (parts[12]) is the number of entries in flow list
@@ -194,11 +195,7 @@ def parseGenParticleLine(line):
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
                     polPhi=parts[10], flowDict=flowDict)
-
     p.edgeAttributes.inVertexBarcode = int(parts[11])
-    # TODO: set initial state,
-    # final state set in GenEvent.addVerticesForFinalState()
-
     return p
 
 

@@ -259,7 +259,7 @@ class GenVertex(object):
 
     def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
                  numOrphans=0, numOutgoing=0, numWeights=0, weights=None):
-        self.barcode = int(barcode)  # barcode
+        self.barcode = barcode  # barcode
         self.id = int(id)  # id
         self.x = float(x)  # x
         self.y = float(y)  # y

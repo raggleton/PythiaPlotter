@@ -27,8 +27,8 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
             # Do particle line from vertex to vertex
             entry = '    {0:s} -> {1:s} {2:s}\n'.format(
-                str(p.edgeAttributes.outVertex.barcode).replace("-", "V"),
-                str(p.edgeAttributes.inVertex.barcode).replace("-", "V"),
+                p.edgeAttributes.outVertex.barcode,
+                p.edgeAttributes.inVertex.barcode,
                 p.displayAttributes.getEdgeString())
 
             gvFile.write(entry)
@@ -49,8 +49,8 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
         # Set all initial vertices to be level in diagram
         rank = "  {rank=same;"
-        initial = [str(p.edgeAttributes.outVertexBarcode).replace("-", "V")
-                   for p in event.particles if p.isInitialState]
+        initial = [p.edgeAttributes.outVertexBarcode for p in event.particles
+                   if p.isInitialState]
         rank += ' '.join(initial)
         rank += "} // Put initial particles on same level\n"
         if config.VERBOSE: print rank,
