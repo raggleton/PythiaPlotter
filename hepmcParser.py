@@ -42,21 +42,18 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
             # add vertex references to GenParticles & vice versa,
             # and add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
-                currentEvent.connectParticlesVertices()
-                for p in currentEvent.particles:
-                        p.convertEdgeToNodeAttributes()
-                eventList.append(currentEvent)
-                if config.VERBOSE: print "Adding GenEvent to list"
-                if config.VERBOSE: print len(currentEvent.particles), len(currentEvent.vertices)
+                postProcessEvent(currentEvent, eventList)
+                if config.VERBOSE:
+                    print "Adding GenEvent to list"
+                if config.VERBOSE:
+                    print len(currentEvent.particles), len(currentEvent.vertices)
                 print "End parsing event listing"
 
             # general GenEvent information
             elif line.startswith("E"):
                 # Done with the old event, add it to the list, start a new one
                 if currentEvent:
-                    for p in currentEvent.particles:
-                        p.convertEdgeToNodeAttributes()
-                    eventList.append(currentEvent)
+                    postProcessEvent(currentEvent, eventList)
                     # if config.VERBOSE: print vars(currentEvent)
                     if config.VERBOSE: print "Adding GenEvent to list"
                     if config.VERBOSE: print len(currentEvent.particles),
@@ -199,5 +196,16 @@ def parseGenParticleLine(line):
                     polPhi=parts[10], flowDict=flowDict)
 
     p.edgeAttributes.inVertexBarcode = int(parts[11])
+    # TODO: set initial state,
+    # final state set in GenEvent.addVerticesForFinalState()
 
     return p
+
+
+def postProcessEvent(currentEvent, eventList):
+    """After getting GenEvent, do common things"""
+    currentEvent.connectParticlesVertices()
+    for p in currentEvent.particles:
+        p.convertEdgeToNodeAttributes()
+    currentEvent.markInitialEdges()
+    eventList.append(currentEvent)
