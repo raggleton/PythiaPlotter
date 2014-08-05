@@ -13,6 +13,7 @@ import pythiaParser
 import hepmcParser
 import eventClasses
 import nodeWriter
+import edgeWriter
 
 # Script that converts the event listing from either Pythia 8 output or
 # standard HepMC file into a GraphViz file, which is then plotted with
@@ -55,7 +56,7 @@ def get_parser():
                         choices=["HEPMC", "PYTHIA"])
     parser.add_argument("--eventNumber",
                         help="For HepMC file, select event number to plot",
-                        type=int)
+                        type=int, default=0)
     parser.add_argument("-oGV", "--outputGV",
                         help="output GraphViz filename \
                         (if unspecified, defaults to INPUT.gv)")
@@ -153,7 +154,7 @@ if __name__ == "__main__":
             inputType = "PYTHIA"
     print "Assuming input type", inputType
 
-    eventNumber = args.eventNumber
+    eventNumber = int(args.eventNumber)
     if inputType == "PYTHIA":
         print "Ignoring --eventNumber option as not relevant"
 
@@ -209,13 +210,13 @@ if __name__ == "__main__":
 
     if inputType == "PYTHIA":
         event = pythiaParser.parse(filename=inputFilename)
-        if removeRedundants:
-            event.removeRedundantsNodes()
+        # if removeRedundants:
+            # event.removeRedundantsNodes()
     else:
         event = hepmcParser.parse(filename=inputFilename,
                                   eventNumber=eventNumber)
-        if removeRedundants:
-            event.removeRedundantsEdges()
+        # if removeRedundants:
+        #     event.removeRedundantsEdges()
 
     # Post processing - don't like this being here, move it!
     event.addVerticesForFinalState()
@@ -223,13 +224,12 @@ if __name__ == "__main__":
     ########################################################################
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
     ########################################################################
-    print "Writing GraphViz file to %s" % gvFilename
-
     if particleRepr == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
                                         useRawNames=args.rawNames)
     else:
-        pass
+        edgeWriter.printEdgeToGraphViz(event, gvFilename=gvFilename,
+                                       useRawNames=args.rawNames)
 
     ########################################
     # Run pdflatex or dot to produce the PDF
@@ -257,18 +257,28 @@ if __name__ == "__main__":
             else:
                 dttOpts = ""
 
-            texTemplate = (r"""\documentclass{standalone}
+    #         texTemplate = (r"""\documentclass{standalone}
+    # \usepackage{dot2texi}
+    # \usepackage{tikz}
+    # \usepackage{xcolor}
+    # \usetikzlibrary{shapes,arrows}
+    # \begin{document}
+    # \begin{dot2tex}[dot,mathmode,%s]
+    # \input{%s}
+    # \end{dot2tex}
+    # \end{document}
+    # """ % dttOpts, gvFilename)
+            texTemplate = r"""\documentclass{standalone}
     \usepackage{dot2texi}
     \usepackage{tikz}
     \usepackage{xcolor}
     \usetikzlibrary{shapes,arrows}
     \begin{document}
-    \begin{dot2tex}[dot,mathmode,$s]
-    \input{$s}
+    \begin{dot2tex}[dot,mathmode,"""+dttOpts+r"""]
+    \input{"""+gvFilename+r"""}
     \end{dot2tex}
     \end{document}
-    """ % dttOpts, gvFilename)
-
+    """
             with open(stemName+".tex", "w") as texFile:
                 texFile.write(texTemplate)
 

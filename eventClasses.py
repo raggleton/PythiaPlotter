@@ -150,17 +150,20 @@ class GenEvent(object):
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""
+        print "Adding final state vertices"
         for p in self.particles:
-            if p.isFinalState:
-                if p.edgeAttributes:
-                    if not p.edgeAttributes.inVertex:
-                        v = GenVertex(barcode=(-1*len(self.vertices))-1)
-                        v.inParticles.append(p)
-                        self.vertices.append(v)
-                        p.edgeAttributes.setInVertex(v)
-                else:
-                    raise Exception(
-                        "ERROR: you haven't given particle EdgeAttributes obj")
+            # if p.isFinalState:
+            if p.edgeAttributes:
+                if not p.edgeAttributes.inVertex:
+                    v = GenVertex(barcode=(-1*len(self.vertices))-1)
+                    v.inParticles.append(p)
+                    self.vertices.append(v)
+                    p.edgeAttributes.setInVertex(v)
+                    p.isFinalState = True
+            else:
+                raise Exception(
+                    "ERROR: you haven't given particle EdgeAttributes obj")
+            print p.edgeAttributes.inVertexBarcode
 
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
@@ -530,5 +533,9 @@ class DisplayAttributes(object):
         pass
 
     def getEdgeString(self):
-        """Reurns string that can be used in GraphViz to describe the edge"""
-        pass
+        """Returns string that can be used in GraphViz to describe the edge"""
+        if self.colour == "\"\"":
+            self.colour = ""
+        return '[label="%s: %s", color="%s", fontcolor="%s", arrowsize=0.8 ]\n'\
+               % (self.particle.barcode, self.label,
+                  self.colour, self.colour)
