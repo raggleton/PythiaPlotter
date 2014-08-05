@@ -496,7 +496,7 @@ class DisplayAttributes(object):
         self.particle = parent  # ref to parent particle
         self.isInteresting = False  # Whether the user wants this highlighted
         self.color = "\"\""  # What color to highlight the node/edge
-        self.shape = "circle"  # Shape, only for node
+        self.shape = "\"\""  # Shape, only for node
         self.style = "\"\""  # Fill style
         self.label = parent.texname  # Particle name to display (TeX or raw)
         if rawNames:
