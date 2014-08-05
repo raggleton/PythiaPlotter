@@ -155,8 +155,7 @@ class GenEvent(object):
         for p in self.particles:
             if p.status == 4:
                 p.isInitialState = True
-                p.edgeAttributes.outVertex = True
-
+                p.edgeAttributes.isInitialState = True
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""

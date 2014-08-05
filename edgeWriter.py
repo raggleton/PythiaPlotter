@@ -26,7 +26,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 interestingList=config.interesting, useRawName=useRawNames)
 
             # Do particle line from vertex to vertex
-            entry = '    {0:s} -> {1:s} {2:s}\n' .format(
+            entry = '    {0:s} -> {1:s} {2:s}\n'.format(
                 str(p.edgeAttributes.outVertex.barcode).replace("-", "V"),
                 str(p.edgeAttributes.inVertex.barcode).replace("-", "V"),
                 p.displayAttributes.getEdgeString())
