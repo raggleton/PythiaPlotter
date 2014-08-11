@@ -12,7 +12,7 @@ from pprint import pprint
 import sys
 # import os.path
 # sys.path.append(
-#     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+# os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 import eventClasses as e
 import pythiaParser as P
@@ -21,7 +21,6 @@ from common_test import printTestHeader
 
 
 class TestNodeToEdge(unittest.TestCase):
-
     config.VERBOSE = False
 
     # TODO: improve fail conditions - test that vertices and particles
@@ -76,6 +75,21 @@ class TestNodeToEdge(unittest.TestCase):
         [printVertex(v) for v in e.vertices]
         self.assertEqual(len(e.vertices), 7)
 
+    def test_5to2to3_conversion_vertices(self):
+        printTestHeader(self)
+        e = P.parse("test/testSamples/test_5to2to3.txt")
+        print "number vertices:", len(e.vertices)
+        [printVertex(v) for v in e.vertices]
+        self.assertEqual(len(e.vertices), 10)
+
+    def test_3to2to2_conversion_vertices(self):
+        printTestHeader(self)
+        e = P.parse("test/testSamples/test_3to2to2.txt")
+        print "number vertices:", len(e.vertices)
+        [printVertex(v) for v in e.vertices]
+        self.assertEqual(len(e.vertices), 6)
+
+
 def printVertex(v):
     print "vtx barcode:", v.barcode, "num incoming:", len(v.inParticles), \
         "num outgoing:", len(v.outParticles)
@@ -83,13 +97,16 @@ def printVertex(v):
     outBarcodes = [i.barcode for i in v.outParticles]
     print "incoming barcodes", inBarcodes, "outgoing barcodes", outBarcodes
 
+
 def printParticle(p):
-    print ("p barcode:",p.barcode,
+    print ("p barcode:", p.barcode,
            "in vtx barcode:", p.edgeAttributes.inVertexBarcode,
            "out vtx barcode:", p.edgeAttributes.outVertexBarcode)
 
+
 def main():
     unittest.main()
+
 
 if __name__ == '__main__':
     main()
