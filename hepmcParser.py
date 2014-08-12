@@ -175,7 +175,7 @@ def parseGenVertexLine(line):
                   x=parts[3], y=parts[4], z=parts[5], ctau=parts[6],
                   numOrphans=parts[7], numOutgoing=parts[8],
                   numWeights=parts[9], weights=parts[10:])
-
+    print v.barcode, v.numOutgoing
     return v
 
 

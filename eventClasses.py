@@ -85,7 +85,7 @@ class GenEvent(object):
             print "ERROR mismatch in number of weight names/values"
         else:
             # strip off annoying leading and trailing " "
-            # lovely list comprhension!
+            # lovely list comprehension!
             weightNames = [w.strip('"') for w in weightNames]
             # construct a dictionary from weightNames and self.weightValues
             # easy with izip!
@@ -306,7 +306,7 @@ class GenParticle(object):
         self.pz = float(pz)
         self.energy = float(energy)  # Units specified in Units.momentumUnit
         self.mass = float(mass)
-        self.status = int(status)  # status code - diff for Pythia output and hepmc
+        self.status = int(status)  # status code, diff for Pythia output & hepmc
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
         self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0

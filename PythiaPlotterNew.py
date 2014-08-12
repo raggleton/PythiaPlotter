@@ -215,7 +215,7 @@ if __name__ == "__main__":
         #     event.removeRedundantsEdges()
 
     # Post processing - don't like this being here, move it!
-    event.addVerticesForFinalState()
+    event.addVerticesForFinalState() # TODO: fixme, sets all final
     event.markInitialHepMC()
 
     ########################################################################
@@ -283,7 +283,7 @@ if __name__ == "__main__":
 
             if config.VERBOSE: print texTemplate,
 
-            # TODO: show output otherwise can hang wihtout sayign anything
+            # TODO: show output otherwise can hang without saying anything
             texargs = ["pdflatex", "--shell-escape", '-jobname',
                        os.path.splitext(pdfFilename)[0], stemName+".tex"]
             texout = subprocess.check_output(texargs)

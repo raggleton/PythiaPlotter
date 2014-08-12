@@ -6,10 +6,9 @@ Prints relationships to GraphViz file when representing particles as nodes
 import eventClasses
 import config
 
-config.VERBOSE = True
 
 def printNodeToGraphViz(event, gvFilename, useRawNames=False):
-    """Prints GenEvent to GraphViz file using particle inNode representation"""
+    """Prints GenEvent to GraphViz file using particle in Node representation"""
 
     print "Writing GraphViz file to %s" % gvFilename
     with open(gvFilename, "w") as gvFile:

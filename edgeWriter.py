@@ -7,7 +7,6 @@ import eventClasses
 import config
 
 
-
 def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
     """Prints GenEvent to GraphViz file using particle in Edge representation"""
     config.VERBOSE = True
@@ -26,7 +25,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 interestingList=config.interesting, useRawName=useRawNames)
 
             # Do particle line from vertex to vertex
-            entry = '    {0:s} -> {1:s} {2:s}\n'.format(
+            entry = '    %s -> %s %s\n' % (
                 p.edgeAttributes.outVertex.barcode,
                 p.edgeAttributes.inVertex.barcode,
                 p.displayAttributes.getEdgeString())

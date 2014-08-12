@@ -19,14 +19,14 @@ with open("data/pdg_all.tex", "r") as particleList:
         # print key, val,
         pidTexDict[int(key)] = val.strip()
 
-# Load up dictionary with PDGIDs and corresponding "raw" string names 
-# (e.g. K_L0). Uses the ParticleData.xml file from Pythia8/xmldoc. 
+# Load up dictionary with PDGIDs and corresponding "raw" string names
+# (e.g. K_L0). Uses the ParticleData.xml file from Pythia8/xmldoc.
 # Have copied it into repo, although should probably ask user to link to it.
-# BUT: 
+# BUT:
 #   - it has lots of standard text crap before it
 #   - there are typos where <particle ... ends with />, not > giving error !
 # So maybe stick with mine for now...
-# For each PDGID key, there is a corresponding pair of strings, 
+# For each PDGID key, there is a corresponding pair of strings,
 # the first is the paricle name, the second is the antiparticle name.
 ParticleDataFile = "data/PythiaParticleData.xml"
 tree = ET.parse(ParticleDataFile)
