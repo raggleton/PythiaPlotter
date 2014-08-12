@@ -190,12 +190,13 @@ def parseGenParticleLine(line):
     # each entry in the flow list. We use the "stride" feature of ranges,
     # [start:stop:step], list comprehension to convert to ints,
     # izip to turn into pairs, then cast to dictionary. Sweet!
-    flowDict = dict(izip([int(x) for x in parts[13::2]], [int(y) for y in parts[14::2]]))
+    flowDict = dict(izip([int(x) for x in parts[13::2]],
+                         [int(y) for y in parts[14::2]]))
     p = GenParticle(barcode=parts[1], pdgid=parts[2],
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
                     polPhi=parts[10], flowDict=flowDict)
-    p.edgeAttributes.inVertexBarcode = int(parts[11])
+    p.edgeAttributes.inVertexBarcode = parts[11].replace("-", "V")
     return p
 
 

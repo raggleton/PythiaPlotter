@@ -70,6 +70,10 @@ class GenEvent(object):
         Returns None if no match."""
         return next((x for x in self.vertices if x.barcode == barcode), None)
 
+    def nextVertexBarcode(self):
+        """Auto generate next vertex barcode"""
+        return "V"+str(len(self.vertices)+1)
+
     def setWeightNames(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the
         weightNames pased in, and weightValues already stored. Stores
@@ -95,9 +99,9 @@ class GenEvent(object):
         Then sort particle list by ascending barcode"""
         # Add vertex reference to particles using stored barcode
         for p in self.particles:
-            if p.edgeAttributes.inVertexBarcode != 0:
+            if p.edgeAttributes.inVertexBarcode != "V0":
                 p.edgeAttributes.inVertex = \
-                    self.vertices[abs(p.edgeAttributes.inVertexBarcode)-1]
+                    self.getVertex(p.edgeAttributes.inVertexBarcode)
 
         self.particles.sort(key=operator.attrgetter('barcode'))
 
@@ -124,7 +128,7 @@ class GenEvent(object):
             # if p.isFinalState:
             if p.edgeAttributes:
                 if not p.edgeAttributes.inVertex:
-                    v = GenVertex(barcode=(-1*len(self.vertices))-1)
+                    v = GenVertex(barcode=self.nextVertexBarcode())
                     v.inParticles.append(p)
                     v.isFinalState = True
                     self.vertices.append(v)
@@ -257,7 +261,7 @@ class PdfInfo(object):
 class GenVertex(object):
     """Class to store info about vertex"""
 
-    def __init__(self, barcode=0, id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
+    def __init__(self, barcode="V0", id=0, x=0.0, y=0.0, z=0.0, ctau=0.0,
                  numOrphans=0, numOutgoing=0, numWeights=0, weights=None):
         self.barcode = barcode  # barcode
         self.id = int(id)  # id
@@ -285,6 +289,9 @@ class GenVertex(object):
         print "outParticles barcodes:"
         for po in self.outParticles:
             print(po.barcode)
+
+    def __eq__(self, other):
+        return self.barcode == other.barcode
 
 
 class GenParticle(object):
@@ -428,11 +435,11 @@ class EdgeAttributes(object):
     def __init__(self, parent, inVertexBarcode=0, outVertexBarcode=0):
         self.particle = parent  # ref to parent particle
         # Barcode of vertex that has this particle as an incoming particle
-        self.inVertexBarcode = int(inVertexBarcode)
+        self.inVertexBarcode = inVertexBarcode
         # Reference to GenVertex where this particle is incoming
         self.inVertex = None
         # Barcode of vertex that has this particle as an outgoing particle
-        self.outVertexBarcode = int(outVertexBarcode)
+        self.outVertexBarcode = outVertexBarcode
         # Reference to GenVertex where this particle is outgoing
         self.outVertex = None
 
