@@ -34,13 +34,31 @@
 ### Current work 
 
 _hepmcParser_:
+- [ ] Fix NodeToEdge comversion
+    - GenParticle barcode: int -> string
+    - Move method to GenEvent
+
+- [ ] oddity with incoming proton self edge
+- [ ] user options (curly splines, etc)
+- [ ] Fix dot2tex implementation
+    - [ ] mathmode not being respected for edges, but is for nodes? -> __Use `texlbl`??__
+    - [ ] colours go screwy (edge only)
+    - [ ] points are too big
+    - [ ] labels not colored
+- [ ] Output for gv and pdf/tex should respect folder, not jsut dump it wherever python is called from
+- [ ] Test removeRedundants & write for Edge case
+- [ ] Event post-processing common for both parsers - hide away? do separately?
+- [ ] Rename `xxxAttributes` to `xxxAttr` for brevity
+
 - [ ] Rename all functions/attributes from `camelCase` to `underscore_rulez`
 - [ ] add proton beam info to GenEvent?
 - [ ] `__repr__` functions better
 - [ ] Add test to parse() methods to check if suitable format or not
 - [ ] Add more tests for all classes/methods
-- [ ] Some way to type check ints - use constructors again? OR decorators?  
-- [ ] Event post-processing common for both parsers - hide away? do separately?
+- [x] barcode to string, use V for vertex **Done for GenVertex only**
+- [x] Set initial/final state for hepmcParser
+- [x] add suffix to PDF filename for edge or node
+- [x] rename "colour" to "color" in DisplayAttributes
 - [x] Restructure PythiaPlotter (see PythiaPlotterNew.py)
 - [x] Subclass GenParticle for Edge/Node specifics. Or have attribute classes
 - [x] redo sameInitialOnes in nodeParser.py
