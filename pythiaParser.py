@@ -99,8 +99,9 @@ def parse(filename="qcdScatterSmall.txt"):
     currentEvent.addNodeDaughters()
 
     # Convert Node to Edge repr for all particles so we can plot either later
-    [p.convertNodeToEdgeAttributes(currentEvent)
-    for p in currentEvent.particles]
+    # [p.convertNodeToEdgeAttributes(currentEvent)
+    # for p in currentEvent.particles]
+    currentEvent.convertNodesToEdges()
     # currentEvent.markInitialHepMC()
 
     # Things like mark interesting, remove redundants done in main script, as
@@ -226,7 +227,7 @@ def parseParticleLine(line):
     if (mother1 and not mother2):
         mother2 = mother1
 
-    p.nodeAttributes.mother1 = mother1
-    p.nodeAttributes.mother2 = mother2
+    p.node_attr.mother1 = mother1
+    p.node_attr.mother2 = mother2
 
     return p

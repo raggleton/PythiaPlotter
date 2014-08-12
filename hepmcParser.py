@@ -110,8 +110,8 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
             elif line.startswith("P"):
                 p = parseGenParticleLine(line)
                 # Add outVertices and barcodes
-                p.edgeAttributes.outVertexBarcode = currentVertex.barcode
-                p.edgeAttributes.outVertex = currentVertex
+                p.edge_attr.outVertexBarcode = currentVertex.barcode
+                p.edge_attr.outVertex = currentVertex
                 currentEvent.particles.append(p)
                 if config.VERBOSE: print "Adding GenParticle info"
                 # if config.VERBOSE: pprint(vars(p))
@@ -196,7 +196,7 @@ def parseGenParticleLine(line):
                     px=parts[3], py=parts[4], pz=parts[5], energy=parts[6],
                     mass=parts[7], status=parts[8], polTheta=parts[9],
                     polPhi=parts[10], flowDict=flowDict)
-    p.edgeAttributes.inVertexBarcode = parts[11].replace("-", "V")
+    p.edge_attr.inVertexBarcode = parts[11].replace("-", "V")
     return p
 
 
