@@ -159,33 +159,37 @@ class GenEvent(object):
     def removeRedundantNodes(self):
         """Get rid of redundant particles and rewrite relationships
         for particles as Nodes"""
-
-        for p in self.particles:
-
-            if (not p.skip and not p.isInitialState
-                    and len(p.nodeAttributes.mothers) == 1):
-                current = p
-                mum = p.nodeAttributes.mothers[0]
-                foundSuitableMother = False
-                while not foundSuitableMother:
-                    # Check if mother of current has 1 parent and 1 child,
-                    # both with same PID. If it does, then it's redundant
-                    # and we can skip it in future. If not then suitable mother
-                    # for Particle p
-                    if (len(mum.nodeAttributes.mothers) == 1
-                        and len(mum.daughters) == 1
-                        and mum.PID == mum.nodeAttributes.mothers[0].PID
-                        and mum.PID == current.PID
-                    ):
-
-                        mum.skip = True
-                        current = mum
-                        mum = current.nodeAttributes.mothers[0]
-                    else:
-                        foundSuitableMother = True
-
-                # whatever is stored in mum is the suitable mother for p
-                p.nodeAttributes.mothers[0] = mum
+        pass
+        # for p in self.particles:
+        #     if (not p.skip and not p.isInitialState
+        #         and len(p.nodeAttributes.mothers) == 1
+        #         and len(p.nodeAttributes.daughters) == 1):
+        #
+        #         pass
+                # if p.nodeAttributes.mothers[0]
+            # if (not p.skip and not p.isInitialState
+            #         and len(p.nodeAttributes.mothers) == 1):
+            #     current = p
+            #     mum = p.nodeAttributes.mothers[0]
+            #     foundSuitableMother = False
+            #     while not foundSuitableMother:
+            #         # Check if mother of current has 1 parent and 1 child,
+            #         # both with same PID. If it does, then it's redundant
+            #         # and we can skip it in future. If not then suitable mother
+            #         # for Particle p
+            #         if (len(mum.nodeAttributes.mothers) == 1
+            #             and len(mum.nodeAttributes.daughters) == 1
+            #             and mum.pdgid == mum.nodeAttributes.mothers[0].pdgid
+            #             and mum.pdgid == current.pdgid
+            #         ):
+            #             mum.skip = True
+            #             current = mum
+            #             mum = current.nodeAttributes.mothers[0]
+            #         else:
+            #             foundSuitableMother = True
+            #
+            #     # whatever is stored in mum is the suitable mother for p
+            #     p.nodeAttributes.mothers[0] = mum
 
     def removeRedundantEdges(self):
         """Get rid of redundant particles and rewrite relationships
