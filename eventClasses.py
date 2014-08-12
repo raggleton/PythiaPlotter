@@ -349,24 +349,33 @@ class GenParticle(object):
         #
         # Set vertex barcode as highest vtx barcode in GenEvent+1
         v = None  # hold vertex where this particle is outgoing from
+        print "Doing particle barcode:", self.barcode
         if self.nodeAttributes.mothers:
             mumVtx = []
+            print "Going through mothers"
             for m in self.nodeAttributes.mothers:
+                print "mother barcode:", m.barcode
                 if m.edgeAttributes.inVertex:
-                    mumVtx.append(m.edgeAttributes.inVertex)
+                    print "inVertex barcode:", m.edgeAttributes.inVertex.barcode
+                    if not m.edgeAttributes.inVertex in mumVtx:
+                        mumVtx.append(m.edgeAttributes.inVertex)
             # need the if statement as default is None which is an object!
             # find unique ones - could get repetitions
             if len(mumVtx) > 1:
-                for m in mumVtx:
-                    print m.barcode
-                raise Exception("Mothers have >1 invertices!")
+                for mv in mumVtx:
+                    print mv.barcode
+
+                raise Exception("Particle: %s has Mothers with >1 invertices!"
+                                % (self.barcode))
             elif len(mumVtx) == 1:
                 v = mumVtx[0]
 
         if not v:  # none of mothers has inVertex, so set one up
-            v = GenVertex(barcode=(-1*len(event.vertices))-1, numOutgoing=0)
+            print "creating inVertex for mothers"
+            v = GenVertex(barcode=event.nextVertexBarcode(), numOutgoing=0)
             for m in self.nodeAttributes.mothers:
                 if m.edgeAttributes.inVertex != v or not m.edgeAttributes.inVertex:
+                    print m.barcode
                     m.edgeAttributes.setInVertex(v)
                     v.inParticles.append(m)
             event.vertices.append(v)
