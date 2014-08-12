@@ -63,6 +63,7 @@ class GenEvent(object):
     def getParticle(self, barcode):
         """Get particle by its barcode, safer than particles[i].
         Returns None if no match."""
+        # TODO: raise exception if no match? or bad barcode?
         return next((x for x in self.particles if x.barcode == barcode), None)
 
     def getVertex(self, barcode):
@@ -143,9 +144,9 @@ class GenEvent(object):
         """Add references to mothers based on mother1/2 indicies"""
         for p in self.particles:
             if not p.isInitialState:
-                for m in range(p.nodeAttributes.mother1,
-                               p.nodeAttributes.mother2+1):
-                    p.nodeAttributes.mothers.append(self.getParticle(barcode=m))
+                for m in range(int(p.nodeAttributes.mother1),
+                               int(p.nodeAttributes.mother2)+1):
+                    p.nodeAttributes.mothers.append(self.getParticle(barcode=str(m)))
 
     def addNodeDaughters(self):
         """Add references to daughters based on mother relationships"""
@@ -301,9 +302,9 @@ class GenVertex(object):
 class GenParticle(object):
     """Class to store info about GenParticle in event"""
 
-    def __init__(self, barcode=0, pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
+    def __init__(self, barcode="0", pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
                  mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None):
-        self.barcode = int(barcode)  # particle barcode - unique
+        self.barcode = barcode  # particle barcode - unique
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.px = float(px)
         self.py = float(py)
