@@ -23,8 +23,9 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
                 continue
 
             # Set DisplayAttributes as node
+            p.display_attr.rawNames = useRawNames
             p.display_attr.setAttributesForNode(
-                interestingList=config.interesting, useRawName=useRawNames)
+                interestingList=config.interesting)
 
             entry = '    %s -> { ' % p.barcode
 
@@ -37,13 +38,10 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
                 gvFile.write(entry)  # don't want p+ -> system entries
                 if config.VERBOSE:
                     print entry,
-            # Write labels for text for each node (raw name or tex)
-            # Set special features for initial/final state & interesting ones
-            # Final state: box, yellow fill
-            # Initial state: circle, green fill
-            # Interesting: user-chosen color fill, keep shape if initial/final
-            # p.display_attr holds all this info
-            nodeConfig = p.display_attr.getNodeString()
+
+            # Write labels for each node
+            nodeConfig = "    %s %s \n" % (p.barcode,
+                                           p.display_attr.getNodeString())
             gvFile.write(nodeConfig)
             if config.VERBOSE:
                 print nodeConfig,

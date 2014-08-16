@@ -27,8 +27,14 @@ interesting = [
               ["blue", ["tau+", "tau-"]],
               ["red", ["b", "bbar"]],
               ["orange", ["c", "cbar"]],
-              ["orchid", ["s", "sbar"]]
+              ["brown", ["s", "sbar"]]
               ]
+
+# Color for initial particles (protons normally)
+initial_color = "green"
+
+# Color for final state particles
+final_color = "yellow"
 
 #############################################################
 # DO NOT EDIT BELOW HERE (unless you know what you're doing)

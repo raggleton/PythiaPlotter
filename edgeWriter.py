@@ -20,9 +20,9 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
             # if p.skip or p.name == "system":
             #     continue
-
-            p.display_attr.setAttributesForNode(
-                interestingList=config.interesting, useRawName=useRawNames)
+            p.display_attr.rawNames = useRawNames
+            p.display_attr.setAttributesForEdge(
+                interestingList=config.interesting)
 
             # Do particle line from vertex to vertex
             entry = '    %s -> %s %s\n' % (
@@ -53,7 +53,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
         rank += ' '.join(initial)
         rank += "} // Put initial particles on same level\n"
         if config.VERBOSE: print rank,
-        # gvFile.write(rank)
+        gvFile.write(rank)
 
         gvFile.write("}")
         gvFile.write("")

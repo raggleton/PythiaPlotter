@@ -7,7 +7,7 @@ from itertools import izip
 from pprint import pprint
 import operator
 
-import config as C  # Global definitions
+import config as CONFIG  # Global definitions
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 import weakref
 
@@ -475,15 +475,14 @@ class DisplayAttributes(object):
     """Class to store attributes about visual node/edge representation
     of a particle, e.g. node shape, color"""
 
+    # TODO: use .format instead of simple string sub
     def __init__(self, parent, rawNames=False):
         self.particle = parent  # ref to parent particle
+        # dict to hold attributes & name, so generate_string/getNode|EdgeString
+        # are super easy
+        self.attr = {}
         self.isInteresting = False  # Whether the user wants this highlighted
-        self.color = "\"\""  # What color to highlight the node/edge
-        self.shape = "\"\""  # Shape, only for node
-        self.style = "\"\""  # Fill style
-        self.label = parent.texname  # Particle name to display (TeX or raw)
-        if rawNames:
-            self.label = parent.name  # TODO: change this, ugly
+        self.rawNames = rawNames  # bool for raw or tex particle names
 
     def __str__(self):
         pprint(vars(self))
@@ -491,44 +490,90 @@ class DisplayAttributes(object):
     def __repr__(self):
         return '%s' % pprint(vars(self))
 
-    def setAttributesForNode(self, interestingList=None, useRawName=False):
-        """Set all display attributes to automated values,
-        so doesn't occur all over the place"""
-        # Set color and shape for initial/final states
+    def setCommonAttributes(self, interestingList=None):
+        """Set common display attributes for Nodes & Edges"""
+        # Initial/final state common options
+        self.attr["color"] = ""
+        self.attr["style"] = ""
+
         if self.particle.isInitialState:
-            self.color = "green3"
-            self.shape = "circle"
-            self.style = "filled"
+            self.attr["color"] = CONFIG.initial_color
+            # self.shape = "circle"
         elif self.particle.isFinalState:
-            self.color = "orange"
-            self.shape = "box"
-            self.style = "filled"
+            self.attr["color"] = CONFIG.final_color
+
         # Set interesting or not
         if interestingList:
             for i in interestingList:
                 if self.particle.name in i[1]:
                     self.isInteresting = True
-                    self.color = i[0]
-                    self.style = "filled"
+                    self.attr["color"] = i[0]
+
         # Set label
-        if useRawName:
-            self.label = self.particle.name
+        if self.rawNames:
+            self.attr["label"] = "%s: %s" % (self.particle.barcode,
+                                             self.particle.name)
         else:
-            self.label = self.particle.texname
+            self.attr["label"] = self.particle.texname
+            self.attr["texlabel"] = self.particle.texname
+
+    def setAttributesForNode(self, interestingList=None):
+        """Set options specifically for NODE plotting mode"""
+        # Do node-specific defaults
+        self.setCommonAttributes(interestingList)
+        self.attr["shape"] = ""
+        self.attr["fillcolor"] = self.attr["color"]
+
+        # Set color and shape for initial/final states, or interesting ones
+        if self.particle.isInitialState:
+            self.attr["style"] = "filled"
+            self.attr["shape"] = "circle"
+        elif self.particle.isFinalState:
+            self.attr["style"] = "filled"
+            self.attr["shape"] = "box"
+        if self.isInteresting:
+            self.attr["style"] = "filled"
+
+    def setAttributesForEdge(self, interestingList=None):
+        """Set options specifically for EDGE plotting mode"""
+        # Do edge-specific defaults
+        self.setCommonAttributes(interestingList)
+        self.attr["arrowsize"] = 0.8
+        self.attr["fontcolor"] = ""
+        # TikZ options
+        if not self.rawNames:
+            if self.particle.pdgid == 22:  # wiggly lines for photons
+                self.attr["style"] = "snake=snake"
+
+    def generate_string(self, attributes):
+        """Function to generate string with all necessary attributes.
+        attributes is a list of options the user wants to include."""
+        attr_string = ""
+        for a in attributes:
+            if a in self.attr.keys():
+                attr_string += a+"=\""+str(self.attr[a])+"\""
+                if a != attributes[-1]:
+                    attr_string += ", "
+            else:
+                print "Attribute %s not in the DisplayAttributes object" % a
+                continue
+        print attr_string
+        return "["+attr_string+"]"
 
     def getNodeString(self):
         """Returns string that can be used in GraphViz to describe the node"""
-        return '    %s [label="%s: %s", shape=%s, style=%s, fillcolor=%s]\n' \
-               % (self.particle.barcode, self.particle.barcode,
-                  self.label, self.shape, self.style, self.color)
-
-    def setAttributesForEdge(self, interestingList=None, useRawName=False):
-        pass
+        return self.generate_string(["label", "shape", "style", "fillcolor"])
 
     def getEdgeString(self):
         """Returns string that can be used in GraphViz to describe the edge"""
-        if self.color == "\"\"":
-            self.color = ""
-        return '[label="%s: %s", color="%s", fontcolor="%s", arrowsize=0.8 ]\n'\
-               % (self.particle.barcode, self.label,
-                  self.color, self.color)
+        if self.rawNames:
+            return self.generate_string(["label",
+                                         "color",
+                                         "fontcolor",
+                                         "arrowsize"])
+        else:
+            return self.generate_string(["texlabel",
+                                         "color",
+                                         "fontcolor",
+                                         "arrowsize",
+                                         "style"])
