@@ -122,6 +122,19 @@ class GenEvent(object):
             if p.status == 4:
                 p.isInitialState = True
                 p.edge_attr.isInitialState = True
+                # Pythia has a self-loop for initial particles, bit annoying
+                # create a new vertex for proton to come out of
+                if p.edge_attr.inVertex == p.edge_attr.outVertex:
+                    p.edge_attr.outVertex.numOutgoing -= 1
+                    p.edge_attr.outVertex.outParticles.remove(p)
+                    v = GenVertex(barcode=self.nextVertexBarcode(),
+                                  numOutgoing=1)
+                    v.isInitialState = True
+                    v.outParticles = p
+                    p.edge_attr.outVertex = v
+                    p.edge_attr.outVertexBarcode = v.barcode
+                    self.vertices.append(v)
+
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""

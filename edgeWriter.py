@@ -40,8 +40,8 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
             if v.isInitialState or v.isFinalState:
                 color = "transparent"
 
-            entry = '    %s [label="",shape=point, size=0.1, color=%s]\n' \
-                    % (v.barcode, color)
+            entry = '    %s [label="%s",shape="point", size=0.1, color=%s]\n' \
+                    % (v.barcode, v.barcode, color)
             gvFile.write(entry)
             if config.VERBOSE:
                 print entry,
