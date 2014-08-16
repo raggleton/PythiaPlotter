@@ -5,21 +5,17 @@ or TeX particle names (slower, but more pretty + configurations opts viz TikZ)
 """
 
 import os.path
-import subprocess
 from subprocess import call
 from sys import platform as _platform
 import argparse
 
 # PythiaPlotter files:
 import config  # Global definitions
-import pythiaParser
-import hepmcParser
-import eventClasses
-import nodeWriter
-import edgeWriter
 
 
 def print_pdf(args, stemName, gvFilename, pdfFilename):
+    """Print GraphViz file (gvFilename) to pdf (pdfFilename).
+    stemName is for tex file. Should probably just use pdfFilename"""
 
     print "Producing PDF %s" % pdfFilename
     if args.rawNames:
@@ -31,21 +27,21 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
         # Make a tex file for the job so can add user args, etc
         # Too difficult to use \def on command line
         if not args.noStraightEdges:
-            dttOpts = "straightedges"
+            dttOpts = ",straightedges"
         else:
             dttOpts = ""
 
         texTemplate = r"""\documentclass{standalone}
-        \usepackage{dot2texi}
-        \usepackage{tikz}
-        \usepackage{xcolor}
-        \usetikzlibrary{shapes,arrows,snakes}
-        \begin{document}
-        \begin{dot2tex}[dot,mathmode,"""+dttOpts+r"""]
-        \input{"""+gvFilename+r"""}
-        \end{dot2tex}
-        \end{document}
-        """
+\usepackage{dot2texi}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{shapes,arrows,snakes}
+\begin{document}
+\begin{dot2tex}[dot,mathmode"""+dttOpts+r"""]
+\input{"""+gvFilename+r"""}
+\end{dot2tex}
+\end{document}
+"""
         with open(stemName+".tex", "w") as texFile:
             texFile.write(texTemplate)
 

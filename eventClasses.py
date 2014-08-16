@@ -515,7 +515,7 @@ class DisplayAttributes(object):
                                              self.particle.name)
         else:
             self.attr["label"] = self.particle.texname
-            self.attr["texlabel"] = self.particle.texname
+            self.attr["texlbl"] = "$%s$" % self.particle.texname
 
     def setAttributesForNode(self, interestingList=None):
         """Set options specifically for NODE plotting mode"""
@@ -539,11 +539,15 @@ class DisplayAttributes(object):
         # Do edge-specific defaults
         self.setCommonAttributes(interestingList)
         self.attr["arrowsize"] = 0.8
-        self.attr["fontcolor"] = ""
+        self.attr["fontcolor"] = "black"
+        self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
         # TikZ options
         if not self.rawNames:
+            self.attr["label"] = " "  # space is VITAL!
             if self.particle.pdgid == 22:  # wiggly lines for photons
                 self.attr["style"] = "snake=snake"
+        if self.isInteresting:
+            self.attr["fontcolor"] = self.attr["color"]
 
     def generate_string(self, attributes):
         """Function to generate string with all necessary attributes.
@@ -557,7 +561,6 @@ class DisplayAttributes(object):
             else:
                 print "Attribute %s not in the DisplayAttributes object" % a
                 continue
-        print attr_string
         return "["+attr_string+"]"
 
     def getNodeString(self):
@@ -570,10 +573,13 @@ class DisplayAttributes(object):
             return self.generate_string(["label",
                                          "color",
                                          "fontcolor",
-                                         "arrowsize"])
+                                         "arrowsize",
+                                         "penwidth"])
         else:
-            return self.generate_string(["texlabel",
+            return self.generate_string(["label",
+                                         "texlbl",
                                          "color",
                                          "fontcolor",
                                          "arrowsize",
-                                         "style"])
+                                         "style",
+                                         "penwidth"])
