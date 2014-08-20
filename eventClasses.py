@@ -73,7 +73,7 @@ class GenEvent(object):
 
     def nextVertexBarcode(self):
         """Auto generate next vertex barcode"""
-        return "V"+str(len(self.vertices)+1)
+        return "V" + str(len(self.vertices) + 1)
 
     def setWeightNames(self, weightNames=None):
         """Create Weights object atttribute for GenEvent object using the
@@ -104,7 +104,8 @@ class GenEvent(object):
                 p.edge_attr.inVertex = \
                     self.getVertex(p.edge_attr.inVertexBarcode)
 
-        self.particles.sort(key=operator.attrgetter('barcode'))
+        # self.particles.sort(key=operator.attrgetter('barcode'))
+        self.particles.sort(key=lambda a: int(a.barcode))
 
         # Add particle reference to vertices using stored barcodes
         for v in self.vertices:
@@ -150,7 +151,6 @@ class GenEvent(object):
             else:
                 raise Exception(
                     "ERROR: you haven't given particle EdgeAttributes obj")
-            print p.edge_attr.inVertexBarcode
 
     def addNodeMothers(self):
         """Add references to mothers based on mother1/2 indicies"""
@@ -159,7 +159,7 @@ class GenEvent(object):
                 # Do some dodgy int <> string casting as Pythia deals in ints,
                 # but we generalise to strings to allow NodeToEdge conversions
                 for m in range(int(p.node_attr.mother1),
-                               int(p.node_attr.mother2)+1):
+                               int(p.node_attr.mother2) + 1):
                     p.node_attr.mothers.append(self.getParticle(barcode=str(m)))
 
     def addNodeDaughters(self):
@@ -176,41 +176,105 @@ class GenEvent(object):
         for particles as Nodes"""
         pass
         # for p in self.particles:
-        #     if (not p.skip and not p.isInitialState
+        # if (not p.skip and not p.isInitialState
         #         and len(p.node_attr.mothers) == 1
         #         and len(p.node_attr.daughters) == 1):
         #
         #         pass
-                # if p.node_attr.mothers[0]
-            # if (not p.skip and not p.isInitialState
-            #         and len(p.node_attr.mothers) == 1):
-            #     current = p
-            #     mum = p.node_attr.mothers[0]
-            #     foundSuitableMother = False
-            #     while not foundSuitableMother:
-            #         # Check if mother of current has 1 parent and 1 child,
-            #         # both with same PID. If it does, then it's redundant
-            #         # and we can skip it in future. If not then suitable mother
-            #         # for Particle p
-            #         if (len(mum.node_attr.mothers) == 1
-            #             and len(mum.node_attr.daughters) == 1
-            #             and mum.pdgid == mum.node_attr.mothers[0].pdgid
-            #             and mum.pdgid == current.pdgid
-            #         ):
-            #             mum.skip = True
-            #             current = mum
-            #             mum = current.node_attr.mothers[0]
-            #         else:
-            #             foundSuitableMother = True
-            #
-            #     # whatever is stored in mum is the suitable mother for p
-            #     p.node_attr.mothers[0] = mum
+        # if p.node_attr.mothers[0]
+        # if (not p.skip and not p.isInitialState
+        #         and len(p.node_attr.mothers) == 1):
+        #     current = p
+        #     mum = p.node_attr.mothers[0]
+        #     foundSuitableMother = False
+        #     while not foundSuitableMother:
+        #         # Check if mother of current has 1 parent and 1 child,
+        #         # both with same PID. If it does, then it's redundant
+        #         # and we can skip it in future. If not then suitable mother
+        #         # for Particle p
+        #         if (len(mum.node_attr.mothers) == 1
+        #             and len(mum.node_attr.daughters) == 1
+        #             and mum.pdgid == mum.node_attr.mothers[0].pdgid
+        #             and mum.pdgid == current.pdgid
+        #         ):
+        #             mum.skip = True
+        #             current = mum
+        #             mum = current.node_attr.mothers[0]
+        #         else:
+        #             foundSuitableMother = True
+        #
+        #     # whatever is stored in mum is the suitable mother for p
+        #     p.node_attr.mothers[0] = mum
 
     def removeRedundantEdges(self):
         """Get rid of redundant particles and rewrite relationships
         for particles as Edges"""
-        # TODO: write this. Could be hard!
+        # Mark particle as redundant if:
+        # - its outVertex only has 1 particle out (itself)
+        # - the particle incoming to outVertex has the same pdgid
+        # - isn't initial or final state
+        for p in self.particles:
+            print p.barcode, ": outVertex.inParticles: "
+            print len(p.edge_attr.outVertex.inParticles), p.edge_attr.outVertex.inParticles
+            if len(p.edge_attr.outVertex.inParticles) == 1 \
+                    and p.edge_attr.outVertex.inParticles[0].pdgid == p.pdgid \
+                    and len(p.edge_attr.outVertex.outParticles) == 1 \
+                    and not p.isInitialState and not p.isFinalState:
+
+                print p.barcode, "is Redundant", len(p.edge_attr.outVertex.inParticles)
+                p.isRedundant = True
+                p.skip = True
+                # Get rid of the particle and it's outVertex.
+                # Also remove it from it's inVertex inParticles list
+                # Rewire so any incoming particle now uses p.inVertex
+                # as their inVertex, and update that vertex
+                p.edge_attr.outVertex.skip = True
+                incoming = p.edge_attr.outVertex.inParticles[0]
+                incoming.edge_attr.setInVertex(p.edge_attr.inVertex)
+                p.edge_attr.inVertex.inParticles.remove(p)
+                p.edge_attr.outVertex.skip = True
+
+    def convertNodesToEdges(self):
+        """Converts from Node representation to Edge representation"""
         pass
+        # for p in self.particles:
+        # if len(p.node_attr.mothers) <= 1:
+        #         # If our particle has 0 or 1 mothers then we can proceed easily.
+        #         # Check if the mother has an inVertex, if so use that for p
+        #         # If not, create one and assign it to mother and p
+        #         v = None
+        #         in_p = None
+        #         if p.node_attr.mothers:
+        #             in_p = p.node_attr.mothers[0]
+        #             if p.node_attr.mothers[0].edge_attr.inVertex:
+        #                 v = p.node_attr.mothers[0].edge_attr.inVertex
+        #
+        #         self.create_assign_to_vtx(vertex=v, in_p=in_p, out_p=p)
+        #     else:
+        #         # If our particle has more than 1 mother, more difficult.
+        #         # To tackle this, we look for mothers that have non-common
+        #         # daughters (this is hard?)
+        #         # Then for each of those, we create duplicate particles
+        #         # and necessary vertices (and do the wiring).
+        #         # Then we hook up the rest of the mothers.
+        #         for m in p.node_attr.mothers:
+
+    def create_assign_to_vtx(self, vertex=None, in_p=None, out_p=None):
+        """Simple method to create a new GenVertex if necessary,
+        and assign in_p as incoming particle and out_p as outgoing particle,
+        doing all the necessary wiring"""
+        if not vertex:
+            vertex = GenVertex(barcode=self.nextVertexBarcode())
+            self.vertices.append(vertex)
+        if out_p:
+            out_p.edge_attr.outVertex = vertex
+            out_p.edge_attr.outVertexBarcode = vertex.barcode
+            vertex.numOutgoing += 1
+            vertex.outParticles.append(out_p)
+        if in_p:
+            in_p.edge_attr.inVertex = vertex
+            in_p.edge_attr.inVertexBarcode = vertex.barcode
+            vertex.inParticles.append(in_p)
 
 
 class Weights(object):
@@ -297,6 +361,7 @@ class GenVertex(object):
         self.weights = weights  # optional list of weights
         self.isInitialState = False
         self.isFinalState = False
+        self.skip = False  # skip when iterating over list of vertices
         self.inParticles = []  # Incoming GenParticles
         self.outParticles = []  # Outgoing GenParticles
 
@@ -336,6 +401,7 @@ class GenParticle(object):
         self.skip = False  # Whether to skip when writing nodes to file
         self.isFinalState = False
         self.isInitialState = False
+        self.isRedundant = False
         self.event = None  # parent event
 
         # Store color, shape, label, etc
@@ -360,7 +426,7 @@ class GenParticle(object):
         # (Look in mothers)
         # If there isn't, then create one.
         # - If the particle has mother(s) then assign that new vertex to
-        #   be in inVertex of all those mother(s). And do the wiring (set
+        # be in inVertex of all those mother(s). And do the wiring (set
         #   vertex inParticles = mothers, mothers.inVertex,
         #   mothers.inVertex.barcode)
         # In either scenario, we have a target vertex, and need to set
@@ -414,15 +480,16 @@ class GenParticle(object):
                 mothers.append(i)
             if mothers:
                 mothers = sorted(mothers, key=lambda particle: particle.barcode)
-                mother1 = mothers[0].barcode
-                mother2 = mothers[-1].barcode
+                mother1 = int(mothers[0].barcode)
+                mother2 = int(mothers[-1].barcode)
                 # Check that we can safely do mothers = mother1, ..., mother2
                 for i in mothers:
-                    if i.barcode not in range(mother1, mother2+1):
+                    if i.barcode not in range(mother1, mother2 + 1):
                         print "ERROR: ", i.barcode
+                        print mother1, mother2 + 1
                         raise Exception("barcode not in range mother1->mother2")
-                self.node_attr.mother1 = mother1
-                self.node_attr.mother2 = mother2
+                self.node_attr.mother1 = str(mother1)
+                self.node_attr.mother2 = str(mother2)
                 self.node_attr.mothers = mothers
 
         # Now add daughter references. Don't do barcodes,
@@ -460,13 +527,16 @@ class EdgeAttributes(object):
     """To store attributes specially for when particle is represented
     by edge, e.g. from HepMC"""
 
-    def __init__(self, parent, inVertexBarcode=0, outVertexBarcode=0):
+    def __init__(self, parent, inVertexBarcode="", outVertexBarcode=""):
         self.particle = parent  # ref to parent particle
         # Barcode of vertex that has this particle as an incoming particle
+        # Only used when doing hepmc parsing, for everything else use
+        # self.inVertex.barcode as conssitent
         self.inVertexBarcode = inVertexBarcode
         # Reference to GenVertex where this particle is incoming
         self.inVertex = None
         # Barcode of vertex that has this particle as an outgoing particle
+        # Ditto note about inVertexBarcode
         self.outVertexBarcode = outVertexBarcode
         # Reference to GenVertex where this particle is outgoing
         self.outVertex = None
@@ -474,20 +544,26 @@ class EdgeAttributes(object):
     def __str__(self):
         pprint(vars(self))
 
+    def __repr__(self):
+        return "EA: %s" % self.particle.barcode
+
     def setInVertex(self, v):
+        """Set particle's inVertex to be v"""
         self.inVertex = v
         self.inVertexBarcode = v.barcode
+        v.inParticles.append(self.particle)
 
     def setOutVertex(self, v):
+        """Set particle's outVertex to be v"""
         self.outVertex = v
         self.outVertexBarcode = v.barcode
-
+        v.outParticles.append(self.particle)
+        v.numOutgoing += 1
 
 class DisplayAttributes(object):
     """Class to store attributes about visual node/edge representation
     of a particle, e.g. node shape, color"""
 
-    # TODO: use .format instead of simple string sub
     def __init__(self, parent, rawNames=False):
         self.particle = parent  # ref to parent particle
         # dict to hold attributes & name, so generate_string/getNode|EdgeString
@@ -553,21 +629,32 @@ class DisplayAttributes(object):
         self.attr["arrowsize"] = 0.8
         self.attr["fontcolor"] = "black"
         self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
+
+        if self.particle.isRedundant:
+            self.attr["color"] = "green"
+
         # TikZ options
         if not self.rawNames:
-            self.attr["label"] = " "  # space is VITAL!
-            if self.particle.pdgid == 22:  # wiggly lines for photons
+            self.attr["label"] = " "  # do tex names via texlbl - space is VITAL
+            if abs(self.particle.pdgid) in [22, 23, 24]:  # gauge boson (wiggly)
                 self.attr["style"] = "snake=snake"
+            elif abs(self.particle.pdgid) == 21:  # gluons (spirally)
+                pass  # TODO: gluons
+            elif abs(self.particle.pdgid) in range(25, 38):  # higgs (dashed)
+                self.attr["style"] = "dashed"
+
+        # TODO: only interesting? final? or none? potentially hard to read
         if self.isInteresting:
             self.attr["fontcolor"] = self.attr["color"]
 
     def generate_string(self, attributes):
         """Function to generate string with all necessary attributes.
-        attributes is a list of options the user wants to include."""
+        attributes is a list of options (i.e. dictionary keys)
+        the user wants to include."""
         attr_string = ""
         for a in attributes:
             if a in self.attr.keys():
-                attr_string += a+"=\""+str(self.attr[a])+"\""
+                attr_string += ''.join([a, "=\"", str(self.attr[a]), "\""])
                 if a != attributes[-1]:
                     attr_string += ", "
             else:
@@ -577,14 +664,17 @@ class DisplayAttributes(object):
 
     def getNodeString(self):
         """Returns string that can be used in GraphViz to describe the node"""
-        return self.generate_string(["label", "shape", "style", "fillcolor"])
+        return self.generate_string(["label",
+                                     "shape",
+                                     "style",
+                                     "fillcolor"])
 
     def getEdgeString(self):
         """Returns string that can be used in GraphViz to describe the edge"""
         if self.rawNames:
             return self.generate_string(["label",
                                          "color",
-                                         "fontcolor",
+                                         # "fontcolor",
                                          "arrowsize",
                                          "penwidth"])
         else:
