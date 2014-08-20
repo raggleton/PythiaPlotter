@@ -151,37 +151,33 @@ if __name__ == "__main__":
     # Get command line arguments, parse them
     args = get_parser().parse_args()
 
-    # Store filename for input txt file with event listing
-    # Default uses the example output in this repository
-    inputFilename = args.input
-
-    # Store stem filename (i.e. without .xyz bit) for use later for default
-    # PDF/GV etc filenames
-    name = os.path.basename(inputFilename)
-    stemName = os.path.splitext(name)[0]
+    # Store stem of input filename (i.e. without .xyz bit) for use
+    # later for default PDF/GV etc filenames
+    name = os.path.basename(args.input)  # just filename and extension
+    stemName, extension = os.path.splitext(name)
 
     # Store filepath
-    filePath = get_full_path(inputFilename)
+    filePath = get_full_path(args.input)
 
-    # Before we go any further, check file exists
-    if not check_file_exists(inputFilename):
-        raise Exception(inputFilename+" does not exist!!!")
+    # Note that checking that the file exists is done in the individual parsers
 
     # Try and guess input type if not specified, based on file extension.
     # (could be done more sophisticatedly, I guess)
     # NO checking done if user option =/= actual file type!
-    inputType = args.inputType
     if not args.inputType:
-        extension = os.path.splitext(name)[1].lower()
         if extension == ".hepmc":
-            inputType = "HEPMC"
+            args.inputType = "HEPMC"
         else:
-            inputType = "PYTHIA"
-    print "Assuming input type", inputType
+            args.inputType = "PYTHIA"
+        print "Assuming input type", args.inputType
 
-    eventNumber = int(args.eventNumber)
-    if inputType == "PYTHIA":
-        print "Ignoring --eventNumber option as not relevant"
+    # Set default mode based on input type (only temporary)
+    # TODO: remove me
+    if not args.mode:
+        if args.inputType == "HEPMC":
+            args.mode = "EDGE"
+        else:
+            args.mode = "NODE"
 
     # Store output GraphViz filename
     # Default filename for output GraphViz file based on inputFilename
@@ -198,21 +194,6 @@ if __name__ == "__main__":
     if not pdfFilename:
         pdfFilename = stemName+"_"+args.mode+".pdf"
         pdfFilename = os.path.join(filePath, pdfFilename)
-
-    # Interesting particles we wish to highlight
-    # Can do different particles in different colours,
-    # see www.graphviz.org/doc/info/colors.html
-    # although requires xcolor latex package
-    # Relies on matching names though...better method?
-    # User must include antiparticles
-    # Make list in args?
-    interesting = [
-        ["cyan", ["mu+", "mu-"]],
-        ["blue", ["tau+", "tau-"]],
-        ["red", ["b", "bbar"]],
-        ["orange", ["c", "cbar"]],
-        ["yellow", ["s", "sbar"]]
-    ]
 
     # Option to remove redundant particles from graph.
     # Useful for cleaning up the graph, but don't enable if you want to debug
@@ -231,19 +212,21 @@ if __name__ == "__main__":
     #-----------------------------------------------------------------------
     event = None  # Hold GenEvent as result fo file parsing
 
-    if inputType == "PYTHIA":
-        event = pythiaParser.parse(filename=inputFilename)
+    if args.inputType == "PYTHIA":
+        print "Ignoring --eventNumber option as not relevant"
+        event = pythiaParser.parse(filename=args.input)
         # if removeRedundants:
-            # event.removeRedundantsNodes()
+        # event.removeRedundantsNodes()
+
     else:
-        event = hepmcParser.parse(filename=inputFilename,
-                                  eventNumber=eventNumber)
+        event = hepmcParser.parse(filename=args.input,
+                                  eventNumber=args.eventNumber)
+        # Post processing - don't like this being here, move it!
+        event.addVerticesForFinalState()  # TODO: fixme, sets all final?
+        event.markInitialHepMC()
+        event.removeRedundantEdges()
         # if removeRedundants:
         #     event.removeRedundantsEdges()
-
-    # Post processing - don't like this being here, move it!
-    event.addVerticesForFinalState() # TODO: fixme, sets all final
-    event.markInitialHepMC()
 
     #-----------------------------------------------------------------------
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
@@ -252,7 +235,7 @@ if __name__ == "__main__":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
     else:
-        if inputType == "PYTHIA":
+        if args.inputType == "PYTHIA":
             raise Exception("Can't do that at the moment, try NODE mode")
         edgeWriter.printEdgeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
