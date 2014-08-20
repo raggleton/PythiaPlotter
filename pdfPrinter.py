@@ -10,7 +10,7 @@ from sys import platform as _platform
 import argparse
 
 # PythiaPlotter files:
-import config  # Global definitions
+import config as CONFIG
 
 
 def print_pdf(args, stemName, gvFilename, pdfFilename):
@@ -47,12 +47,13 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
 
         print "Producing tex file and running pdflatex (may take a while)"
 
-        if config.VERBOSE: print texTemplate,
+        if CONFIG.VERBOSE: print texTemplate,
 
         texargs = ["pdflatex", "--shell-escape", '-jobname',
                    os.path.splitext(pdfFilename)[0], stemName+".tex"]
 
         call(texargs)
+
     print ""
     print "If you want to rerun the tex file for whatever reason, do:"
     print ' '.join(texargs)

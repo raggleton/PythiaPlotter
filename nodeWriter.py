@@ -25,7 +25,7 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
             # Set DisplayAttributes as node
             p.display_attr.rawNames = useRawNames
             p.display_attr.setAttributesForNode(
-                interestingList=config.interesting)
+                interestingList=CONFIG.interesting)
 
             entry = '    %s -> { ' % p.barcode
 
@@ -36,14 +36,14 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
 
             if not p.isInitialState:
                 gvFile.write(entry)  # don't want p+ -> system entries
-                if config.VERBOSE:
+                if CONFIG.VERBOSE:
                     print entry,
 
             # Write labels for each node
             nodeConfig = "    %s %s \n" % (p.barcode,
                                            p.display_attr.getNodeString())
             gvFile.write(nodeConfig)
-            if config.VERBOSE:
+            if CONFIG.VERBOSE:
                 print nodeConfig,
 
         # Set all initial particles to be level in diagram
@@ -51,7 +51,7 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
         rank += ' '.join([str(p.barcode) for p in event.particles
                           if p.isInitialState and p.pdgid != 90])
         rank += "} // Put initial particles on same level\n"
-        if config.VERBOSE: print rank,
+        if CONFIG.VERBOSE: print rank,
         gvFile.write(rank)
 
         gvFile.write("}")

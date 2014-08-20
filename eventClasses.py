@@ -7,7 +7,7 @@ from itertools import izip
 from pprint import pprint
 import operator
 
-import config as CONFIG  # Global definitions
+import config as CONFIG
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 import weakref
 
@@ -134,7 +134,6 @@ class GenEvent(object):
                     p.edge_attr.outVertex = v
                     p.edge_attr.outVertexBarcode = v.barcode
                     self.vertices.append(v)
-
 
     def addVerticesForFinalState(self):
         """Add inVertex for final state particles so they can be drawn later."""
@@ -350,10 +349,10 @@ class GenParticle(object):
         return self.barcode == other.barcode
 
     def __str__(self):
-        pprint(vars(self))
+        print self.barcode
 
     def __repr__(self):
-        return '%s' % pprint(vars(self))
+        return '%s' % self.barcode
 
     def convertNodeToEdgeAttributes(self, event):
         """Convert NodeAttributes object to EdgeAttributes object"""
@@ -439,12 +438,12 @@ class NodeAttributes(object):
     """Class to store attributes specially for when particle is represented
     by node, e.g. from Pythia screen output"""
 
-    def __init__(self, parent, mother1=0, mother2=0):
+    def __init__(self, parent, mother1="", mother2=""):
         self.particle = parent  # ref to parent particle
         # For reading in from Pythia screen output, need to read in mother(s)
         # of particle. Can then infer daughters once gathered all particles
-        self.mother1 = int(mother1)  # barcode of mother 1
-        self.mother2 = int(mother2)  # barcode of mother 2 (mothers = m1 -> m2?)
+        self.mother1 = mother1  # barcode of mother 1
+        self.mother2 = mother2  # barcode of mother 2 (mothers = m1 -> m2?)
         self.mothers = []  # list of NodeParticle objects that are its mother
         self.daughters = []  # list of GenParticles that are its daughters
 

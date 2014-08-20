@@ -9,9 +9,9 @@ from pprint import pprint
 
 # PythiaPlotter files
 from eventClasses import *
-import config  # For my Global definitions
+import config as CONFIG
 
-# TODO: delete all the unnecessary if config.VERBOSE: print vars() lines
+# TODO: delete all the unnecessary if CONFIG.VERBOSE: print vars() lines
 
 
 def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
@@ -27,12 +27,12 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
         currentEvent = None  # hold current GenEvent, add particles, etc
         currentVertex = None  # hold current vertex, to add ref to particles
         for line in file:
-            # if config.VERBOSE: print line,
+            # if CONFIG.VERBOSE: print line,
 
             # Get HepMC version
             if line.startswith("HepMC::Version"):
                 version = line.split()[1]
-                if config.VERBOSE: print "Using HepMC version", version
+                if CONFIG.VERBOSE: print "Using HepMC version", version
 
             # Get start of event block
             elif line.startswith("HepMC::IO_GenEvent-START_EVENT_LISTING"):
@@ -43,9 +43,9 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
             # and add the last GenEvent
             elif line.startswith("HepMC::IO_GenEvent-END_EVENT_LISTING"):
                 postProcessEvent(currentEvent, eventList)
-                if config.VERBOSE:
+                if CONFIG.VERBOSE:
                     print "Adding GenEvent to list"
-                if config.VERBOSE:
+                if CONFIG.VERBOSE:
                     print len(currentEvent.particles), len(currentEvent.vertices)
                 print "End parsing event listing"
 
@@ -54,47 +54,47 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
                 # Done with the old event, add it to the list, start a new one
                 if currentEvent:
                     postProcessEvent(currentEvent, eventList)
-                    # if config.VERBOSE: print vars(currentEvent)
-                    if config.VERBOSE: print "Adding GenEvent to list"
-                    if config.VERBOSE: print len(currentEvent.particles),
+                    # if CONFIG.VERBOSE: print vars(currentEvent)
+                    if CONFIG.VERBOSE: print "Adding GenEvent to list"
+                    if CONFIG.VERBOSE: print len(currentEvent.particles),
                     len(currentEvent.vertices)
                 currentEvent = parseGenEventLine(line)
-                if config.VERBOSE: print "*** EVENT: Adding GenEvent info"
+                if CONFIG.VERBOSE: print "*** EVENT: Adding GenEvent info"
 
             # named weights
             elif line.startswith("N"):
                 # line.split()[1] has the number of weights
                 # line.split()[2:] has all the weight names
                 currentEvent.setWeightNames(line.split()[2:])
-                if config.VERBOSE: print "Adding weights info"
-                if config.VERBOSE: print pprint(vars(currentEvent.weights))
+                if CONFIG.VERBOSE: print "Adding weights info"
+                if CONFIG.VERBOSE: print pprint(vars(currentEvent.weights))
 
             # momentum and position units
             elif line.startswith("U"):
                 currentEvent.units = parseUnitsLine(line)
-                if config.VERBOSE: print "Adding units info"
-                if config.VERBOSE: print pprint(vars(currentEvent.units))
+                if CONFIG.VERBOSE: print "Adding units info"
+                if CONFIG.VERBOSE: print pprint(vars(currentEvent.units))
 
             # GenCrossSection information:
             # This line will appear ONLY if GenCrossSection is defined.
             elif line.startswith("C"):
                 currentEvent.cross_section = parseCrossSectionLine(line)
-                if config.VERBOSE: print "Adding cross-section info"
-                if config.VERBOSE: print pprint(vars(currentEvent.cross_section))
+                if CONFIG.VERBOSE: print "Adding cross-section info"
+                if CONFIG.VERBOSE: print pprint(vars(currentEvent.cross_section))
 
             # HeavyIon information:
             # This line will contain zeros if there is no associated
             # HeavyIon object.
             # We don't use this so ignore (for now). Or throw exception?
             elif line.startswith("H"):
-                if config.VERBOSE: print "We don't deal with this"
+                if CONFIG.VERBOSE: print "We don't deal with this"
 
             # PdfInfo information:
             # This line will contain 0s if there is no associated PdfInfo obj
             elif line.startswith("F"):
                 currentEvent.pdf_info = parsePdfInfoLine(line)
-                if config.VERBOSE: print "Adding pdf info"
-                if config.VERBOSE: print pprint(vars(currentEvent.pdf_info))
+                if CONFIG.VERBOSE: print "Adding pdf info"
+                if CONFIG.VERBOSE: print pprint(vars(currentEvent.pdf_info))
 
             # GenVertex information:
             # Need to keep track of last process vertex to add to GenParticle
@@ -102,8 +102,8 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
                 v = parseGenVertexLine(line)
                 currentEvent.vertices.append(v)
                 currentVertex = v
-                if config.VERBOSE: print "Adding GenVertex info"
-                # if config.VERBOSE: pprint(vars(v))
+                if CONFIG.VERBOSE: print "Adding GenVertex info"
+                # if CONFIG.VERBOSE: pprint(vars(v))
 
             # GenParticle information:
             # The GenVertex line before this has this particle as outgoing
@@ -113,11 +113,11 @@ def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
                 p.edge_attr.outVertexBarcode = currentVertex.barcode
                 p.edge_attr.outVertex = currentVertex
                 currentEvent.particles.append(p)
-                if config.VERBOSE: print "Adding GenParticle info"
-                # if config.VERBOSE: pprint(vars(p))
+                if CONFIG.VERBOSE: print "Adding GenParticle info"
+                # if CONFIG.VERBOSE: pprint(vars(p))
 
-        if config.VERBOSE: print len(eventList)
-        if config.VERBOSE: pprint(vars(currentEvent))
+        if CONFIG.VERBOSE: print len(eventList)
+        if CONFIG.VERBOSE: pprint(vars(currentEvent))
 
     return eventList[eventNumber]
 

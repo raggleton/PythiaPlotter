@@ -7,7 +7,7 @@ import re
 
 # PythiaPlotter files
 from eventClasses import *
-import config  # For my Global definitions
+import config as CONFIG
 
 
 def parse(filename="qcdScatterSmall.txt"):
@@ -55,53 +55,53 @@ def parse(filename="qcdScatterSmall.txt"):
             # Look for event info listing
             if infoStart in line:
                 addToBlock = True
-                if config.VERBOSE: print "Event Info start"
+                if CONFIG.VERBOSE: print "Event Info start"
 
             elif addToBlock and infoEnd in line:
                 addToBlock = False
                 currentEvent = parseInfo(block)
-                if config.VERBOSE: print "Event Info end"
-                if config.VERBOSE: pprint(block)
-                if config.VERBOSE: print len(block)
+                if CONFIG.VERBOSE: print "Event Info end"
+                if CONFIG.VERBOSE: pprint(block)
+                if CONFIG.VERBOSE: print len(block)
                 del block[:]  # empty list of lines
 
             # Look for cross-section & events stats
             elif statsStart in line:
                 addToBlock = True
-                if config.VERBOSE: print "Event Stats Start"
+                if CONFIG.VERBOSE: print "Event Stats Start"
 
             elif addToBlock and statsEnd in line:
                 addToBlock = False
                 # parseStats(block)
-                if config.VERBOSE: print "Event Stats End"
-                if config.VERBOSE: pprint(block)
-                if config.VERBOSE: print len(block)
+                if CONFIG.VERBOSE: print "Event Stats End"
+                if CONFIG.VERBOSE: pprint(block)
+                if CONFIG.VERBOSE: print len(block)
                 del block[:]
 
             # Look for event particle listing
             elif fullEventStart in line:
                 addToBlock = True
-                if config.VERBOSE: print "Event Listing Starts"
+                if CONFIG.VERBOSE: print "Event Listing Starts"
 
             elif addToBlock and fullEventEnd in line:
                 addToBlock = False
                 currentEvent.particles = parseEventListing(block)
-                if config.VERBOSE: print "Event Listing Ends"
-                if config.VERBOSE: print len(block)
+                if CONFIG.VERBOSE: print "Event Listing Ends"
+                if CONFIG.VERBOSE: print len(block)
                 del block[:]
 
         print "Done reading file"
 
     # Once got all particles, add mothers/daughters
-    if config.VERBOSE: print "Adding mothers"
+    if CONFIG.VERBOSE: print "Adding mothers"
     currentEvent.addNodeMothers()
-    if config.VERBOSE: print "Adding daughters"
+    if CONFIG.VERBOSE: print "Adding daughters"
     currentEvent.addNodeDaughters()
 
     # Convert Node to Edge repr for all particles so we can plot either later
     # [p.convertNodeToEdgeAttributes(currentEvent)
     # for p in currentEvent.particles]
-    currentEvent.convertNodesToEdges()
+    # currentEvent.convertNodesToEdges()
     # currentEvent.markInitialHepMC()
 
     # Things like mark interesting, remove redundants done in main script, as
@@ -179,7 +179,7 @@ def parseEventListing(block):
             continue
 
         if parseLine:
-            print line
+            # print line
             particleList.append(parseParticleLine(line))
 
     # Note, adding of daughters/mothers done in main parse() method
@@ -190,7 +190,7 @@ def parseParticleLine(line):
     """Parse line with particle info, and return GenParticle object
     with NodeAttributes set"""
 
-    # if config.VERBOSE: print line,
+    # if CONFIG.VERBOSE: print line,
 
     parts = line.split()
     # name = parts[2]

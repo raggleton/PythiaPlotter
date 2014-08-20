@@ -9,7 +9,6 @@ import config
 
 def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
     """Prints GenEvent to GraphViz file using particle in Edge representation"""
-    config.VERBOSE = True
 
     print "Writing GraphViz file to %s" % gvFilename
     with open(gvFilename, "w") as gvFile:
@@ -22,7 +21,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
             #     continue
             p.display_attr.rawNames = useRawNames
             p.display_attr.setAttributesForEdge(
-                interestingList=config.interesting)
+                interestingList=CONFIG.interesting)
 
             # Do particle line from vertex to vertex
             entry = '    %s -> %s %s\n' % (
@@ -31,7 +30,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 p.display_attr.getEdgeString())
 
             gvFile.write(entry)
-            if config.VERBOSE:
+            if CONFIG.VERBOSE:
                 print entry,
 
         # Print vertex display attributes, all the same for now
@@ -43,7 +42,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
             entry = '    %s [label="%s",shape="point", size=0.1, color=%s]\n' \
                     % (v.barcode, v.barcode, color)
             gvFile.write(entry)
-            if config.VERBOSE:
+            if CONFIG.VERBOSE:
                 print entry,
 
         # Set all initial vertices to be level in diagram
@@ -52,7 +51,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                    if p.isInitialState]
         rank += ' '.join(initial)
         rank += "} // Put initial particles on same level\n"
-        if config.VERBOSE: print rank,
+        if CONFIG.VERBOSE: print rank,
         gvFile.write(rank)
 
         gvFile.write("}")

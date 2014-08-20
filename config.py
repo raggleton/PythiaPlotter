@@ -1,13 +1,13 @@
 """
 This file contains global definitions. These can be used in a python file by:
 
-import config
+import config as CONFIG
 
 Since there is only one instance of each module,
 any changes made to the module object get reflected everywhere.
 So can use for global variables e.g.
 
-config.VERBOSE
+CONFIG.VERBOSE
 
 Robin Aggleton 22/7/14
 """

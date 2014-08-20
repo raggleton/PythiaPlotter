@@ -8,7 +8,7 @@ import re
 import imp  # For testing if modules exist
 
 # PythiaPlotter files:
-import config  # Global definitions
+import config as CONFIG
 import pythiaParser
 import hepmcParser
 import eventClasses
@@ -181,12 +181,12 @@ if __name__ == "__main__":
     # User must include antiparticles
     # Make list in args?
     interesting = [
-                  ["cyan", ["mu+", "mu-"]],
-                  ["blue", ["tau+", "tau-"]],
-                  ["red", ["b", "bbar"]],
-                  ["orange", ["c", "cbar"]],
-                  ["yellow", ["s", "sbar"]]
-                  ]
+        ["cyan", ["mu+", "mu-"]],
+        ["blue", ["tau+", "tau-"]],
+        ["red", ["b", "bbar"]],
+        ["orange", ["c", "cbar"]],
+        ["yellow", ["s", "sbar"]]
+    ]
 
     # Option to remove redundant particles from graph.
     # Useful for cleaning up the graph, but don't enable if you want to debug
@@ -194,15 +194,15 @@ if __name__ == "__main__":
     removeRedundants = True
 
     # For debugging - print output & various debug messages to screen
-    config.VERBOSE = args.verbose
+    CONFIG.VERBOSE = args.verbose
 
     ###########################################
     # MAIN - Start of file processing routines
     ###########################################
 
-    ########################################################################
+    #-----------------------------------------------------------------------
     # Parse input file, depending on file contents (HepMC or Pythia8 output)
-    ########################################################################
+    #-----------------------------------------------------------------------
     event = None  # Hold GenEvent as result fo file parsing
 
     if inputType == "PYTHIA":
@@ -219,19 +219,21 @@ if __name__ == "__main__":
     event.addVerticesForFinalState() # TODO: fixme, sets all final
     event.markInitialHepMC()
 
-    ########################################################################
+    #-----------------------------------------------------------------------
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
-    ########################################################################
+    #-----------------------------------------------------------------------
     if args.mode == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
     else:
+        if inputType == "PYTHIA":
+            raise Exception("Can't do that at the moment, try NODE mode")
         edgeWriter.printEdgeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
 
-    ########################################
+    #-----------------------------------------------------------------------
     # Run pdflatex or dot to produce the PDF
-    ########################################
+    #-----------------------------------------------------------------------
     if args.noPDF:
         print ""
         print "Not converting to PDF"
