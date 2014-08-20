@@ -118,6 +118,21 @@ def check_module_exists(mod):
         args.rawNames = True
 
 
+def cleanup_filepath(filepath):
+    """Resolve any env vars, ~, return absolute path."""
+    return os.path.abspath(os.path.expandvars(os.path.expanduser(filepath)))
+
+
+def get_full_path(filepath):
+    """Return absolute, full path of file.
+    Resolve any environment vars, ~, sym links(?)"""
+    return os.path.dirname(cleanup_filepath(filepath))
+
+
+def check_file_exists(filepath):
+    """Check if file exists. Can do absolute or relative file paths."""
+    return os.path.isfile(cleanup_filepath(filepath))
+
 ###############################################################################
 # MAIN BODY OF CODE HERE
 ###############################################################################
@@ -136,20 +151,29 @@ if __name__ == "__main__":
     # Get command line arguments, parse them
     args = get_parser().parse_args()
 
-    # Store filename for input txt file with Pythia listing
+    # Store filename for input txt file with event listing
     # Default uses the example output in this repository
     inputFilename = args.input
 
-    # Store path and stem filename (i.e. without .xyz bit)
+    # Store stem filename (i.e. without .xyz bit) for use later for default
+    # PDF/GV etc filenames
     name = os.path.basename(inputFilename)
     stemName = os.path.splitext(name)[0]
+
+    # Store filepath
+    filePath = get_full_path(inputFilename)
+
+    # Before we go any further, check file exists
+    if not check_file_exists(inputFilename):
+        raise Exception(inputFilename+" does not exist!!!")
 
     # Try and guess input type if not specified, based on file extension.
     # (could be done more sophisticatedly, I guess)
     # NO checking done if user option =/= actual file type!
     inputType = args.inputType
     if not args.inputType:
-        if os.path.splitext(name)[1].lower() == ".hepmc":
+        extension = os.path.splitext(name)[1].lower()
+        if extension == ".hepmc":
             inputType = "HEPMC"
         else:
             inputType = "PYTHIA"
@@ -165,6 +189,7 @@ if __name__ == "__main__":
     gvFilename = args.outputGV
     if not gvFilename:
         gvFilename = stemName+".gv"
+        gvFilename = os.path.join(filePath, gvFilename)
 
     # Filename for output PDF
     # Default filename for output PDF based on inputFilename
@@ -172,6 +197,7 @@ if __name__ == "__main__":
     pdfFilename = args.outputPDF
     if not pdfFilename:
         pdfFilename = stemName+"_"+args.mode+".pdf"
+        pdfFilename = os.path.join(filePath, pdfFilename)
 
     # Interesting particles we wish to highlight
     # Can do different particles in different colours,
