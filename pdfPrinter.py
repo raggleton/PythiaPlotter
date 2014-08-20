@@ -20,8 +20,20 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
     print "Producing PDF %s" % pdfFilename
     if args.rawNames:
         # Just use dot to make a pdf quickly
-        texargs = ["dot", "-Tpdf", gvFilename, "-o", pdfFilename]
+        # Do 2 stages: make a PostScript file, then convert to PDF.
+        # This makes the PDF searchable.
+        psFilename = pdfFilename.replace(".pdf", ".ps")
+        texargs = ["dot", "-Tps2", gvFilename, "-o", psFilename]
         call(texargs)
+        psargs = ["ps2pdf", psFilename, pdfFilename]
+        call(psargs)
+
+        print ""
+        print "To re-run:"
+        print ' '.join(texargs)
+        print ' '.join(psargs)
+        print ""
+
     else:
         # Use latex to make particle names nice.
         # Make a tex file for the job so can add user args, etc
