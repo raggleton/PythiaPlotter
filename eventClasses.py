@@ -174,37 +174,26 @@ class GenEvent(object):
     def removeRedundantNodes(self):
         """Get rid of redundant particles and rewrite relationships
         for particles as Nodes"""
-        pass
-        # for p in self.particles:
-        # if (not p.skip and not p.isInitialState
-        #         and len(p.node_attr.mothers) == 1
-        #         and len(p.node_attr.daughters) == 1):
-        #
-        #         pass
-        # if p.node_attr.mothers[0]
-        # if (not p.skip and not p.isInitialState
-        #         and len(p.node_attr.mothers) == 1):
-        #     current = p
-        #     mum = p.node_attr.mothers[0]
-        #     foundSuitableMother = False
-        #     while not foundSuitableMother:
-        #         # Check if mother of current has 1 parent and 1 child,
-        #         # both with same PID. If it does, then it's redundant
-        #         # and we can skip it in future. If not then suitable mother
-        #         # for Particle p
-        #         if (len(mum.node_attr.mothers) == 1
-        #             and len(mum.node_attr.daughters) == 1
-        #             and mum.pdgid == mum.node_attr.mothers[0].pdgid
-        #             and mum.pdgid == current.pdgid
-        #         ):
-        #             mum.skip = True
-        #             current = mum
-        #             mum = current.node_attr.mothers[0]
-        #         else:
-        #             foundSuitableMother = True
-        #
-        #     # whatever is stored in mum is the suitable mother for p
-        #     p.node_attr.mothers[0] = mum
+        # Mark particles as redundant if:
+        # - only 1 mother, same pdgid
+        # - only 1 daughter, same pdgid
+        # - not initial or final state
+        for p in self.particles:
+            if (not p.skip and not p.isInitialState and not p.isFinalState
+                and len(p.node_attr.mothers) == 1
+                and p.node_attr.mothers[0].pdgid == p.pdgid
+                and p.node_attr.daughters[0].pdgid == p.pdgid
+                and len(p.node_attr.daughters) == 1):
+
+                p.isRedundant = True
+                p.skip = True
+                mother = p.node_attr.mothers[0]
+                child = p.node_attr.daughters[0]
+                # Rewire as if p never existed
+                mother.node_attr.daughters.remove(p)
+                mother.node_attr.daughters.append(child)
+                child.node_attr.mothers.remove(p)
+                child.node_attr.mothers.append(mother)
 
     def removeRedundantEdges(self):
         """Get rid of redundant particles and rewrite relationships

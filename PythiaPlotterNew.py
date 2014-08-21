@@ -195,11 +195,6 @@ if __name__ == "__main__":
         pdfFilename = stemName+"_"+args.mode+".pdf"
         pdfFilename = os.path.join(filePath, pdfFilename)
 
-    # Option to remove redundant particles from graph.
-    # Useful for cleaning up the graph, but don't enable if you want to debug
-    # the event listing or see where recoil/shower gluons are.
-    removeRedundants = True
-
     # For debugging - print output & various debug messages to screen
     CONFIG.VERBOSE = args.verbose
 
@@ -215,18 +210,18 @@ if __name__ == "__main__":
     if args.inputType == "PYTHIA":
         print "Ignoring --eventNumber option as not relevant"
         event = pythiaParser.parse(filename=args.input)
-        # if removeRedundants:
-        # event.removeRedundantsNodes()
+        if CONFIG.removeRedundants:
+            event.removeRedundantNodes()
 
-    else:
+    elif args.inputType == "HEPMC":
         event = hepmcParser.parse(filename=args.input,
                                   eventNumber=args.eventNumber)
         # Post processing - don't like this being here, move it!
         event.addVerticesForFinalState()  # TODO: fixme, sets all final?
         event.markInitialHepMC()
         event.removeRedundantEdges()
-        # if removeRedundants:
-        #     event.removeRedundantsEdges()
+        if CONFIG.removeRedundants:
+            event.removeRedundantsEdges()
 
     #-----------------------------------------------------------------------
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
