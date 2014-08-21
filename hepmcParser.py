@@ -15,7 +15,7 @@ import config as CONFIG
 
 
 def parse(filename="test/testSamples/testSS_HLT.hepmc", eventNumber=0):
-    """Parse HepMCfile and return eventNumber event.
+    """Parse HepMCfile and return eventNumber GenEvent.
     Note that eventNumber starts at 0, not 1.
     Defaults to first event if eventNumber unspecified."""
 
@@ -175,14 +175,12 @@ def parseGenVertexLine(line):
                   x=parts[3], y=parts[4], z=parts[5], ctau=parts[6],
                   numOrphans=parts[7], numOutgoing=parts[8],
                   numWeights=parts[9], weights=parts[10:])
-    print v.barcode, v.numOutgoing
     return v
 
 
 def parseGenParticleLine(line):
     """Parse line from HepMC file containing GenParticle info
     e.g. P 4 21 0 0 -2.9355943031880248e+05 2.9355943031880248e+05 0 21 0 0 -3 2 1 102 2 103 """
-    print line,
     parts = line.split()
     # Handle flow entries at end, e.g. 2 1 102 2 103 from above
     # The first number (parts[12]) is the number of entries in flow list

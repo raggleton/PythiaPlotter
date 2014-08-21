@@ -5,11 +5,9 @@
 
 from itertools import izip
 from pprint import pprint
-import operator
 
 import config as CONFIG
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
-import weakref
 
 
 class GenEvent(object):
@@ -545,6 +543,7 @@ class EdgeAttributes(object):
         v.outParticles.append(self.particle)
         v.numOutgoing += 1
 
+
 class DisplayAttributes(object):
     """Class to store attributes about visual node/edge representation
     of a particle, e.g. node shape, color"""
@@ -571,11 +570,11 @@ class DisplayAttributes(object):
 
         if self.particle.isInitialState:
             self.attr["color"] = CONFIG.initial_color
-            # self.shape = "circle"
         elif self.particle.isFinalState:
             self.attr["color"] = CONFIG.final_color
 
         # Set interesting or not
+        # TODO: allow use of pdgid as well as name
         if interestingList:
             for i in interestingList:
                 if self.particle.name in i[1]:
@@ -588,7 +587,8 @@ class DisplayAttributes(object):
                                              self.particle.name)
         else:
             self.attr["label"] = self.particle.texname
-            self.attr["texlbl"] = "$%s$" % self.particle.texname
+            self.attr["texlbl"] = "$%s: %s$" % (self.particle.barcode,
+                                                self.particle.texname)
 
     def setAttributesForNode(self, interestingList=None):
         """Set options specifically for NODE plotting mode"""

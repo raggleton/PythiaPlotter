@@ -4,7 +4,7 @@ Prints relationships to GraphViz file when representing particles as nodes
 """
 
 import eventClasses
-import config
+import config as CONFIG
 
 
 def printEdgeToGraphViz(event, gvFilename, useRawNames=False):

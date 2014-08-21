@@ -11,7 +11,7 @@ import config as CONFIG
 
 
 def parse(filename="qcdScatterSmall.txt"):
-    """Parse PYTHIA8 screen output and return event full of NodeParticles"""
+    """Parse PYTHIA8 screen output and return GenEvent"""
 
     currentEvent = GenEvent()
 
