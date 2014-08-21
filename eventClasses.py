@@ -577,7 +577,7 @@ class DisplayAttributes(object):
         # TODO: allow use of pdgid as well as name
         if interestingList:
             for i in interestingList:
-                if self.particle.name in i[1]:
+                if any(x in (self.particle.name, self.particle.pdgid) for x in i[1]):
                     self.isInteresting = True
                     self.attr["color"] = i[0]
 

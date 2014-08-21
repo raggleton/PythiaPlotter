@@ -16,17 +16,21 @@ Robin Aggleton 22/7/14
 ###########################
 
 # Interesting particles we wish to highlight
-# Can do different particles in different colours,
-# see www.graphviz.org/doc/info/colors.html
-# although requires xcolor latex package
-# Relies on matching names though...better method?
-# User must include antiparticles
+# Can do different particles in different colours, see
+# www.graphviz.org/doc/info/colors.html
+# (although requires xcolor latex package?)
+#
+# You need to define a list where each entry is a list with the form:
+# [ <colour>, [<list of particles>]]
+# where list of particles can either be their names,
+# or their PDGIDs (see example below).
+# Note, you have to add in antiparticles as well, if you want them highlighted.
 interesting = [
     ["cyan", ["mu+", "mu-"]],
     ["blue", ["tau+", "tau-"]],
     ["red", ["b", "bbar"]],
     ["orange", ["c", "cbar"]],
-    ["brown", ["s", "sbar"]]
+    ["brown", [3, -3]]
 ]
 
 # Color for initial particles (protons normally)
