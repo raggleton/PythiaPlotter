@@ -43,6 +43,7 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
         else:
             dttOpts = ""
 
+        # Pass relative path of gv & pdf file as TeX doesn't like absolute paths
         texTemplate = r"""\documentclass{standalone}
 \usepackage{dot2texi}
 \usepackage{tikz}
@@ -50,7 +51,7 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
 \usetikzlibrary{shapes,arrows,snakes}
 \begin{document}
 \begin{dot2tex}[dot,mathmode"""+dttOpts+r"""]
-\input{"""+gvFilename+r"""}
+\input{"""+os.path.relpath(gvFilename)+r"""}
 \end{dot2tex}
 \end{document}
 """
@@ -62,15 +63,15 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
         if CONFIG.VERBOSE: print texTemplate,
 
         texargs = ["pdflatex", "--shell-escape", '-jobname',
-                   os.path.splitext(pdfFilename)[0], stemName+".tex"]
-
+                   os.path.relpath(os.path.splitext(pdfFilename)[0]),
+                   stemName+".tex"]
         call(texargs)
 
-    print ""
-    print "If you want to rerun the tex file for whatever reason, do:"
-    print ' '.join(texargs)
-    print ""
-    print "Written PDF to", pdfFilename
+        print ""
+        print "If you want to rerun the tex file for whatever reason, do:"
+        print ' '.join(texargs)
+        print ""
+        print "Written PDF to", pdfFilename
 
     ################################################
     # Automatically open the PDF on the user's system if desired
