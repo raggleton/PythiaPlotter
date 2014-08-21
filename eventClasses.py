@@ -196,27 +196,23 @@ class GenEvent(object):
                 child.node_attr.mothers.append(mother)
 
     def removeRedundantEdges(self):
-        """Get rid of redundant particles and rewrite relationships
+        """Get rid of redundant particles & vertices and rewrite relationships
         for particles as Edges"""
         # Mark particle as redundant if:
         # - its outVertex only has 1 particle out (itself)
-        # - the particle incoming to outVertex has the same pdgid
+        # - its outVertex only has 1 particle in, with same pdgid
         # - isn't initial or final state
         for p in self.particles:
-            print p.barcode, ": outVertex.inParticles: "
-            print len(p.edge_attr.outVertex.inParticles), p.edge_attr.outVertex.inParticles
-            if len(p.edge_attr.outVertex.inParticles) == 1 \
-                    and p.edge_attr.outVertex.inParticles[0].pdgid == p.pdgid \
-                    and len(p.edge_attr.outVertex.outParticles) == 1 \
-                    and not p.isInitialState and not p.isFinalState:
+            if (len(p.edge_attr.outVertex.inParticles) == 1
+                and p.edge_attr.outVertex.inParticles[0].pdgid == p.pdgid
+                and len(p.edge_attr.outVertex.outParticles) == 1
+                and not p.isInitialState and not p.isFinalState):
 
-                print p.barcode, "is Redundant", len(p.edge_attr.outVertex.inParticles)
-                p.isRedundant = True
-                p.skip = True
-                # Get rid of the particle and it's outVertex.
-                # Also remove it from it's inVertex inParticles list
+                # Get rid of the particle and its outVertex.
+                # Also remove it from its inVertex inParticles list
                 # Rewire so any incoming particle now uses p.inVertex
                 # as their inVertex, and update that vertex
+                p.skip = True
                 p.edge_attr.outVertex.skip = True
                 incoming = p.edge_attr.outVertex.inParticles[0]
                 incoming.edge_attr.setInVertex(p.edge_attr.inVertex)
@@ -618,9 +614,6 @@ class DisplayAttributes(object):
         self.attr["arrowsize"] = 0.8
         self.attr["fontcolor"] = "black"
         self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
-
-        if self.particle.isRedundant:
-            self.attr["color"] = "green"
 
         # TikZ options
         if not self.rawNames:

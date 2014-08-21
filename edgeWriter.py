@@ -17,8 +17,9 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
         for p in event.particles:
 
-            # if p.skip or p.name == "system":
-            #     continue
+            if p.skip:
+                continue
+
             p.display_attr.rawNames = useRawNames
             p.display_attr.setAttributesForEdge(
                 interestingList=CONFIG.interesting)
@@ -35,6 +36,9 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
         # Print vertex display attributes, all the same for now
         for v in event.vertices:
+            if v.skip:
+                continue
+
             color = "black"
             if v.isInitialState or v.isFinalState:
                 color = "transparent"
