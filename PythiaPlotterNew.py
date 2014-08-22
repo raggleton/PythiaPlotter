@@ -219,9 +219,8 @@ if __name__ == "__main__":
         # Post processing - don't like this being here, move it!
         event.addVerticesForFinalState()  # TODO: fixme, sets all final?
         event.markInitialHepMC()
-        event.removeRedundantEdges()
         if CONFIG.removeRedundants:
-            event.removeRedundantsEdges()
+            event.removeRedundantEdges()
 
     #-----------------------------------------------------------------------
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
