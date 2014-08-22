@@ -65,14 +65,12 @@ def run_latex(args, gvFilename, pdfFilename):
     # Use latex to make particle names nice.
     # Make a tex file for the job so can add user args, etc
     # Too difficult to use \def on command line
-    # TODO: replace this with a direct call to dot2tex module
-    if not args.noStraightEdges:
-        dttOpts = ",straightedges"
-    else:
-        dttOpts = ""
+    d2tOpts = ""
+    if args.StraightEdges:
+        d2tOpts = ",straightedges"
 
     # Pass relative path of gv & pdf file as TeX doesn't like absolute paths
-    texTemplate = r"""\documentclass{standalone}
+    texTemplate = r"""\documentclass[tikz]{standalone}
 \usepackage{dot2texi}
 \usepackage{tikz}
 \usepackage{xcolor}
@@ -80,7 +78,7 @@ def run_latex(args, gvFilename, pdfFilename):
 \usetikzlibrary{decorations.pathmorphing}
 
 \begin{document}
-\begin{dot2tex}[dot,mathmode"""+dttOpts+r"""]
+\begin{dot2tex}[dot,mathmode,format=tikz"""+d2tOpts+r"""]
 \input{"""+os.path.relpath(gvFilename)+r"""}
 \end{dot2tex}
 \end{document}

@@ -77,8 +77,8 @@ def get_parser():
                         help="don't convert particle names to tex, use raw \
                         string names - faster but less pretty",
                         action="store_true")
-    parser.add_argument("--noStraightEdges",
-                        help="don't use straight edges, curvy instead",
+    parser.add_argument("--StraightEdges",
+                        help="use straight edges instead of curvy",
                         action="store_true")
     parser.add_argument("-v", "--verbose",
                         help="print debug statements to screen",
