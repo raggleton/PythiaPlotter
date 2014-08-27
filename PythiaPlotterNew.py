@@ -77,7 +77,7 @@ def get_parser():
                         help="don't convert particle names to tex, use raw \
                         string names - faster but less pretty",
                         action="store_true")
-    parser.add_argument("--StraightEdges",
+    parser.add_argument("--straightEdges",
                         help="use straight edges instead of curvy",
                         action="store_true")
     parser.add_argument("-v", "--verbose",
@@ -237,12 +237,12 @@ if __name__ == "__main__":
     #-----------------------------------------------------------------------
     # Run pdflatex or dot to produce the PDF
     #-----------------------------------------------------------------------
-    if args.noPDF:
-        print ""
-        print "Not converting to PDF"
-        print "If you want a PDF, run without --noPDF"
-        print "and if you only want the raw names (faster to produce),"
-        print "then run with --rawNames"
-        print ""
-    else:
-        pdfPrinter.print_pdf(args, stemName, gvFilename, pdfFilename)
+    # if args.noPDF:
+    #     print ""
+    #     print "Not converting to PDF"
+    #     print "If you want a PDF, run without --noPDF"
+    #     print "and if you only want the raw names (faster to produce),"
+    #     print "then run with --rawNames"
+    #     print ""
+    # else:
+    pdfPrinter.print_pdf(args, stemName, gvFilename, pdfFilename)

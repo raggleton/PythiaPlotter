@@ -13,7 +13,31 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
     print "Writing GraphViz file to %s" % gvFilename
     with open(gvFilename, "w") as gvFile:
         # Now process the particles and add appropriate links to GraphViz file
-        gvFile.write("digraph g {\n    rankdir = LR;\n")
+        gvFile.write("digraph g {\n"
+                     "\trankdir=LR;\n"
+                     "\tranksep=0.5\n"
+                     "\tnodesep=0.5\n")
+
+        if not useRawNames:
+            # Lots of dot2tex specific options
+            libs = "\\usetikzlibrary{decorations.pathmorphing,fit,backgrounds,positioning}"
+            styles = "\\tikzset{ \n" \
+                     "\t\tstandard/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},\n" \
+                     "\t\ttransparent/.style={circle}\n" \
+                     "\t\tgluon/.style={gray,semitransparent}\n" \
+                     "\t}"
+            hard_vertex = "V3"  # set me somewhere!
+            highlight_box = '% Highlight the hard process\n' \
+                            '\t\\begin{scope}[on background layer]\n' \
+                            '\t\t\\node[fill=black!30,inner sep=10bp,fit=('+hard_vertex+')]{};\n' \
+                            '\t\\end{scope}'
+
+            gvFile.write('\t// Options just for dot2tex:\n')
+            gvFile.write('\td2tdocpreamble="%s"\n' % libs)
+            gvFile.write('\td2tfigpreamble="%s"\n' % styles)
+            gvFile.write('\ttexmode="math"\n')
+            gvFile.write('\td2tgraphstyle="very thick,scale=0.7"\n')
+            gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
 
         for p in event.particles:
 
@@ -25,7 +49,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 interestingList=CONFIG.interesting)
 
             # Do particle line from vertex to vertex
-            entry = '    %s -> %s %s\n' % (
+            entry = '\t%s -> %s %s\n' % (
                 p.edge_attr.outVertex.barcode,
                 p.edge_attr.inVertex.barcode,
                 p.display_attr.getEdgeString())
@@ -39,12 +63,18 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
             if v.skip:
                 continue
 
-            color = "black"
-            if v.isInitialState or v.isFinalState:
-                color = "transparent"
-
-            entry = '    %s [label="%s",shape="point", size=0.1, color=%s]\n' \
+            if useRawNames:
+                color = "black"
+                if v.isInitialState or v.isFinalState:
+                    color = "transparent"
+                entry = '    %s [label="%s",shape="point", size=0.1, color=%s]\n' \
                     % (v.barcode, v.barcode, color)
+            else:
+                style = "standard"
+                if v.isInitialState or v.isFinalState:
+                    style = "transparent"
+                entry = '\t%s [label="", style="%s"]\n' % (v.barcode, style)
+
             gvFile.write(entry)
             if CONFIG.VERBOSE:
                 print entry,

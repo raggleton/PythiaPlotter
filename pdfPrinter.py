@@ -6,8 +6,11 @@ or TeX particle names (slower, but more pretty + configurations opts viz TikZ)
 
 import os.path
 from subprocess import call
+from subprocess import check_output
 from sys import platform as _platform
+import re
 import argparse
+import dot2tex as d2t
 
 # PythiaPlotter files:
 import config as CONFIG
@@ -23,10 +26,11 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
         run_dot(gvFilename, pdfFilename)
     else:
         # Run pdflatex with dot2tex to make nice greek letters, etc. Slower.
-        run_latex(args, gvFilename, pdfFilename)
+        # run_latex(args, gvFilename, pdfFilename)
+        run_dot2tex(args, gvFilename, pdfFilename)
 
     # Automatically open the PDF on the user's system if desired
-    if args.openPDF:
+    if args.openPDF and not args.noPDF:
         open_pdf(pdfFilename)
 
 
@@ -65,8 +69,8 @@ def run_latex(args, gvFilename, pdfFilename):
     # Use latex to make particle names nice.
     # Make a tex file for the job so can add user args, etc
     # Too difficult to use \def on command line
-    d2tOpts = ""
-    if args.StraightEdges:
+    d2tOpts = ''
+    if args.straightEdges:
         d2tOpts = ",straightedges"
 
     # Pass relative path of gv & pdf file as TeX doesn't like absolute paths
@@ -75,10 +79,9 @@ def run_latex(args, gvFilename, pdfFilename):
 \usepackage{tikz}
 \usepackage{xcolor}
 \usetikzlibrary{shapes,arrows,snakes}
-\usetikzlibrary{decorations.pathmorphing}
 
 \begin{document}
-\begin{dot2tex}[dot,mathmode,format=tikz"""+d2tOpts+r"""]
+\begin{dot2tex}[dot,mathmode,format=tikz,options={--graphstyle "very thick"}"""+d2tOpts+r"""]
 \input{"""+os.path.relpath(gvFilename)+r"""}
 \end{dot2tex}
 \end{document}
@@ -91,10 +94,83 @@ def run_latex(args, gvFilename, pdfFilename):
 
     if CONFIG.VERBOSE: print texTemplate,
 
+    # Optionally call pdflatex
     texargs = ["pdflatex", "--shell-escape", '-jobname',
                os.path.relpath(os.path.splitext(pdfFilename)[0]),
                texName]
-    call(texargs)
+    if args.noPDF:
+        print ""
+        print "Not converting to PDF"
+        print "If you want a PDF, run without --noPDF"
+        print "and if you only want the raw names (faster to produce),"
+        print "then run with --rawNames"
+        print ""
+    else:
+        call(texargs)
+
+    print ""
+    print "If you want to rerun the tex file for whatever reason, do:"
+    print ' '.join(texargs)
+    print ""
+    print "Written PDF to", pdfFilename
+
+
+def run_dot2tex(args, gvFilename, pdfFilename):
+    """Run dot2tex module to convert graphviz to tikz in tex format"""
+
+    # Need graph as string to pass to dot2tex module
+    graph = ""
+    with open(gvFilename, "r") as gvFile:
+        graph += gvFile.read()
+
+    # Use dot2tex to make tex file
+    # First convert to xdot format?
+    # xdot = check_output(["dot", "-Txdot", gvFilename])
+
+    edge_opts = "gluon/.style={gray,semitransparent}"
+
+    # TODO: print out this command. args as dict?
+    kwargs = {'format': 'tikz',
+              'tikzedgelabels': True,
+              'straightedges': args.straightEdges,
+              'styleonly': True,
+              'edgeoptions': edge_opts,
+              'progoptions': "-Gsize=6,12!"
+    }
+
+    texcode = d2t.dot2tex(graph,
+                          **kwargs
+                          # usepdflatex=True,  # use pdflatex for preprocessing
+                          # autosize=True,
+    )
+
+    # Make some amendments to the tex code
+    # Need to use standalone class to get right page size
+    # TODO: use template?
+    texcode = texcode.replace("{article}", "{standalone}")
+    texcode = texcode.replace("\enlargethispage{100cm}", "")
+    # Remove a silly background layer that dot2tex inserts that conflicts with
+    # TikZ's ability to do [on background layer]
+    p = re.compile(r'\\begin\{scope\}\n.*?\\end\{scope\}', re.DOTALL)  # keep the ? to make it non-greedy
+    texcode = re.sub(p, "", texcode, count=1)
+
+    texName = pdfFilename.replace(".pdf", ".tex")
+    with open(texName, "w") as texFile:
+        texFile.write(texcode)
+
+    # Optionally call pdflatex
+    texargs = ["pdflatex", '-jobname',
+               os.path.relpath(os.path.splitext(pdfFilename)[0]),
+               texName]
+    if args.noPDF:
+        print ""
+        print "Not converting to PDF"
+        print "If you want a PDF, run without --noPDF"
+        print "and if you only want the raw names (faster to produce),"
+        print "then run with --rawNames"
+        print ""
+    else:
+        call(texargs)
 
     print ""
     print "If you want to rerun the tex file for whatever reason, do:"

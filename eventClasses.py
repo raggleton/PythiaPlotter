@@ -574,7 +574,6 @@ class DisplayAttributes(object):
             self.attr["color"] = CONFIG.final_color
 
         # Set interesting or not
-        # TODO: allow use of pdgid as well as name
         if interestingList:
             for i in interestingList:
                 if any(x in (self.particle.name, self.particle.pdgid) for x in i[1]):
@@ -586,7 +585,8 @@ class DisplayAttributes(object):
             self.attr["label"] = "%s: %s" % (self.particle.barcode,
                                              self.particle.name)
         else:
-            self.attr["label"] = self.particle.texname
+            self.attr["label"] = "%s: %s" % (self.particle.barcode,
+                                             self.particle.texname)
             self.attr["texlbl"] = "$%s: %s$" % (self.particle.barcode,
                                                 self.particle.texname)
 
@@ -615,19 +615,49 @@ class DisplayAttributes(object):
         self.attr["fontcolor"] = "black"
         self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
 
-        # TikZ options
+        # TikZ options for various particles
         if not self.rawNames:
+            # Color label same as edge, and puts label on tangent to curve
+            # Only works if dot2tex used with --tikzedgelabels option
+            self.attr["exstyle"] = "sloped,above,pos=0.6"
             self.attr["label"] = " "  # do tex names via texlbl - space is VITAL
-            if abs(self.particle.pdgid) in [22, 23, 24]:  # gauge boson (wiggly)
-                self.attr["style"] = "snake=snake"
-            elif abs(self.particle.pdgid) == 21:  # gluons (spirally)
-                pass  # TODO: gluons
-            elif abs(self.particle.pdgid) in range(25, 38):  # higgs (dashed)
-                self.attr["style"] = "dashed"
+            if abs(self.particle.pdgid) == 21:  # gluons
+                self.styleGluons()
+            elif abs(self.particle.pdgid) == 22:  # photons
+                self.stylePhotons()
+            elif abs(self.particle.pdgid) in [23, 24]:  # gauge boson
+                self.styleGaugeBosons()
+            elif abs(self.particle.pdgid) in range(25, 38):  # higgs bosons
+                self.styleHiggs()
 
         # TODO: only interesting? final? or none? potentially hard to read
-        if self.isInteresting:
-            self.attr["fontcolor"] = self.attr["color"]
+        # dot2tex doesn't use fontcolor anyway - bug
+        # if self.isInteresting:
+        #     self.attr["fontcolor"] = self.attr["color"]
+
+    def stylePhotons(self):
+        """Apply TikZ styling for photons edges - wavy, no labels"""
+        self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
+        self.attr["texlbl"] = ""  # turn off photon labels
+        self.attr["exstyle"] = ""
+
+    def styleGaugeBosons(self):
+        """Apply TikZ styling for gauge boson edges - wavy"""
+        self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
+
+    def styleGluons(self):
+        """Apply TikZ styling for gluon edges - spirals, no labels"""
+        # self.attr["style"] = \
+        # "thin, decorate,decoration={coil,amplitude=3bp,segment length=4bp}"
+        # self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
+        # self.attr["style"] = "gluon"
+        self.attr["color"] = "gray,semitransparent"
+        self.attr["texlbl"] = ""  # turn off gluon labels
+        self.attr["exstyle"] = ""
+
+    def styleHiggs(self):
+        """Apply TikZ styling for Higgs boson edges - dashed"""
+        self.attr["style"] = "dashed"
 
     def generate_string(self, attributes):
         """Function to generate string with all necessary attributes.
@@ -649,16 +679,17 @@ class DisplayAttributes(object):
         return self.generate_string(["label",
                                      "shape",
                                      "style",
-                                     "fillcolor"])
+                                     "fillcolor"
+        ])
 
     def getEdgeString(self):
         """Returns string that can be used in GraphViz to describe the edge"""
         if self.rawNames:
             return self.generate_string(["label",
                                          "color",
-                                         # "fontcolor",
-                                         "arrowsize",
-                                         "penwidth"])
+                                         "penwidth",
+                                         "arrowsize"
+            ])
         else:
             return self.generate_string(["label",
                                          "texlbl",
@@ -666,4 +697,5 @@ class DisplayAttributes(object):
                                          "fontcolor",
                                          "arrowsize",
                                          "style",
-                                         "penwidth"])
+                                         "exstyle"
+            ])
