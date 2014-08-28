@@ -151,7 +151,8 @@ def run_dot2tex(args, gvFilename, pdfFilename):
     texcode = texcode.replace("\enlargethispage{100cm}", "")
     # Remove a silly background layer that dot2tex inserts that conflicts with
     # TikZ's ability to do [on background layer]
-    p = re.compile(r'\\begin\{scope\}\n.*?\\end\{scope\}', re.DOTALL)  # keep the ? to make it non-greedy
+    p = re.compile(r'\\begin\{scope\}\n.*?\\end\{scope\}',
+                   re.DOTALL)  # keep the ? to make it non-greedy
     texcode = re.sub(p, "", texcode, count=1)
 
     texName = pdfFilename.replace(".pdf", ".tex")
@@ -159,9 +160,13 @@ def run_dot2tex(args, gvFilename, pdfFilename):
         texFile.write(texcode)
 
     # Optionally call pdflatex
-    texargs = ["pdflatex", '-jobname',
+    texargs = ["pdflatex",
+               '-interaction=nonstopmode',
+               # '-halt-on-error', '-file-line-error',
+               '-jobname',
                os.path.relpath(os.path.splitext(pdfFilename)[0]),
                texName]
+
     if args.noPDF:
         print ""
         print "Not converting to PDF"
