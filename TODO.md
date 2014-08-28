@@ -42,6 +42,7 @@ _**hepmcParser**_:
 - [ ] Fix NodeToEdge comversion
     - [ ] Do properly **ON HOLD - V.DIFFICULT**
 - [ ] user options (curly splines, etc)?
+- [ ] give GenVertex DisplayAttr?
 - [ ] Fix DisplayAttributes/pdfPrinter/dot2tex implementation
     - [ ] tidy up the tex Vs dot style for edges
     - [ ] does `arrowsize` even do anything?
@@ -71,6 +72,7 @@ _**hepmcParser**_:
 
 *Less pressing issues:*
 
+- [ ] styles for different statuses?
 - [ ] Rename all functions/attributes from `camelCase` to `underscore_rulez`
 - [ ] do docstrings properly: https://docs.python.org/2/tutorial/controlflow.html#documentation-strings
 - [ ] add proton beam info to GenEvent?
@@ -79,6 +81,7 @@ _**hepmcParser**_:
 
 *DONE:*
 
+- [x] user opt to turn on vertex labels
 - [x] be able select interesting particles via PDGID as well as name
 - [x] make PDF searchable by doing `dot -Tps2` then `ps2pdf` on PostScript file
 - [x] Test removeRedundants & write for Edge case

@@ -38,32 +38,31 @@ import pdfPrinter
 
 # Setup commandline args parser
 def get_parser():
-    """Define all command-line options. Returns ArgumentParser object"""
+    """Define all command-line options. Returns ArgumentParser object."""
 
     parser = argparse.ArgumentParser(
-        description="Convert PYTHIA8 or HepMC event listing into graph using \
-        dot/GraphViz/dot2tex/pdflatex"
+        description="Convert PYTHIA8 or HepMC event listing into graph using "
+                    "dot/GraphViz/dot2tex/pdflatex"
     )
-    # TODO: improve multi-line strings. This sucks!
     parser.add_argument("-i", "--input",
-                        help="input text file with Pythia 8 output \
-                        (if unspecified, defaults to qcdScatterSmall.txt)",
+                        help="input text file with Pythia 8 output (if "
+                             "unspecified, defaults to qcdScatterSmall.txt)",
                         default="qcdScatterSmall.txt")
     parser.add_argument("--inputType",
-                        help="input type, either HEPMC or PYTHIA (latter for \
-                        the *direct* output from Pythia8 on screen).\
-                        If unspecified, will try and make an educated guess,\
-                        but could fail!",
+                        help="input type, either HEPMC or PYTHIA "
+                             "(latter for the *direct* output from Pythia8 "
+                             "on screen). If unspecified, will try and "
+                             "make an educated guess, but could fail!",
                         choices=["HEPMC", "PYTHIA"])
     parser.add_argument("--eventNumber",
                         help="For HepMC file, select event number to plot",
                         type=int, default=0)
     parser.add_argument("-oGV", "--outputGV",
-                        help="output GraphViz filename \
-                        (if unspecified, defaults to INPUT.gv)")
+                        help="output GraphViz filename "
+                             "(if unspecified, defaults to INPUT.gv)")
     parser.add_argument("-oPDF", "--outputPDF",
-                        help="output graph PDF filename \
-                        (if unspecified, defaults to INPUT.pdf)")
+                        help="output graph PDF filename "
+                             "(if unspecified, defaults to INPUT.pdf)")
     parser.add_argument("--openPDF",
                         help="automatically open PDF once plotted",
                         action="store_true")
@@ -74,12 +73,20 @@ def get_parser():
                         help="don't convert to PDF",
                         action="store_true")
     parser.add_argument("--rawNames",
-                        help="don't convert particle names to tex, use raw \
-                        string names - faster but less pretty",
+                        help="don't convert particle names to tex, use raw "
+                             "string names - faster but less pretty",
                         action="store_true")
     parser.add_argument("--straightEdges",
                         help="use straight edges instead of curvy",
                         action="store_true")
+    parser.add_argument("--showVertexBarcode",  # think of a better opt name!
+                        help="show vertex barcodes, useful for figuring out "
+                             "which are the hard interaction(s)",
+                        action="store_true")
+    parser.add_argument("--hardVertices",
+                        help='list of vertex barcode(s) that contain the '
+                             'hard interaction, e.g. --hardVertices V2, V3',
+                        default=None, nargs='*', type=str)
     parser.add_argument("-v", "--verbose",
                         help="print debug statements to screen",
                         action="store_true")
@@ -150,6 +157,7 @@ if __name__ == "__main__":
 
     # Get command line arguments, parse them
     args = get_parser().parse_args()
+    CONFIG.args = args
 
     # Store stem of input filename (i.e. without .xyz bit) for use
     # later for default PDF/GV etc filenames

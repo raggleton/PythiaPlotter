@@ -51,3 +51,7 @@ removeRedundants = True
 
 # To print out intermediate lines during processing - only for debugging
 VERBOSE = False
+
+# Store user args globally so everyone can access them
+# Or should I be passing as argument to classes - could get tedious?
+args = None

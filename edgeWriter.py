@@ -22,25 +22,37 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
             # Lots of dot2tex specific options
             libs = "\\usetikzlibrary{decorations.pathmorphing,fit,backgrounds,positioning}"
             styles = "\\tikzset{ \n" \
-                     "\t\tstandard/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},\n" \
-                     "\t\ttransparent/.style={circle},\n" \
+                     "\t\tpoint node/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},\n" \
+                     "\t\tnamed node/.style={circle,draw=black},\n" \
+                     "\t\ttransparent node/.style={circle},\n" \
                      "\t\tgluon/.style={gray,semitransparent,thin,decorate," \
                      "decoration={coil,amplitude=3bp,segment length=4bp}},\n" \
                      "\t\tphoton/.style={decorate,decoration={snake,post length=5bp}}\n" \
                      "\t}"
-            hard_vertex = "V3"  # set me somewhere!
-            highlight_box = '% Highlight the hard process\n' \
-                            '\t\\begin{scope}[on background layer]\n' \
-                            '\t\t\\node[fill=black!30,inner sep=10bp,fit=('\
-                            + hard_vertex +')]{};\n' \
-                            '\t\\end{scope}'
-
+            # gluon must be thin - if you change the scale of the picture,
+            # also fiddle with gluon line width and amplitude/segment length to
+            # avoid exceeding memory
             gvFile.write('\t// Options just for dot2tex:\n')
             gvFile.write('\td2tdocpreamble="%s"\n' % libs)
             gvFile.write('\td2tfigpreamble="%s"\n' % styles)
             gvFile.write('\ttexmode="math"\n')
             gvFile.write('\td2tgraphstyle="very thick,scale=0.7,transform shape"\n')
-            gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
+
+            # If desired, draw box for hard interaction - user must specify
+            # the vertices via command line option
+            if CONFIG.args.hardVertices:
+                hard_vertices = ') ('.join(CONFIG.args.hardVertices)
+                # Note, the 40bp spacing is required to actually encompass the
+                # nodes - may need even more if you find it doesn't go all the
+                # way. IT should do this automatically, but think there's
+                # a possible scaling issue
+                highlight_box = '% Highlight the hard process\n' \
+                                '\t\\begin{scope}[on background layer]\n' \
+                                '\t\t\\node[fill=blue!30,inner sep=40bp,' \
+                                'label=above:\Large Hard interaction,' \
+                                'fit=(' + hard_vertices + ')]{};\n' \
+                                '\t\\end{scope}'
+                gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
 
         for p in event.particles:
 
@@ -73,10 +85,18 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 entry = '    %s [label="%s",shape="point", size=0.1, color=%s]\n' \
                     % (v.barcode, v.barcode, color)
             else:
-                style = "standard"
+                style = "point node"
+                label = ""
+                if CONFIG.args.showVertexBarcode:
+                    style = "named node"
+                    label = v.barcode
+
                 if v.isInitialState or v.isFinalState:
-                    style = "transparent"
-                entry = '\t%s [label="", style="%s"]\n' % (v.barcode, style)
+                    style = "transparent node"
+
+                entry = '\t%s [label="%s", style="%s"]\n' % (v.barcode,
+                                                             label,
+                                                             style)
 
             gvFile.write(entry)
             if CONFIG.VERBOSE:
