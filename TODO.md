@@ -8,6 +8,7 @@
     - [x] Redo ugly rewriting gv into tex file by linking or something
     - [x] Do test to see if the necessary programs exist
 - [ ] **_BIG_ - see hepmcParser branch** Use HepMC to actually parse a HepMC file, not just copy and paste the output...
+    - [ ] See list below...
     - [ ] Draw like normal Feynman diagram, not the current inverse look. Or give user the choice
     - [ ] Use pyparsing to ease parsing of file/event info?
     - [ ] Just wrap HepMC instead of implementing subset/whole of it?
@@ -36,24 +37,26 @@
 
 _**hepmcParser**_:
 
+- [ ] Time arrow at top & bottom of page
 - [ ] go from `--rawNames` to `tex` and `dot` modes (or something like that?)
 - [ ] Fix NodeToEdge comversion
     - [ ] Do properly **ON HOLD - V.DIFFICULT**
 - [ ] user options (curly splines, etc)?
 - [ ] Fix DisplayAttributes/pdfPrinter/dot2tex implementation
+    - [ ] tidy up the tex Vs dot style for edges
     - [ ] does `arrowsize` even do anything?
     - [ ] More feynman-like:
-        - [ ] arrow in middle: `--->---`
-        - [ ] gluons are spirals
+        - [ ] arrow in middle: `--->---` ?
+        - [x] gluons are spirals
         - [x] wavy lines for bosons
         - [x] higgs bosons are dashed: `- - - - -`
-    - [ ] TikZ styles for Edges
+    - Where should I put all my options for dot2tex? When calling it from module? Or in gv file, so easier to process later? ATM scattered about the place...
     - [ ] Centralise styles so easily accessible in DisplayAttributes, edgeWriter, pdfPrinter
-    - [ ] (Printer class instead of jsut fns)
+    - [ ] Printer/writer/parser classes instead of just fns
     - [ ] Fix colours (use camelCase)
     - [ ] Legend on plot?
     - [ ] Template for dot2tex *hard - doesn't seem to accept it from py module, doesn't insert things properly*
-    - Where should I put all my options for dot2tex? When calling it from module? Or in gv file, so easier to process later? ATM scattered about the place...
+    - [x] TikZ styles for Edges
     - [x] use `dot2tex` module, don't write own tex file
     - [x] `penwidth`, `transparent` not obeyed (for latter, remove fill in [], so just \node...[circle])
     - [x] do some preprocessing to do spacing better?
@@ -72,7 +75,6 @@ _**hepmcParser**_:
 - [ ] do docstrings properly: https://docs.python.org/2/tutorial/controlflow.html#documentation-strings
 - [ ] add proton beam info to GenEvent?
 - [ ] `__repr__` functions better
-- [ ] Add test to parse() methods to check if suitable format or not
 - [ ] Add more tests for all classes/methods
 
 *DONE:*

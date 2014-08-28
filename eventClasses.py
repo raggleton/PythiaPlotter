@@ -587,8 +587,10 @@ class DisplayAttributes(object):
         else:
             self.attr["label"] = "%s: %s" % (self.particle.barcode,
                                              self.particle.texname)
-            self.attr["texlbl"] = "$%s: %s$" % (self.particle.barcode,
-                                                self.particle.texname)
+            # Use Large font size in tex mode.
+            # TODO: Make this a user arg?
+            self.attr["texlbl"] = "\Large $%s: %s$" % (self.particle.barcode,
+                                                       self.particle.texname)
 
     def setAttributesForNode(self, interestingList=None):
         """Set options specifically for NODE plotting mode"""
@@ -609,11 +611,14 @@ class DisplayAttributes(object):
 
     def setAttributesForEdge(self, interestingList=None):
         """Set options specifically for EDGE plotting mode"""
-        # Do edge-specific defaults
         self.setCommonAttributes(interestingList)
+        # Do edge-specific defaults
         self.attr["arrowsize"] = 0.8
         self.attr["fontcolor"] = "black"
         self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
+        self.attr["dir"] = "forward"  # arrowhead direction
+
+        # TODO: improve for tex mode Vs dot mode - currently fragemnted
 
         # TikZ options for various particles
         if not self.rawNames:
@@ -637,7 +642,8 @@ class DisplayAttributes(object):
 
     def stylePhotons(self):
         """Apply TikZ styling for photons edges - wavy, no labels"""
-        self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
+        # self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
+        self.attr["style"] = "photon"
         self.attr["texlbl"] = ""  # turn off photon labels
         self.attr["exstyle"] = ""
 
@@ -650,10 +656,11 @@ class DisplayAttributes(object):
         # self.attr["style"] = \
         # "thin, decorate,decoration={coil,amplitude=3bp,segment length=4bp}"
         # self.attr["style"] = "decorate,decoration={snake,post length=5bp}"
-        # self.attr["style"] = "gluon"
-        self.attr["color"] = "gray,semitransparent"
+        self.attr["style"] = "gluon"
+        # self.attr["color"] = "gray,semitransparent"
         self.attr["texlbl"] = ""  # turn off gluon labels
         self.attr["exstyle"] = ""
+        self.attr["dir"] = "none"  # No arrow for gluons
 
     def styleHiggs(self):
         """Apply TikZ styling for Higgs boson edges - dashed"""
@@ -697,5 +704,6 @@ class DisplayAttributes(object):
                                          "fontcolor",
                                          "arrowsize",
                                          "style",
-                                         "exstyle"
+                                         "exstyle",
+                                         "dir"
             ])

@@ -15,28 +15,31 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
         # Now process the particles and add appropriate links to GraphViz file
         gvFile.write("digraph g {\n"
                      "\trankdir=LR;\n"
-                     "\tranksep=0.5\n"
-                     "\tnodesep=0.5\n")
+                     "\tranksep=0.4\n"
+                     "\tnodesep=0.4\n")
 
         if not useRawNames:
             # Lots of dot2tex specific options
             libs = "\\usetikzlibrary{decorations.pathmorphing,fit,backgrounds,positioning}"
             styles = "\\tikzset{ \n" \
                      "\t\tstandard/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},\n" \
-                     "\t\ttransparent/.style={circle}\n" \
-                     "\t\tgluon/.style={gray,semitransparent}\n" \
+                     "\t\ttransparent/.style={circle},\n" \
+                     "\t\tgluon/.style={gray,semitransparent,thin,decorate," \
+                     "decoration={coil,amplitude=3bp,segment length=4bp}},\n" \
+                     "\t\tphoton/.style={decorate,decoration={snake,post length=5bp}}\n" \
                      "\t}"
             hard_vertex = "V3"  # set me somewhere!
             highlight_box = '% Highlight the hard process\n' \
                             '\t\\begin{scope}[on background layer]\n' \
-                            '\t\t\\node[fill=black!30,inner sep=10bp,fit=('+hard_vertex+')]{};\n' \
+                            '\t\t\\node[fill=black!30,inner sep=10bp,fit=('\
+                            + hard_vertex +')]{};\n' \
                             '\t\\end{scope}'
 
             gvFile.write('\t// Options just for dot2tex:\n')
             gvFile.write('\td2tdocpreamble="%s"\n' % libs)
             gvFile.write('\td2tfigpreamble="%s"\n' % styles)
             gvFile.write('\ttexmode="math"\n')
-            gvFile.write('\td2tgraphstyle="very thick,scale=0.7"\n')
+            gvFile.write('\td2tgraphstyle="very thick,scale=0.7,transform shape"\n')
             gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
 
         for p in event.particles:
