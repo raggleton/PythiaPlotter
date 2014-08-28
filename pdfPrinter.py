@@ -127,15 +127,15 @@ def run_dot2tex(args, gvFilename, pdfFilename):
     # First convert to xdot format?
     # xdot = check_output(["dot", "-Txdot", gvFilename])
 
-    edge_opts = "gluon/.style={gray,semitransparent}"
+    # edge_opts = "gluon/.style={gray,semitransparent,thin}"
 
     # TODO: print out this command. args as dict?
     kwargs = {'format': 'tikz',
               'tikzedgelabels': True,
               'straightedges': args.straightEdges,
               'styleonly': True,
-              'edgeoptions': edge_opts,
-              'progoptions': "-Gsize=6,12!"
+              # 'edgeoptions': edge_opts,
+              # 'progoptions': "-Gsize=6,12!"
     }
 
     texcode = d2t.dot2tex(graph,
