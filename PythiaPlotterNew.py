@@ -90,6 +90,9 @@ def get_parser():
     parser.add_argument("--noTimeArrows",
                         help='turn off the "Time" arrows',
                         action="store_true")
+    parser.add_argument("--scale",
+                        help="factor to scale PDF by (Tex mode only atm)",
+                        default=0.7, type=float)
     parser.add_argument("-v", "--verbose",
                         help="print debug statements to screen",
                         action="store_true")

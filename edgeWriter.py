@@ -38,7 +38,8 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 r"\draw [->,line width=4bp,arrows={-latex[scale=3]}] ($(current bounding box.north)!0.07!(current bounding box.west)$) -- ($(current bounding box.north)!0.07!(current bounding box.east)$) node [midway,above,label=\Huge \textsc{Time}] {};"
             time_arrow_bottom = \
                 r"\draw [->,line width=4bp,arrows={-latex[scale=3]}] ($(current bounding box.south)!0.07!(current bounding box.west)$) -- ($(current bounding box.south)!0.07!(current bounding box.east)$) node [midway,above,label=\Huge \textsc{Time}] {};"
-            graphstyle = "very thick,scale=0.7,transform shape," \
+            graphstyle = "very thick,scale=" + str(CONFIG.args.scale) + \
+                         ",transform shape," \
                          "execute at end picture={\n"
             if not CONFIG.args.noTimeArrows:
                 graphstyle += "\t" + time_arrow_top + "\n" \
@@ -65,8 +66,11 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 # a possible scaling issue
                 highlight_box = '% Highlight the hard process\n' \
                                 '\t\\begin{scope}[on background layer]\n' \
-                                '\t\t\\node[fill=blue!30,inner sep=40bp,' \
-                                'label=above:\Large Hard interaction,' \
+                                '\t\t% Highlight hard process node(s)\n' \
+                                '\t\t\\node[scale=' \
+                                + str(1./CONFIG.args.scale) + \
+                                ',fill=blue!30,inner sep=20bp,' \
+                                'label=above:\Large \\textsc{Hard Interaction},' \
                                 'fit=(' + hard_vertices + ')]{};\n' \
                                 '\t\\end{scope}'
                 gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
