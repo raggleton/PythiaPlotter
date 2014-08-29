@@ -20,23 +20,40 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
 
         if not useRawNames:
             # Lots of dot2tex specific options
-            libs = "\\usetikzlibrary{decorations.pathmorphing,fit,backgrounds,positioning}"
-            styles = "\\tikzset{ \n" \
-                     "\t\tpoint node/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},\n" \
+            docpreamble = "\\usetikzlibrary{decorations.pathmorphing,fit," \
+                          "backgrounds,positioning,calc}"
+            figpreamble = "\\tikzset{ \n" \
+                     "\t\tpoint node/.style={circle,minimum size=4bp," \
+                     "inner sep=0pt,fill,draw=black},\n" \
                      "\t\tnamed node/.style={circle,draw=black},\n" \
                      "\t\ttransparent node/.style={circle},\n" \
                      "\t\tgluon/.style={gray,semitransparent,thin,decorate," \
                      "decoration={coil,amplitude=3bp,segment length=4bp}},\n" \
-                     "\t\tphoton/.style={decorate,decoration={snake,post length=5bp}}\n" \
-                     "\t}"
-            # gluon must be thin - if you change the scale of the picture,
+                     "\t\tphoton/.style={decorate,decoration={snake," \
+                     "post length=10bp}}\n" \
+                     "\t}\n" \
+
+            # Add in time arrows if user wants them
+            time_arrow_top = \
+                r"\draw [->,line width=4bp,arrows={-latex[scale=3]}] ($(current bounding box.north)!0.07!(current bounding box.west)$) -- ($(current bounding box.north)!0.07!(current bounding box.east)$) node [midway,above,label=\Huge \textsc{Time}] {};"
+            time_arrow_bottom = \
+                r"\draw [->,line width=4bp,arrows={-latex[scale=3]}] ($(current bounding box.south)!0.07!(current bounding box.west)$) -- ($(current bounding box.south)!0.07!(current bounding box.east)$) node [midway,above,label=\Huge \textsc{Time}] {};"
+            graphstyle = "very thick,scale=0.7,transform shape," \
+                         "execute at end picture={\n"
+            if not CONFIG.args.noTimeArrows:
+                graphstyle += "\t" + time_arrow_top + "\n" \
+                              + "\t" + time_arrow_bottom + "\n"
+            graphstyle += "}"
+            # "\\node (legend-align) at ($(current bounding box.north west)!0.07!(current bounding box.south east)$) [align=left, anchor=north west,fill=black!20,label=above:\Huge \\textsc{Legend}] {AYE A TEST \\ line2};
+
+            # NOTE: gluon must be thin - if you change the scale of the picture,
             # also fiddle with gluon line width and amplitude/segment length to
             # avoid exceeding memory
             gvFile.write('\t// Options just for dot2tex:\n')
-            gvFile.write('\td2tdocpreamble="%s"\n' % libs)
-            gvFile.write('\td2tfigpreamble="%s"\n' % styles)
+            gvFile.write('\td2tdocpreamble="%s"\n' % docpreamble)
+            gvFile.write('\td2tfigpreamble="%s"\n' % figpreamble)
             gvFile.write('\ttexmode="math"\n')
-            gvFile.write('\td2tgraphstyle="very thick,scale=0.7,transform shape"\n')
+            gvFile.write('\td2tgraphstyle="%s"\n' % graphstyle)
 
             # If desired, draw box for hard interaction - user must specify
             # the vertices via command line option

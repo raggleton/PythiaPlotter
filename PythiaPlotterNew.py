@@ -87,6 +87,9 @@ def get_parser():
                         help='list of vertex barcode(s) that contain the '
                              'hard interaction, e.g. --hardVertices V2, V3',
                         default=None, nargs='*', type=str)
+    parser.add_argument("--noTimeArrows",
+                        help='turn off the "Time" arrows',
+                        action="store_true")
     parser.add_argument("-v", "--verbose",
                         help="print debug statements to screen",
                         action="store_true")
