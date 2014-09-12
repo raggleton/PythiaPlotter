@@ -21,10 +21,10 @@ def print_pdf(args, stemName, gvFilename, pdfFilename):
     stemName is for tex file. Should probably just use pdfFilename"""
 
     print "Producing PDF %s" % pdfFilename
-    if args.rawNames:
+    if args.outputMode == "DOT":
         # Just use dot to make a pdf quickly, no need for LaTeX
         run_dot(gvFilename, pdfFilename)
-    else:
+    elif args.outputMode == "LATEX":
         # Run pdflatex with dot2tex to make nice greek letters, etc. Slower.
         # run_latex(args, gvFilename, pdfFilename)
         run_dot2tex(args, gvFilename, pdfFilename)
