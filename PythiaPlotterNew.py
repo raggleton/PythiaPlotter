@@ -66,9 +66,8 @@ def get_parser():
     parser.add_argument("--openPDF",
                         help="automatically open PDF once plotted",
                         action="store_true")
-    parser.add_argument("-m", "--mode", choices=["NODE", "EDGE"],
-                        help="particle representation on PDF: NODE or EDGE",
-                        default="NODE")
+    parser.add_argument("-p", "--particleMode", choices=["NODE", "EDGE"],
+                        help="particle representation on PDF: NODE or EDGE")
     parser.add_argument("--noPDF",
                         help="don't convert to PDF",
                         action="store_true")
@@ -187,11 +186,11 @@ if __name__ == "__main__":
 
     # Set default mode based on input type (only temporary)
     # TODO: remove me
-    if not args.mode:
+    if not args.particleMode:
         if args.inputType == "HEPMC":
-            args.mode = "EDGE"
+            args.particleMode = "EDGE"
         else:
-            args.mode = "NODE"
+            args.particleMode = "NODE"
 
     # Store output GraphViz filename
     # Default filename for output GraphViz file based on inputFilename
@@ -206,7 +205,7 @@ if __name__ == "__main__":
     # if user doesn't specify one
     pdfFilename = args.outputPDF
     if not pdfFilename:
-        pdfFilename = stemName+"_"+args.mode+".pdf"
+        pdfFilename = stemName+"_"+args.particleMode+".pdf"
         pdfFilename = os.path.join(filePath, pdfFilename)
 
     # For debugging - print output & various debug messages to screen
@@ -239,7 +238,7 @@ if __name__ == "__main__":
     #-----------------------------------------------------------------------
     # Write relationships to GraphViz file, with Particles as Edges or Nodes
     #-----------------------------------------------------------------------
-    if args.mode == "NODE":
+    if args.particleMode == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
                                        useRawNames=args.rawNames)
     else:
