@@ -151,9 +151,9 @@ def run_dot2tex(args, gvFilename, pdfFilename):
     texcode = texcode.replace("\enlargethispage{100cm}", "")
     # Remove a silly background layer that dot2tex inserts that conflicts with
     # TikZ's ability to do [on background layer]
-    p = re.compile(r'\\begin\{scope\}\n.*?\\end\{scope\}',
+    p = re.compile(r'\\begin\{scope\}\n.*pgfsetstrokecolor.*?\\end\{scope\}',
                    re.DOTALL)  # keep the ? to make it non-greedy
-    texcode = re.sub(p, "", texcode, count=1)
+    texcode = re.sub(p, "", texcode)
 
     texName = pdfFilename.replace(".pdf", ".tex")
     with open(texName, "w") as texFile:
