@@ -132,8 +132,8 @@ def run_dot2tex(args, gvFilename, pdfFilename):
     # TODO: print out this command. args as dict?
     kwargs = {'format': 'tikz',
               'tikzedgelabels': True,
-              'straightedges': args.straightEdges,
-              'styleonly': True,
+              'straightedges': args.straightEdges
+              # 'styleonly': True,  # True for EDGE, false for NODE, for time being TODO: needs fixing
               # 'edgeoptions': edge_opts,
               # 'progoptions': "-Gsize=6,12!"
     }
@@ -154,6 +154,27 @@ def run_dot2tex(args, gvFilename, pdfFilename):
     p = re.compile(r'\\begin\{scope\}\n.*pgfsetstrokecolor.*?\\end\{scope\}',
                    re.DOTALL)  # keep the ? to make it non-greedy
     texcode = re.sub(p, "", texcode)
+
+    # Figure out canvas size
+    # p_node = re.compile(r'\\node \(V[0-9]*\) at \(([.0-9]*)bp,([.0-9]*)bp\)')
+    # coords = p_node.findall(texcode)
+    # x_max = 0
+    # y_max = 0
+    # x_min = 10000
+    # y_min = 10000
+    # for i in coords:
+    #     # has to be a better way of doing this - lambda? unpacking?
+    #     x, y = float(i[0]), float(i[1])
+    #     if x > x_max:
+    #         x_max = x
+    #     elif x < x_min:
+    #         x_min = x
+    #     if y > y_max:
+    #         y_max = y
+    #     elif y < y_min:
+    #         y_min = y
+    # print "max:", x_max, y_max
+    # print "min:", x_min, y_min
 
     texName = pdfFilename.replace(".pdf", ".tex")
     with open(texName, "w") as texFile:
