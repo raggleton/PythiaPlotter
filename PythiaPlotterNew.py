@@ -41,7 +41,7 @@ def get_parser():
     """Define all command-line options. Returns ArgumentParser object."""
 
     parser = argparse.ArgumentParser(
-        description="Convert PYTHIA8 or HepMC event listing into graph using "
+        description="Convert PYTHIA8 or HepMC event listing into diagram using "
                     "dot/GraphViz/dot2tex/pdflatex"
     )
     parser.add_argument("-i", "--input",
@@ -185,12 +185,14 @@ if __name__ == "__main__":
         print "Assuming input type", args.inputType
 
     # Set default mode based on input type (only temporary)
-    # TODO: remove me
     if not args.particleMode:
         if args.inputType == "HEPMC":
             args.particleMode = "EDGE"
         else:
             args.particleMode = "NODE"
+    print "Outputting particle as", args.particleMode
+
+    print "Output mode:", args.outputMode
 
     # Store output GraphViz filename
     # Default filename for output GraphViz file based on inputFilename
@@ -236,7 +238,7 @@ if __name__ == "__main__":
             event.removeRedundantEdges()
 
     #-----------------------------------------------------------------------
-    # Write relationships to GraphViz file, with Particles as Edges or Nodes
+    # Write relationships to GraphViz file, with particles as Edges or Nodes
     #-----------------------------------------------------------------------
     if args.outputMode == "DOT":
         rawNames = True
