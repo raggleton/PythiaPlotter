@@ -1,3 +1,4 @@
+*.ps*
 *.aux
 *.dvi
 *.log
@@ -5,11 +6,15 @@
 *.eps
 *.pdf
 *.gv
-*.txt
 *.pyc
 *.png
 pyhepmc-0.3.2
 hepmc2root.py
-*.hepmc
 *.dot
 *.tex
+*.txt
+__init__.py
+.idea
+page
+testSite
+processing.min.js

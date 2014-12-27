@@ -21,7 +21,7 @@ from common_test import printTestHeader
 
 
 class TestNodeToEdge(unittest.TestCase):
-    config.VERBOSE = False
+    CONFIG.VERBOSE = False
 
     # TODO: improve fail conditions - test that vertices and particles
     # have correct in/out barcodes
@@ -100,8 +100,8 @@ def printVertex(v):
 
 def printParticle(p):
     print ("p barcode:", p.barcode,
-           "in vtx barcode:", p.edgeAttributes.inVertexBarcode,
-           "out vtx barcode:", p.edgeAttributes.outVertexBarcode)
+           "in vtx barcode:", p.edge_attr.inVertexBarcode,
+           "out vtx barcode:", p.edge_attr.outVertexBarcode)
 
 
 def main():

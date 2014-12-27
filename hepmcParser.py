@@ -201,7 +201,7 @@ def parseGenParticleLine(line):
 def postProcessEvent(currentEvent, eventList):
     """After getting GenEvent, do common things"""
     currentEvent.connectParticlesVertices()
-    for p in currentEvent.particles:
-        p.convertEdgeToNodeAttributes()
+    # for p in currentEvent.particles:
+    #     p.convertEdgeToNodeAttributes()
     # currentEvent.markInitialHepMC()
     eventList.append(currentEvent)

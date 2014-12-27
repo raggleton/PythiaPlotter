@@ -2,7 +2,6 @@
 
 (not in any particular order)
 
-- [ ] Let pdflatex run normally instead of trying to hide output, otherwise can look like it hangs for no reason
 - [x] **_BIG_ - and mostly done (in master branch)** Combine with Latex to represent particle names properly
     - [ ] Add user option to pass options to dot2texi
     - [x] Redo ugly rewriting gv into tex file by linking or something
@@ -20,6 +19,8 @@
 - [ ] **_BIG_ - slow start, see siteDev branch** Make into interactive diagram, so that if you mouse-over a particle, you can see what it decays into and where it's from easily (highlight, or make everything else transparent)
 - [ ] **_BIG_ - not even looked at yet** Parse LHE files
 - [ ] Improve parsing of input file eg if only full event, or other listings
+- [ ] Private class members start with _
+
 
 ## DONE (well, mostly...)
 - [x] Any way to optimise the diagram? Sometimes lines go in weird paths *solved using `straightedges` option in dot*
@@ -33,15 +34,16 @@
 - [x] Make a bit more user-friendly
 - [x] Redo in python!
 
-### Current work 
+### Current work
 
 _**hepmcParser**_:
 
-- [ ] Time arrow at top & bottom of page
+- [ ] Labels using GenEvent info e.g. p+p -> ?, p_1 = 8TeV, p_2 = 8TeV
+- [ ] update NOdeWriter with dot2tex new stuff
 - [ ] go from `--rawNames` to `tex` and `dot` modes (or something like that?)
+- [ ] use logging module?
 - [ ] Fix NodeToEdge comversion
     - [ ] Do properly **ON HOLD - V.DIFFICULT**
-- [ ] user options (curly splines, etc)?
 - [ ] give GenVertex DisplayAttr?
 - [ ] Fix DisplayAttributes/pdfPrinter/dot2tex implementation
     - [ ] tidy up the tex Vs dot style for edges
@@ -54,9 +56,9 @@ _**hepmcParser**_:
     - Where should I put all my options for dot2tex? When calling it from module? Or in gv file, so easier to process later? ATM scattered about the place...
     - [ ] Centralise styles so easily accessible in DisplayAttributes, edgeWriter, pdfPrinter
     - [ ] Printer/writer/parser classes instead of just fns
-    - [ ] Fix colours (use camelCase)
     - [ ] Legend on plot?
     - [ ] Template for dot2tex *hard - doesn't seem to accept it from py module, doesn't insert things properly*
+    - [x] Fix colours (use camelCase)
     - [x] TikZ styles for Edges
     - [x] use `dot2tex` module, don't write own tex file
     - [x] `penwidth`, `transparent` not obeyed (for latter, remove fill in [], so just \node...[circle])
@@ -81,6 +83,8 @@ _**hepmcParser**_:
 
 *DONE:*
 
+- [x] Let pdflatex run normally instead of trying to hide output, otherwise can look like it hangs for no reason
+- [x] Time arrow at top & bottom of page
 - [x] user opt to turn on vertex labels
 - [x] be able select interesting particles via PDGID as well as name
 - [x] make PDF searchable by doing `dot -Tps2` then `ps2pdf` on PostScript file

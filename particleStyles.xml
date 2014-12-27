@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    
+    This XML file contains style information for particles. 
+    The default style is given first, followed by initial & final state styles,
+    followed by PDGID-specific ones. This should be clear from the styleNames.
+
+    For each ID, we have the following:
+    
+-->
+
+<!-- 
+    point node/.style={circle,minimum size=4bp,inner sep=0pt,fill,draw=black},
+    named node/.style={circle,draw=black},
+    transparent node/.style={circle},
+    gluon/.style={gray,semitransparent,thin,decorate,decoration={coil,amplitude=3bp,segment length=4bp}},
+    photon/.style={decorate,decoration={snake,post length=10bp}},
+    particle/.style={postaction={decorate,decoration={markings,mark=at position .5 with {\arrow{>}}}}},
+    antiparticle/.style={postaction={decorate,decoration={markings,mark=at position .5 with {\arrow{<}}}}}
+-->
+
+<!-- can do \draw [Purple1,->,photon] and the Purple will override the colour in the style? No, style overrides any other options-->
+
+<data>
+    <particle id="0" name="default" styleName="default">
+    </particle>
+
+    <particle id="0" name="initial" styleName="initial">
+    <!-- Options here for initial state particles. Note, you must include the attribute name (e.g. color, shape) so it can be overridden correctly by the PDGID-specific styles below. -->
+        <common>
+            <shape>circle</shape>
+            <color>Green3</color>
+        </common>
+    </particle>     
+    
+    <particle id="0" name="final" styleName="final">
+        <common>
+            <shape>rectangle</shape>
+            <color>SteelBlue1</color>
+        </common>
+    </particle>     
+
+    <particle id="21" styleName="gluon">
+        <common>
+            <color>gray</color>
+            <dot></dot>
+            <latex>semitransparent</latex> 
+            <node></node>
+            <edge></edge>
+        </common>
+        <edgeDot></edgeDot>
+        <nodeDot></nodeDot>
+        <edgeLatex>thin,decorate,decoration={coil,amplitude=3bp,segment length=4bp}</edgeLatex>
+        <nodeLatex></nodeLatex>
+    </particle>
+
+    <particle id="22" styleName="photon">
+        <common>
+            <dot></dot>
+            <latex></latex> 
+            <node></node>
+            <edge></edge>
+        </common>
+        <edgeDot></edgeDot>
+        <nodeDot></nodeDot>
+        <edgeLatex>decorate,decoration={snake,post length=10bp}</edgeLatex>
+        <nodeLatex></nodeLatex>
+    </particle>
+</data>

@@ -9,6 +9,9 @@ from pprint import pprint
 import config as CONFIG
 from convertParticleName import convertPIDToTexName, convertPIDToRawName
 
+# TODO: remove a lot of crap here. Did ~ full implementation of hepmc classes,
+# but really, all we care is about status, PDGID, mothers, daughters, barcode
+# Maybe some other info handy for displaying on plot?
 
 class GenEvent(object):
     """Class to hold complete event info, e.g. evt number, scales, beam IDs
@@ -52,11 +55,6 @@ class GenEvent(object):
         self.vertices = []
         self.particles = []
 
-        # To hold dictionary of particles & vertices by barcode
-        # key = barcode, value = ref to object
-        # self.pDict = {}
-        # self.vDict = {}
-
     # TODO: decorator? See raymond talk
     def getParticle(self, barcode):
         """Get particle by its barcode, safer than particles[i].
@@ -84,7 +82,6 @@ class GenEvent(object):
             print "ERROR mismatch in number of weight names/values"
         else:
             # strip off annoying leading and trailing " "
-            # lovely list comprehension!
             weightNames = [w.strip('"') for w in weightNames]
             # construct a dictionary from weightNames and self.weightValues
             # easy with izip!
@@ -102,7 +99,6 @@ class GenEvent(object):
                 p.edge_attr.inVertex = \
                     self.getVertex(p.edge_attr.inVertexBarcode)
 
-        # self.particles.sort(key=operator.attrgetter('barcode'))
         self.particles.sort(key=lambda a: int(a.barcode))
 
         # Add particle reference to vertices using stored barcodes
@@ -514,7 +510,7 @@ class EdgeAttributes(object):
         self.particle = parent  # ref to parent particle
         # Barcode of vertex that has this particle as an incoming particle
         # Only used when doing hepmc parsing, for everything else use
-        # self.inVertex.barcode as conssitent
+        # self.inVertex.barcode as consistent
         self.inVertexBarcode = inVertexBarcode
         # Reference to GenVertex where this particle is incoming
         self.inVertex = None
@@ -528,7 +524,7 @@ class EdgeAttributes(object):
         pprint(vars(self))
 
     def __repr__(self):
-        return "EA: %s" % self.particle.barcode
+        return "%s: %s" % (self.__class__, self.particle.barcode)
 
     def setInVertex(self, v):
         """Set particle's inVertex to be v"""
@@ -539,6 +535,7 @@ class EdgeAttributes(object):
     def setOutVertex(self, v):
         """Set particle's outVertex to be v"""
         self.outVertex = v
+
         self.outVertexBarcode = v.barcode
         v.outParticles.append(self.particle)
         v.numOutgoing += 1
@@ -560,7 +557,7 @@ class DisplayAttributes(object):
         pprint(vars(self))
 
     def __repr__(self):
-        return '%s' % pprint(vars(self))
+        return '%s: %s' % (self.__class__, pprint(vars(self)))
 
     def setCommonAttributes(self, interestingList=None):
         """Set common display attributes for Nodes & Edges"""
@@ -589,8 +586,8 @@ class DisplayAttributes(object):
                                              self.particle.texname)
             # Use Large font size in tex mode.
             # TODO: Make this a user arg?
-            self.attr["texlbl"] = "\Large $%s: %s$" % (self.particle.barcode,
-                                                       self.particle.texname)
+            # self.attr["texlbl"] = "\Large $%s: %s$" % (self.particle.barcode,
+            self.attr["texlbl"] = "\Large $%s$" % (self.particle.texname)
 
     def setAttributesForNode(self, interestingList=None):
         """Set options specifically for NODE plotting mode"""
@@ -598,6 +595,7 @@ class DisplayAttributes(object):
         self.setCommonAttributes(interestingList)
         self.attr["shape"] = ""
         self.attr["fillcolor"] = self.attr["color"]
+        self.attr["fontcolor"] = self.attr["color"]
 
         # Set color and shape for initial/final states, or interesting ones
         if self.particle.isInitialState:
@@ -613,7 +611,7 @@ class DisplayAttributes(object):
         """Set options specifically for EDGE plotting mode"""
         self.setCommonAttributes(interestingList)
         # Do edge-specific defaults
-        self.attr["arrowsize"] = 0.8
+        self.attr["arrowsize"] = 1.5
         self.attr["fontcolor"] = "black"
         self.attr["penwidth"] = 2  # TODO: currently ignored by dot2tex
         self.attr["dir"] = "forward"  # arrowhead direction
@@ -624,6 +622,10 @@ class DisplayAttributes(object):
         if not self.rawNames:
             # Color label same as edge, and puts label on tangent to curve
             # Only works if dot2tex used with --tikzedgelabels option
+            # if self.particle.pdgid > 0:
+            # self.attr["style"] = "particle"
+            # else:
+                # self.attr["style"] = "antiparticle"
             self.attr["exstyle"] = "sloped,above,pos=0.6"
             self.attr["label"] = " "  # do tex names via texlbl - space is VITAL
             if abs(self.particle.pdgid) == 21:  # gluons
@@ -683,11 +685,20 @@ class DisplayAttributes(object):
 
     def getNodeString(self):
         """Returns string that can be used in GraphViz to describe the node"""
-        return self.generate_string(["label",
-                                     "shape",
-                                     "style",
-                                     "fillcolor"
-        ])
+        if self.rawNames:
+            return self.generate_string(["label",
+                                         "shape",
+                                         "style",
+                                         "fillcolor"
+                                         ])
+        else:
+            return self.generate_string(["label",
+                                         "texlbl",
+                                         "color",
+                                         "fillcolor",
+                                         "shape",
+                                         "fontcolor"
+                                         ])
 
     def getEdgeString(self):
         """Returns string that can be used in GraphViz to describe the edge"""
@@ -696,14 +707,14 @@ class DisplayAttributes(object):
                                          "color",
                                          "penwidth",
                                          "arrowsize"
-            ])
+                                         ])
         else:
             return self.generate_string(["label",
                                          "texlbl",
                                          "color",
-                                         "fontcolor",
-                                         "arrowsize",
+                                         # "fontcolor",
+                                         # "arrowsize",
                                          "style",
                                          "exstyle",
                                          "dir"
-            ])
+                                         ])

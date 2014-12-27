@@ -93,8 +93,8 @@ class TestEdgeToNode(unittest.TestCase):
 def testParticleMothers(particle, motherList):
     """Compare motherList to mothers of particle"""
     print ("Particle barcode:", particle.barcode,
-           len(particle.nodeAttributes.mothers), "mothers")
-    mums = [m.barcode for m in particle.nodeAttributes.mothers]
+           len(particle.node_attr.mothers), "mothers")
+    mums = [m.barcode for m in particle.node_attr.mothers]
     print mums
     leftovers = set(motherList).difference(set(mums))
     if leftovers:
@@ -105,8 +105,8 @@ def testParticleMothers(particle, motherList):
 def testParticleDaughters(particle, daughterList):
     """Compare daughterList to daughters of particle"""
     print ("Particle barcode:", particle.barcode,
-           len(particle.nodeAttributes.daughters), "daughters")
-    daughters = [m.barcode for m in particle.nodeAttributes.daughters]
+           len(particle.node_attr.daughters), "daughters")
+    daughters = [m.barcode for m in particle.node_attr.daughters]
     print daughters
     leftovers = set(daughterList).difference(set(daughters))
     if leftovers:

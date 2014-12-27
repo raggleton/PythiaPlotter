@@ -118,12 +118,12 @@ def testProgramRuns(progName):
         prog_out = subprocess.check_output([progName, "-h"],
                                            stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as cpe:
-        args.rawNames = True
+        args.outputMode = "DOT"
         print(cpe.returncode)
         print(cpe.output)
     except OSError as e:
         if e.errno == os.errno.ENOENT:
-            args.rawNames = True
+            args.outputMode = "DOT"
             print "You need to install " + progName + \
                   "or add it to PATH variable"
             print(e)
@@ -139,7 +139,7 @@ def testModuleExists(mod):
     except ImportError:
         print "!!! Module " + mod + " doesn't exist"
         print "No fancy particle names for you!"
-        args.rawNames = True
+        args.outputMode = "DOT"
 
 
 testProgramRuns(progName="dot2tex")
@@ -300,7 +300,7 @@ with open(gvFilename, "w") as gvFile:
         shape = "\"\""
         label = p.texname
 
-        if args.rawNames:
+        if args.outputMode == "TEX":
             label = p.name
 
         if p.isInteresting or p.isInitialState or p.isFinalState:

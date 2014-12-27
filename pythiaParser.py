@@ -212,7 +212,7 @@ def parseParticleLine(line):
                     flowDict=flowDict)
 
     mother1 = int(parts[4])
-    mother2 = int(parts[5])
+    mother2 = int(parts[5])  # TODO: string, not int??
 
     # Following only true if reading from Pythia screen output.
     # HepMC uses different codes.
