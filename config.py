@@ -16,28 +16,32 @@ Robin Aggleton 22/7/14
 ###########################
 
 # Interesting particles we wish to highlight
-# Can do different particles in different colours, see
+# -> For non-TeX mode, use the list:
 # www.graphviz.org/doc/info/colors.html
-# (although requires xcolor latex package?)
-#
+# -> For TeX mode, requires xcolor latex package 
+# AND put in CamelCase to ensure it works with TikZ)
+# AND you have to choose from Section 4.4 of 
+# http://anorien.csc.warwick.ac.uk/mirrors/CTAN/macros/latex/contrib/xcolor/xcolor.pdf
+# Probably a good idea to pick ones that apear in both lists
+# 
 # You need to define a list where each entry is a list with the form:
 # [ <colour>, [<list of particles>]]
 # where list of particles can either be their names,
 # or their PDGIDs (see example below).
 # Note, you have to add in antiparticles as well, if you want them highlighted.
 interesting = [
-    ["cyan", ["mu+", "mu-"]],
+    ["Purple1", ["mu+", "mu-"]],
     ["blue", ["tau+", "tau-"]],
     ["red", ["b", "bbar"]],
-    ["orange", ["c", "cbar"]],
-    ["brown", [3, -3]]
+    ["Orange1", ["c", "cbar"]],
+    ["Chocolate3", [3, -3]]
 ]
 
 # Color for initial particles (protons normally)
-initial_color = "green"
+initial_color = "Green3"
 
 # Color for final state particles
-final_color = "purple"
+final_color = "SteelBlue2"
 
 #############################################################
 # DO NOT EDIT BELOW HERE (unless you know what you're doing)

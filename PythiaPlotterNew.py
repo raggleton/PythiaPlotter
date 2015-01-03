@@ -41,7 +41,7 @@ def get_parser():
     """Define all command-line options. Returns ArgumentParser object."""
 
     parser = argparse.ArgumentParser(
-        description="Convert PYTHIA8 or HepMC event listing into graph using "
+        description="Convert PYTHIA8 or HepMC event listing into diagram using "
                     "dot/GraphViz/dot2tex/pdflatex"
     )
     parser.add_argument("-i", "--input",
@@ -66,16 +66,15 @@ def get_parser():
     parser.add_argument("--openPDF",
                         help="automatically open PDF once plotted",
                         action="store_true")
-    parser.add_argument("-m", "--mode", choices=["NODE", "EDGE"],
-                        help="particle representation on PDF: NODE or EDGE",
-                        default="NODE")
+    parser.add_argument("-p", "--particleMode", choices=["NODE", "EDGE"],
+                        help="particle representation on PDF: NODE or EDGE")
     parser.add_argument("--noPDF",
                         help="don't convert to PDF",
                         action="store_true")
-    parser.add_argument("--rawNames",
-                        help="don't convert particle names to tex, use raw "
-                             "string names - faster but less pretty",
-                        action="store_true")
+    parser.add_argument("-oMode", "--outputMode",
+                        help="output method: LATEX, or DOT (no nice text/"
+                             "particle edge formatting, but faster)",
+                        default="DOT", choices=["LATEX", "DOT"])
     parser.add_argument("--straightEdges",
                         help="use straight edges instead of curvy",
                         action="store_true")
@@ -101,18 +100,18 @@ def get_parser():
 
 
 def check_program_exists(progName):
-    """Test if external program runs"""
+    """Test if external program runs."""
     try:
         # Storing in string stifles output
         prog_out = subprocess.check_output([progName, "-h"],
                                            stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as cpe:
-        args.rawNames = True
+        args.outputMode = "DOT"
         print(cpe.returncode)
         print(cpe.output)
     except OSError as e:
         if e.errno == os.errno.ENOENT:
-            args.rawNames = True
+            args.outputMode = "DOT"
             print "You need to install " + progName + \
                   "or add it to PATH variable"
             print(e)
@@ -122,13 +121,13 @@ def check_program_exists(progName):
 
 
 def check_module_exists(mod):
-    """Test if Python module exists"""
+    """Test if Python module exists."""
     try:
         imp.find_module(mod)
     except ImportError:
         print "!!! Module " + mod + " doesn't exist"
         print "No fancy particle names for you!"
-        args.rawNames = True
+        args.outputMode = "DOT"
 
 
 def cleanup_filepath(filepath):
@@ -186,12 +185,14 @@ if __name__ == "__main__":
         print "Assuming input type", args.inputType
 
     # Set default mode based on input type (only temporary)
-    # TODO: remove me
-    if not args.mode:
+    if not args.particleMode:
         if args.inputType == "HEPMC":
-            args.mode = "EDGE"
+            args.particleMode = "EDGE"
         else:
-            args.mode = "NODE"
+            args.particleMode = "NODE"
+    print "Outputting particle as", args.particleMode
+
+    print "Output mode:", args.outputMode
 
     # Store output GraphViz filename
     # Default filename for output GraphViz file based on inputFilename
@@ -206,7 +207,7 @@ if __name__ == "__main__":
     # if user doesn't specify one
     pdfFilename = args.outputPDF
     if not pdfFilename:
-        pdfFilename = stemName+"_"+args.mode+".pdf"
+        pdfFilename = stemName+"_"+args.particleMode+".pdf"
         pdfFilename = os.path.join(filePath, pdfFilename)
 
     # For debugging - print output & various debug messages to screen
@@ -237,16 +238,20 @@ if __name__ == "__main__":
             event.removeRedundantEdges()
 
     #-----------------------------------------------------------------------
-    # Write relationships to GraphViz file, with Particles as Edges or Nodes
+    # Write relationships to GraphViz file, with particles as Edges or Nodes
     #-----------------------------------------------------------------------
-    if args.mode == "NODE":
+    if args.outputMode == "DOT":
+        rawNames = True
+    else:
+        rawNames = False
+    if args.particleMode == "NODE":
         nodeWriter.printNodeToGraphViz(event, gvFilename=gvFilename,
-                                       useRawNames=args.rawNames)
+                                       useRawNames=rawNames)
     else:
         if args.inputType == "PYTHIA":
             raise Exception("Can't do that at the moment, try NODE mode")
         edgeWriter.printEdgeToGraphViz(event, gvFilename=gvFilename,
-                                       useRawNames=args.rawNames)
+                                       useRawNames=rawNames)
 
     #-----------------------------------------------------------------------
     # Run pdflatex or dot to produce the PDF

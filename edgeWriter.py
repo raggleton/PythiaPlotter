@@ -21,7 +21,7 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
         if not useRawNames:
             # Lots of dot2tex specific options
             docpreamble = "\\usetikzlibrary{decorations.pathmorphing,fit," \
-                          "backgrounds,positioning,calc}"
+                          "backgrounds,positioning,calc,decorations.markings}"
             figpreamble = "\\tikzset{ \n" \
                      "\t\tpoint node/.style={circle,minimum size=4bp," \
                      "inner sep=0pt,fill,draw=black},\n" \
@@ -30,8 +30,12 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                      "\t\tgluon/.style={gray,semitransparent,thin,decorate," \
                      "decoration={coil,amplitude=3bp,segment length=4bp}},\n" \
                      "\t\tphoton/.style={decorate,decoration={snake," \
-                     "post length=10bp}}\n" \
-                     "\t}\n" \
+                     "post length=10bp}},\n" \
+                     "\t\tparticle/.style={postaction={decorate,decoration=" \
+                     "{markings,mark=at position .5 with {\\arrow{>}}}}},\n" \
+                     "\t\tantiparticle/.style={postaction={decorate,decoration=" \
+                     "{markings,mark=at position .5 with {\\arrow{<}}}}}\n" \
+                     "}\n" \
 
             # Add in time arrows if user wants them
             time_arrow_top = \
@@ -42,8 +46,8 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                          ",transform shape," \
                          "execute at end picture={\n"
             if not CONFIG.args.noTimeArrows:
-                graphstyle += "\t" + time_arrow_top + "\n" \
-                              + "\t" + time_arrow_bottom + "\n"
+                graphstyle += "\t% Time arrows\n\t" + time_arrow_top + "\n" \
+                           + "\t" + time_arrow_bottom + "\n"
             graphstyle += "}"
             # "\\node (legend-align) at ($(current bounding box.north west)!0.07!(current bounding box.south east)$) [align=left, anchor=north west,fill=black!20,label=above:\Huge \\textsc{Legend}] {AYE A TEST \\ line2};
 
@@ -64,15 +68,16 @@ def printEdgeToGraphViz(event, gvFilename, useRawNames=False):
                 # nodes - may need even more if you find it doesn't go all the
                 # way. IT should do this automatically, but think there's
                 # a possible scaling issue
-                highlight_box = '% Highlight the hard process\n' \
-                                '\t\\begin{scope}[on background layer]\n' \
-                                '\t\t% Highlight hard process node(s)\n' \
-                                '\t\t\\node[scale=' \
+                highlight_box = '\t'r'% Various regions to highlight''\n' \
+                                '\t'r'\begin{scope}[on background layer]''\n' \
+                                '\t\t'r'% Highlight hard process node(s)''\n' \
+                                '\t\t'r'\node[scale=' \
                                 + str(1./CONFIG.args.scale) + \
-                                ',fill=blue!30,inner sep=20bp,' \
-                                'label=above:\Large \\textsc{Hard Interaction},' \
+                                r',fill=blue!30,inner sep=20bp,' \
+                                r'label=above:' \
+                                r'\Large \textsc{Hard Interaction},' \
                                 'fit=(' + hard_vertices + ')]{};\n' \
-                                '\t\\end{scope}'
+                                '\t'r'\end{scope}'
                 gvFile.write('\td2tfigpostamble="%s"\n' % highlight_box)
 
         for p in event.particles:
