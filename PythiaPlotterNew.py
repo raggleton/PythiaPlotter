@@ -106,12 +106,12 @@ def check_program_exists(progName):
         prog_out = subprocess.check_output([progName, "-h"],
                                            stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as cpe:
-        args.outputMode = "DOT"
+        # args.outputMode = "DOT"
         print(cpe.returncode)
         print(cpe.output)
     except OSError as e:
         if e.errno == os.errno.ENOENT:
-            args.outputMode = "DOT"
+            # args.outputMode = "DOT"
             print "You need to install " + progName + \
                   "or add it to PATH variable"
             print(e)
@@ -127,7 +127,7 @@ def check_module_exists(mod):
     except ImportError:
         print "!!! Module " + mod + " doesn't exist"
         print "No fancy particle names for you!"
-        args.outputMode = "DOT"
+        # args.outputMode = "DOT"
 
 
 def cleanup_filepath(filepath):
@@ -225,8 +225,8 @@ if __name__ == "__main__":
     if args.inputType == "PYTHIA":
         print "Ignoring --eventNumber option as not relevant"
         event = pythiaParser.parse(filename=args.input)
-        if CONFIG.removeRedundants:
-            event.removeRedundantNodes()
+        # if CONFIG.removeRedundants:
+        #     event.removeRedundantNodes()
 
     elif args.inputType == "HEPMC":
         event = hepmcParser.parse(filename=args.input,

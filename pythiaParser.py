@@ -95,8 +95,8 @@ def parse(filename="qcdScatterSmall.txt"):
     # Once got all particles, add mothers/daughters
     if CONFIG.VERBOSE: print "Adding mothers"
     currentEvent.addNodeMothers()
-    if CONFIG.VERBOSE: print "Adding daughters"
-    currentEvent.addNodeDaughters()
+    # if CONFIG.VERBOSE: print "Adding daughters"
+    # currentEvent.addNodeDaughters()
 
     # Convert Node to Edge repr for all particles so we can plot either later
     # [p.convertNodeToEdgeAttributes(currentEvent)
@@ -190,9 +190,10 @@ def parseParticleLine(line):
     """Parse line with particle info, and return GenParticle object
     with NodeAttributes set"""
 
-    # if CONFIG.VERBOSE: print line,
+    if CONFIG.VERBOSE: print line,
 
     parts = line.split()
+    print parts
     # name = parts[2]
     # d1 = int(parts[6])
     # d2 = int(parts[7])
@@ -219,7 +220,7 @@ def parseParticleLine(line):
     if p.status > 0:
         p.isFinalState = True
 
-    if (mother1 == 0 and mother2 == 0):
+    if (mother1 == 0 and mother2 == 0 and int(parts[1]) == 2212):
         p.isInitialState = True
 
     # Sometimes Pythia sets m2 == 0 if only 1 mother & particle from shower
