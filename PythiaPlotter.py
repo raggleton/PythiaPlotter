@@ -3,10 +3,10 @@ Main script to run PythiaPlotter.
 """
 
 import helper_methods as helper
-from Requisite_Checker import Requisite_Checker
+from requisite_checker import RequisiteChecker
 
 
-class Pythia_Plotter():
+class PythiaPlotter():
     """
     Store central objects & args used
     """
@@ -27,11 +27,11 @@ class Pythia_Plotter():
 if __name__ == "__main__":
 
     # Check for optional modules & programs to determine what we can do
-    checkr = Requisite_Checker(modules=["pydot", "pyparsing"],
-                               programs=["dot2tex"])
+    checkr = RequisiteChecker(modules=["pydot", "pyparsing"],
+                              programs=["dot2tex"])
 
     # Central Pythia_Plotter object to keep track of the parser, printer, etc
-    pp = Pythia_Plotter()
+    pp = PythiaPlotter()
 
     # for event in event_list:
     gen_event = pp.parse_event(event)

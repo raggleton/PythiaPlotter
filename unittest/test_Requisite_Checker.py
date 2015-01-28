@@ -1,5 +1,5 @@
 """
-Unit tests for Requisite_Checker class
+Unit tests for RequisiteChecker class
 """
 
 import unittest
@@ -10,7 +10,7 @@ import unittest
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from Requisite_Checker import Requisite_Checker
+from requisite_checker import RequisiteChecker
 from pprint import pprint
 
 
@@ -26,8 +26,8 @@ class Checker_Test(unittest.TestCase):
         self.all_mod = [self.real_mod, self.fake_mod]
 
         # Setup with 1 real program, 1 fake, 1 real module, 1 fake
-        self.checkr = Requisite_Checker(programs=self.all_prog,
-                                        modules=self.all_mod)
+        self.checkr = RequisiteChecker(programs=self.all_prog,
+                                       modules=self.all_mod)
         pprint(self.checkr.results)
 
     def test_real_program(self):

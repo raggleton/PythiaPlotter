@@ -4,7 +4,7 @@ import subprocess
 from distutils.spawn import find_executable
 
 
-class Requisite_Checker():
+class RequisiteChecker():
     """
     Class to handle checking of modules/programs.
     Queryable for program/module name via the results dictionary.
