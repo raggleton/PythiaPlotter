@@ -1,26 +1,28 @@
 import imp  # For testing if modules exist
 import os
 import subprocess
+from distutils.spawn import find_executable
 
 
 class Requisite_Checker():
     """
     Class to handle checking of modules/programs.
-    Queryable for program/module name via the self.check dictionary.
+    Queryable for program/module name via the results dictionary.
     """
 
     def __init__(self, modules=None, programs=None):
         modules = [] if not modules else modules
         programs = [] if not programs else programs
-        self.check = dict()
+        self.results = dict()
 
         for mod in modules:
-            self.check[mod] = self.check_module_exists(mod)
+            self.results[mod] = self.check_module_exists(mod)
         for prog in programs:
-            self.check[prog] = self.check_program_exists(prog)
+            self.results[prog] = self.check_program_exists(prog)
 
-    def check_program_exists(self, program):
+    def check_program_exists_old(self, program):
         """Test if external program runs."""
+        # Old, not so great version that relied on program having a -h option
         try:
             # Storing in string stifles output
             prog_out = subprocess.check_output([program, "-h"],
@@ -31,7 +33,7 @@ class Requisite_Checker():
             return False
         except OSError as e:
             if e.errno == os.errno.ENOENT:
-                print "!!! You need to install \"" + program + \
+                print "!!! You need to install program \"" + program + \
                       "\" or add it to PATH variable"
                 print(e)
             else:
@@ -39,6 +41,15 @@ class Requisite_Checker():
                 print(e)
             return False
         return True
+
+    def check_program_exists(self, program):
+        """Test if external program runs."""
+        if find_executable(program):
+            return True
+        else:
+            print "!!! Cannot find program \"" + program + \
+                  "\", or missing from PATH"
+            return False
 
     def check_module_exists(self, module):
         """Test if Python module exists."""
