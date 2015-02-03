@@ -4,7 +4,7 @@ Main script to run PythiaPlotter.
 
 import helper_methods as helper
 from requisite_checker import RequisiteChecker
-
+import user_args
 
 class PythiaPlotter():
     """
@@ -26,13 +26,13 @@ class PythiaPlotter():
 
 if __name__ == "__main__":
 
-    # Check for optional modules & programs to determine what we can do
-    checkr = RequisiteChecker(modules=["pydot", "pyparsing"],
-                              programs=["dot2tex"])
+    # Parse args
+    opts = user_args.get_args()
 
     # Central Pythia_Plotter object to keep track of the parser, printer, etc
     pp = PythiaPlotter()
 
     # for event in event_list:
+    event = None
     gen_event = pp.parse_event(event)
     pp.print_event(gen_event)
