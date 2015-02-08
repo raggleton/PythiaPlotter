@@ -29,4 +29,4 @@ def check_dir_exists(filepath):
 def check_dir_exists_create(filepath):
     """Check if directory exists. If not, create it."""
     if not check_dir_exists(filepath):
-        os.makedirs(opath)
+        os.makedirs(filepath)
