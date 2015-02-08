@@ -4,8 +4,6 @@ Class & methods to check if programs & modules exist on user's computer.
 
 
 import imp  # For testing if modules exist
-import os
-import subprocess
 from distutils.spawn import find_executable
 
 
@@ -30,23 +28,42 @@ def check_module_exists(module):
 
 
 class RequisiteChecker():
-    """
-    Class to handle checking of modules/programs.
+    """Class to handle checking of modules/programs.
+
     Queryable for program/module name via the results dictionary.
     Or to check all exist, use self.all_exist.
     """
 
     def __init__(self, modules=None, programs=None):
-        modules = [] if not modules else modules
-        programs = [] if not programs else programs
+        self.modules = [] if not modules else modules
+        self.programs = [] if not programs else programs
 
         self.results = dict()
-        for mod in modules:
+        for mod in self.modules:
             self.results[mod] = check_module_exists(mod)
-        for prog in programs:
+        for prog in self.programs:
             self.results[prog] = check_program_exists(prog)
 
-        self.all_exist = all(list(self.results.values()))
+    def __repr__(self):
+        mod_str = ', '.join(self.modules)
+        pro_str = ', '.join(self.programs)
+        return '%s.%s(modules=[%r], programs=[%r])' % (self.__module__,
+                                                       self.__class__.__name__,
+                                                       mod_str,
+                                                       pro_str)
+
+    def __str__(self):
+        return "RequisiteChecker: %s" % str(self.results)
+
+
+    def all_exist(self):
+        """Check if all modules and programs passed in constructor exist"""
+        return all(list(self.results.values()))
+
+    def check(self, name):
+        """Check if particular module or program passed in constructor exist"""
+        return self.results[name]
+
 
 # def check_program_exists_old(program):
 #     """Test if external program runs."""
