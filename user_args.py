@@ -59,11 +59,11 @@ def get_args():
 
     latex_check = checkr.RequisiteChecker(modules=["pydot", "pyparsing"],
                                           programs=["dot2tex"])
-    if not latex_check.all_exist:
+    if not latex_check.all_exist():
         del render_opts["LATEX"]
 
     dot_check = checkr.RequisiteChecker(programs=["dot"])
-    if not dot_check.all_exist:
+    if not dot_check.all_exist():
         del render_opts["DOT"]
 
     if len(render_opts.keys()) == 0:
@@ -76,7 +76,7 @@ def get_args():
     parser.add_argument("-r", "--render",
                         help="Render method:\n%s" % help_str,
                         choices=render_opts,
-                        default="DOT")
+                        default="DOT" if "DOT" in render_opts.keys() else "LATEX")
 
     # Testing options
     parser.add_argument("--straightEdges",
