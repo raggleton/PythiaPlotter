@@ -17,11 +17,12 @@ class GenEvent(object):
     """Class to hold complete event info, e.g. evt number, scales, beam IDs
     as well as list of all particles and vertices"""
 
-    def __init__(self, eventNum=0, numMPI=0, scale=-1.0, alphaQCD=-1.0,
+    def __init__(self, eventNum=0, LS=0, numMPI=0, scale=-1.0, alphaQCD=-1.0,
                  alphaQED=-1.0, signalProcessID=0, signalProcessBarcode=0,
                  numVertices=0, beam1Barcode=0, beam2Barcode=0,
                  randomInts=None, weightValues=None):
         self.eventNum = int(eventNum)  # event number
+        self.lumisection = int(LS)  # lumisection
         self.numMPI = int(numMPI)  # number of multi paricle interactions
         self.scale = float(scale)  # event scale
         self.alphaQCD = float(alphaQCD)  # alpha QCD
@@ -156,6 +157,7 @@ class GenEvent(object):
                                int(p.node_attr.mother2) + 1):
                     p.node_attr.mothers.append(self.getParticle(barcode=str(m)))
 
+
     def addNodeDaughters(self):
         """Add references to daughters based on mother relationships"""
         # Don't use the daughters in the pythia output, they aren't complete
@@ -164,6 +166,7 @@ class GenEvent(object):
             for pp in self.particles:
                 if p in pp.node_attr.mothers and p != pp:
                     p.node_attr.daughters.append(pp)
+
 
     def removeRedundantNodes(self):
         """Get rid of redundant particles and rewrite relationships
@@ -177,7 +180,8 @@ class GenEvent(object):
                 and len(p.node_attr.mothers) == 1
                 and p.node_attr.mothers[0].pdgid == p.pdgid
                 and p.node_attr.daughters[0].pdgid == p.pdgid
-                and len(p.node_attr.daughters) == 1):
+                and len(p.node_attr.daughters) == 1
+                ):
 
                 p.isRedundant = True
                 p.skip = True
@@ -360,20 +364,25 @@ class GenVertex(object):
 class GenParticle(object):
     """Class to store info about GenParticle in event"""
 
-    def __init__(self, barcode="0", pdgid=0, px=0.0, py=0.0, pz=0.0, energy=0.0,
-                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None):
+    def __init__(self, barcode="0", pdgid=0, px=0.0, py=0.0, pz=0.0,
+                 pt=0.0, eta=-999., phi=999., energy=0.0,
+                 mass=0.0, status=0, polTheta=0.0, polPhi=0.0, flowDict=None, name=""):
         self.barcode = barcode  # particle barcode - unique
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.px = float(px)
         self.py = float(py)
         self.pz = float(pz)
+        self.pt = float(pt)
+        self.eta = float(eta)
+        self.phi = float(phi)
         self.energy = float(energy)  # Units specified in Units.momentumUnit
         self.mass = float(mass)
         self.status = int(status)  # status code, diff for Pythia output & hepmc
         self.polTheta = float(polTheta)  # polarization theta
         self.polPhi = float(polPhi)  # polarization phi
-        self.name = convertPIDToRawName(self.pdgid)  # name in raw form e.g pi0
-        self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
+        self.name = name if name else convertPIDToRawName(self.pdgid)   # name in raw form e.g pi0
+        self.texname = self.name  # name in tex e.g pi^0
+        # self.texname = convertPIDToTexName(self.pdgid)  # name in tex e.g pi^0
         if not flowDict:
             flowDict = {}
         self.flowDict = flowDict  # color flow
@@ -579,11 +588,12 @@ class DisplayAttributes(object):
 
         # Set label
         if self.rawNames:
-            self.attr["label"] = "%s: %s" % (self.particle.barcode,
-                                             self.particle.name)
+            self.attr["label"] = "%s: %s, pT=%g" % (self.particle.barcode,
+                                             self.particle.name,
+                                             self.particle.pt)
         else:
-            self.attr["label"] = "%s: %s" % (self.particle.barcode,
-                                             self.particle.texname)
+            self.attr["label"] = "%s: %s, p_{T}=%g GeV" % (self.particle.barcode,
+                                             self.particle.texname, self.particle.pt)
             # Use Large font size in tex mode.
             # TODO: Make this a user arg?
             # self.attr["texlbl"] = "\Large $%s: %s$" % (self.particle.barcode,

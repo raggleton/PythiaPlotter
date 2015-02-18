@@ -225,8 +225,8 @@ if __name__ == "__main__":
     if args.inputType == "PYTHIA":
         print "Ignoring --eventNumber option as not relevant"
         event = pythiaParser.parse(filename=args.input)
-        # if CONFIG.removeRedundants:
-        #     event.removeRedundantNodes()
+        if CONFIG.removeRedundants:
+            event.removeRedundantNodes()
 
     elif args.inputType == "HEPMC":
         event = hepmcParser.parse(filename=args.input,

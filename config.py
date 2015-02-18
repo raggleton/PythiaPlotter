@@ -30,11 +30,12 @@ Robin Aggleton 22/7/14
 # or their PDGIDs (see example below).
 # Note, you have to add in antiparticles as well, if you want them highlighted.
 interesting = [
-    ["Purple1", ["mu+", "mu-"]],
-    ["blue", ["tau+", "tau-"]],
-    ["red", ["b", "bbar"]],
-    ["Orange1", ["c", "cbar"]],
-    ["Chocolate3", [3, -3]]
+    # ["Purple1", ["mu+", "mu-"]],
+    # ["blue", ["tau+", "tau-"]],
+    # ["red", ["b", "bbar"]],
+    # ["Orange1", ["c", "cbar"]],
+    # ["Chocolate3", [3, -3]]
+    ["red", [12,-12,14,-14,16,-16]]
 ]
 
 # Color for initial particles (protons normally)
@@ -51,7 +52,7 @@ final_color = "SteelBlue2"
 # represent some momentum shift or connection. Often, we don't care about that
 # and just want an overview of what's going on.
 # Also it means fewer particles to be drawn = less busy, faster to draw!
-removeRedundants = True
+removeRedundants = False
 
 # To print out intermediate lines during processing - only for debugging
 VERBOSE = False

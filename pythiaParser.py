@@ -10,7 +10,7 @@ from eventClasses import *
 import config as CONFIG
 
 
-def parse(filename="qcdScatterSmall.txt"):
+def parse_old(filename="qcdScatterSmall.txt"):
     """Parse PYTHIA8 screen output and return GenEvent"""
 
     currentEvent = GenEvent()
@@ -108,6 +108,110 @@ def parse(filename="qcdScatterSmall.txt"):
     # required for both HepMC and Pythia
     return currentEvent
 
+def parse(filename="qcdScatterSmall.txt"):
+    """Parse PYTHIA8 screen output and return GenEvent
+    For CMSSW style listing
+    """
+
+    currentEvent = GenEvent()
+
+    # List of Particle objects in full event,
+    # in order of number in event listing.
+    # So the object at fullEvent[i] has self.barcode = i
+    # Can then add to GenEvent at the end
+    particleList = []
+
+    # Open input file & parse event info
+    with open(filename, "r") as inputFile:
+
+        print "Reading event listing from %s" % filename
+
+        # For processing the full output from Pythia, triggers where blocks
+        # of info start/stop. Use `if <trigger> in line:`
+        infoStart = "-  PYTHIA Info Listing"
+        infoEnd = "End PYTHIA Info Listing"
+
+        fullEventStart = "ParticleListDrawer"
+        fullEventEnd = "End PYTHIA Event Listing"
+
+        hardEventStart = "-  PYTHIA Event Listing  (hard process)"
+        hardEventEnd = "End PYTHIA Event Listing"
+
+        statsStart = "-  PYTHIA Event and Cross Section Statistics"
+        statsEnd = "End PYTHIA Event and Cross Section Statistics"
+
+        # To hold list of lines for parsing in separate methods
+        addToBlock = False
+        block = []
+
+        # Read in file to list of Particles
+        for line in inputFile:
+
+            # if addToBlock:
+            block.append(line)
+
+            # Go through file, looking for matches to triggers
+            # Must be a more succint way to do this
+            # Look for event info listing
+            # if infoStart in line:
+            #     addToBlock = True
+            #     if CONFIG.VERBOSE: print "Event Info start"
+
+            # elif addToBlock and infoEnd in line:
+            #     addToBlock = False
+            #     currentEvent = parseInfo(block)
+            #     if CONFIG.VERBOSE: print "Event Info end"
+            #     if CONFIG.VERBOSE: pprint(block)
+            #     if CONFIG.VERBOSE: print len(block)
+            #     del block[:]  # empty list of lines
+
+            # # Look for cross-section & events stats
+            # elif statsStart in line:
+            #     addToBlock = True
+            #     if CONFIG.VERBOSE: print "Event Stats Start"
+
+            # elif addToBlock and statsEnd in line:
+            #     addToBlock = False
+            #     # parseStats(block)
+            #     if CONFIG.VERBOSE: print "Event Stats End"
+            #     if CONFIG.VERBOSE: pprint(block)
+            #     if CONFIG.VERBOSE: print len(block)
+            #     del block[:]
+
+            # # Look for event particle listing
+            # elif fullEventStart in line:
+            #     addToBlock = True
+            #     if CONFIG.VERBOSE: print "Event Listing Starts"
+
+            # elif addToBlock and fullEventEnd in line:
+            #     addToBlock = False
+            #     currentEvent.particles = parseEventListing(block)
+            #     if CONFIG.VERBOSE: print "Event Listing Ends"
+            #     if CONFIG.VERBOSE: print len(block)
+            #     del block[:]
+
+        num = filename.split("_")[-1].replace(".txt","")
+        lumi = filename.split("_")[-2]
+        currentEvent = GenEvent(eventNum=num,LS=lumi)
+        currentEvent.particles = parseEventListing(block)
+        print "Done reading file"
+
+    # Once got all particles, add mothers/daughters
+    if CONFIG.VERBOSE: print "Adding mothers"
+    currentEvent.addNodeMothers()
+    if CONFIG.VERBOSE: print "Adding daughters"
+    currentEvent.addNodeDaughters()
+
+    # Convert Node to Edge repr for all particles so we can plot either later
+    # [p.convertNodeToEdgeAttributes(currentEvent)
+    # for p in currentEvent.particles]
+    # currentEvent.convertNodesToEdges()
+    # currentEvent.markInitialHepMC()
+
+    # Things like mark interesting, remove redundants done in main script, as
+    # required for both HepMC and Pythia
+    return currentEvent
+
 
 def parseInfo(block):
     """Parse Event Info listing block, return """
@@ -159,26 +263,14 @@ def parseStats(block):
 def parseEventListing(block):
     """Parse full event particle listing, returns list of GenParticles"""
 
-    # Where particle listing starts and stops
-    listingStart = """no        id"""
-    listingEnd = """Charge sum"""
-
     particleList = []
 
-    parseLine = False
     for line in block:
         line = line.strip()
-        if line.startswith(listingStart):
-            parseLine = True
-            continue
-        elif line.startswith(listingEnd):
-            parseLine = False
+        if "idx" in line or "ParticleListDrawer" in line:
             continue
 
-        if "system" in line:
-            continue
-
-        if parseLine:
+        if line:
             # print line
             particleList.append(parseParticleLine(line))
 
@@ -191,36 +283,34 @@ def parseParticleLine(line):
     with NodeAttributes set"""
 
     if CONFIG.VERBOSE: print line,
-
-    parts = line.split()
-    print parts
+    parts = [x for x in re.split(r"[|\s]*", line) if x != "" and x != "-"]
+    # print parts
     # name = parts[2]
     # d1 = int(parts[6])
     # d2 = int(parts[7])
-    flowDict = {}
-    if int(parts[8]) or int(parts[9]):
-        flowDict[1] = int(parts[8])
-        flowDict[2] = int(parts[9])
 
     p = GenParticle(barcode=parts[0],
                     pdgid=parts[1],
+                    name=parts[2],
                     status=parts[3],
-                    px=parts[10],
-                    py=parts[11],
-                    pz=parts[12],
-                    energy=parts[13],
-                    mass=parts[14],
-                    flowDict=flowDict)
+                    pt=parts[10],
+                    eta=parts[11],
+                    phi=parts[12],
+                    px=parts[13],
+                    py=parts[14],
+                    pz=parts[15],
+                    mass=parts[16],
+                    flowDict=dict())
 
     mother1 = int(parts[4])
     mother2 = int(parts[5])  # TODO: string, not int??
 
     # Following only true if reading from Pythia screen output.
     # HepMC uses different codes.
-    if p.status > 0:
+    if p.status == 1:
         p.isFinalState = True
 
-    if (mother1 == 0 and mother2 == 0 and int(parts[1]) == 2212):
+    if (mother1 == -1 and mother2 == -1 and int(parts[1]) == 2212):
         p.isInitialState = True
 
     # Sometimes Pythia sets m2 == 0 if only 1 mother & particle from shower

@@ -3,6 +3,7 @@ Prints relationships to GraphViz file when representing particles as nodes
 (for edges see edgeWriter.py)
 """
 
+import os.path
 import eventClasses
 import config as CONFIG
 
@@ -70,7 +71,7 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
 
         for p in reversed(event.particles):
 
-            if p.skip or p.name == "system":
+            if p.skip or p.isRedundant or p.name == "system":
                 continue
 
             # Set DisplayAttributes as node
@@ -97,8 +98,17 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
             if CONFIG.VERBOSE:
                 print nodeConfig,
 
+        # Add in node for sample, LS, evt number
+        base_name = os.path.basename(gvFilename)
+        sample = "_".join(base_name.split("_")[:2])
+        LS = base_name.split("_")[-2]
+        evt = base_name.split("_")[-1].replace(".gv", "")
+        info_label = "%s,  LS: %s,  EVT: %s" % (sample, LS, evt)
+        info_node = '-1 [label="%s", shape="box", style="filled", fillcolor="Yellow"]\n' % info_label
+        gvFile.write(info_node)
+
         # Set all initial particles to be level in diagram
-        rank = "  {rank=same;"
+        rank = "  {rank=same; -1 "
         rank += ' '.join([str(p.barcode) for p in event.particles
                           if p.isInitialState and p.pdgid != 90])
         rank += "} // Put initial particles on same level\n"
