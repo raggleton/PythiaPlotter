@@ -52,15 +52,15 @@ def run_dot(gvFilename, pdfFilename):
     # Do 2 stages: make a PostScript file, then convert to PDF.
     # This makes the PDF searchable.
     psFilename = pdfFilename.replace(".pdf", ".ps")
-    dotargs = ["dot", "-Tps2", gvFilename, "-o", psFilename]
+    # dotargs = ["dot", "-Tps2", gvFilename, "-o", psFilename]
+    dotargs = ["dot", "-Tpdf:quartz", gvFilename, "-o", pdfFilename]
     call(dotargs)
-    psargs = ["ps2pdf", psFilename, pdfFilename]
-    call(psargs)
+    # psargs = ["ps2pdf", psFilename, pdfFilename]
+    # call(psargs)
 
     print ""
     print "To re-run:"
-    print ' '.join(dotargs)
-    print ' '.join(psargs)
+    print ' '.join(dotargs)#, "&&", ' '.join(psargs)
     print ""
 
 

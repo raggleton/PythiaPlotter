@@ -21,6 +21,15 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
              "\tranksep=0.4\n"
              "\tnodesep=0.4\n")
 
+        # Add in label for sample, LS, evt number
+        base_name = os.path.basename(gvFilename)
+        sample = "_".join(base_name.split("_")[:2])
+        LS = base_name.split("_")[-2]
+        evt = base_name.split("_")[-1].replace(".gv", "")
+        info_label = '    <<FONT POINT-SIZE="20">%s,  LS: %s,  EVT: %s<BR/><FONT COLOR="SteelBlue2">blue = final state</FONT>, <FONT COLOR="red">red = neutrino</FONT>, <FONT COLOR="purple">purple = e, mu</FONT></FONT>>' % (sample, LS, evt)
+        info_node = 'label=%s;\n    labelloc=top;\n    labeljust=left;\n' % info_label
+        gvFile.write(info_node)
+
         if not useRawNames:
             # Lots of dot2tex specific options
             docpreamble = "\\usetikzlibrary{decorations.pathmorphing,fit," \
@@ -98,17 +107,8 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
             if CONFIG.VERBOSE:
                 print nodeConfig,
 
-        # Add in node for sample, LS, evt number
-        base_name = os.path.basename(gvFilename)
-        sample = "_".join(base_name.split("_")[:2])
-        LS = base_name.split("_")[-2]
-        evt = base_name.split("_")[-1].replace(".gv", "")
-        info_label = "%s,  LS: %s,  EVT: %s" % (sample, LS, evt)
-        info_node = '-1 [label="%s", shape="box", style="filled", fillcolor="Yellow"]\n' % info_label
-        gvFile.write(info_node)
-
         # Set all initial particles to be level in diagram
-        rank = "  {rank=same; -1 "
+        rank = "  {rank=same; "
         rank += ' '.join([str(p.barcode) for p in event.particles
                           if p.isInitialState and p.pdgid != 90])
         rank += "} // Put initial particles on same level\n"
