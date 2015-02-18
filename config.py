@@ -30,7 +30,7 @@ Robin Aggleton 22/7/14
 # or their PDGIDs (see example below).
 # Note, you have to add in antiparticles as well, if you want them highlighted.
 interesting = [
-    # ["Purple1", ["mu+", "mu-"]],
+    ["Purple1", [13,-13,11,-11]],
     # ["blue", ["tau+", "tau-"]],
     # ["red", ["b", "bbar"]],
     # ["Orange1", ["c", "cbar"]],
