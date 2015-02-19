@@ -26,8 +26,11 @@ def printNodeToGraphViz(event, gvFilename, useRawNames=False):
         sample = "_".join(base_name.split("_")[:2])
         LS = base_name.split("_")[-2]
         evt = base_name.split("_")[-1].replace(".gv", "")
-        info_label = '    <<FONT POINT-SIZE="20">%s,  LS: %s,  EVT: %s<BR/><FONT COLOR="SteelBlue2">blue = final state</FONT>, <FONT COLOR="red">red = neutrino</FONT>, <FONT COLOR="purple">purple = e, mu</FONT></FONT>>' % (sample, LS, evt)
-        info_node = 'label=%s;\n    labelloc=top;\n    labeljust=left;\n' % info_label
+        info_label = '<<FONT POINT-SIZE="20">%s,  LS: %s,  EVT: %s<BR/>' \
+                     '<FONT COLOR="SteelBlue2">blue = final state</FONT>, ' \
+                     '<FONT COLOR="red">red = neutrino</FONT>, ' \
+                     '<FONT COLOR="purple">purple = e/mu/tau</FONT></FONT>>' % (sample, LS, evt)
+        info_node = '    label=%s;\n    labelloc=top;\n    labeljust=left;\n' % info_label
         gvFile.write(info_node)
 
         if not useRawNames:
