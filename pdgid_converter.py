@@ -52,8 +52,8 @@ def load_pdgid_dict():
                 else:
                     tex_anti = "\\overline{%s}" % tex
             # add entry into dictionary, defaults for raw names = tex names
-            pdgid_dict[int(pid)] = dict(latex=tex, raw=tex,)
-            pdgid_dict[-1 * int(pid)] = dict(latex=tex_anti, raw=tex_anti)
+            pdgid_dict[int(pid)] = dict(tex=tex, raw=tex,)
+            pdgid_dict[-1 * int(pid)] = dict(tex=tex_anti, raw=tex_anti)
 
     # get raw string names
     particle_str_file = "particledata/PythiaParticleData.xml"
@@ -95,7 +95,7 @@ def pdgid_to_tex(pdgid):
     """Convert PDGID to TeX-compatible name e.g. \pi^0"""
 
     check_pdgid(pdgid)
-    return PDGID_NAME_DICT[int(pdgid)]["latex"]
+    return PDGID_NAME_DICT[int(pdgid)]["tex"]
 
 
 def pdgid_to_string(pdgid):
