@@ -4,7 +4,7 @@ Main script to run PythiaPlotter.
 
 import sys
 import user_args
-
+import pythia_parser
 
 class PythiaPlotter(object):
     """
@@ -19,7 +19,7 @@ class PythiaPlotter(object):
 
         # Choose parser
         if opts.inputFormat == "PYTHIA":
-            self.parser = PythiaParser(opts.input)
+            self.parser = pythia_parser.PythiaParser(opts.input)
         elif opts.inputFormat == "HEPMC":
             pass
 
