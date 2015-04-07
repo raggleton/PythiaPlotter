@@ -45,14 +45,14 @@ class Particle(object):
         self.et = 0.0  # FIXME
         self.mass = float(mass)
         self.status = int(status)  # status code, diff for Pythia & hepmc
-        self.parent1_code = int(parent1) # barcode range for parents
+        self.parent1_code = int(parent1)  # barcode range for parents
         self.parent2_code = int(parent2)
-        self.parent_codes = range(self.parent1_code, self.parent2_code+1) # to store barcodes of parents
-        self.child_codes = None # to store barcodes of children
+        self.parent_codes = range(self.parent1_code, self.parent2_code+1)  # to store barcodes of parents
+        self.child_codes = None  # to store barcodes of children
         # self.name = convert.pdgid_to_string(self.pdgid)  # raw form e.g pi0
         # self.texname = convert.pdgid_to_tex(self.pdgid)  # tex e.g \pi^0
         # self.skip = False  # Skip when writing to file
-        # self.final_state = False
+        self.final_state = False
         self.initial_state = self.parent1_code == self.parent2_code == 0
         self.event = None  # parent event
 
@@ -62,18 +62,15 @@ class Particle(object):
             args_str.append("%s=%s" % (k, v))
 
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
-                             ", ".join(args_str))
+                              ", ".join(args_str))
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
-        properties = dict(
-                          # skip=self.skip,
-                          # intital_state=self.initial_state,
-                          # final_state=self.final_state
-                          m1=self.parent1_code,
-                          m2=self.parent2_code
+        properties = dict(m1=self.parent1_code,
+                          m2=self.parent2_code,
+                          pt=self.pt
                           )
-        return "Particle %s, PDGID %d, %s" % (self.barcode, self.pdgid, str(properties))
+        return "Particle {0}, PDGID {1}, {2}".format{self.barcode, self.pdgid, str(properties)}
 
     def __eq__(self, other):
         return self.barcode == other.barcode and self.pdgid == other.pdgid

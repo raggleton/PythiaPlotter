@@ -7,6 +7,7 @@ import argparse
 import os.path
 import helper_methods as helpr
 import requisite_checker as checkr
+from pprint import pprint
 
 
 def get_args(input_args):
@@ -28,18 +29,18 @@ def get_args(input_args):
                         default="qcdScatterSmall.txt")
 
     parser_opts = {"PYTHIA": "For screen output from Pythia 8",
-                    "HEPMC": "For HEPMC files"}
+                   "HEPMC": "For HEPMC files"}
     parser_help_str = "Input format:\n"
     for k, v in parser_opts.items():
         parser_help_str += k + ": " + v + "\n"
     parser_help_str += "If unspecified, will try and make an educated guess, " \
-                        "but could fail!"
+                       "but could fail!"
 
     parser.add_argument("--inputFormat",
                         help=parser_help_str,
                         choices=parser_opts)
     # parser.add_argument("--eventNumber",
-    #                     help="Select event number to plot (for input formats "
+    #                     help="Select event number to plot (for input formats"
     #                          "HEPMC)",
     #                     type=int, default=0)
 
@@ -128,7 +129,7 @@ def get_args(input_args):
     set_default_mode(args)
 
     if args.verbose:
-        from pprint import pprint; pprint(args)
+        pprint(args)
 
     return args
 
@@ -160,6 +161,7 @@ def set_default_format(args):
 
 def set_default_mode(args):
     """Set default particle mode if the user hasn't."""
+    args.particleMode = None
     if not args.particleMode:
         if args.inputFormat == "HEPMC":
             args.particleMode = "EDGE"

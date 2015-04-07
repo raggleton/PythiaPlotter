@@ -34,7 +34,8 @@ def assign_particles_nodes(particles, remove_redundants=True):
         for i in xrange(int(particle.parent1_code), int(particle.parent2_code)+1):
             gr.add_edge(str(i), particle.barcode)
 
-    # store daughters properly - do I really need this is using graph structure?
+    # store daughters properly
+    # FIXME do I really need this is using graph structure?
     for node in gr.nodes():
         gr.node[node]['particle'].child_codes = list(gr.successors(node))
 
@@ -42,7 +43,7 @@ def assign_particles_nodes(particles, remove_redundants=True):
     if remove_redundants:
         for node in gr.nodes():
             if (len(gr.successors(node)) == 1
-                and len(gr.predecessors(node)) == 1):
+               and len(gr.predecessors(node)) == 1):
 
                 p = gr.node[node]['particle']
                 parent = gr.node[gr.predecessors(node)[0]]['particle']
@@ -52,7 +53,7 @@ def assign_particles_nodes(particles, remove_redundants=True):
                     parent.child_codes = p.child_codes
                     child.parent1_code = parent.barcode
                     child.parent2_code = parent.barcode
-                    gr.remove_node(node) # also removes the relevant edges
+                    gr.remove_node(node)  # also removes the relevant edges
                     gr.add_edge(parent.barcode, child.barcode)
 
     return gr

@@ -83,7 +83,11 @@ def parse_stats_block(contents):
 
 
 class PythiaParser(object):
-    """Main class to parse Pythia 8 screen output from a text file."""
+    """Main class to parse Pythia 8 screen output from a text file.
+
+    Returns an Event object, which contains a list of Particles, and
+    a NetworkX graph obj with particles assigned to nodes.
+    """
 
     # Block types in Pythia output
     # For each, we store: strings that indicate start/end or block;

@@ -8,8 +8,9 @@ import user_args
 
 class PythiaPlotter(object):
     """
-    Store central objects & args used
+    Central object to keep track of the parser, printer, etc
     """
+
     def __init__(self, opts):
         self.opts = opts
         self.parser = None
