@@ -31,11 +31,11 @@ def assign_particles_nodes(particles, remove_redundants=True):
     for particle in reversed(particles):
         if particle.parent1_code == 0 and particle.parent2_code == 0:
             continue
-        for i in xrange(int(particle.parent1_code), int(particle.parent2_code)+1):
-            gr.add_edge(str(i), particle.barcode)
+        for i in xrange(particle.parent1_code, particle.parent2_code+1):
+            gr.add_edge(i, particle.barcode)
 
     # store daughters properly
-    # FIXME do I really need this is using graph structure?
+    # FIXME do I really need this if using graph structure?
     for node in gr.nodes():
         gr.node[node]['particle'].child_codes = list(gr.successors(node))
 
