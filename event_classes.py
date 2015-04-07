@@ -13,10 +13,16 @@ class Event(object):
         self.graph = None  # to hold NetworkX graph
 
     def __repr__(self):
-        return "STUFF HERE"
+        args_str = ["%ss=%s" %(a, self.__dict__[a]) for a in
+                    ["event_num", "run_num", "lumi_section"]]
+        return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
+                              ", ".join(args_str))
 
     def __str__(self):
-        return "STUFF HERE"
+        return "Event (event_num {e_num}, run_num {r_num}, LS {ls})".format(
+            e_num=self.event_num,
+            r_num=self.run_num,
+            ls=self.lumi_section)
 
     @property
     def particles(self):
@@ -61,10 +67,7 @@ class Particle(object):
         self.event = None  # parent event
 
     def __repr__(self):
-        args_str = []
-        for k, v in self.__dict__.items():
-            args_str.append("%s=%s" % (k, v))
-
+        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()]
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
                               ", ".join(args_str))
 
