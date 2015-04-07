@@ -9,7 +9,7 @@ import helper_methods as helpr
 import requisite_checker as checkr
 
 
-def get_args():
+def get_args(input_args):
     """Define all command-line options. Returns ArgumentParser object."""
 
     parser = argparse.ArgumentParser(
@@ -19,21 +19,33 @@ def get_args():
         formatter_class=argparse.RawTextHelpFormatter
     )
 
+    #################
     # Input options
+    #################
     parser.add_argument("input",
                         help="Input file",
                         nargs="?",
                         default="qcdScatterSmall.txt")
-    parser.add_argument("--inputFormat",
-                        help="Input format. If unspecified, will try and "
-                             "make an educated guess, but could fail!",
-                        choices=["HEPMC", "PYTHIA"])
-    parser.add_argument("--eventNumber",
-                        help="Select event number to plot (for input formats "
-                             "HEPMC)",
-                        type=int, default=0)
 
+    parser_opts = {"PYTHIA": "For screen output from Pythia 8",
+                    "HEPMC": "For HEPMC files"}
+    parser_help_str = "Input format:\n"
+    for k, v in parser_opts.items():
+        parser_help_str += k + ": " + v + "\n"
+    parser_help_str += "If unspecified, will try and make an educated guess, " \
+                        "but could fail!"
+
+    parser.add_argument("--inputFormat",
+                        help=parser_help_str,
+                        choices=parser_opts)
+    # parser.add_argument("--eventNumber",
+    #                     help="Select event number to plot (for input formats "
+    #                          "HEPMC)",
+    #                     type=int, default=0)
+
+    #################
     # Output file options
+    #################
     # parser.add_argument("-oGV", "--outputGV",
     #                     help="output GraphViz filename "
     #                          "(if unspecified, defaults to INPUT.gv)")
@@ -44,10 +56,12 @@ def get_args():
                         help="Automatically open PDF once plotted",
                         action="store_true")
 
+    #################
     # Render options
-    parser.add_argument("-p", "--particleMode",
-                        choices=["NODE", "EDGE"],
-                        help="Particle representation (see README)")
+    #################
+    # parser.add_argument("-p", "--particleMode",
+    #                     choices=["NODE", "EDGE"],
+    #                     help="Particle representation (see README)")
     parser.add_argument("--noPDF",
                         help="Don't convert to PDF",
                         action="store_true")
@@ -69,42 +83,46 @@ def get_args():
     if len(render_opts.keys()) == 0:
         raise EnvironmentError("You are mising programs. Cannot render.")
 
-    help_str = ""
+    render_help_str = "Render method:\n"
     for k, v in render_opts.items():
-        help_str += k + ": " + v + "\n"
+        render_help_str += k + ": " + v + "\n"
 
     parser.add_argument("-r", "--render",
-                        help="Render method:\n%s" % help_str,
+                        help=render_help_str,
                         choices=render_opts,
                         default="DOT" if "DOT" in render_opts.keys() else "LATEX")
 
+    #################
     # Testing options
-    parser.add_argument("--straightEdges",
-                        help="Use straight edges instead of curvy",
-                        action="store_true")
-    parser.add_argument("--showVertexBarcode",  # think of a better opt name!
-                        help="Show vertex barcodes, useful for figuring out "
-                             "which are the hard interaction(s). Only useful "
-                             "when in EDGE mode.",
-                        action="store_true")
-    parser.add_argument("--hardVertices",
-                        help='List of vertex barcode(s) that contain the '
-                             'hard interaction, e.g. --hardVertices V2, V3 '
-                             '(LATEX render only)',
-                        default=None, nargs='*', type=str)
-    parser.add_argument("--noTimeArrows",
-                        help='Turn off the "Time" arrows (LATEX render only)',
-                        action="store_true")
-    parser.add_argument("--scale",
-                        help="Factor to scale PDF by (LATEX render only)",
-                        default=0.7, type=float)
+    #################
+    # parser.add_argument("--straightEdges",
+    #                     help="Use straight edges instead of curvy",
+    #                     action="store_true")
+    # parser.add_argument("--showVertexBarcode",  # think of a better opt name!
+    #                     help="Show vertex barcodes, useful for figuring out "
+    #                          "which are the hard interaction(s). Only useful "
+    #                          "when in EDGE mode.",
+    #                     action="store_true")
+    # parser.add_argument("--hardVertices",
+    #                     help='List of vertex barcode(s) that contain the '
+    #                          'hard interaction, e.g. --hardVertices V2, V3 '
+    #                          '(LATEX render only)',
+    #                     default=None, nargs='*', type=str)
+    # parser.add_argument("--noTimeArrows",
+    #                     help='Turn off the "Time" arrows (LATEX render only)',
+    #                     action="store_true")
+    # parser.add_argument("--scale",
+    #                     help="Factor to scale PDF by (LATEX render only)",
+    #                     default=0.7, type=float)
     parser.add_argument("-v", "--verbose",
                         help="Print debug statements to screen",
                         action="store_true")
 
-    args = parser.parse_args()
+    args = parser.parse_args(input_args)
 
+    #################
     # Post process user args
+    #################
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)

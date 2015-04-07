@@ -2,10 +2,11 @@
 Main script to run PythiaPlotter.
 """
 
+import sys
 import user_args
 
 
-class PythiaPlotter():
+class PythiaPlotter(object):
     """
     Store central objects & args used
     """
@@ -13,11 +14,11 @@ class PythiaPlotter():
         self.opts = opts
         self.parser = None
         self.printer = None
-        self.gen_event = None
+        self.event = None
 
         # Choose parser
         if opts.inputFormat == "PYTHIA":
-            self.parser = PythiaParser(opts.input, opts.eventNumber)
+            self.parser = PythiaParser(opts.input)
         elif opts.inputFormat == "HEPMC":
             pass
 
@@ -33,24 +34,23 @@ class PythiaPlotter():
     def __str__(self):
         pass
 
-    def parse_event(self, thingtoparse, event_num):
-        # return self.parser.parse(thingtoparse)
+    def parse_print():
+        """Do parsing and printing in one call."""
         pass
 
-    def print_event(self, gen_event):
-        # self.printer.print_event(gen_event)
+    def parse_event(self):
+        pass
+
+    def print_event(self):
         pass
 
 
-def main():
+
+def main(args=None):
     # Central Pythia_Plotter object to keep track of the parser, printer, etc
-    pp = PythiaPlotter(user_args.get_args())
-
-    # for event in event_list:
-    thingtoparse = None
-    gen_event = pp.parse_event(thingtoparse)
-    pp.print_event(gen_event)
+    pp = PythiaPlotter(user_args.get_args(args))
+    pp.parse_print()
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main(sys.argv))
