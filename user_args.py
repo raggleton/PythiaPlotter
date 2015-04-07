@@ -26,7 +26,7 @@ def get_args(input_args):
     parser.add_argument("input",
                         help="Input file",
                         nargs="?",
-                        default="qcdScatterSmall.txt")
+                        default="example/example_pythia8.txt")
 
     parser_opts = {"PYTHIA": "For screen output from Pythia 8",
                    "HEPMC": "For HEPMC files"}
