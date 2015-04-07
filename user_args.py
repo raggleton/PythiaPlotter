@@ -8,7 +8,7 @@ import os.path
 import helper_methods as helpr
 import requisite_checker as checkr
 from pprint import pprint
-
+import sys
 
 def get_args(input_args):
     """Define all command-line options. Returns ArgumentParser object."""

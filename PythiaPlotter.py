@@ -46,10 +46,10 @@ class PythiaPlotter(object):
         pass
 
 
-def main(args=None):
+def main(args):
     pp = PythiaPlotter(user_args.get_args(args))
     pp.parse_print()
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(main(sys.argv[1:]))
