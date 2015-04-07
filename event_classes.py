@@ -18,6 +18,10 @@ class Event(object):
     def __str__(self):
         return "STUFF HERE"
 
+    @property
+    def particles(self):
+        return self.particles
+
     @particles.setter
     def particles(self, particles):
         self.particles = particles
@@ -70,7 +74,9 @@ class Particle(object):
                           m2=self.parent2_code,
                           pt=self.pt
                           )
-        return "Particle {0}, PDGID {1}, {2}".format{self.barcode, self.pdgid, str(properties)}
+        return "Particle {0}, PDGID {1}, {2}".format(self.barcode,
+                                                     self.pdgid,
+                                                     str(properties))
 
     def __eq__(self, other):
         return self.barcode == other.barcode and self.pdgid == other.pdgid
