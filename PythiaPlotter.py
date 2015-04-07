@@ -34,20 +34,18 @@ class PythiaPlotter(object):
     def __str__(self):
         pass
 
-    def parse_print():
+    def parse_print(self):
         """Do parsing and printing in one call."""
         pass
 
     def parse_event(self):
-        pass
+        self.event = self.parser.parse()
 
     def print_event(self):
         pass
 
 
-
 def main(args=None):
-    # Central Pythia_Plotter object to keep track of the parser, printer, etc
     pp = PythiaPlotter(user_args.get_args(args))
     pp.parse_print()
 

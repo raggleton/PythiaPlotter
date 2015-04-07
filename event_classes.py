@@ -2,17 +2,15 @@
 Classes to describe event & particles
 """
 
-# import pdgid_converter as convert
-
 
 class Event(object):
     """Hold event info"""
 
-    def __init__(self, particles=None, event_num=0, run_num=0, lumi_section=0):
+    def __init__(self, event_num=0, run_num=0, lumi_section=0):
         self.event_num = int(event_num)
-        self.particles = particles if particles else []
         self.run_num = int(run_num)
         self.lumi_section = int(lumi_section)
+        self.graph = None  # to hold NetworkX graph
 
     def __repr__(self):
         return "STUFF HERE"
@@ -20,19 +18,24 @@ class Event(object):
     def __str__(self):
         return "STUFF HERE"
 
-    # @particles.setter
-    # def particles(self, particles):
-    #     self.particles = particles
-    #     for p in self.particles:
-    #         p.event = self
+    @particles.setter
+    def particles(self, particles):
+        self.particles = particles
+        for p in self.particles:
+            p.event = self
 
 
 class Particle(object):
-    """Representation of a particle"""
+    """Representation of a particle
 
-    def __init__(self, barcode="-1", pdgid=0, px=0.0, py=0.0, pz=0.0,
+    Each Particle object should have a unique integer barcode,
+    to uniquely identify it in an event. 0 should be used for the initial
+    "system" or such like.
+    """
+
+    def __init__(self, barcode=-1, pdgid=0, px=0.0, py=0.0, pz=0.0,
                  energy=0.0, mass=0.0, status=0, parent1=-1, parent2=-1):
-        self.barcode = barcode  # barcode - should be a unique **number**
+        self.barcode = int(barcode)  # barcode - should be a unique **number**
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.px = float(px)  # Store as TLorentzVector?
         self.py = float(py)
@@ -50,7 +53,7 @@ class Particle(object):
         # self.texname = convert.pdgid_to_tex(self.pdgid)  # tex e.g \pi^0
         # self.skip = False  # Skip when writing to file
         # self.final_state = False
-        # self.initial_state = False
+        self.initial_state = self.parent1_code == self.parent2_code == 0
         self.event = None  # parent event
 
     def __repr__(self):

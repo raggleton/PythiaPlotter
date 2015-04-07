@@ -8,7 +8,7 @@ TODO: reshuffle blocks - non optimal spreading out atm
 from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle
-
+import node_grapher
 
 class PythiaBlock(object):
     """Represent a 'block' in Pythia output e.g. Event Listing"""
@@ -163,14 +163,13 @@ class PythiaParser(object):
         event = (self.block_types["Info"]["blocks"][0].parse_results
                  if self.block_types["Info"]["blocks"] else Event())
 
-
         # Hard event blocks:
         hard_particles = self.block_types["HardEvent"]["blocks"][self.evt_num].parse_results
 
         # Full event blocks:
         full_particles = self.block_types["FullEvent"]["blocks"][self.evt_num].parse_results
 
-        # event.particles = hard_particles
         event.particles = full_particles
+        event.graph = node_grapher.assign_particles_nodes(event.particles, remove_redunants)
 
         return event
