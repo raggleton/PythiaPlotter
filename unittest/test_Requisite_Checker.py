@@ -10,7 +10,7 @@ import unittest
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from requisite_checker import RequisiteChecker
+from utils.requisite_checker import RequisiteChecker
 from pprint import pprint
 
 

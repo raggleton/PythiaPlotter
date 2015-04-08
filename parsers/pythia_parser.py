@@ -4,12 +4,16 @@ Handle parsing of Pythia 8 screen output.
 TODO: reshuffle blocks - non optimal spreading out atm
 """
 
-
+import utils.logging_config
+import logging
 from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle
 import node_grapher
 import utils.user_args as user_args
+
+
+log = logging.getLogger(__name__)
 
 
 class PythiaBlock(object):
@@ -129,6 +133,8 @@ class PythiaParser(object):
         self.filename = filename
         self.evt_num = event_num
         self.remove_redundants = remove_redundants
+        log.info("Opening event file %s" % filename)
+
         # store file contents in list to slice up easily
         self.contents = []
         with open(filename, "r") as f:

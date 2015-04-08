@@ -2,6 +2,12 @@
 Classes to describe event & particles
 """
 
+import utils.logging_config
+import logging
+
+
+log = logging.getLogger(__name__)
+
 
 class Event(object):
     """Hold event info"""

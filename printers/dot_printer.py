@@ -11,9 +11,15 @@ Several stages:
 """
 
 
+import utils.logging_config
+import logging
 import os.path
 from subprocess import call
 from display_classes import DotNodeAttr, DotEdgeAttr
+
+
+log = logging.getLogger(__name__)
+
 
 class DotPrinter(object):
     """Class to easily print event to file using dot/Graphviz"""
@@ -42,7 +48,7 @@ class DotPrinter(object):
     def write_dot(self, event, dot_filename):
         """Write event graph to file in dot format"""
 
-        print "Writing GraphViz file to %s" % dot_filename
+        log.info("Writing GraphViz file to %s" % dot_filename)
         with open(dot_filename, "w") as dot_file:
 
             # Header-type info
@@ -76,20 +82,23 @@ class DotPrinter(object):
 
     def print_pdf(self, dot_filename, pdf_filename):
         """Run GraphViz file through dot to produce a PDF."""
+
+        log.info("Writing PDF to %s", pdf_filename)
+
         # Do 2 stages: make a PostScript file, then convert to PDF.
         # This makes the PDF searchable.
-        ps_filename = pdf_filename.replace(".pdf", ".ps")
-        psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
-        call(psargs)
-        pdfargs = ["ps2pdf", ps_filename, pdf_filename]
-        call(psargs)
+        # ps_filename = pdf_filename.replace(".pdf", ".ps")
+        # psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
+        # call(psargs)
+        # pdfargs = ["ps2pdf", ps_filename, pdf_filename]
+        # call(psargs)
 
         # Or do straight to PDF:
-        # dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
-        # call(dotargs)
+        dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
+        call(dotargs)
 
-        print ""
-        print "To re-run:"
-        print ' '.join(psargs)
-        print ' '.join(pdfargs)
-        print ""
+        # print ""
+        # print "To re-run:"
+        # print ' '.join(psargs)
+        # print ' '.join(pdfargs)
+        # print ""

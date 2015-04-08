@@ -3,6 +3,8 @@ To handle input args & subsequent modifications
 """
 
 
+import logging_config
+import logging
 import argparse
 import os.path
 import utils.common as helpr
@@ -10,8 +12,7 @@ import utils.requisite_checker as checkr
 from pprint import pprint
 import sys
 
-import logging
-logging.basicConfig(level=logging.DEBUG)
+
 log = logging.getLogger(__name__)
 
 
@@ -166,7 +167,7 @@ def set_default_format(args):
             args.inputFormat = "HEPMC"
         elif args.extension in [".txt", ".out"]:
             args.inputFormat = "PYTHIA"
-        print "You didn't set an input format. Assuming", args.inputFormat
+        log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
 
 
 def set_default_mode(args):
@@ -177,4 +178,4 @@ def set_default_mode(args):
             args.particleMode = "EDGE"
         else:
             args.particleMode = "NODE"
-    print "You didn't set a particle mode. Using", args.particleMode
+        log.info("You didn't set a particle mode. Using %s" % args.particleMode)

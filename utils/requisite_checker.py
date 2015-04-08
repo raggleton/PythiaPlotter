@@ -3,8 +3,13 @@ Class & methods to check if programs & modules exist on user's computer.
 """
 
 
+import logging_config
+import logging
 import imp  # For testing if modules exist
 from distutils.spawn import find_executable
+
+
+log = logging.getLogger(__name__)
 
 
 def check_program_exists(program):
@@ -12,8 +17,8 @@ def check_program_exists(program):
     if find_executable(program):
         return True
     else:
-        print "!!! Cannot find program \"" + program + \
-              "\", or missing from PATH"
+        log.error("!!! Cannot find program \"" + program + \
+              "\", or missing from PATH")
         return False
 
 
@@ -22,7 +27,7 @@ def check_module_exists(module):
     try:
         imp.find_module(module)
     except ImportError:
-        print "!!! Module \"" + module + "\" doesn't exist"
+        log.error("!!! Module \"" + module + "\" doesn't exist")
         return False
     return True
 
