@@ -23,7 +23,7 @@ class PythiaBlock(object):
         self.name = name
         self.contents = contents if contents else []
         self.parser = parser  # method to parser contents
-        self.parse_results = None  # to hold output from self.parser
+        self.parser_results = None  # to hold output from self.parser
 
     def __repr__(self):
         return "%s.%s(%r, parser=%s, contents=%s)" % (self.__module__,
@@ -37,8 +37,8 @@ class PythiaBlock(object):
 
     def parse_block(self):
         """Run the instance parser over contents."""
-
-        self.parse_results = self.parser(self.contents)
+        log.debug("Parsing block %s" % self.name)
+        self.parser_results = self.parser(self.contents)
 
 
 def parse_event_block(contents):
@@ -91,8 +91,9 @@ def parse_stats_block(contents):
 class Pythia8Parser(object):
     """Main class to parse Pythia 8 screen output from a text file.
 
-    Returns an Event object, which contains a list of Particles, and
-    a NetworkX graph obj with particles assigned to nodes.
+    Returns an Event object, which contains info about the event,
+    a list of Particles in the event, and a NetworkX graph obj
+    with particles assigned to nodes.
     """
 
     # Block types in Pythia output
@@ -173,14 +174,14 @@ class Pythia8Parser(object):
         # Deal with each type
         # Info block: make a blank Event() object incase there's no Info block,
         # assigning grapher (TODO: move elsewhere?)
-        event = (self.block_types["Info"]["blocks"][0].parse_results
+        event = (self.block_types["Info"]["blocks"][0].parser_results
                  if self.block_types["Info"]["blocks"] else Event())
 
         # Hard event blocks:
-        hard_particles = self.block_types["HardEvent"]["blocks"][self.evt_num].parse_results
+        hard_particles = self.block_types["HardEvent"]["blocks"][self.evt_num].parser_results
 
         # Full event blocks:
-        full_particles = self.block_types["FullEvent"]["blocks"][self.evt_num].parse_results
+        full_particles = self.block_types["FullEvent"]["blocks"][self.evt_num].parser_results
 
         # Assign particles to graph nodes
         event.particles = full_particles
