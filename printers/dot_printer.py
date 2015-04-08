@@ -54,12 +54,12 @@ class DotPrinter(object):
             # Header-type info
             dot_file.write("digraph g {\n"
                           "\trankdir=LR;\n"
-                          "\tranksep=0.4\n"
-                          "\tnodesep=0.4\n")
+                          "\tranksep=0.4;\n"
+                          "\tnodesep=0.4;\n")
 
             # Add event info to plot
             if event.label:
-                lbl = "<FONT POINT-SIZE=\"20\">{0}<BR/>".format(event.label)
+                lbl = "<FONT POINT-SIZE=\"40\">{0}<BR/>".format(event.label)
                 if event.run_num:
                     lbl += "Run: {0} <BR/>".foramt(event.run_num)
                 if event.lumi_section:
@@ -69,12 +69,12 @@ class DotPrinter(object):
                 # lbl += "Key:<BR/>"
                 # lbl += "green"
                 lbl += "</FONT>"
-                dot_file.write("label=<{0}>".format(lbl))
-                dot_file.write("labelloc=top;\n")
-                dot_file.write("labeljust=left;\n") # this doesn't work
+                dot_file.write("\tlabel=<{0}>;\n".format(lbl))
+                dot_file.write("\tlabelloc=top;\n")
+                dot_file.write("\tlabeljust=left;\n") # this doesn't work
 
             graph = event.graph
-            # Now write all the nodes and edges to file,
+            # Now write all the nodes to file,
             # with their display attributes
             for node in graph.nodes():
                 # Maybe use this form for smaller files when in NODE repr?
