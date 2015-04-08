@@ -13,7 +13,6 @@ hepmc2root.py
 *.dot
 *.tex
 *.txt
-__init__.py
 .idea
 page
 testSite
