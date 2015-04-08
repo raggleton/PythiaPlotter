@@ -24,15 +24,15 @@ class Event(object):
             r_num=self.run_num,
             ls=self.lumi_section)
 
-    @property
-    def particles(self):
-        return self.particles
+    # @property
+    # def particles(self):
+    #     return self.particles
 
-    @particles.setter
-    def particles(self, particles):
-        self.particles = particles
-        for p in self.particles:
-            p.event = self
+    # @particles.setter
+    # def particles(self, particles):
+    #     self.particles = particles
+    #     for p in self.particles:
+    #         p.event = self
 
 
 class Particle(object):
