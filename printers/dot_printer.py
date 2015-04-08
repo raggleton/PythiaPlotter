@@ -16,7 +16,14 @@ from subprocess import call
 from display_classes import DotNodeAttr, DotEdgeAttr
 
 
-def add_display_attr(graph, opts):
+def print_event(event, opts):
+    """Inclusive function to do the various stages easily"""
+    add_display_attr(event.graph)
+    write_dot(event, opts.outputGV)
+    print_pdf(opts.outputGV, opts.outputPDF)
+
+
+def add_display_attr(graph):
     """Add display attribute to nodes & edges"""
     for node_ind in graph.nodes():
         node = graph.node[node_ind]
