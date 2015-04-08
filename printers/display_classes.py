@@ -6,12 +6,6 @@ Classes to describe visual representation
 from utils.pdgid_converter import pdgid_to_string
 
 
-class DotAttr(object):
-    """Generic class to hold display attributes for Graphviz"""
-    def __init__(self, arg):
-        pass
-
-
 class DotEdgeAttr(object):
     """Hold display attributes for edge in dot graph"""
 
