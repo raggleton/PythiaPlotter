@@ -34,12 +34,15 @@ def assign_particles_nodes(particles, remove_redundants=True):
         for i in xrange(particle.parent1_code, particle.parent2_code+1):
             gr.add_edge(i, particle.barcode)
 
-    # store daughters properly
-    # FIXME do I really need this if using graph structure?
+    # store daughters properly, mark final state particles
     for node in gr.nodes():
-        gr.node[node]['particle'].child_codes = list(gr.successors(node))
+        children = list(gr.successors(node))
+        if children:
+            gr.node[node]['particle'].child_codes = children
+        else:
+            gr.node[node]['particle'].final_state = True
 
-    # remove redundant nodes
+    # remove redundant nodes from graph - NB they still exist in the Event tho...
     if remove_redundants:
         for node in gr.nodes():
             if (len(gr.successors(node)) == 1
