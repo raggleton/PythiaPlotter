@@ -1,1 +1,1 @@
-from pythia_parser import PythiaParser
+from pythia8_parser import Pythia8Parser

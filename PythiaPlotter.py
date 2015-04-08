@@ -23,7 +23,7 @@ class PythiaPlotter(object):
 
         # Choose parser & configure
         if opts.inputFormat == "PYTHIA":
-            self.parser = parsers.PythiaParser(opts.input)
+            self.parser = parsers.Pythia8Parser(opts.input)
         elif opts.inputFormat == "HEPMC":
             pass
 

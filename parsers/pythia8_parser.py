@@ -1,5 +1,5 @@
 """
-Handle parsing of Pythia 8 screen output.
+Handle parsing of standalone Pythia 8 screen output.
 
 TODO: reshuffle blocks - non optimal spreading out atm
 """
@@ -88,7 +88,7 @@ def parse_stats_block(contents):
     pass
 
 
-class PythiaParser(object):
+class Pythia8Parser(object):
     """Main class to parse Pythia 8 screen output from a text file.
 
     Returns an Event object, which contains a list of Particles, and
@@ -147,7 +147,7 @@ class PythiaParser(object):
                                                      self.event_num)
 
     def __str__(self):
-        return "PythiaParser:\n%s" % pformat(self.block_types)
+        return "Pythia8Parser:\n%s" % pformat(self.block_types)
 
     def parse(self):
         """Go through contents and find blocks, then deal with them."""
