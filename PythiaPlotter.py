@@ -28,7 +28,7 @@ class PythiaPlotter(object):
 
         # Choose printer
         if opts.render == "DOT":
-            pass
+            self.printer = printers.dot_printer
         elif opts.render == "LATEX":
             pass
 
@@ -47,7 +47,7 @@ class PythiaPlotter(object):
         self.event = self.parser.parse()
 
     def print_event(self):
-        pass
+        self.printer.print_event(self.event, self.opts)
 
 
 def main(args):
