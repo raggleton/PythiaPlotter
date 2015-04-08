@@ -65,10 +65,10 @@ class DotNodeAttr(object):
         self.attr["label"] = " {0}: {1}".format(particle.barcode,
                                                 pdgid_to_string(particle.pdgid))
 
-        if particle.isInitialState:
+        if particle.initial_state:
             self.attr["style"] = "filled"
             self.attr["shape"] = "circle"
-        elif particle.isFinalState:
+        elif particle.final_state:
             self.attr["style"] = "filled"
             self.attr["shape"] = "box"
 
