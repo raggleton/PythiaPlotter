@@ -158,10 +158,12 @@ class Pythia8Parser(object):
             for block in self.block_types.values():
                 if block["str_start"] in line:
                     block["ind_start"].append(i)
+                    log.debug("Block starting line: %s" % line)
                 if block["str_end"] in line:
                     # check that there's at least one ind_start < i
                     if sum([j < i for j in block["ind_start"]]):
                         block["ind_end"].append(i)
+                        log.debug("Block ending line: %s" % line)
 
         # Now pull the contents from files & parse
         for name, block in self.block_types.items():
