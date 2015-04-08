@@ -5,7 +5,7 @@ To handle input args & subsequent modifications
 
 import argparse
 import os.path
-import utils.helper_methods as helpr
+import utils.common as helpr
 import utils.requisite_checker as checkr
 from pprint import pprint
 import sys
