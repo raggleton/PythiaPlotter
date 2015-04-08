@@ -20,15 +20,15 @@ class PythiaPlotter(object):
         self.printer = None
         self.event = None
 
-        # Choose parser
+        # Choose parser & configure
         if opts.inputFormat == "PYTHIA":
             self.parser = parsers.PythiaParser(opts.input)
         elif opts.inputFormat == "HEPMC":
             pass
 
-        # Choose printer
+        # Choose printer & configure
         if opts.render == "DOT":
-            self.printer = printers.dot_printer
+            self.printer = printers.DotPrinter(opts.outputGV, opts.outputPDF)
         elif opts.render == "LATEX":
             pass
 
@@ -38,21 +38,17 @@ class PythiaPlotter(object):
     def __str__(self):
         pass
 
-    def parse_print(self):
-        """Do parsing and printing in one call."""
-        self.parse_event()
-        self.print_event()
-
     def parse_event(self):
         self.event = self.parser.parse()
 
     def print_event(self):
-        self.printer.print_event(self.event, self.opts)
+        self.printer.print_event(self.event)
 
 
 def main(args):
     pp = PythiaPlotter(user_args.get_args(args))
-    pp.parse_print()
+    pp.parse_event()
+    pp.print_event()
 
 
 if __name__ == "__main__":
