@@ -57,7 +57,21 @@ class DotPrinter(object):
                           "\tranksep=0.4\n"
                           "\tnodesep=0.4\n")
 
-            # TODO: print event info
+            # Add event info to plot
+            if event.label:
+                lbl = "<FONT POINT-SIZE=\"20\">{0}<BR/>".format(event.label)
+                if event.run_num:
+                    lbl += "Run: {0} <BR/>".foramt(event.run_num)
+                if event.lumi_section:
+                    lbl += "LS: {0} <BR/>".format(event.lumi_section)
+                if event.run_num:
+                    lbl += "Event: {0}<BR/>".format(event.event_num)
+                # lbl += "Key:<BR/>"
+                # lbl += "green"
+                lbl += "</FONT>"
+                dot_file.write("label=<{0}>".format(lbl))
+                dot_file.write("labelloc=top;\n")
+                dot_file.write("labeljust=left;\n") # this doesn't work
 
             graph = event.graph
             # Now write all the nodes and edges to file,
