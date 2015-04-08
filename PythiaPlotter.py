@@ -4,6 +4,7 @@ Main script to run PythiaPlotter.
 
 import sys
 import utils.user_args as user_args
+from utils.common import open_pdf
 import parsers
 import printers
 import networkx as nx
@@ -43,7 +44,8 @@ class PythiaPlotter(object):
 
     def print_event(self):
         self.printer.print_event(self.event)
-
+        if self.opts.openPDF:
+            open_pdf(self.opts.outputPDF)
 
 def main(args):
     pp = PythiaPlotter(user_args.get_args(args))
