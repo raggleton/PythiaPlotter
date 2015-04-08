@@ -19,7 +19,7 @@ from display_classes import DotNodeAttr, DotEdgeAttr
 def add_display_attr(graph, opts):
     """Add display attribute to nodes & edges"""
     for node_ind in graph.nodes():
-        node = graph[node]
+        node = graph.node[node_ind]
         node["attr"] = DotNodeAttr(node)
 
     for edges_ind in graph.edges():
@@ -34,7 +34,7 @@ def write_dot(event, dot_filename):
     with open(dot_filename, "w") as dot_file:
 
         # Header-type info
-        gv_file.write("digraph g {\n"
+        dot_file.write("digraph g {\n"
                       "\trankdir=LR;\n"
                       "\tranksep=0.4\n"
                       "\tnodesep=0.4\n")
@@ -47,20 +47,20 @@ def write_dot(event, dot_filename):
         for node in graph.nodes():
             # Maybe use this form for smaller files when in NODE repr?
             # children = ' '.join(graph.successors())
-            # gv_file.write("{0} -> {{ {1} }}").format(node, children)
-            gv_file.write("{0} {1}\n".format(node, graph[node]["attr"]))
+            # dot_file.write("{0} -> {{ {1} }}").format(node, children)
+            dot_file.write("{0} {1}\n".format(node, graph.node[node]["attr"]))
 
         # Same with edges
         for edge_ind in graph.edges():
             edge = graph[edge_ind[0]][edge_ind[1]]
-            gv_file.write("{0} -> {1} {2}\n".format(edge_ind[0], edge_ind[1], edge["attr"]))
+            dot_file.write("{0} -> {1} {2}\n".format(edge_ind[0], edge_ind[1], edge["attr"]))
 
         # Set all initial particles to be level in diagram
-        initial = ' '.join([str(node) for node in graph.nodes() if graph[node]['particle'].initial_state])
-        gv_file.write("\t{{rank=same; {0} }} "
+        initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['particle'].initial_state])
+        dot_file.write("\t{{rank=same; {0} }} "
                       "// initial particles on same level\n".format(initial))
 
-        gv_file.write("}\n")
+        dot_file.write("}\n")
 
 
 def print_pdf(dot_filename, pdf_filename):
@@ -70,15 +70,15 @@ def print_pdf(dot_filename, pdf_filename):
     ps_filename = pdf_filename.replace(".pdf", ".ps")
     psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
     call(psargs)
-    psargs = ["ps2pdf", ps_filename, pdf_filename]
+    pdfargs = ["ps2pdf", ps_filename, pdf_filename]
     call(psargs)
 
     # Or do straight to PDF:
-    # pdfargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
-    # call(pdfargs)
+    # dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
+    # call(dotargs)
 
     print ""
     print "To re-run:"
-    print ' '.join(dotargs)
     print ' '.join(psargs)
+    print ' '.join(pdfargs)
     print ""
