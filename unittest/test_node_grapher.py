@@ -10,14 +10,14 @@ import unittest
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-import node_grapher as ng
-from event_classes import Particle
+import parsers.node_grapher as ng
+from parsers.event_classes import Particle
 from pprint import pprint
 
 
 class NodeGrapher_Test(unittest.TestCase):
 
-    verbose = True
+    verbose = False
 
     def setUp(self):
         pass
