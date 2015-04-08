@@ -6,10 +6,11 @@ Classes to describe event & particles
 class Event(object):
     """Hold event info"""
 
-    def __init__(self, event_num=0, run_num=0, lumi_section=0):
+    def __init__(self, event_num=0, run_num=0, lumi_section=0, label=""):
         self.event_num = int(event_num)
         self.run_num = int(run_num)
         self.lumi_section = int(lumi_section)
+        self.label = label
         self.graph = None  # to hold NetworkX graph
 
     def __repr__(self):
@@ -57,6 +58,7 @@ class Particle(object):
         self.status = int(status)  # status code, diff for Pythia & hepmc
         self.parent1_code = int(parent1)  # barcode range for parents
         self.parent2_code = int(parent2)
+
         self.parent_codes = range(self.parent1_code, self.parent2_code+1)  # to store barcodes of parents
         self.child_codes = None  # to store barcodes of children
         # self.name = convert.pdgid_to_string(self.pdgid)  # raw form e.g pi0
