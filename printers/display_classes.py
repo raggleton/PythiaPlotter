@@ -4,6 +4,18 @@ Classes to describe visual representation
 
 
 from utils.pdgid_converter import pdgid_to_string
+import json
+
+
+# Hold user-defined settings from JSON file
+config_file = "printers/dot_config.json"
+with open(config_file) as jfile:
+    data = json.load(jfile)
+
+interesting_pdgids = data.keys()[:]
+for x in ["_comment", "default", "initial", "final"]:
+    interesting_pdgids.remove(x)
+interesting_pdgids = [int(i) for i in interesting_pdgids]
 
 
 class DotEdgeAttr(object):
@@ -54,17 +66,30 @@ class DotNodeAttr(object):
         self.attr["shape"] = "point"
 
     def add_particle_attr(self, node):
-        """Style node as particle according to PDGID, initial/final state, special, etc"""
+        """Style node as particle
+        Uses external config file to get PDGID-specific settings, as well as
+        initial & final state particles.
+        """
         particle = node["particle"]
-        self.attr["label"] = " {0}: {1}".format(particle.barcode,
+
+        # Displayed node label
+        self.attr["label"] = "{0}: {1}".format(particle.barcode,
                                                 pdgid_to_string(particle.pdgid))
 
-        if particle.initial_state:
-            self.attr["style"] = "filled"
-            self.attr["shape"] = "circle"
-        elif particle.final_state:
-            self.attr["style"] = "filled"
-            self.attr["shape"] = "box"
+        # default stylings, if they exist
+        if data["default"]["node"]:
+            for key, value in data["default"]["node"].iteritems():
+                self.attr[key] = value
 
-        # if particle.isInteresting:
-        #     self.attr["style"] = "filled"
+        # style initial & final state
+        if particle.initial_state:
+            for key, value in data["initial"].iteritems():
+                self.attr[key] = value
+        elif particle.final_state:
+            for key, value in data["final"].iteritems():
+                self.attr[key] = value
+
+        # other interesting particles
+        if abs(particle.pdgid) in interesting_pdgids:
+            for key, value in data[str(abs(particle.pdgid))].iteritems():
+                self.attr[key] = value

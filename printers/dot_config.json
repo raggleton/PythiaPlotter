@@ -1,0 +1,44 @@
+{
+    "_comment": [
+        "This is the config file for the DotPrinter. ",
+        "It stores specific display settings for various particles,",
+        "including initial/final state and PDGID-specific.",
+        "For each, store dot attributes as key:value pairs.",
+        "Note that for PDGID-specific settings,",
+        "it will apply settings to both + and - PDGIDs"
+    ],
+
+    "default": {
+        "node": null,
+        "edge": null
+    },
+
+    "initial": {
+        "style": "filled",
+        "shape": "circle",
+        "color": "green"
+    },
+
+    "final": {
+        "style": "filled",
+        "shape": "box",
+        "color": "dodgerblue2"
+    },
+
+    "15": {
+        "style": "filled",
+        "color": "purple"
+    },
+
+    "13": {
+        "style": "filled",
+        "color": "purple"
+    },
+
+    "5": {
+        "style": "filled",
+        "color": "red"
+    }
+
+
+}
