@@ -133,13 +133,14 @@ def get_args(input_args):
     #################
     # Post process user args
     #################
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
-    log.debug(args)
 
-    if args.verbose:
-        pprint(args)
+    log.debug("Args: %s" % args)
 
     user_args = args
     return args
