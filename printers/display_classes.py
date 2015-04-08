@@ -21,7 +21,7 @@ class DotEdgeAttr(object):
 
     def __str__(self):
         attr_list = ['{0}="{1}"'.format(i[0], i[1]) for i in self.attr.iteritems()]
-        return "[{0}]".format(", ".join(attr_list))
+        return "[{0}]".format(", ".join(attr_list)) if attr_list else ""
 
     def add_line_attr(self, edge):
         """Simple line to represent relationship between particles"""
