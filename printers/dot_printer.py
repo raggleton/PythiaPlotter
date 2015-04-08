@@ -60,22 +60,18 @@ class DotPrinter(object):
             # Add event info to plot
             if event.label:
                 lbl = "<FONT POINT-SIZE=\"40\">{0}<BR/>".format(event.label)
-                if event.run_num:
-                    lbl += "Run: {0} <BR/>".foramt(event.run_num)
-                if event.lumi_section:
-                    lbl += "LS: {0} <BR/>".format(event.lumi_section)
-                if event.run_num:
-                    lbl += "Event: {0}<BR/>".format(event.event_num)
-                # lbl += "Key:<BR/>"
-                # lbl += "green"
+                evt_lbl = [str(k + ": " + str(event.__dict__[k]))
+                           for k in event.__dict__.keys()
+                           if k not in ["graph", "particles", "label"]]
+                lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
                 dot_file.write("\tlabel=<{0}>;\n".format(lbl))
                 dot_file.write("\tlabelloc=top;\n")
                 dot_file.write("\tlabeljust=left;\n") # this doesn't work
 
             graph = event.graph
-            # Now write all the nodes to file,
-            # with their display attributes
+
+            # Now write all the nodes to file, with their display attributes
             for node in graph.nodes():
                 # Maybe use this form for smaller files when in NODE repr?
                 # children = ' '.join(graph.successors())
