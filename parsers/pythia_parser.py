@@ -9,6 +9,8 @@ from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle
 import node_grapher
+import utils.user_args as user_args
+
 
 class PythiaBlock(object):
     """Represent a 'block' in Pythia output e.g. Event Listing"""

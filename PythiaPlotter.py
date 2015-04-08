@@ -3,8 +3,11 @@ Main script to run PythiaPlotter.
 """
 
 import sys
-import user_args
-import pythia_parser
+import utils.user_args as user_args
+import parsers
+import printers
+import networkx as nx
+
 
 class PythiaPlotter(object):
     """
@@ -19,7 +22,7 @@ class PythiaPlotter(object):
 
         # Choose parser
         if opts.inputFormat == "PYTHIA":
-            self.parser = pythia_parser.PythiaParser(opts.input)
+            self.parser = parsers.PythiaParser(opts.input)
         elif opts.inputFormat == "HEPMC":
             pass
 
@@ -37,7 +40,8 @@ class PythiaPlotter(object):
 
     def parse_print(self):
         """Do parsing and printing in one call."""
-        pass
+        self.parse_event()
+        self.print_event()
 
     def parse_event(self):
         self.event = self.parser.parse()

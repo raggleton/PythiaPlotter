@@ -5,10 +5,18 @@ To handle input args & subsequent modifications
 
 import argparse
 import os.path
-import helper_methods as helpr
-import requisite_checker as checkr
+import utils.helper_methods as helpr
+import utils.requisite_checker as checkr
 from pprint import pprint
 import sys
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(__name__)
+
+
+global args
+
 
 def get_args(input_args):
     """Define all command-line options. Returns ArgumentParser object."""
@@ -127,10 +135,12 @@ def get_args(input_args):
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
+    log.debug(args)
 
     if args.verbose:
         pprint(args)
 
+    user_args = args
     return args
 
 
