@@ -123,9 +123,10 @@ class PythiaParser(object):
                        HardEvent=hard_evt_blocks)
                        # Stats=stats_blocks)
 
-    def __init__(self, filename, event_num=0):
+    def __init__(self, filename, event_num=0, remove_redundants=True):
         self.filename = filename
         self.evt_num = event_num
+        self.remove_redundants = remove_redundants
         # store file contents in list to slice up easily
         self.contents = []
         with open(filename, "r") as f:
@@ -173,7 +174,13 @@ class PythiaParser(object):
         # Full event blocks:
         full_particles = self.block_types["FullEvent"]["blocks"][self.evt_num].parse_results
 
+        # Assign particles to graph nodes
         event.particles = full_particles
-        event.graph = node_grapher.assign_particles_nodes(event.particles, remove_redunants)
+        event.graph = node_grapher.assign_particles_nodes(event.particles, self.remove_redundants)
+
+        # TODO: use user args
+        # if user_args.args.verbose:
+        # pprint(event)
+        # pprint(event.graph.node)
 
         return event
