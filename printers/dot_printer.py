@@ -29,7 +29,7 @@ class DotPrinter(object):
         self.pdf_filename = pdf_filename
 
     def print_event(self, event):
-        """Inclusive function to do the various stages easily"""
+        """Inclusive function to do the various stages of printing easily"""
         self.event = event
         self.add_display_attr(event.graph)
         self.write_dot(event, self.gv_filename)
@@ -47,15 +47,14 @@ class DotPrinter(object):
 
     def write_dot(self, event, dot_filename):
         """Write event graph to file in dot format"""
-
         log.info("Writing GraphViz file to %s" % dot_filename)
         with open(dot_filename, "w") as dot_file:
 
             # Header-type info
             dot_file.write("digraph g {\n"
-                          "\trankdir=LR;\n"
-                          "\tranksep=0.4;\n"
-                          "\tnodesep=0.4;\n")
+                           "\trankdir=LR;\n"
+                           "\tranksep=0.4;\n"
+                           "\tnodesep=0.4;\n")
 
             # Add event info to plot
             if event.label:
@@ -67,7 +66,7 @@ class DotPrinter(object):
                 lbl += "</FONT>"
                 dot_file.write("\tlabel=<{0}>;\n".format(lbl))
                 dot_file.write("\tlabelloc=top;\n")
-                dot_file.write("\tlabeljust=left;\n") # this doesn't work
+                dot_file.write("\tlabeljust=left;\n")  # this doesn't work
 
             graph = event.graph
 
@@ -84,15 +83,15 @@ class DotPrinter(object):
                 dot_file.write("\t{0} -> {1} {2}\n".format(edge_ind[0], edge_ind[1], edge["attr"]))
 
             # Set all initial particles to be level in diagram
-            initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['particle'].initial_state])
+            initial = ' '.join([str(node) for node in graph.nodes()
+                               if graph.node[node]['particle'].initial_state])
             dot_file.write("\t{{rank=same; {0} }} "
-                          "// initial particles on same level\n".format(initial))
+                           "// initial particles on same level\n".format(initial))
 
             dot_file.write("}\n")
 
     def print_pdf(self, dot_filename, pdf_filename):
         """Run GraphViz file through dot to produce a PDF."""
-
         log.info("Writing PDF to %s", pdf_filename)
 
         # Do 2 stages: make a PostScript file, then convert to PDF.

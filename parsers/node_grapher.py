@@ -42,7 +42,7 @@ def assign_particles_nodes(particles, remove_redundants=True):
         else:
             gr.node[node]['particle'].final_state = True
 
-    # remove redundant nodes from graph - NB they still exist in the Event tho...
+    # remove redundant nodes from graph - NB they still exist in the Event tho
     if remove_redundants:
         for node in gr.nodes():
             if (len(gr.successors(node)) == 1

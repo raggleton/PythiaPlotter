@@ -9,6 +9,7 @@ Get more help by doing:
 
 """
 
+
 import sys
 import utils.user_args as user_args
 from utils.common import open_pdf
@@ -53,6 +54,7 @@ class PythiaPlotter(object):
         self.printer.print_event(self.event)
         if self.opts.openPDF:
             open_pdf(self.opts.outputPDF)
+
 
 def main(args):
     pp = PythiaPlotter(user_args.get_args(args))

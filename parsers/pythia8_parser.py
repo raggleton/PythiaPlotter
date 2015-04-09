@@ -53,7 +53,7 @@ def parse_event_block(contents):
 
     for line in contents:
         parts = line.split()
-        # print parts
+        log.debug(parts)
 
         # first determine if interesting line or not - checks to see if entries
         # in ignore tuple match entries in parts list
@@ -89,16 +89,13 @@ def parse_stats_block(contents):
 
 
 class Pythia8Parser(object):
-    """Main class to parse Pythia 8 screen output from a text file.
-
-    Returns an Event object, which contains info about the event,
-    a list of Particles in the event, and a NetworkX graph obj
-    with particles assigned to nodes.
-    """
+    """Main class to parse Pythia 8 screen output from a text file."""
 
     # Block types in Pythia output
-    # For each, we store: strings that indicate start/end or block;
-    # the start/end indicies of any blocks; a list of individual block contents;
+    # For each, we store:
+    # strings that indicate start/end or block;
+    # the start/end indicies of any blocks;
+    # a list of individual block contents;
     # and the parser method to handle this type of block
     info_start = "PYTHIA Info Listing"
     info_end = "End PYTHIA Info Listing"
@@ -128,7 +125,6 @@ class Pythia8Parser(object):
     block_types = dict(FullEvent=full_evt_blocks,
                        Info=info_blocks,
                        HardEvent=hard_evt_blocks)
-                       # Stats=stats_blocks)
 
     def __init__(self, filename, event_num=0, remove_redundants=True):
         self.filename = filename
@@ -139,7 +135,8 @@ class Pythia8Parser(object):
         # store file contents in list to slice up easily
         self.contents = []
         with open(filename, "r") as f:
-            self.contents = filter(None, [l.replace("\n", "").strip() for l in list(f)])
+            lines = [l.replace("\n", "").strip() for l in list(f)]
+            self.contents = filter(None, lines)
 
     def __repr__(self):
         return "%s.%s(filename=%r, event_num=%d)" % (self.__module__,
@@ -151,7 +148,12 @@ class Pythia8Parser(object):
         return "Pythia8Parser:\n%s" % pformat(self.block_types)
 
     def parse(self):
-        """Go through contents and find blocks, then deal with them."""
+        """Go through contents and find blocks, then deal with them.
+
+        Returns an Event object, which contains info about the event,
+        a list of Particles in the event, and a NetworkX graph obj
+        with particles assigned to nodes.
+        """
 
         # Find all start & end indices for blocks
         for i, line in enumerate(self.contents):
@@ -188,10 +190,5 @@ class Pythia8Parser(object):
         # Assign particles to graph nodes
         event.particles = full_particles
         event.graph = node_grapher.assign_particles_nodes(event.particles, self.remove_redundants)
-
-        # TODO: use user args
-        # if user_args.args.verbose:
-        # pprint(event)
-        # pprint(event.graph.node)
 
         return event

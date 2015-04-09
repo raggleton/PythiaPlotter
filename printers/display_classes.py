@@ -13,9 +13,8 @@ with open(config_file) as jfile:
     data = json.load(jfile)
 
 interesting_pdgids = data.keys()[:]
-for x in ["_comment", "default", "initial", "final"]:
-    interesting_pdgids.remove(x)
-interesting_pdgids = [int(i) for i in interesting_pdgids]
+non_pdgids = ["_comment", "default", "initial", "final"]
+interesting_pdgids = [int(i) for i in interesting_pdgids if i not in non_pdgids]
 
 
 class DotEdgeAttr(object):
@@ -40,7 +39,10 @@ class DotEdgeAttr(object):
         pass
 
     def add_particle_attr(self, edge):
-        """Style line as particle according to PDGID, initial/final state, special, etc"""
+        """Style line as particle.
+        Uses external config file to get PDGID-specific settings, as well as
+        initial & final state particles.
+        """
         pass
 
 
@@ -74,7 +76,7 @@ class DotNodeAttr(object):
 
         # Displayed node label
         self.attr["label"] = "{0}: {1}".format(particle.barcode,
-                                                pdgid_to_string(particle.pdgid))
+                                               pdgid_to_string(particle.pdgid))
 
         # default stylings, if they exist
         if data["default"]["node"]:

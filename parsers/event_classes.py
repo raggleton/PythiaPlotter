@@ -20,7 +20,7 @@ class Event(object):
         self.graph = None  # to hold NetworkX graph
 
     def __repr__(self):
-        args_str = ["%ss=%s" %(a, self.__dict__[a]) for a in
+        args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
                     ["event_num", "run_num", "lumi_section"]]
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
                               ", ".join(args_str))
@@ -64,8 +64,8 @@ class Particle(object):
         self.status = int(status)  # status code, diff for Pythia & hepmc
         self.parent1_code = int(parent1)  # barcode range for parents
         self.parent2_code = int(parent2)
-
-        self.parent_codes = range(self.parent1_code, self.parent2_code+1)  # to store barcodes of parents
+        # to store barcodes of parents:
+        self.parent_codes = range(self.parent1_code, self.parent2_code + 1)
         self.child_codes = None  # to store barcodes of children
         # self.name = convert.pdgid_to_string(self.pdgid)  # raw form e.g pi0
         # self.texname = convert.pdgid_to_tex(self.pdgid)  # tex e.g \pi^0

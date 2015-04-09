@@ -1,5 +1,5 @@
 """
-This attaches particles etc to a NetworkX graph, when EDGES represent particles.
+Attaches particles etc to a NetworkX graph, when EDGES represent particles.
 """
 
 
@@ -12,4 +12,3 @@ def assign_particles_edges(particles, remove_redundants=True):
     # assign a node for each Particle obj
     for particle in particles:
         # gr.add_edge(particle.barcode, particle=particle)
-
