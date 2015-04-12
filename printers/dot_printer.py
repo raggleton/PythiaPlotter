@@ -59,9 +59,8 @@ class DotPrinter(object):
             # Add event info to plot
             if event.label:
                 lbl = "<FONT POINT-SIZE=\"40\">{0}<BR/>".format(event.label)
-                evt_lbl = [str(k + ": " + str(event.__dict__[k]))
-                           for k in event.__dict__.keys()
-                           if k not in ["graph", "particles", "label"]]
+                # Keep event.label as a title, not in attribute list
+                evt_lbl = [x for x in event.__str__().split("\n") if not x.startswith("label")]
                 lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
                 dot_file.write("\tlabel=<{0}>;\n".format(lbl))
@@ -101,6 +100,8 @@ class DotPrinter(object):
         # call(psargs)
         # pdfargs = ["ps2pdf", ps_filename, pdf_filename]
         # call(psargs)
+        # rmargs = ["rm", ps_filename]
+        # call (rmargs)
 
         # Or do straight to PDF:
         dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]

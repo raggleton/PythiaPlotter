@@ -18,28 +18,30 @@ class Event(object):
         self.lumi_section = int(lumi_section)
         self.label = label
         self.graph = None  # to hold NetworkX graph
+        self._particles = None
 
     def __repr__(self):
         args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
-                    ["event_num", "run_num", "lumi_section"]]
+                    ["event_num", "run_num", "lumi_section", "label"]]
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
                               ", ".join(args_str))
 
     def __str__(self):
-        return "Event (event_num {e_num}, run_num {r_num}, LS {ls})".format(
-            e_num=self.event_num,
-            r_num=self.run_num,
-            ls=self.lumi_section)
+        """Print event info in format suitable for use on graph or printout"""
+        ignore = ["graph", "_particles", "particles"]
+        info = [k+": "+str(v)+"\n" for k,v in self.__dict__.iteritems()
+                if k not in ignore]
+        return "Event: {0}".format("".join(info))
 
-    # @property
-    # def particles(self):
-    #     return self.particles
+    @property
+    def particles(self):
+        return self._particles
 
-    # @particles.setter
-    # def particles(self, particles):
-    #     self.particles = particles
-    #     for p in self.particles:
-    #         p.event = self
+    @particles.setter
+    def particles(self, particles):
+        self._particles = particles
+        for p in self._particles:
+            p.event = self
 
 
 class Particle(object):
