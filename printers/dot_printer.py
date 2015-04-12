@@ -24,16 +24,17 @@ log = logging.getLogger(__name__)
 class DotPrinter(object):
     """Class to easily print event to file using dot/Graphviz"""
 
-    def __init__(self, gv_filename, pdf_filename):
+    def __init__(self, gv_filename, pdf_filename, renderer="pdf"):
         self.gv_filename = gv_filename
         self.pdf_filename = pdf_filename
+        self.renderer = renderer
 
     def print_event(self, event):
         """Inclusive function to do the various stages of printing easily"""
         self.event = event
         self.add_display_attr(event.graph)
         self.write_dot(event, self.gv_filename)
-        self.print_pdf(self.gv_filename, self.pdf_filename)
+        self.print_pdf(self.gv_filename, self.pdf_filename, self.renderer)
 
     def add_display_attr(self, graph):
         """Add display attribute to nodes & edges"""
@@ -94,26 +95,33 @@ class DotPrinter(object):
 
             dot_file.write("}\n")
 
-    def print_pdf(self, dot_filename, pdf_filename):
-        """Run GraphViz file through dot to produce a PDF."""
+    def print_pdf(self, dot_filename, pdf_filename, renderer):
+        """Run GraphViz file through dot to produce a PDF.
+
+        Different renderer options: ps, pdf.
+        TODO: better way of handling this...
+        """
+
         log.info("Writing PDF to %s", pdf_filename)
+        log.info("To re-run:")
 
-        # Do 2 stages: make a PostScript file, then convert to PDF.
-        # This makes the PDF searchable.
-        # ps_filename = pdf_filename.replace(".pdf", ".ps")
-        # psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
-        # call(psargs)
-        # pdfargs = ["ps2pdf", ps_filename, pdf_filename]
-        # call(psargs)
-        # rmargs = ["rm", ps_filename]
-        # call (rmargs)
-
-        # Or do straight to PDF:
-        dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
-        call(dotargs)
-
-        # print ""
-        # print "To re-run:"
-        # print ' '.join(psargs)
-        # print ' '.join(pdfargs)
-        # print ""
+        if renderer == "ps":
+            # Do 2 stages: make a PostScript file, then convert to PDF.
+            # This makes the PDF searchable, but doens't apply all HTML tags.
+            ps_filename = pdf_filename.replace(".pdf", ".ps")
+            psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
+            call(psargs)
+            pdfargs = ["ps2pdf", ps_filename, pdf_filename]
+            call(pdfargs)
+            rmargs = ["rm", ps_filename]
+            call (rmargs)
+            log.info(" ".join(psargs))
+            log.info(" ".join(pdfargs))
+            log.info(" ".join(rmargs))
+        elif renderer == "pdf":
+            # Or do straight to PDF: obeys HTML tags, but not searchable.
+            dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
+            call(dotargs)
+            log.info(" ".join(dotargs))
+        else:
+            raise Exception("'%s' is not a valid renderer option: use ps or pdf" % renderer)
