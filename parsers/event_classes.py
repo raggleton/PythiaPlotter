@@ -31,7 +31,7 @@ class Event(object):
         ignore = ["graph", "_particles", "particles"]
         info = [k+": "+str(v)+"\n" for k,v in self.__dict__.iteritems()
                 if k not in ignore]
-        return "Event: {0}".format("".join(info))
+        return "Event:\n{0}".format("".join(info))
 
     @property
     def particles(self):

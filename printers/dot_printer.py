@@ -58,18 +58,23 @@ class DotPrinter(object):
 
             # Add event info to plot
             if event.label:
-                lbl = "<FONT POINT-SIZE=\"40\">{0}<BR/>".format(event.label)
+                # Event title
+                lbl = "<FONT POINT-SIZE=\"45\"><B>{0}</B></FONT><BR/>".format(event.label)
+                # Event info
+                lbl += "<FONT POINT-SIZE=\"40\">  <BR/>"
                 # Keep event.label as a title, not in attribute list
-                evt_lbl = [x for x in event.__str__().split("\n") if not x.startswith("label")]
+                evt_lbl = [x for x in event.__str__().split("\n")
+                           if not (x.startswith("label") or x.startswith("Event"))]
                 lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
                 dot_file.write("\tlabel=<{0}>;\n".format(lbl))
                 dot_file.write("\tlabelloc=top;\n")
                 dot_file.write("\tlabeljust=left;\n")  # this doesn't work
 
+            # Now print the graph to file
             graph = event.graph
 
-            # Now write all the nodes to file, with their display attributes
+            # Write all the nodes to file, with their display attributes
             for node in graph.nodes():
                 # Maybe use this form for smaller files when in NODE repr?
                 # children = ' '.join(graph.successors())
