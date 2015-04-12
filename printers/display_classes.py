@@ -10,11 +10,11 @@ import json
 # Hold user-defined settings from JSON file
 config_file = "printers/dot_config.json"
 with open(config_file) as jfile:
-    data = json.load(jfile)
+    settings = json.load(jfile)
 
-interesting_pdgids = data.keys()[:]
-non_pdgids = ["_comment", "default", "initial", "final"]
-interesting_pdgids = [int(i) for i in interesting_pdgids if i not in non_pdgids]
+interesting_pdgids = settings.keys()[:]
+non_pdgid_keys = ["_comment", "default", "initial", "final"]
+interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
 
 
 class DotEdgeAttr(object):
@@ -79,19 +79,20 @@ class DotNodeAttr(object):
                                                pdgid_to_string(particle.pdgid))
 
         # default stylings, if they exist
-        if data["default"]["node"]:
-            for key, value in data["default"]["node"].iteritems():
+        if settings["default"]["node"]:
+            for key, value in settings["default"]["node"].iteritems():
                 self.attr[key] = value
 
         # style initial & final state
         if particle.initial_state:
-            for key, value in data["initial"].iteritems():
+            for key, value in settings["initial"]["node"].iteritems():
                 self.attr[key] = value
         elif particle.final_state:
-            for key, value in data["final"].iteritems():
+            for key, value in settings["final"]["node"].iteritems():
                 self.attr[key] = value
 
         # other interesting particles
-        if abs(particle.pdgid) in interesting_pdgids:
-            for key, value in data[str(abs(particle.pdgid))].iteritems():
+        pid = str(abs(particle.pdgid))
+        if pid in interesting_pdgids:
+            for key, value in settings[pid]["node"].iteritems():
                 self.attr[key] = value

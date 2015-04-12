@@ -4,6 +4,7 @@
         "It stores specific display settings for various particles,",
         "including initial/final state and PDGID-specific.",
         "For each, store dot attributes as key:value pairs.",
+        "There is a set for both node & edge representations.",
         "Note that for PDGID-specific settings,",
         "it will apply settings to both + and - PDGIDs"
     ],
@@ -14,30 +15,55 @@
     },
 
     "initial": {
-        "style": "filled",
-        "shape": "circle",
-        "color": "green"
+        "node": {
+            "style": "filled",
+            "shape": "circle",
+            "color": "green"
+        },
+        "edge":{
+            "color": "green"
+        }
     },
 
     "final": {
-        "style": "filled",
-        "shape": "box",
-        "color": "dodgerblue2"
+        "node": {
+            "style": "filled",
+            "shape": "box",
+            "color": "dodgerblue1"
+        },
+        "edge": {
+            "color": "dodgerblue1"
+        }
     },
 
     "15": {
-        "style": "filled",
-        "color": "purple"
+        "node": {
+            "style": "filled",
+            "color": "purple"
+        },
+        "edge": {
+            "color": "purple"
+        }
     },
 
     "13": {
-        "style": "filled",
-        "color": "purple"
+        "node": {
+            "style": "filled",
+            "color": "purple"
+        },
+        "edge": {
+            "color": "purple"
+        }
     },
 
     "5": {
-        "style": "filled",
-        "color": "red"
+        "node": {
+            "style": "filled",
+            "color": "red"
+        },
+        "edge": {
+            "color": "red"
+        }
     }
 
 
