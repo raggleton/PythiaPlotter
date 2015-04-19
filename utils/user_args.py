@@ -100,7 +100,7 @@ def get_args(input_args):
     parser.add_argument("-r", "--render",
                         help=render_help_str,
                         choices=render_opts,
-                        default="DOT" if "DOT" in render_opts.keys() else "LATEX")
+                        default="DOT" if "DOT" in render_opts else "LATEX")
 
     #################
     # Testing options
@@ -136,6 +136,9 @@ def get_args(input_args):
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
+    if not helpr.check_file_exists(args.input):
+        raise IOError("No such file: '%s'" % args.input)
+
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
@@ -168,6 +171,8 @@ def set_default_format(args):
             args.inputFormat = "HEPMC"
         elif args.extension in [".txt", ".out"]:
             args.inputFormat = "PYTHIA"
+        else:
+            raise RuntimeError("Cannot determine input format. Please specify.")
         log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
 
 
