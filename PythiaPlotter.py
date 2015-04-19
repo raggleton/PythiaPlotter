@@ -33,7 +33,8 @@ class PythiaPlotter(object):
         if opts.inputFormat == "PYTHIA":
             self.parser = parsers.Pythia8Parser(opts.input)
         elif opts.inputFormat == "HEPMC":
-            pass
+            self.parser = parsers.HepMCParser(opts.input,
+                                              remove_redundants=False)
 
         # Choose printer & configure
         if opts.render == "DOT":

@@ -1,10 +1,18 @@
 """
-Classes to describe visual representation
+Classes to describe visual attributes. Used when making GraphViz file.
+
+TODO: there's so much common between the two classes, surely it must be
+possible to simplify things...
 """
 
 
 from utils.pdgid_converter import pdgid_to_string
 import json
+import utils.logging_config
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 # Hold user-defined settings from JSON file
@@ -44,7 +52,30 @@ class DotEdgeAttr(object):
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
         """
-        pass
+        particle = edge["particle"]
+
+        # Displayed edge label
+        self.attr["label"] = "{0}: {1}".format(particle.barcode,
+                                               pdgid_to_string(particle.pdgid))
+
+        # default stylings, if they exist
+        if settings["default"]["edge"]:
+            for key, value in settings["default"]["edge"].iteritems():
+                self.attr[key] = value
+
+        # style initial & final state
+        if particle.initial_state:
+            for key, value in settings["initial"]["edge"].iteritems():
+                self.attr[key] = value
+        elif particle.final_state:
+            for key, value in settings["final"]["edge"].iteritems():
+                self.attr[key] = value
+
+        # other interesting particles
+        pid = str(abs(particle.pdgid))
+        if pid in interesting_pdgids:
+            for key, value in settings[pid]["edge"].iteritems():
+                self.attr[key] = value
 
 
 class DotNodeAttr(object):
@@ -94,7 +125,9 @@ class DotNodeAttr(object):
                 self.attr[key] = value
 
         # other interesting particles
+        # do last so it overrides other initial/final settings
         pid = str(abs(particle.pdgid))
         if pid in interesting_pdgids:
             for key, value in settings[pid]["node"].iteritems():
+                self.attr[key] = value
                 self.attr[key] = value

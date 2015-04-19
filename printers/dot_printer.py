@@ -90,7 +90,7 @@ class DotPrinter(object):
 
             # Set all initial particles to be level in diagram
             initial = ' '.join([str(node) for node in graph.nodes()
-                               if graph.node[node]['particle'].initial_state])
+                               if graph.node[node]['initial_state']])
             dot_file.write("\t{{rank=same; {} }} "
                            "// initial particles on same level\n".format(initial))
 

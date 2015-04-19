@@ -1,5 +1,5 @@
 """
-Classes to describe event & particles
+Classes to describe event & physical particles
 """
 
 import utils.logging_config
@@ -12,7 +12,8 @@ log = logging.getLogger(__name__)
 class Event(object):
     """Hold event info"""
 
-    def __init__(self, event_num=0, run_num=0, lumi_section=0, label=""):
+    def __init__(self, event_num=0, run_num=0, lumi_section=0, label="",
+                 signal_process_vtx_id=0):
         self.event_num = int(event_num)
         self.run_num = int(run_num)
         self.lumi_section = int(lumi_section)
@@ -22,14 +23,14 @@ class Event(object):
 
     def __repr__(self):
         args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
-                    ["event_num", "run_num", "lumi_section", "label"]]
+                    self.__dict__ if a not in ["graph", "_particles", "particles"]]
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
                               ", ".join(args_str))
 
     def __str__(self):
         """Print event info in format suitable for use on graph or printout"""
         ignore = ["graph", "_particles", "particles"]
-        info = [k+": "+str(v)+"\n" for k,v in self.__dict__.iteritems()
+        info = [k+": "+str(v)+"\n" for k, v in self.__dict__.iteritems()
                 if k not in ignore]
         return "Event:\n{0}".format("".join(info))
 
@@ -69,20 +70,20 @@ class Particle(object):
         # to store barcodes of parents:
         self.parent_codes = range(self.parent1_code, self.parent2_code + 1)
         self.child_codes = None  # to store barcodes of children
-        # self.name = convert.pdgid_to_string(self.pdgid)  # raw form e.g pi0
-        # self.texname = convert.pdgid_to_tex(self.pdgid)  # tex e.g \pi^0
         # self.skip = False  # Skip when writing to file
         self.final_state = False
         self.initial_state = self.parent1_code == self.parent2_code == 0
         self.event = None  # parent event
 
     def __repr__(self):
-        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()]
+        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()
+                    if k not in ["event"]]
         return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
                               ", ".join(args_str))
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
+        # TODO - fix this, it's stupid
         properties = dict(m1=self.parent1_code,
                           m2=self.parent2_code,
                           pt=self.pt
