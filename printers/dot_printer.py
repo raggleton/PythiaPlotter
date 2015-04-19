@@ -105,11 +105,16 @@ class DotPrinter(object):
         log.info("Writing PDF to %s", pdf_filename)
         log.info("To re-run:")
 
-        if renderer == "ps":
+        if renderer == "ps" or renderer == "ps2":
             # Do 2 stages: make a PostScript file, then convert to PDF.
-            # This makes the PDF searchable, but doens't apply all HTML tags.
+            # Note that there is no perfect renderer.
+            # ps2 - will make the PDF searchable,
+            # but won't obey all HTML tags or unicode.
+            # ps:cairo - obey HTML tags and unicode, but not be searchable.
             ps_filename = pdf_filename.replace(".pdf", ".ps")
-            psargs = ["dot", "-Tps2", dot_filename, "-o", ps_filename]
+            if renderer == "ps2":
+                renderer += ":cairo"
+            psargs = ["dot", "-T%s" % renderer, dot_filename, "-o", ps_filename]
             call(psargs)
             pdfargs = ["ps2pdf", ps_filename, pdf_filename]
             call(pdfargs)
