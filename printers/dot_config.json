@@ -26,7 +26,7 @@
     "default": {
         "node": null,
         "edge": {
-          "penwidth": 2
+            "penwidth": 2
         }
     },
 
@@ -91,7 +91,10 @@
 
     "21": {
         "_name": "gluon",
-        "node": null,
+        "node": {
+            "color": "grey",
+            "fontcolor": "grey"
+        },
         "edge": {
             "color": "grey",
             "fontcolor": "grey"
