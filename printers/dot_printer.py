@@ -60,7 +60,7 @@ class DotPrinter(object):
             # Add event info to plot
             if event.label:
                 # Event title
-                lbl = "<FONT POINT-SIZE=\"45\"><B>{0}</B></FONT><BR/>".format(event.label)
+                lbl = "<FONT POINT-SIZE=\"45\"><B>{}</B></FONT><BR/>".format(event.label)
                 # Event info
                 lbl += "<FONT POINT-SIZE=\"40\">  <BR/>"
                 # Keep event.label as a title, not in attribute list
@@ -68,7 +68,7 @@ class DotPrinter(object):
                            if not (x.startswith("label") or x.startswith("Event"))]
                 lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
-                dot_file.write("\tlabel=<{0}>;\n".format(lbl))
+                dot_file.write("\tlabel=<{}>;\n".format(lbl))
                 dot_file.write("\tlabelloc=top;\n")
                 dot_file.write("\tlabeljust=left;\n")  # this doesn't work
 
@@ -78,19 +78,20 @@ class DotPrinter(object):
             # Write all the nodes to file, with their display attributes
             for node in graph.nodes():
                 # Maybe use this form for smaller files when in NODE repr?
+                # Otherwise have line for *each* edge, even when parent same
                 # children = ' '.join(graph.successors())
                 # dot_file.write("{0} -> {{ {1} }}").format(node, children)
-                dot_file.write("\t{0} {1}\n".format(node, graph.node[node]["attr"]))
+                dot_file.write("\t{0} {attr}\n".format(node, **graph.node[node]))
 
             # Same with edges
             for edge_ind in graph.edges():
                 edge = graph[edge_ind[0]][edge_ind[1]]
-                dot_file.write("\t{0} -> {1} {2}\n".format(edge_ind[0], edge_ind[1], edge["attr"]))
+                dot_file.write("\t{0} -> {1} {attr}\n".format(*edge_ind, **edge))
 
             # Set all initial particles to be level in diagram
             initial = ' '.join([str(node) for node in graph.nodes()
                                if graph.node[node]['particle'].initial_state])
-            dot_file.write("\t{{rank=same; {0} }} "
+            dot_file.write("\t{{rank=same; {} }} "
                            "// initial particles on same level\n".format(initial))
 
             dot_file.write("}\n")

@@ -31,8 +31,9 @@ class DotEdgeAttr(object):
         return "DotEdgeAttrRepr"
 
     def __str__(self):
-        attr_list = ['{0}="{1}"'.format(i[0], i[1]) for i in self.attr.iteritems()]
-        return "[{0}]".format(", ".join(attr_list)) if attr_list else ""
+        """Print edge attributes in dot-friendly format"""
+        attr_list = ['{0}="{1}"'.format(*i) for i in self.attr.iteritems()]
+        return "[{}]".format(", ".join(attr_list)) if attr_list else ""
 
     def add_line_attr(self, edge):
         """Simple line to represent relationship between particles"""
@@ -60,8 +61,9 @@ class DotNodeAttr(object):
         return "DotNodeAttrRepr"
 
     def __str__(self):
-        attr_list = ['{0}="{1}"'.format(i[0], i[1]) for i in self.attr.iteritems()]
-        return "[{0}]".format(", ".join(attr_list))
+        """Print node attributes in dot-friendly format"""
+        attr_list = ['{0}="{1}"'.format(*i) for i in self.attr.iteritems()]
+        return "[{}]".format(", ".join(attr_list))
 
     def add_point_attr(self, node):
         """Simple point to represent intersection of particles"""
