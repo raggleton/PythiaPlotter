@@ -25,6 +25,13 @@ non_pdgid_keys = ["_comment", "graph", "default", "initial", "final"]
 interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
 
 
+def load_json_settings(json_dict, attr):
+    """Load dict from JSON into attr dict. Checks to see if null value."""
+    if json_dict:
+        for key, value in json_dict.iteritems():
+            attr[key] = value
+
+
 class DotEdgeAttr(object):
     """Hold display attributes for edge in dot graph"""
 
@@ -59,23 +66,18 @@ class DotEdgeAttr(object):
                                                pdgid_to_string(particle.pdgid))
 
         # default stylings, if they exist
-        if settings["default"]["edge"]:
-            for key, value in settings["default"]["edge"].iteritems():
-                self.attr[key] = value
+        load_json_settings(settings["default"]["edge"], self.attr)
 
         # style initial & final state
         if particle.initial_state:
-            for key, value in settings["initial"]["edge"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings["initial"]["edge"], self.attr)
         elif particle.final_state:
-            for key, value in settings["final"]["edge"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings["final"]["edge"], self.attr)
 
         # other interesting particles
         pid = str(abs(particle.pdgid))
         if pid in interesting_pdgids:
-            for key, value in settings[pid]["edge"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings[pid]["edge"], self.attr)
 
 
 class DotNodeAttr(object):
@@ -113,24 +115,19 @@ class DotNodeAttr(object):
                                                pdgid_to_string(particle.pdgid))
 
         # default stylings, if they exist
-        if settings["default"]["node"]:
-            for key, value in settings["default"]["node"].iteritems():
-                self.attr[key] = value
+        load_json_settings(settings["default"]["node"], self.attr)
 
         # style initial & final state
         if particle.initial_state:
-            for key, value in settings["initial"]["node"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings["initial"]["node"], self.attr)
         elif particle.final_state:
-            for key, value in settings["final"]["node"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings["final"]["node"], self.attr)
 
         # other interesting particles
         # do last so it overrides other initial/final settings
         pid = str(abs(particle.pdgid))
         if pid in interesting_pdgids:
-            for key, value in settings[pid]["node"].iteritems():
-                self.attr[key] = value
+            load_json_settings(settings[pid]["node"], self.attr)
 
 
 class DotGraphAttr(object):
@@ -139,7 +136,7 @@ class DotGraphAttr(object):
     def __init__(self, graph):
         self.graph = graph
         self.attr = {}
-        self.add_graph_attr()
+        load_json_settings(settings["graph"], self.attr)
 
     def __repr__(self):
         return "DotGraphAttr"
@@ -151,6 +148,4 @@ class DotGraphAttr(object):
 
     def add_graph_attr(self):
         """Store graph-wide settings from JSON"""
-        if settings["graph"]:
-            for key, value in settings["graph"].iteritems():
-                self.attr[key] = value
+        pass
