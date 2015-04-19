@@ -17,7 +17,7 @@ from pprint import pprint
 class Checker_Test(unittest.TestCase):
 
     def setUp(self):
-        self.real_prog = "root"
+        self.real_prog = "vim"
         self.fake_prog = "fakeprog"
         self.real_mod = "argparse"
         self.fake_mod = "aaaaaaa"
