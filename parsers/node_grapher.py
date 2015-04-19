@@ -1,22 +1,16 @@
+import utils.logging_config
+import logging
 import networkx as nx
+
+
+log = logging.getLogger(__name__)
 
 
 def assign_particles_nodes(particles, remove_redundants=True):
     """
-    Attaches particles to a NetworkX directional graph,
-    when NODES represent particles.
+    Attach particles to a NetworkX directed graph when NODES represent particles.
 
     It automatically attaches directed edges, from parent to child nodes.
-
-    It also is possible to remove redundant nodes - i.e. when you have
-    a particles who has 1 parent who has the same PDGID,
-    and 1 child (no PDGID requirement)
-
-    e.g.
-    ->-g->-g->-g->-
-
-    These are useful if considering how Pythia actually works,
-    but otherwise are just confusing and waste space.
     """
 
     gr = nx.DiGraph()
@@ -41,22 +35,38 @@ def assign_particles_nodes(particles, remove_redundants=True):
             gr.node[node]['particle'].child_codes = children
         else:
             gr.node[node]['particle'].final_state = True
+        # mark node as initial state or not, so we can align them on graph
+        gr.node[node]['initial_state'] = gr.node[node]['particle'].initial_state
 
     # remove redundant nodes from graph - NB they still exist in the Event tho
     if remove_redundants:
-        for node in gr.nodes():
-            if (len(gr.successors(node)) == 1
-               and len(gr.predecessors(node)) == 1):
-
-                p = gr.node[node]['particle']
-                parent = gr.node[gr.predecessors(node)[0]]['particle']
-                child = gr.node[gr.successors(node)[0]]['particle']
-                if parent.pdgid == p.pdgid:
-                    # rewire the graph
-                    parent.child_codes = p.child_codes
-                    child.parent1_code = parent.barcode
-                    child.parent2_code = parent.barcode
-                    gr.remove_node(node)  # also removes the relevant edges
-                    gr.add_edge(parent.barcode, child.barcode)
+        remove_redundant_nodes(gr)
 
     return gr
+
+
+def remove_redundant_nodes(graph):
+    """
+    Remove redundant particle nodes - i.e. when you have a particles which has
+    1 parent who has the same PDGID, and 1 child (no PDGID requirement)
+
+    e.g.
+    ->-g->-g->-g->-
+
+    These are useful to keep if considering Pythia8 internal workings,
+    but otherwise are just confusing and a waste of space.
+    """
+    for node in graph.nodes():
+        if (len(graph.successors(node)) == 1
+           and len(graph.predecessors(node)) == 1):
+
+            p = graph.node[node]['particle']
+            parent = graph.node[graph.predecessors(node)[0]]['particle']
+            child = graph.node[graph.successors(node)[0]]['particle']
+            if parent.pdgid == p.pdgid:
+                # rewire the graph
+                parent.child_codes = p.child_codes
+                child.parent1_code = parent.barcode
+                child.parent2_code = parent.barcode
+                graph.remove_node(node)  # also removes the relevant edges
+                graph.add_edge(parent.barcode, child.barcode)
