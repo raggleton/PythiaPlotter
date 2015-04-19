@@ -40,7 +40,7 @@ class DotEdgeAttr(object):
 
     def __str__(self):
         """Print edge attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}"'.format(*i) for i in self.attr.iteritems()]
+        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
         return "[{}]".format(", ".join(attr_list)) if attr_list else ""
 
     def add_line_attr(self, edge):
@@ -93,7 +93,7 @@ class DotNodeAttr(object):
 
     def __str__(self):
         """Print node attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}"'.format(*i) for i in self.attr.iteritems()]
+        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
         return "[{}]".format(", ".join(attr_list))
 
     def add_point_attr(self, node):
@@ -145,7 +145,7 @@ class DotGraphAttr(object):
 
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}";'.format(*i) for i in self.attr.iteritems()]
+        attr_list = ['{0}="{1}";'.format(*it) for it in self.attr.iteritems()]
         return "{}".format("\n\t".join(attr_list))
 
     def add_graph_attr(self):
