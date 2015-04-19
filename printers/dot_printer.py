@@ -53,9 +53,11 @@ class DotPrinter(object):
         log.info("Writing GraphViz file to %s" % dot_filename)
         with open(dot_filename, "w") as dot_file:
 
+            graph = event.graph
+
             # Header-type info with graph-wide settings
             dot_file.write("digraph g {\n")
-            dot_file.write("\t{attr}\n".format(**self.event.graph.graph))
+            dot_file.write("\t{attr}\n".format(**graph.graph))
 
             # Add event info to plot
             if event.label:
@@ -71,7 +73,6 @@ class DotPrinter(object):
                 dot_file.write("\tlabel=<{}>;\n".format(lbl))
 
             # Now print the graph to file
-            graph = event.graph
 
             # Write all the nodes to file, with their display attributes
             for node in graph.nodes():
@@ -88,7 +89,7 @@ class DotPrinter(object):
 
             # Set all initial particles to be level in diagram
             initial = ' '.join([str(node) for node in graph.nodes()
-                               if graph.node[node]['initial_state']])
+                                if graph.node[node]['initial_state']])
             dot_file.write("\t{{rank=same; {} }} "
                            "// initial particles on same level\n".format(initial))
 
@@ -118,7 +119,7 @@ class DotPrinter(object):
             log.info(" ".join(pdfargs))
             log.info(" ".join(rmargs))
         elif renderer == "pdf":
-            # Or do straight to PDF: obeys HTML tags, but not searchable.
+            # Or do straight to PDF: fast, obeys HTML tags, but not searchable.
             dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
             call(dotargs)
             log.info(" ".join(dotargs))

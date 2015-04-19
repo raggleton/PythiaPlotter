@@ -102,6 +102,7 @@ class DotNodeAttr(object):
 
     def add_particle_attr(self, node):
         """Style node as particle
+
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
         """
