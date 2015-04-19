@@ -21,7 +21,7 @@ with open(config_file) as jfile:
     settings = json.load(jfile)
 
 interesting_pdgids = settings.keys()[:]
-non_pdgid_keys = ["_comment", "default", "initial", "final"]
+non_pdgid_keys = ["_comment", "graph", "default", "initial", "final"]
 interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
 
 
@@ -130,4 +130,26 @@ class DotNodeAttr(object):
         if pid in interesting_pdgids:
             for key, value in settings[pid]["node"].iteritems():
                 self.attr[key] = value
+
+
+class DotGraphAttr(object):
+    """Hold GraphViz attributes for the graph as whole"""
+
+    def __init__(self, graph):
+        self.graph = graph
+        self.attr = {}
+        self.add_graph_attr()
+
+    def __repr__(self):
+        return "DotGraphAttr"
+
+    def __str__(self):
+        """Print graph attributes in dot-friendly format"""
+        attr_list = ['{0}="{1}";'.format(*i) for i in self.attr.iteritems()]
+        return "{}".format("\n\t".join(attr_list))
+
+    def add_graph_attr(self):
+        """Store graph-wide settings from JSON"""
+        if settings["graph"]:
+            for key, value in settings["graph"].iteritems():
                 self.attr[key] = value

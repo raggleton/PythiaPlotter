@@ -15,7 +15,7 @@ import utils.logging_config
 import logging
 import os.path
 from subprocess import call
-from display_classes import DotNodeAttr, DotEdgeAttr
+from display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 
 log = logging.getLogger(__name__)
@@ -37,7 +37,9 @@ class DotPrinter(object):
         self.print_pdf(self.gv_filename, self.pdf_filename, self.renderer)
 
     def add_display_attr(self, graph):
-        """Add display attribute to nodes & edges"""
+        """Add display attribute to graph, nodes & edges"""
+        graph.graph["attr"] = DotGraphAttr(graph)
+
         for node_ind in graph.nodes():
             node = graph.node[node_ind]
             node["attr"] = DotNodeAttr(node)
@@ -51,26 +53,22 @@ class DotPrinter(object):
         log.info("Writing GraphViz file to %s" % dot_filename)
         with open(dot_filename, "w") as dot_file:
 
-            # Header-type info
-            dot_file.write("digraph g {\n"
-                           "\trankdir=LR;\n"
-                           "\tranksep=0.4;\n"
-                           "\tnodesep=0.4;\n")
+            # Header-type info with graph-wide settings
+            dot_file.write("digraph g {\n")
+            dot_file.write("\t{attr}\n".format(**self.event.graph.graph))
 
             # Add event info to plot
             if event.label:
                 # Event title
                 lbl = "<FONT POINT-SIZE=\"45\"><B>{}</B></FONT><BR/>".format(event.label)
-                # Event info
                 lbl += "<FONT POINT-SIZE=\"40\">  <BR/>"
+                # Event info
                 # Keep event.label as a title, not in attribute list
                 evt_lbl = [x for x in event.__str__().split("\n")
                            if not (x.startswith("label") or x.startswith("Event"))]
                 lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
                 dot_file.write("\tlabel=<{}>;\n".format(lbl))
-                dot_file.write("\tlabelloc=top;\n")
-                dot_file.write("\tlabeljust=left;\n")  # this doesn't work
 
             # Now print the graph to file
             graph = event.graph

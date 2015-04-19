@@ -18,7 +18,9 @@
     "graph": {
         "rankdir": "LR",
         "ranksep": 0.4,
-        "nodesep": 0.4
+        "nodesep": 0.4,
+        "labelloc": "top",
+        "labeljust": "left"
     },
 
     "default": {
