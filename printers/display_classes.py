@@ -17,8 +17,14 @@ log = logging.getLogger(__name__)
 
 # Hold user-defined settings from JSON file
 config_file = "printers/dot_config.json"
-with open(config_file) as jfile:
-    settings = json.load(jfile)
+try:
+    with open(config_file) as jfile:
+        settings = json.load(jfile)
+except IOError as e:
+    log.error("Cannot load settings file %s - no such file" % config_file)
+except ValueError as e:
+    log.error("Problem parsing settings file %s" % config_file)
+    raise e
 
 interesting_pdgids = settings.keys()[:]
 non_pdgid_keys = ["_comment", "graph", "default", "initial", "final"]
@@ -98,9 +104,13 @@ class DotNodeAttr(object):
         attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
         return "[{}]".format(", ".join(attr_list))
 
-    def add_point_attr(self, node):
-        """Simple point to represent intersection of particles"""
-        self.attr["shape"] = "point"
+    def add_point_attr(self, node, show_barcode=False):
+        """Simple point to show intersection of particles in EDGE representation
+
+        Optional arg show_barcode shows the node/vertex barcode, for debugging
+        purposes.
+        """
+        self.attr["shape"] = "circle" if show_barcode else "point"
 
     def add_particle_attr(self, node):
         """Style node as particle
