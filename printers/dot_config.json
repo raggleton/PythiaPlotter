@@ -4,12 +4,12 @@
         "It stores specific display settings for the graph as a whole, as well",
         "as for various particles, including default settings, ",
         "initial/final state particles, and PDGID-specific settings.",
+        "There is a set for both node & edge representations.",
         "For each, store dot attributes as key:value pairs.",
         "Where keys & values can be any suitable attribute name & value as",
         "described in the GraphViz documentation:",
         "http://www.graphviz.org/doc/info/attrs.html",
         "http://www.graphviz.org/doc/info/colors.html",
-        "There is a set for both node & edge representations.",
         "Note that for PDGID-specific settings,",
         "it will apply settings to both + and - PDGIDs",
         "Note that the '_name' keys are ignored, so can be used for comments"
@@ -24,6 +24,10 @@
     },
 
     "default": {
+        "_comment": [
+            "These are the default attributes for a *particle* when it is in",
+            "node or edge representation, respectively."
+        ],
         "node": null,
         "edge": {
             "penwidth": 2
@@ -61,7 +65,8 @@
             "color": "purple"
         },
         "edge": {
-            "color": "purple"
+            "color": "purple",
+            "penwidth": 4
         }
     },
 
@@ -73,7 +78,8 @@
         },
         "edge": {
             "color": "purple",
-            "fontcolor": "purple"
+            "fontcolor": "purple",
+            "penwidth": 4
         }
     },
 
