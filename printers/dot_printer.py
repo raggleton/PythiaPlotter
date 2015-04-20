@@ -62,7 +62,7 @@ class DotPrinter(object):
             # Add event info to plot
             if event.label:
                 # Event title
-                lbl = "<FONT POINT-SIZE=\"45\"><B>{}</B></FONT><BR/>".format(event.label)
+                lbl = "<FONT POINT-SIZE=\"45\"><B>{0}</B></FONT><BR/>".format(event.label)
                 lbl += "<FONT POINT-SIZE=\"40\">  <BR/>"
                 # Event info
                 # Keep event.label as a title, not in attribute list
@@ -70,7 +70,7 @@ class DotPrinter(object):
                            if not (x.startswith("label") or x.startswith("Event"))]
                 lbl += '<BR/>'.join(evt_lbl)
                 lbl += "</FONT>"
-                dot_file.write("\tlabel=<{}>;\n".format(lbl))
+                dot_file.write("\tlabel=<{0}>;\n".format(lbl))
 
             # Now print the graph to file
 
@@ -90,7 +90,7 @@ class DotPrinter(object):
             # Set all initial particles to be level in diagram
             initial = ' '.join([str(node) for node in graph.nodes()
                                 if graph.node[node]['initial_state']])
-            dot_file.write("\t{{rank=same; {} }} "
+            dot_file.write("\t{{rank=same; {0} }} "
                            "// initial particles on same level\n".format(initial))
 
             dot_file.write("}\n")
