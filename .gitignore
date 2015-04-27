@@ -14,9 +14,13 @@ hepmc2root.py
 *.tex
 *.txt
 .idea
+.coverage
 page
 testSite
 processing.min.js
 pylintrc
 Chris_QCD
 NEW
+htmlcov
+OLD
+test
