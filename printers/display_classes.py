@@ -21,10 +21,11 @@ try:
     with open(config_file) as jfile:
         settings = json.load(jfile)
 except IOError as e:
-    log.error("Cannot load settings file %s - no such file" % config_file)
+    log.error("Cannot load settings file %s - no such file\n" % config_file)
+    raise
 except ValueError as e:
-    log.error("Problem parsing settings file %s" % config_file)
-    raise e
+    log.error("Problem parsing settings file %s\n" % config_file)
+    raise
 
 interesting_pdgids = settings.keys()[:]
 non_pdgid_keys = ["_comment", "graph", "default", "initial", "final"]
@@ -39,7 +40,10 @@ def load_json_settings(json_dict, attr):
 
 
 class DotEdgeAttr(object):
-    """Hold display attributes for edge in dot graph"""
+    """Hold display attributes for edge in dot graph
+
+    Auto-generates attributes from JSON file.
+    """
 
     def __init__(self, edge):
         self.attr = {}  # dict to hold attributes - key must be same as in GV
@@ -87,7 +91,10 @@ class DotEdgeAttr(object):
 
 
 class DotNodeAttr(object):
-    """Hold display attributes for node in dot graph"""
+    """Hold display attributes for node in dot graph
+
+    Auto-generates attributes from JSON file.
+    """
 
     def __init__(self, node):
         self.attr = {}  # dict to hold attributes - key must be same as in GV
@@ -141,7 +148,10 @@ class DotNodeAttr(object):
 
 
 class DotGraphAttr(object):
-    """Hold GraphViz attributes for the graph as whole"""
+    """Hold GraphViz attributes for the graph as whole.
+
+    Auto-generates attributes from JSON file.
+    """
 
     def __init__(self, graph):
         self.graph = graph
@@ -149,13 +159,10 @@ class DotGraphAttr(object):
         load_json_settings(settings["graph"], self.attr)
 
     def __repr__(self):
-        return "DotGraphAttr"
+        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
+        return "DotGraphAttr(attr=dict({0}))".format(", ".join(attr_list))
 
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
         attr_list = ['{0}="{1}";'.format(*it) for it in self.attr.iteritems()]
-        return "{0}".format("\n\t".join(attr_list))
-
-    def add_graph_attr(self):
-        """Store graph-wide settings from JSON"""
-        pass
+        return "\t{0}".format("\n\t".join(attr_list))
