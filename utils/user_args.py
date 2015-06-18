@@ -16,7 +16,7 @@ import sys
 log = logging.getLogger(__name__)
 
 
-global args
+# global args
 
 
 def get_args(input_args):
@@ -38,7 +38,8 @@ def get_args(input_args):
                         default="example/example_pythia8.txt")
 
     parser_opts = {"PYTHIA": "For screen output from Pythia 8",
-                   "HEPMC": "For HEPMC files"}
+                   "HEPMC": "For HEPMC files",
+                   "LHE": "For LHE files"}
     parser_help_str = "Input format:\n"
     for k, v in parser_opts.items():
         parser_help_str += k + ": " + v + "\n"
@@ -48,10 +49,10 @@ def get_args(input_args):
     parser.add_argument("--inputFormat",
                         help=parser_help_str,
                         choices=parser_opts)
-    # parser.add_argument("--eventNumber",
-    #                     help="Select event number to plot (for input formats"
-    #                          "HEPMC)",
-    #                     type=int, default=0)
+    parser.add_argument("-n", "--eventNumber",
+                        help="Select event number to plot, starts at 1.\n"
+                             "For: HEPMC, LHE input formats.\n",
+                        type=int, default=1)
 
     #################
     # Output file options
@@ -128,11 +129,11 @@ def get_args(input_args):
                         help="Print debug statements to screen",
                         action="store_true")
 
-    args = parser.parse_args(input_args)
-
     #################
     # Post process user args
     #################
+    args = parser.parse_args(input_args)
+
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
@@ -145,7 +146,6 @@ def get_args(input_args):
 
     log.debug("Args: %s" % args)
 
-    user_args = args
     return args
 
 
@@ -167,10 +167,12 @@ def set_default_output(args):
 def set_default_format(args):
     """Set default input format if the user hasn't."""
     if not args.inputFormat:
-        if args.extension == ".hepmc":
+        if args.extension.lower() == ".hepmc":
             args.inputFormat = "HEPMC"
-        elif args.extension in [".txt", ".out"]:
+        elif args.extension.lower() in [".txt", ".out"]:
             args.inputFormat = "PYTHIA"
+        elif args.extension.lower() == ".lhe":
+            args.inputFormat = "LHE"
         else:
             raise RuntimeError("Cannot determine input format. Please specify.")
         log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
