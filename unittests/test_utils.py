@@ -21,15 +21,21 @@ class Utils_Test(unittest.TestCase):
     def test_check_file_exists(self):
         self.assertFalse(check_file_exists("./madeupFile.txt"))
         self.assertFalse(check_file_exists("../madeupFile.txt"))
-        self.assertTrue(check_file_exists("./test_utils.py"))
-        self.assertTrue(check_file_exists("../README.md"))
+        open("tempTestFile.txt", "a").close()
+        self.assertTrue(check_file_exists("tempTestFile.txt"))
+        os.remove("tempTestFile.txt")
 
     def test_check_dir_exists(self):
         self.assertFalse(check_dir_exists("madeupdir"))
         self.assertFalse(check_dir_exists("../madeupdir"))
-        self.assertTrue(check_dir_exists("../unittest"))
+        os.makedirs("tempTestDir")
+        self.assertTrue((check_dir_exists("tempTestDir")))
+        os.rmdir("tempTestDir")
 
     def test_check_dir_exists_create(self):
+        """Tests check_dir_exists_create
+        i.e. create dir it doens't already exist
+        """
         createDir = "testFakeDirCreate"
         if check_dir_exists(createDir):
             os.rmdir(createDir)
@@ -37,7 +43,6 @@ class Utils_Test(unittest.TestCase):
         self.assertTrue(check_dir_exists(createDir))
         os.rmdir(createDir)
         self.assertFalse(check_dir_exists(createDir))
-
 
 
 class RequisiteChecker_Test(unittest.TestCase):
