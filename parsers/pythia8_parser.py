@@ -8,7 +8,7 @@ import utils.logging_config
 import logging
 from itertools import izip
 from pprint import pprint, pformat
-from event_classes import Event, Particle
+from event_classes import Event, Particle, NodeParticle
 import node_grapher
 import utils.user_args as user_args
 
@@ -48,8 +48,8 @@ def parse_event_block(contents):
     # These indicate non-particle lines - matches words
     ignore = (("no", "id"), ("Charge", "sum:"), ("0", "90", "(system)"))
 
-    #  Store all particles in event
-    particles = []
+    # Store all the NodeParticles in the event
+    node_particles = []
 
     for line in contents:
         parts = line.split()
@@ -62,20 +62,20 @@ def parse_event_block(contents):
 
         # Create a Particle obj and add to total
         # Sometimes parent2 = 0, so set = parent1
-        part = Particle(barcode=parts[0],
-                        pdgid=parts[1],
-                        status=parts[3],
-                        px=parts[10],
-                        py=parts[11],
-                        pz=parts[12],
-                        energy=parts[13],
-                        mass=parts[14],
-                        parent1=parts[4],
-                        parent2=parts[5] if int(parts[5]) else parts[4])
+        p = Particle(barcode=parts[0],
+                     pdgid=parts[1],
+                     status=parts[3],
+                     px=parts[10],
+                     py=parts[11],
+                     pz=parts[12],
+                     energy=parts[13],
+                     mass=parts[14])
+        np = NodeParticle(particle=p,
+                          parent1_barcode=parts[4],
+                          parent2_barcode=parts[5] if int(parts[5]) else parts[4])
+        node_particles.append(np)
 
-        particles.append(part)
-
-    return particles
+    return node_particles
 
 
 def parse_info_block(contents):
@@ -126,13 +126,14 @@ class Pythia8Parser(object):
                        Info=info_blocks,
                        HardEvent=hard_evt_blocks)
 
-    def __init__(self, filename, event_num=0, remove_redundants=True):
+    def __init__(self, filename, event_num=1, remove_redundants=True):
         self.filename = filename
-        self.evt_num = event_num
+        self.evt_num = event_num  # 1 = first event, etc
         self.remove_redundants = remove_redundants
         log.info("Opening event file %s" % filename)
 
         # store file contents in list to slice up easily
+        # TODO: change this - will use large amount of RAM for big files!
         self.contents = []
         with open(filename, "r") as f:
             lines = [l.replace("\n", "").strip() for l in list(f)]
@@ -175,20 +176,23 @@ class Pythia8Parser(object):
                 pb.parse_block()
                 block["blocks"].append(pb)
 
+        if len(self.block_types["FullEvent"]["blocks"]) < self.evt_num:
+            raise IndexError("Cannot access event number %d, no such event" % self.evt_num)
+
         # Deal with each type
         # Info block: make a blank Event() object incase there's no Info block,
         # assigning grapher (TODO: move elsewhere?)
-        event = (self.block_types["Info"]["blocks"][0].parser_results
+        event = (self.block_types["Info"]["blocks"][self.evt_num - 1].parser_results
                  if self.block_types["Info"]["blocks"] else Event())
 
         # Hard event blocks:
-        hard_particles = self.block_types["HardEvent"]["blocks"][self.evt_num].parser_results
+        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.evt_num - 1].parser_results
 
         # Full event blocks:
-        full_particles = self.block_types["FullEvent"]["blocks"][self.evt_num].parser_results
+        full_node_particles = self.block_types["FullEvent"]["blocks"][self.evt_num - 1].parser_results
 
         # Assign particles to graph nodes
-        event.particles = full_particles
-        event.graph = node_grapher.assign_particles_nodes(event.particles, self.remove_redundants)
+        event.particles = [np.particle for np in full_node_particles]
+        event.graph = node_grapher.assign_particles_nodes(full_node_particles, self.remove_redundants)
 
         return event

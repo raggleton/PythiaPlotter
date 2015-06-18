@@ -6,9 +6,10 @@ import networkx as nx
 log = logging.getLogger(__name__)
 
 
-def assign_particles_nodes(particles, remove_redundants=True):
+def assign_particles_nodes(node_particles, remove_redundants=True):
     """
-    Attach particles to a NetworkX directed graph when NODES represent particles.
+    Attach particles to a NetworkX directed graph when NODES represent particles
+    via NodeParticle objects.
 
     It automatically attaches directed edges, from parent to child nodes.
     """
@@ -16,25 +17,24 @@ def assign_particles_nodes(particles, remove_redundants=True):
     gr = nx.DiGraph()
 
     # assign a node for each Particle obj
-    for particle in particles:
-        gr.add_node(particle.barcode, particle=particle)
+    for np in node_particles:
+        gr.add_node(np.particle.barcode, particle=np.particle)
 
     # assign edges between Parent/Children
     # need to work backwards, since the Pythia daughter indices are
     # sometimes not complete, whereas mother IDs are
-    for particle in reversed(particles):
-        if particle.parent1_code == 0 and particle.parent2_code == 0:
+    for np in reversed(node_particles):
+        if np.parent1_code == 0 and np.parent2_code == 0:
             continue
-        for i in xrange(particle.parent1_code, particle.parent2_code+1):
-            gr.add_edge(i, particle.barcode)
+        for i in xrange(np.parent1_code, np.parent2_code + 1):
+            gr.add_edge(i, np.particle.barcode)
 
     # store daughters properly, mark final state particles
     for node in gr.nodes():
         children = list(gr.successors(node))
-        if children:
-            gr.node[node]['particle'].child_codes = children
-        else:
+        if not children:
             gr.node[node]['particle'].final_state = True
+            # gr.node[node]['particle'].child_codes = children
         # mark node as initial state or not, so we can align them on graph
         gr.node[node]['initial_state'] = gr.node[node]['particle'].initial_state
 
@@ -65,7 +65,7 @@ def remove_redundant_nodes(graph):
             child = graph.node[graph.successors(node)[0]]['particle']
             if parent.pdgid == p.pdgid:
                 # rewire the graph
-                parent.child_codes = p.child_codes
+                # parent.child_codes = p.child_codes
                 child.parent1_code = parent.barcode
                 child.parent2_code = parent.barcode
                 graph.remove_node(node)  # also removes the relevant edges

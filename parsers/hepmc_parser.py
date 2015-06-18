@@ -6,7 +6,7 @@ import utils.logging_config
 import logging
 from itertools import izip
 from pprint import pprint, pformat
-from event_classes import Event, Particle
+from event_classes import Event, Particle, EdgeParticle
 import edge_grapher
 import utils.user_args as user_args
 from utils.common import check_file_exists
@@ -50,7 +50,7 @@ class HepMCParser(object):
         events = []
         current_event = None
         current_vertex = None
-        particles = []
+        edge_particles = []
 
         log.info("Opening event file %s" % self.filename)
         with open(self.filename) as f:
@@ -59,8 +59,9 @@ class HepMCParser(object):
                     # General GenEvent information
                     if current_event:
                         # Do only having read in all particles in an event
-                        current_event.particles = particles
-                        particles = []
+                        # current_event.particles = [ep.particle for ep in edge_particles]
+                        current_event.particles = edge_particles
+                        edge_particles = []
                         events.append(current_event)
                     if line.startswith("E"):
                         current_event = self.parse_event_line(line)
@@ -69,8 +70,8 @@ class HepMCParser(object):
                     current_vertex = self.parse_vertex_line(line)
                 elif line.startswith("P"):
                     # GenParticle info
-                    particle = self.parse_particle_line(line)
-                    particle.vtx_out_barcode = current_vertex.barcode
+                    edge_particle = self.parse_particle_line(line)
+                    edge_particle.vtx_out_barcode = current_vertex.barcode
 
                     # If the particle has vtx_in_barcode = 0,
                     # then this is a 'dangling' vertex (i.e. not in the list
@@ -79,21 +80,21 @@ class HepMCParser(object):
                     # unique barcode, since by convention all vertex barcodes
                     # in the file are < 0, and the particle barcode is unique.
                     # This is a final-state particle
-                    if particle.vtx_in_barcode == 0:
-                        particle.vtx_in_barcode = (abs(particle.vtx_out_barcode) \
-                                                   + particle.barcode)
-                        particle.final_state = True
+                    if edge_particle.vtx_in_barcode == 0:
+                        edge_particle.vtx_in_barcode = (abs(edge_particle.vtx_out_barcode) \
+                                                        + edge_particle.barcode)
+                        edge_particle.particle.final_state = True
 
                     # If the vtx_in_barcode = vtx_out_barcode, then we have a
                     # cyclical edge. This is normally reserved for an
                     # incoming proton. Need to create a new "out" node, since
                     # other particles will be outgoing from this node
-                    if particle.vtx_in_barcode == particle.vtx_out_barcode:
-                        particle.vtx_out_barcode = (abs(particle.vtx_out_barcode) \
-                                                    + particle.barcode)
-                        particle.initial_state = True
+                    if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
+                        edge_particle.vtx_out_barcode = (abs(edge_particle.vtx_out_barcode) \
+                                                         + edge_particle.barcode)
+                        edge_particle.particle.initial_state = True
 
-                    particles.append(particle)
+                    edge_particles.append(edge_particle)
 
         # Get the event with the matching barcode, and assign particles to
         # a NetworkX graph in edge representation
@@ -118,7 +119,7 @@ class HepMCParser(object):
         return {k: v for k, v in izip(fields, parts)}
 
     def parse_event_line(self, line):
-        """Parse a HepMC GenEvent line"""
+        """Parse a HepMC GenEvent line and return an Event object"""
         fields = ["event_num", "num_mpi", "scale", "aQCD", "aQED",
                   "signal_process_id", "signal_process_vtx_id", "n_vtx",
                   "beam1_pdgid", "beam2_pdgid"]
@@ -127,14 +128,19 @@ class HepMCParser(object):
                      signal_process_vtx_id=contents["signal_process_vtx_id"])
 
     def parse_vertex_line(self, line):
-        """Parse a HepMC GenVertex line"""
+        """Parse a HepMC GenVertex line and return a GenVertex object"""
         fields = ["barcode", "id", "x", "y", "z", "ctau", "n_orphan_in", "n_out"]
         contents = self.map_columns(fields, line[1:])
         return GenVertex(barcode=contents["barcode"],
                          n_orphan_in=contents["n_orphan_in"])
 
     def parse_particle_line(self, line):
-        """Parse a HepMC GenParticle line"""
+        """Parse a HepMC GenParticle line and return an EdgeParticle object
+
+        Note that the EdgeParticle doe snot have vts_out_barcode assigned, here,
+        since we are parsing a line in isolation. The vtx_out_barcode is added
+        in the main pars() method.
+        """
         fields = ["barcode", "pdgid", "px", "py", "pz", "energy", "mass",
                   "status", "pol_theta", "pol_phi", "vtx_in_barcode"]
         contents = self.map_columns(fields, line[1:])
@@ -142,8 +148,10 @@ class HepMCParser(object):
                      px=contents["px"], py=contents["py"], pz=contents["pz"],
                      energy=contents["energy"], mass=contents["mass"],
                      status=contents["status"])
-        p.vtx_in_barcode = int(contents["vtx_in_barcode"])
-        return p
+        ep = EdgeParticle(particle=p,
+                          vtx_in_barcode=int(contents['vtx_in_barcode']),
+                          vtx_out_barcode=0)
+        return ep
 
 
 class GenVertex(object):
@@ -155,7 +163,10 @@ class GenVertex(object):
     Use a namedtuple instead?
     """
 
-    def __init__(self, barcode, outgoing=None, n_orphan_in=0):
+    def __init__(self, barcode, n_orphan_in=0):
         self.barcode = int(barcode)
-        self.outgoing = []
         self.n_orphan_in = n_orphan_in
+
+    def __repr__(self):
+        return "{0}(barcode={1[barcode]}, n_orphan_in={1[n_orphan_in]})".format(
+            self.__class__.__name__, self.__dict__)

@@ -23,43 +23,52 @@ import networkx as nx
 log = logging.getLogger(__name__)
 
 
-def assign_particles_edges(particles, remove_redundants=True):
+def assign_particles_edges(edge_particles, remove_redundants=True):
     """
     Attach particles to NetworkX directed graph when EDGES represent particles.
 
-    Particles must have vtx_in_barcode and vtx_out_barcode attributes.
+    edge_particles must be a list of EdgeParticle objects
     """
 
-    gr = nx.DiGraph(attr=None)
+    gr = nx.DiGraph(attr=None)  # placeholder attr for later in printer
 
-    initial_nodes = []  # to store outgoing nodes for initial state particles
+    initial_nodes = []  # to store outgoing node barcodes for initial state particles
 
     # assign an edge for each Particle object, preserving direction
-    for particle in particles:
-        log.debug(particle.__dict__)
-        gr.add_edge(particle.vtx_out_barcode, particle.vtx_in_barcode,
-                    barcode=particle.barcode, particle=particle)
-        if particle.initial_state:
-            initial_nodes.append(particle.vtx_out_barcode)
+    for ep in edge_particles:
+        log.debug("Adding edge %d -> %d" % (ep.vtx_out_barcode, ep.vtx_in_barcode))
 
-    # get set of unique vertices, assign to graph as nodes
-    out_barcodes = [p.vtx_out_barcode for p in particles]
-    in_barcodes = [p.vtx_in_barcode for p in particles]
-    nodes = set(out_barcodes + in_barcodes)
-    for n in nodes:
-        # mark node as initial state or not, so we can align them on graph
-        initial_state = True if n in initial_nodes else False
-        gr.add_node(n, initial_state=initial_state)
+        gr.add_edge(ep.vtx_out_barcode, ep.vtx_in_barcode,
+                    barcode=ep.barcode, particle=ep.particle)
+        if ep.particle.initial_state:
+            initial_nodes.append(ep.vtx_out_barcode)
 
-    log.debug(gr.edges())
+    log.debug("Existing nodes before assinging nodes to graph:")
     log.debug(gr.nodes())
+
+    # note tha NetworkX already adds in nodes when adding the edges
+    # get set of unique vertices, assign to graph as nodes
+    out_barcodes = [ep.vtx_out_barcode for ep in edge_particles]
+    in_barcodes = [ep.vtx_in_barcode for ep in edge_particles]
+    nodes = set(out_barcodes + in_barcodes)
+
+    for n in nodes:
+        # add node if it doesn't already exists
+        # mark node as initial state or not, so we can align them on graph
+        if n not in gr.nodes():
+            gr.add_node(n, initial_state=(n in initial_nodes))
+        else:
+            gr.node[n]["initial_state"] = (n in initial_nodes)
+
+    log.debug("Edges after assigning: %s" % gr.edges())
+    log.debug("Nodes after assigning: %s" % gr.nodes())
 
     # optionally remove redundant edges
     if remove_redundants:
         remove_redundant_edges(gr)
 
-        log.debug(gr.nodes())
-        log.debug(gr.edges())
+        log.debug("remove_redundant Edges:%s" % gr.edges())
+        log.debug("remove_redundant Nodes: %s" % gr.nodes())
 
     return gr
 
