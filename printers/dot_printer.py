@@ -36,8 +36,10 @@ class DotPrinter(object):
         self.write_dot(event, self.gv_filename)
         self.print_pdf(self.gv_filename, self.pdf_filename, self.renderer)
 
-    def add_display_attr(self, graph):
+    @staticmethod
+    def add_display_attr(graph):
         """Add display attribute to graph, nodes & edges"""
+
         graph.graph["attr"] = DotGraphAttr(graph)
 
         for node_ind in graph.nodes():
@@ -48,7 +50,8 @@ class DotPrinter(object):
             edge = graph.edge[edges_ind[0]][edges_ind[1]]
             edge["attr"] = DotEdgeAttr(edge)
 
-    def write_dot(self, event, dot_filename):
+    @staticmethod
+    def write_dot(event, dot_filename):
         """Write event graph to file in dot format"""
         log.info("Writing GraphViz file to %s" % dot_filename)
         with open(dot_filename, "w") as dot_file:
@@ -95,7 +98,8 @@ class DotPrinter(object):
 
             dot_file.write("}\n")
 
-    def print_pdf(self, dot_filename, pdf_filename, renderer):
+    @staticmethod
+    def print_pdf(dot_filename, pdf_filename, renderer):
         """Run GraphViz file through dot to produce a PDF.
 
         Different renderer options: ps, pdf.
@@ -119,7 +123,7 @@ class DotPrinter(object):
             pdfargs = ["ps2pdf", ps_filename, pdf_filename]
             call(pdfargs)
             rmargs = ["rm", ps_filename]
-            call (rmargs)
+            call(rmargs)
             log.info(" ".join(psargs))
             log.info(" ".join(pdfargs))
             log.info(" ".join(rmargs))
