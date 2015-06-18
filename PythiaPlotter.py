@@ -15,13 +15,10 @@ import utils.user_args as user_args
 from utils.common import open_pdf
 import parsers
 import printers
-import networkx as nx
 
 
 class PythiaPlotter(object):
-    """
-    Central object to keep track of the parser, printer, etc
-    """
+    """Central object to keep track of the parser, printer, etc"""
 
     def __init__(self, opts):
         self.opts = opts
@@ -31,14 +28,23 @@ class PythiaPlotter(object):
 
         # Choose parser & configure
         if opts.inputFormat == "PYTHIA":
-            self.parser = parsers.Pythia8Parser(opts.input)
+            self.parser = parsers.Pythia8Parser(filename=opts.input,
+                                                event_num=opts.eventNumber,
+                                                remove_redundants=True)
         elif opts.inputFormat == "HEPMC":
-            self.parser = parsers.HepMCParser(opts.input,
+            self.parser = parsers.HepMCParser(filename=opts.input,
+                                              event_num=opts.eventNumber,
                                               remove_redundants=False)
+        elif opts.inputFormat == "LHE":
+            self.parser = parsers.LHEParser(filename=opts.input,
+                                            event_num=opts.eventNumber,
+                                            remove_redundants=True)
 
         # Choose printer & configure
         if opts.render == "DOT":
-            self.printer = printers.DotPrinter(opts.outputGV, opts.outputPDF)
+            self.printer = printers.DotPrinter(gv_filename=opts.outputGV,
+                                               pdf_filename=opts.outputPDF,
+                                               renderer="pdf")
         elif opts.render == "LATEX":
             pass
 
@@ -49,9 +55,14 @@ class PythiaPlotter(object):
         pass
 
     def parse_event(self):
+        """Run the object's parser"""
         self.event = self.parser.parse()
+        # self.event.label = "An example event"
+        self.event.event_num = self.opts.eventNumber
+        # self.event.lumi_section = 123456798
 
     def print_event(self):
+        """Run the object's printer"""
         self.printer.print_event(self.event)
         if self.opts.openPDF:
             open_pdf(self.opts.outputPDF)
