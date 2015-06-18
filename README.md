@@ -1,36 +1,59 @@
 # PythiaPlotter
 
-## > WHAT IS IT
-This is a little script that plots diagrams of particle interactions in MC events using GraphViz (& optionally Latex). Very handy to figure out what is actually going on in your MC!
+![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=restructure_jan_2015)
 
-See example in `example` folder.
+## What Is It
+Plots diagrams of particle decay trees in HEP Monte Carlo events. Very handy to figure out what is actually going on in your MC!
 
-## > WHAT DO I NEED:
+See examples in `example` folder.
 
+## What can I give it to plot?
+
+Currently supporting:
+
+- Pythia 8 screen output (i.e. the big particle listing table)
+- HepMC files
+- LHE files
+
+## What Do I Need:
+
+- graphviz (get it from www.graphviz.org)
 - Your favourite MC generator
+- Some python packages: networkx/pydot2/pyparsing/dot2tex. To easily install these:
+```
+pip install -r requirements.txt
+```
+
+__TODO__: setup instructions properly - virtual env? setup.py?
 
 **Optional:**
 
 
-## > HOW DO I GET IT:
+## How Do I Get It:
 
 - Clone this repo:
 	```
 	git clone https://github.com/raggleton/PythiaPlotter.git # https
 	# or
 	git clone git@github.com:raggleton/PythiaPlotter.git # ssh
-
 	```
 
-## > HOW DO I USE IT:
+## How Do I Use It:
 
+Quick demo to see what it can do:
+```
+python PythiaPlotter.py --help
+python PythiaPlotter.py example/example_pythia8.txt --openPDF
+python PythiaPlotter.py example/example_hepmc.hepmc --openPDF
+```
 
-## > WHAT ELSE SHOULD I KNOW:
+## What Else Should I Know:
 
-- Please run with `python PythiaPlotter.py` not `./PythiaPlotter.py`. For some reason, some things don't work properly using the latter **TO BE CONFIRMED**
+- If you are feeling brave, use the latest, greatest version in the `restructure_jan_2015` branch, or for an example of the Tikz layout, look in the `hepMcReader` branch.
 
-- There's a not totally dissimilar program, HepMC Visual, that does something similar but requires ROOT, and you have to write your own script. So YMMV.
+## What Improvements Are Being Working On:
 
-## > WHAT IMPROVEMENTS ARE BEING WORKING ON:
+Wishlist:
 
-See [TODO](TODO.md)
+- Parse: Pythia8 from CMSSW (Mini)AOD files, Pythia6...?
+-
