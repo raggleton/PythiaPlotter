@@ -78,8 +78,8 @@ def get_args(input_args):
 
     # Check to see if certain render modes are available.
     # If not, don't give them to the user as options
-    render_opts = {"DOT": "Fast, but basic formatting",
-                   "LATEX": "Slower, but nicer formatting"}
+    render_opts = {"DOT": "Fast, but basic formatting"}
+                   # "LATEX": "Slower, but nicer formatting"}
 
     latex_check = checkr.RequisiteChecker(modules=["pydot", "pyparsing"],
                                           programs=["dot2tex"])
