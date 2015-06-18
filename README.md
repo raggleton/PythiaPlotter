@@ -34,7 +34,9 @@ __TODO__: setup instructions properly - virtual env? setup.py?
 - Clone this repo:
 	```
 	git clone https://github.com/raggleton/PythiaPlotter.git # https
+	
 	# or
+	
 	git clone git@github.com:raggleton/PythiaPlotter.git # ssh
 	```
 
@@ -53,7 +55,8 @@ python PythiaPlotter.py example/example_hepmc.hepmc --openPDF
 
 ## What Improvements Are Being Working On:
 
-Wishlist:
+See TODO.md
+
+Wishlist: 
 
 - Parse: Pythia8 from CMSSW (Mini)AOD files, Pythia6...?
--
