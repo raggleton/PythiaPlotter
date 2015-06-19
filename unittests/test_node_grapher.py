@@ -22,8 +22,10 @@ class NodeGrapher_Test(unittest.TestCase):
         # print graph.nodes()
         node_particles = [graph.node[n]['particle'] for n in graph.nodes()]
         if verbose:
-            print node_particles
-            print graph.node
+            print "User particles:"
+            pprint(node_particles)
+            print "Graph nodes:"
+            print (graph.node)
         return set(particles) == set(node_particles)
 
     def check_graph_edges(self, edges, graph, verbose=verbose):
@@ -31,8 +33,10 @@ class NodeGrapher_Test(unittest.TestCase):
         ATM just a simpler way to print info...
         """
         if verbose:
-            print edges
-            print graph.edges()
+            print "User edges:"
+            pprint(edges)
+            print "Graph edges:"
+            pprint(graph.edges())
         return set(edges) == set(graph.edges())
 
     def test_1_to_2(self):
@@ -48,7 +52,7 @@ class NodeGrapher_Test(unittest.TestCase):
         g = ng.assign_particles_nodes(particles)
         self.assertTrue(self.check_graph_nodes([p.particle for p in particles], g))
         edges = [(1, 3), (1, 2)]
-        self.assertTrue(self.check_graph_edges(edges, g, True))
+        self.assertTrue(self.check_graph_edges(edges, g))
 
     def test_2_to_1_to_3(self):
         """2 particles (1,2) to 1 (3) to 3 (4,5,6)"""
@@ -93,7 +97,10 @@ class NodeGrapher_Test(unittest.TestCase):
         self.assertTrue(self.check_graph_edges(edges, g))
 
     def test_intial_final_state(self):
-        """Test whether particles marked as initial/final state correctly"""
+        """Test whether particles marked as initial/final state correctly
+
+        (1)+(2) -> (3) -> (4),(5),(6)
+        """
         p1 = NodeParticle(particle=Particle(barcode=1, pdgid=11),
                           parent1_barcode="0", parent2_barcode="0")
         p2 = NodeParticle(particle=Particle(barcode=2, pdgid=-11),
