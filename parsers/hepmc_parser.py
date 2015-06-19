@@ -157,6 +157,8 @@ class HepMCParser(object):
 class GenVertex(object):
     """Helper class to represent a HepMC GenVertex object.
 
+    Vertices have a barcode that is an integer.
+
     Only exists inside this parser module since it is only used for parsing
     file and when assigning particles to a NetworkX graph.
 

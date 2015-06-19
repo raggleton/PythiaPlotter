@@ -135,12 +135,14 @@ class EdgeParticle(object):
 
     This contains the physical Particle object, and associated info that
     is edge-specific, such as incoming/outgoing vertex barcodes.
+
+    Vertex barcodes are ints.
     """
 
     def __init__(self, particle, vtx_in_barcode, vtx_out_barcode):
         self.particle = particle
-        self.vtx_in_barcode = vtx_in_barcode
-        self.vtx_out_barcode = vtx_out_barcode
+        self.vtx_in_barcode = int(vtx_in_barcode)
+        self.vtx_out_barcode = int(vtx_out_barcode)
 
     @property
     def barcode(self):
