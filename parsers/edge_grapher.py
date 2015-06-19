@@ -25,40 +25,36 @@ log = logging.getLogger(__name__)
 
 def assign_particles_edges(edge_particles, remove_redundants=True):
     """
-    Attach particles to NetworkX directed graph when EDGES represent particles.
+    Attach particles to directed graph edges when EDGES represent particles.
 
-    edge_particles must be a list of EdgeParticle objects
+    edge_particles must be a list of EdgeParticle objects.
     """
 
     gr = nx.DiGraph(attr=None)  # placeholder attr for later in printer
 
-    initial_nodes = []  # to store outgoing node barcodes for initial state particles
-
     # assign an edge for each Particle object, preserving direction
+    # note that NetworkX auto adds nodes when edges are added
     for ep in edge_particles:
-        log.debug("Adding edge %d -> %d" % (ep.vtx_out_barcode, ep.vtx_in_barcode))
+        log.debug("Adding edge %s -> %s" % (ep.vtx_out_barcode, ep.vtx_in_barcode))
 
         gr.add_edge(ep.vtx_out_barcode, ep.vtx_in_barcode,
                     barcode=ep.barcode, particle=ep.particle)
-        if ep.particle.initial_state:
-            initial_nodes.append(ep.vtx_out_barcode)
 
-    log.debug("Existing nodes before assinging nodes to graph:")
-    log.debug(gr.nodes())
+    # Get in-degree for nodes so we can mark the initial state ones
+    # (those with no incoming edges) and their particles
+    for n, i in gr.in_degree_iter(gr.nodes()):
+        gr.node[n]['initial_state'] = False
+        if i == 0:
+            for e, f in gr.out_edges_iter(n):
+                gr.edge[e][f]['particle'].initial_state = True
 
-    # note tha NetworkX already adds in nodes when adding the edges
-    # get set of unique vertices, assign to graph as nodes
-    out_barcodes = [ep.vtx_out_barcode for ep in edge_particles]
-    in_barcodes = [ep.vtx_in_barcode for ep in edge_particles]
-    nodes = set(out_barcodes + in_barcodes)
-
-    for n in nodes:
-        # add node if it doesn't already exists
-        # mark node as initial state or not, so we can align them on graph
-        if n not in gr.nodes():
-            gr.add_node(n, initial_state=(n in initial_nodes))
-        else:
-            gr.node[n]["initial_state"] = (n in initial_nodes)
+    # Do same for final-state nodes/particles (nodes which have no outgoing edges)
+    for n, i in gr.out_degree_iter(gr.nodes()):
+        gr.node[n]['final_state'] = False
+        if i == 0:
+            gr.node[n]['final_state'] = True
+            for e, f in gr.in_edges_iter(n):
+                gr.edge[e][f]['particle'].final_state = True
 
     log.debug("Edges after assigning: %s" % gr.edges())
     log.debug("Nodes after assigning: %s" % gr.nodes())
