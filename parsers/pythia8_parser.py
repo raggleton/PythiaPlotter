@@ -41,6 +41,15 @@ class PythiaBlock(object):
         self.parser_results = self.parser(self.contents)
 
 
+def map_columns(fields, line):
+    """Make dict from fields titles and line
+
+    Field list MUST be in same order as the entries in line.
+    """
+    parts = line.split()[0:len(fields) + 1]
+    return {k: v for k, v in izip(fields, parts)}
+
+
 def parse_event_block(contents):
     """
     Parses Event Listing block in Pythia output
@@ -52,27 +61,33 @@ def parse_event_block(contents):
     node_particles = []
 
     for line in contents:
-        parts = line.split()
-        log.debug(parts)
+        log.debug(line)
 
         # first determine if interesting line or not - checks to see if entries
         # in ignore tuple match entries in parts list
-        if sum([all([i == p for i, p in izip(ig, parts)]) for ig in ignore]):
+        if sum([all([i == p for i, p in izip(ig, line.split())]) for ig in ignore]):
             continue
 
+        # Now assign each field to a dict to make life easier
+        fields = ["barcode", "pdgid", "name", "status", "parent1", "parent2",
+                  "child1", "child2", "colours1", "colours2",
+                  "px", "py", "pz", "energy", "mass"]
+        contents = map_columns(fields, line)
         # Create a Particle obj and add to total
-        # Sometimes parent2 = 0, so set = parent1
-        p = Particle(barcode=parts[0],
-                     pdgid=parts[1],
-                     status=parts[3],
-                     px=parts[10],
-                     py=parts[11],
-                     pz=parts[12],
-                     energy=parts[13],
-                     mass=parts[14])
+        p = Particle(barcode=contents['barcode'],
+                     pdgid=contents['pdgid'],
+                     status=contents['status'],
+                     px=contents['px'],
+                     py=contents['py'],
+                     pz=contents['pz'],
+                     energy=contents['energy'],
+                     mass=contents['mass'])
+        # Sometimes parent2 = 0, so set = parent1 if this is the case
         np = NodeParticle(particle=p,
-                          parent1_barcode=parts[4],
-                          parent2_barcode=parts[5] if int(parts[5]) else parts[4])
+                          parent1_barcode=contents['parent1'],
+                          parent2_barcode=(contents['parent2']
+                                           if int(contents['parent2'])
+                                           else contents['parent1']))
         node_particles.append(np)
 
     return node_particles
