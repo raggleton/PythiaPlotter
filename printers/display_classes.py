@@ -1,6 +1,9 @@
 """
 Classes to describe visual attributes. Used when making GraphViz file.
 
+Also set particle label in here, see get_particle_label(). Or should this be a
+method for the particle?
+
 TODO: there's so much common between the two classes, surely it must be
 possible to simplify things...
 """
@@ -39,6 +42,11 @@ def load_json_settings(json_dict, attr):
             attr[key] = value
 
 
+def get_particle_label(particle):
+    """Return string for particle label to be displayed on graph"""
+    return "{0}: {1}".format(particle.barcode, pdgid_to_string(particle.pdgid))
+
+
 class DotEdgeAttr(object):
     """Hold display attributes for edge in dot graph
 
@@ -72,8 +80,7 @@ class DotEdgeAttr(object):
         particle = edge["particle"]
 
         # Displayed edge label
-        self.attr["label"] = "{0}: {1}".format(particle.barcode,
-                                               pdgid_to_string(particle.pdgid))
+        self.attr["label"] = get_particle_label(particle)
 
         # default stylings, if they exist
         load_json_settings(settings["default"]["edge"], self.attr)
@@ -128,8 +135,7 @@ class DotNodeAttr(object):
         particle = node["particle"]
 
         # Displayed node label
-        self.attr["label"] = "{0}: {1}".format(particle.barcode,
-                                               pdgid_to_string(particle.pdgid))
+        self.attr["label"] = get_particle_label(particle)
 
         # default stylings, if they exist
         load_json_settings(settings["default"]["node"], self.attr)
