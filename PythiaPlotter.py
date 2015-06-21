@@ -34,7 +34,7 @@ class PythiaPlotter(object):
         elif opts.inputFormat == "HEPMC":
             self.parser = parsers.HepMCParser(filename=opts.input,
                                               event_num=opts.eventNumber,
-                                              remove_redundants=False)
+                                              remove_redundants=True)
         elif opts.inputFormat == "LHE":
             self.parser = parsers.LHEParser(filename=opts.input,
                                             event_num=opts.eventNumber,

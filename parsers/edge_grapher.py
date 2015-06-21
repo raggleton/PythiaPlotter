@@ -63,58 +63,94 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
     if remove_redundants:
         remove_redundant_edges(gr)
 
-        log.debug("remove_redundant Edges:%s" % gr.edges())
-        log.debug("remove_redundant Nodes: %s" % gr.nodes())
+        log.debug("After remove_redundant Edges:%s" % gr.edges())
+        log.debug("After remove_redundant Particles: %s" % [gr[i][j]['particle'] for i, j in gr.edges()])
+        log.debug("After remove_redundant Nodes: %s" % gr.nodes())
 
     return gr
 
 
 def remove_redundant_edges(graph):
-    """
-    Remove redundant particle edges - i.e. when you have a particles which has
-    1 particle incoming to its outgoing node and has the same PDGID,
-    and >0 outgoing particles
+    """Remove redundant particle edges from a graph.
+
+    A particle is redundant when:
+    1) > 0 'child' particles (those outgoing from the particle's incoming node
+    - this ensures we don't remove final-state particles)
+    2) 1 'parent' particle with same PDGID (incoming into the particle's
+    outgoing node - also ensures we don't remove initial-state particles)
+    3) 0 'sibling' particles (those outgoing from the particle's outgoing node)
+    Note that NetworkX includes an edge as its own sibling, so actually we
+    require len(sibling_edges) == 1
 
     e.g.
+
     --q-->-g->-g->-g->--u---->
         |             |
     --q->             --ubar->
 
-    Remove the middle gluon and last gluons, since they add no information.
 
-    These are useful to keep if considering MC internal workings,
+    Remove the middle gluon and last gluon, since they add no information.
+
+    These redundants are useful to keep if considering MC internal workings,
     but otherwise are just confusing and a waste of space.
+
+    Since it loops over the list of graph edges, we can only remove one edge in
+    a loop, otherwise adding extra/replacement edges ruins the sibling counting
+    and doesn't remove redundants. So the method loops through the graph edges
+    until there are no more redundant edges.
+
+    There is probably a more sensible way to do this, currently brute
+    force and slow.
     """
-    # TODO: fix me :( write some tests!
 
-    remove_nodes = set()  # use a set here to only keep unique nodes
-    for edge_ind in graph.edges():  # (b,c)
-        edge = graph[edge_ind[0]][edge_ind[1]]  # {barcode:...}
+    done_removing = False
+    while not done_removing:
 
-        # get all incoming edges to this particle's out node,
-        # and all outgoing edges from this particle's in node
-        in_edges_id = graph.in_edges(edge_ind[0])  # [(a,b), ...]
-        out_edges_id = graph.out_edges(edge_ind[1])
-        if len(in_edges_id) == 1 and len(out_edges_id) != 0:
+        done_removing = True
+        remove_nodes = set()  # use a set here to only keep unique nodes
 
-            # dict of objets for this edge
-            in_edge = graph[in_edges_id[0][0]][in_edges_id[0][1]]
+        # want the edges ordered by barcode (i.e in time order),
+        # so make a dict ordered by barcode (which follows the time order)
+        # graph_edges = {graph[j][k]['barcode']: (j, k) for j, k in graph.edges()}
 
-            if in_edge["particle"].pdgid == edge["particle"].pdgid:
+        for out_node, in_node in graph.edges():
+            edge = graph.edge[out_node][in_node]  # {barcode:...}
+            log.debug("Doing edge:", )
+            log.debug([out_node, in_node])
 
-                log.debug("removing redundant edges")
-                log.debug(edge)
-                particle = edge["particle"]
+            # get all incoming edges to this particle's out node (parents)
+            parent_edges = graph.in_edges(out_node)  # [(a,b), ...]
+            # get all outgoing edges from this particle's out node (siblings)
+            sibling_edges = graph.out_edges(out_node)
+            # get all outgoing edges from this particle's in node (children)
+            child_edges = graph.out_edges(in_node)
+            log.debug("Parent edges: %s" % parent_edges)
+            log.debug("Child edges: %s" % child_edges)
+            log.debug("Sibling edges: %s" % sibling_edges)
+            if (len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1):
 
-                out_node = edge_ind[0]  # b
-                in_node = edge_ind[1]  # c
+                # dict of objets for this edge
+                in_edge = graph[parent_edges[0][0]][parent_edges[0][1]]
 
-                # set incoming edge's node to this edge's incoming node
-                # and mark this edge's outgoing node for removal
-                graph.add_edge(in_edges_id[0][0], in_node,
-                               barcode=particle.barcode, particle=particle)
-                remove_nodes.add(out_node)
+                # Do removal if parent PDGID matches
+                if in_edge["particle"].pdgid == edge["particle"].pdgid:
 
-    # Remove all redundant nodes, also removes the associated edges usefully
-    for node in remove_nodes:
-        graph.remove_node(node)
+                    done_removing = False
+
+                    log.debug("Removing redundant edge %s" % edge)
+                    particle = edge["particle"]
+
+                    # set incoming edges' incoming node to this edge's incoming node
+                    # and mark this edge's outgoing node for removal
+                    graph.add_edge(parent_edges[0][0], in_node,
+                                   barcode=particle.barcode, particle=particle)
+                    log.debug("Adding new edge %d -- %d with barcode %d" % (
+                        parent_edges[0][0], in_node, particle.barcode))
+                    remove_nodes.add(out_node)
+
+                    break
+
+        # Remove all redundant nodes, also removes the associated edges usefully
+        log.debug("removing nodes %s" % remove_nodes)
+        for node in remove_nodes:
+            graph.remove_node(node)
