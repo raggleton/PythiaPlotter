@@ -95,9 +95,11 @@ class LHEParser(object):
         # so we have to do it manually
         counter = 1
         for line in text.split('\n'):
-            log.debug(line)
-            if not line:
+            line = line.strip()
+            if not line or line.startswith('#'):
                 continue
+
+            log.debug(line)
 
             # event info
             if not event:
