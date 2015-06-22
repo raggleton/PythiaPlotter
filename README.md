@@ -5,15 +5,16 @@
 ## What Is It
 Plots diagrams of particle decay trees in HEP Monte Carlo events. Very handy to figure out what is actually going on in your MC!
 
-See examples in `example` folder.
+See examples in [`example`](example) folder.
 
 ## What can I give it to plot?
 
 Currently supporting:
 
-- Pythia 8 screen output (i.e. the big particle listing table)
-- HepMC files
-- LHE files
+- Pythia 8 STDOUT (i.e. the big particle listing table) *(see [example/example_pythia8.txt](example/example_pythia8.txt))*
+- HepMC files *(see [example/example_hepmc.hepmc](example/example_hepmc.hepmc))*
+- LHE files *(see [example/example_lhe.lhe](example/example_lhe.lhe))*
+- ParticleListDrawer STDOUT as output by CMSSW *(see [example/example_cmssw.txt](example/example_cmssw.txt))*
 
 ## What Do I Need:
 
@@ -24,19 +25,14 @@ Currently supporting:
 pip install -r requirements.txt
 ```
 
-__TODO__: setup instructions properly - virtual env? setup.py?
-
-**Optional:**
-
-
 ## How Do I Get It:
 
 - Clone this repo:
 	```
 	git clone https://github.com/raggleton/PythiaPlotter.git # https
-	
+
 	# or
-	
+
 	git clone git@github.com:raggleton/PythiaPlotter.git # ssh
 	```
 
@@ -51,12 +47,13 @@ python PythiaPlotter.py example/example_hepmc.hepmc --openPDF
 
 ## What Else Should I Know:
 
-- If you are feeling brave, use the latest, greatest version in the `restructure_jan_2015` branch, or for an example of the Tikz layout, look in the `hepMcReader` branch.
+- If you are feeling brave, use the latest, greatest version in the `restructure_jan_2015` branch, or for an example of the TikZ layout, look in the `hepMcReader` branch.
 
 ## What Improvements Are Being Working On:
 
 See TODO.md
 
-Wishlist: 
+Wishlist:
 
-- Parse: Pythia8 from CMSSW (Mini)AOD files, Pythia6...?
+- Parse: More parsers?
+- Printer: JS?

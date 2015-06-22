@@ -2,7 +2,7 @@
 Handle parsing of LHE files.
 
 Default is NODE representation for particles.
-See example/ for example input file.
+See example/example_lhe.lhe for example input file.
 """
 
 import logging
