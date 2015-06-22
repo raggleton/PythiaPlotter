@@ -24,10 +24,19 @@ log = logging.getLogger(__name__)
 
 
 def assign_particles_edges(edge_particles, remove_redundants=True):
-    """
-    Attach particles to directed graph edges when EDGES represent particles.
+    """Attach particles to directed graph edges when EDGES represent particles.
 
-    edge_particles must be a list of EdgeParticle objects.
+    Additionally marks particles as initial/final state as necessary, based on
+    whether they have any parents/children, respectively.
+
+    edge_particles: list of EdgeParticle objects
+        The Particle in each EdgeParticle will be assigned to a graph edge,
+        using the vertex information in the EdgeParticle object.
+
+    remove_redundants: bool
+        Optionally remove redundant particles from the graph.
+        'Redundants' carry no extra physics information, but are only used
+        internally by Pythia, etc
     """
 
     gr = nx.DiGraph(attr=None)  # placeholder attr for later in printer

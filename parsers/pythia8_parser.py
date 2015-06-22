@@ -29,11 +29,10 @@ class PythiaBlock(object):
         self.parser_results = None  # to hold output from self.parser
 
     def __repr__(self):
-        return "%s.%s(%r, parser=%s, contents=%s)" % (self.__module__,
-                                                      self.__class__.__name__,
-                                                      self.name,
-                                                      self.parser,
-                                                      self.contents)
+        return "%s(%r, parser=%s, contents=%s)" % (self.__class__.__name__,
+                                                   self.name,
+                                                   self.parser,
+                                                   self.contents)
 
     def __str__(self):
         return "%s:\n%s" % (self.name, '\n'.join(self.contents))
@@ -103,7 +102,7 @@ class Pythia8Parser(object):
     # Block types in Pythia output
     # For each, we store:
     # strings that indicate start/end or block;
-    # the start/end indicies of any blocks;
+    # the start/end indices of any blocks;
     # a list of individual block contents;
     # and the parser method to handle this type of block
     info_start = "PYTHIA Info Listing"
@@ -137,7 +136,7 @@ class Pythia8Parser(object):
 
     def __init__(self, filename, event_num=1, remove_redundants=True):
         self.filename = filename
-        self.evt_num = event_num  # 1 = first event, etc
+        self.event_num = event_num  # 1 = first event, etc
         self.remove_redundants = remove_redundants
         log.info("Opening event file %s" % filename)
 
@@ -149,10 +148,9 @@ class Pythia8Parser(object):
             self.contents = filter(None, lines)
 
     def __repr__(self):
-        return "%s.%s(filename=%r, event_num=%d)" % (self.__module__,
-                                                     self.__class__.__name__,
-                                                     self.filename,
-                                                     self.event_num)
+        return "%s(filename=%r, event_num=%d)" % (self.__class__.__name__,
+                                                  self.filename,
+                                                  self.event_num)
 
     def __str__(self):
         return "Pythia8Parser:\n%s" % pformat(self.block_types)
@@ -181,27 +179,28 @@ class Pythia8Parser(object):
         for name, block in self.block_types.items():
             for pair in izip(block["ind_start"], block["ind_end"]):
                 pb = PythiaBlock(name=name, parser=block["parser"],
-                                 contents=self.contents[pair[0] + 1:pair[1]])
+                                 contents=self.contents[pair[0] + 1: pair[1]])
                 pb.parse_block()
                 block["blocks"].append(pb)
 
-        if len(self.block_types["FullEvent"]["blocks"]) < self.evt_num:
-            raise IndexError("Cannot access event number %d, no such event" % self.evt_num)
+        if len(self.block_types["FullEvent"]["blocks"]) < self.event_num:
+            raise IndexError("Cannot access event number %d, no such event" % self.event_num)
 
         # Deal with each type
-        # Info block: make a blank Event() object incase there's no Info block,
+        # Info block: make a blank Event() object in case there's no Info block,
         # assigning grapher (TODO: move elsewhere?)
-        event = (self.block_types["Info"]["blocks"][self.evt_num - 1].parser_results
+        event = (self.block_types["Info"]["blocks"][self.event_num - 1].parser_results
                  if self.block_types["Info"]["blocks"] else Event())
 
         # Hard event blocks:
-        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.evt_num - 1].parser_results
+        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num - 1].parser_results
 
         # Full event blocks:
-        full_node_particles = self.block_types["FullEvent"]["blocks"][self.evt_num - 1].parser_results
+        full_node_particles = self.block_types["FullEvent"]["blocks"][self.event_num - 1].parser_results
 
         # Assign particles to graph nodes
         event.particles = [np.particle for np in full_node_particles]
-        event.graph = node_grapher.assign_particles_nodes(full_node_particles, self.remove_redundants)
+        event.graph = node_grapher.assign_particles_nodes(node_particles=full_node_particles,
+                                                          remove_redundants=self.remove_redundants)
 
         return event

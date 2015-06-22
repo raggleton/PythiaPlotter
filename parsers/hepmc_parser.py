@@ -31,12 +31,9 @@ class HepMCParser(object):
         self.events = []
 
     def __repr__(self):
-        return "%s.%s(filename=%r, event_num=%d, remove_redundants=%s)" % (
-            self.__module__,
-            self.__class__.__name__,
-            self.filename,
-            self.event_num,
-            self.remove_redundants)
+        return "{0}(filename={1[filename]}, " \
+               "event_num={1[event_num]}, " \
+               "remove_redundants={1[remove_redundants]})".format(self.__class__.__name__, self)
 
     def __str__(self):
         return "HepMCParser:\n%s" % pformat(self.filename)

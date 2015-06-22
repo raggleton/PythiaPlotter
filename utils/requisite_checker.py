@@ -1,5 +1,28 @@
 """
 Class & methods to check if programs & modules exist on user's computer.
+
++TODO: maybe this should be redesigned more like a module e.g.
++But what if we want to query? better to have
++
++if "vim" in results.programs:
++    # failed
++else:
++    # carry on
++or
++
++if not results.programs["vim"]:
++    # failed
++else:
++    # carry on
++
++or something like:
++
++import requisite_checker
++failed = requisite_checker.check(modules=["os"], programs=["vim"])
++# failed = None if all OK, otherwise namedtuple of those failing
++if failed:
++    print "Missing modules %s and programs %s" % failed.modules, failed.programs
++
 """
 
 
@@ -17,8 +40,8 @@ def check_program_exists(program):
     if find_executable(program):
         return True
     else:
-        log.error("!!! Cannot find program \"" + program + \
-              "\", or missing from PATH")
+        # log.error("Error: cannot find program \"" + program + \
+        #           "\", or missing from PATH")
         return False
 
 
@@ -27,7 +50,7 @@ def check_module_exists(module):
     try:
         imp.find_module(module)
     except ImportError:
-        log.error("!!! Module \"" + module + "\" doesn't exist")
+        # log.error("Error: module \"" + module + "\" doesn't exist")
         return False
     return True
 
@@ -68,26 +91,3 @@ class RequisiteChecker():
     def check(self, name):
         """Check if particular module or program passed in constructor exist"""
         return self.results[name]
-
-
-# def check_program_exists_old(program):
-#     """Test if external program runs."""
-#     # Old, not so great version that relied on program having a -h option
-#     try:
-#         # Storing in string stifles output
-#         prog_out = subprocess.check_output([program, "-h"],
-#                                            stderr=subprocess.STDOUT)
-#     except subprocess.CalledProcessError as cpe:
-#         print(cpe.returncode)
-#         print(cpe.output)
-#         return False
-#     except OSError as e:
-#         if e.errno == os.errno.ENOENT:
-#             print "!!! You need to install program \"" + program + \
-#                   "\" or add it to PATH variable"
-#             print(e)
-#         else:
-#             # Something else went wrong while trying to run
-#             print(e)
-#         return False
-#     return True

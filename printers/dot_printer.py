@@ -29,6 +29,10 @@ class DotPrinter(object):
         self.pdf_filename = pdf_filename
         self.renderer = renderer
 
+    def __repr__(self):
+        return "{0}(gv_filename={1[barcode}, pdf_filename={1[pdf_filename]}, " \
+               "renderer={1[pdf]})".format(self.__class__.__name__, self)
+
     def print_event(self, event):
         """Inclusive function to do the various stages of printing easily"""
         self.event = event
@@ -59,9 +63,6 @@ class DotPrinter(object):
 
             graph = event.graph
 
-            log.debug("At the printers:")
-            log.debug(graph.edges())
-
             # Header-type info with graph-wide settings
             dot_file.write("digraph g {\n")
             dot_file.write("{attr}\n".format(**graph.graph))
@@ -90,14 +91,13 @@ class DotPrinter(object):
                 # dot_file.write("{0} -> {{ {1} }}").format(node, children)
                 dot_file.write("\t{0} {attr};\n".format(node, **graph.node[node]))
 
-            # Same with edges
+            # Write all the edges to file, with their display attributes
             for edge_ind in graph.edges():
                 edge = graph[edge_ind[0]][edge_ind[1]]
                 dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge))
 
             # Set all initial particles to be level in diagram
-            initial = ' '.join([str(node) for node in graph.nodes()
-                                if graph.node[node]['initial_state']])
+            initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['particle'].initial_state])
             dot_file.write("\t{{rank=same; {0} }}; "
                            "// initial particles on same level\n".format(initial))
 

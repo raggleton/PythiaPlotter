@@ -22,15 +22,15 @@ class Event(object):
         self._particles = None
 
     def __repr__(self):
+        ignore = ["graph", "_particles", "particles"]
         args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
-                    self.__dict__ if a not in ["graph", "_particles", "particles"]]
-        return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
-                              ", ".join(args_str))
+                    self.__dict__ if a not in ignore]
+        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
 
     def __str__(self):
         """Print event info in format suitable for use on graph or printout"""
         ignore = ["graph", "_particles", "particles"]
-        info = [k+": "+str(v)+"\n" for k, v in self.__dict__.iteritems()
+        info = [k + ": " + str(v) + "\n" for k, v in self.__dict__.iteritems()
                 if k not in ignore]
         return "Event:\n{0}".format("".join(info))
 
@@ -61,9 +61,11 @@ class Particle(object):
         self.px = float(px)  # Store as TLorentzVector?
         self.py = float(py)
         self.pz = float(pz)
-        self.pt = 0.0  # FIXME
+        self.pt = float(pt)  # TODO: properties or 4vec for these so can set/get them properly
+        self.eta = float(eta)
+        self.phi = float(phi)
         self.energy = float(energy)
-        self.et = 0.0  # FIXME
+        self.et = float(et)
         self.mass = float(mass)
         self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
         # self.skip = False  # Skip when writing to file
@@ -73,9 +75,9 @@ class Particle(object):
 
     def __repr__(self):
         args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()
-                    if k not in ["event"]]
-        return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
-                              ", ".join(args_str))
+                    if k not in ['event', 'px', 'py', 'pz', 'energy', 'mass',
+                                 'pt', 'eta', 'phi', 'status', "et"]]
+        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
@@ -91,13 +93,8 @@ class NodeParticle(object):
     This contains the physical Particle object, and associated info that
     is node-specific, such as parent node and children node codes.
 
-    Why do we store the barcode and not a reference to the parent particle?
-    This is becasue programs that output in node representation list
-    parents using their particle ID in the event (here, barcode). Thus, when
-    constructing the NodeParticle, we need the barcode, not the object itself.
-    In addition, we can then infer all the parent barcodes based on the parent1
-    and parent2 barcodes, which mark the edge of the range of barcodes of parent
-    particles.
+    parent1 and parent2 barcodes mark the edge of the range of barcodes
+    of parent particles.
     """
 
     def __init__(self, particle, parent1_barcode, parent2_barcode):
@@ -110,11 +107,10 @@ class NodeParticle(object):
         self.parent_codes = range(parent1_barcode, parent2_barcode + 1)
 
     def __repr__(self):
-        ignore = ["particle", "child_codes"]
-        args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
+        ignore = ["parent_codes"]
+        args_str = ["%s=%r" % (a, self.__dict__[a]) for a in
                     self.__dict__ if a not in ignore]
-        return "%s.%s(%s)" % (self.__module__, self.__class__.__name__,
-                              ", ".join(args_str))
+        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
 
     @property
     def barcode(self):
