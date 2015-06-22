@@ -1,6 +1,9 @@
 """
 Handle parsing of standalone Pythia 8 screen output.
 
+Default is NODE representation for particles.
+See example/example_pythia8.txt for example input file.
+
 TODO: reshuffle blocks - non optimal spreading out atm
 """
 
@@ -10,7 +13,7 @@ from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle, NodeParticle
 import node_grapher
-import utils.user_args as user_args
+from utils.common import map_columns
 
 
 log = logging.getLogger(__name__)
@@ -39,15 +42,6 @@ class PythiaBlock(object):
         """Run the instance parser over contents."""
         log.debug("Parsing block %s" % self.name)
         self.parser_results = self.parser(self.contents)
-
-
-def map_columns(fields, line):
-    """Make dict from fields titles and line
-
-    Field list MUST be in same order as the entries in line.
-    """
-    parts = line.split()[0:len(fields) + 1]
-    return {k: v for k, v in izip(fields, parts)}
 
 
 def parse_event_block(contents):

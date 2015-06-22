@@ -1,8 +1,10 @@
 """
-Some common functions used throughout, like opening PDFs, file checking
+Some common functions used throughout, like opening PDFs, file checking.
 """
 
+
 import os
+from itertools import izip
 from subprocess import call
 from subprocess import check_output
 from sys import platform as _platform
@@ -27,7 +29,7 @@ def cleanup_filepath(filepath):
 
 
 def get_full_path(filepath):
-    """Return absolute, full path of file.
+    """Return absolute, full directory of file.
     Resolve any environment vars, ~, sym links(?)"""
     return os.path.dirname(cleanup_filepath(filepath))
 
@@ -45,4 +47,19 @@ def check_dir_exists(filepath):
 def check_dir_exists_create(filepath):
     """Check if directory exists. If not, create it."""
     if not check_dir_exists(filepath):
-        os.makedirs(filepath)
+        os.makedirs(cleanup_filepath(filepath))
+
+
+def map_columns(fields, line, delim=None):
+    """Make dict from fields titles and line.
+
+    fields: list of field names, MUST be in same order as the entries in
+        line.
+
+    line: line to be split and mapped into dict.
+
+    delim: optional delimiter to separate columns. Default is greedy
+        whitespace, like for split(). For non-greedy whitepsace, use ' '.
+    """
+    parts = line.strip().split(delim)[0:len(fields) + 1]
+    return {k: v.strip() for k, v in izip(fields, parts)}

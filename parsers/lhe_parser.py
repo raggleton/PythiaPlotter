@@ -8,6 +8,7 @@ from pprint import pformat
 import xml.etree.ElementTree as ET
 from event_classes import Event, Particle, NodeParticle
 import node_grapher
+from utils.common import map_columns
 
 
 log = logging.getLogger(__name__)
@@ -39,9 +40,9 @@ class LHEParser(object):
         return "LHEParser: %s" % pformat(self.filename)
 
     def parse(self):
-        """Parse LHE file, returning an Event object with list of Particles.
+        """Parse LHE file, returning an Event object with list of Particles
+        assigned to a graph in NODE representation
 
-        <subtle things here>
         """
         try:
             tree = ET.parse(self.filename)
@@ -112,19 +113,10 @@ class LHEParser(object):
         event.particles = node_particles
         return event
 
-    @staticmethod
-    def map_columns(fields, line):
-        """Make dict from fields titles and line
-
-        Field list MUST be in same order as the entries in line.
-        """
-        parts = line.split()[0:len(fields) + 1]
-        return {k: v for k, v in izip(fields, parts)}
-
     def parse_event_line(self, line, event_num):
         """Parse a LHE event info line"""
         fields = ["num_particles", "proc_id", "weight", "scale", "aQED", "aQCD"]
-        contents = self.map_columns(fields, line)
+        contents = map_columns(fields, line)
         log.debug(contents)
         return Event(event_num=event_num)
 
@@ -138,7 +130,7 @@ class LHEParser(object):
         """
         fields = ["pdgid", "status", "parent1", "parent2", "col1", "col2",
                   "px", "py", "pz", "energy", "mass", "lifetime", "spin"]
-        contents = self.map_columns(fields, line)
+        contents = map_columns(fields, line)
         log.debug(contents)
         p = Particle(barcode=barcode,
                      pdgid=contents["pdgid"],

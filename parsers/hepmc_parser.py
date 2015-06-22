@@ -10,6 +10,7 @@ from event_classes import Event, Particle, EdgeParticle
 import edge_grapher
 import utils.user_args as user_args
 from utils.common import check_file_exists
+from utils.common import map_columns
 
 
 log = logging.getLogger(__name__)
@@ -109,41 +110,32 @@ class HepMCParser(object):
                                                           self.remove_redundants)
         return event
 
-    @staticmethod
-    def map_columns(fields, line):
-        """Make dict from fields titles and line
-
-        Field list MUST be in same order as the entries in line.
-        """
-        parts = line.split()[0:len(fields) + 1]
-        return {k: v for k, v in izip(fields, parts)}
-
     def parse_event_line(self, line):
         """Parse a HepMC GenEvent line and return an Event object"""
         fields = ["event_num", "num_mpi", "scale", "aQCD", "aQED",
                   "signal_process_id", "signal_process_vtx_id", "n_vtx",
                   "beam1_pdgid", "beam2_pdgid"]
-        contents = self.map_columns(fields, line[1:])
+        contents = map_columns(fields, line[1:])
         return Event(event_num=contents["event_num"],
                      signal_process_vtx_id=contents["signal_process_vtx_id"])
 
     def parse_vertex_line(self, line):
         """Parse a HepMC GenVertex line and return a GenVertex object"""
         fields = ["barcode", "id", "x", "y", "z", "ctau", "n_orphan_in", "n_out"]
-        contents = self.map_columns(fields, line[1:])
+        contents = map_columns(fields, line[1:])
         return GenVertex(barcode=contents["barcode"],
                          n_orphan_in=contents["n_orphan_in"])
 
     def parse_particle_line(self, line):
         """Parse a HepMC GenParticle line and return an EdgeParticle object
 
-        Note that the EdgeParticle doe snot have vts_out_barcode assigned, here,
+        Note that the EdgeParticle does not have vtx_out_barcode assigned here,
         since we are parsing a line in isolation. The vtx_out_barcode is added
-        in the main pars() method.
+        in the main pars() method. We just use a dummy value for now.
         """
         fields = ["barcode", "pdgid", "px", "py", "pz", "energy", "mass",
                   "status", "pol_theta", "pol_phi", "vtx_in_barcode"]
-        contents = self.map_columns(fields, line[1:])
+        contents = map_columns(fields, line[1:])
         p = Particle(barcode=contents["barcode"], pdgid=contents["pdgid"],
                      px=contents["px"], py=contents["py"], pz=contents["pz"],
                      energy=contents["energy"], mass=contents["mass"],
