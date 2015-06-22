@@ -39,6 +39,9 @@ class PythiaPlotter(object):
             self.parser = parsers.LHEParser(filename=opts.input,
                                             event_num=opts.eventNumber,
                                             remove_redundants=True)
+        elif opts.inputFormat == "CMSSW":
+            self.parser = parsers.CMSSWParticleListParser(filename=opts.input,
+                                                          remove_redundants=True)
 
         # Choose printer & configure
         if opts.render == "DOT":
@@ -57,9 +60,9 @@ class PythiaPlotter(object):
     def parse_event(self):
         """Run the object's parser"""
         self.event = self.parser.parse()
-        # self.event.label = "An example event"
+        self.event.label = "An example event"
         self.event.event_num = self.opts.eventNumber
-        # self.event.lumi_section = 123456798
+        self.event.lumi_section = 123456798
 
     def print_event(self):
         """Run the object's printer"""

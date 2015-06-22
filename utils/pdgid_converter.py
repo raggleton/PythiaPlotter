@@ -82,6 +82,12 @@ PDGID_NAME_DICT = load_pdgid_dict()
 # PDGID_NAME_DICT[999] = dict(latex="I^0", latex_anti="\\overline{I}^0",
 #                             raw="I0", raw_anti="I0")
 
+# These are for the CMSSW Pythia6 interface
+PDGID_NAME_DICT[88] = dict(latex='junction', latex_anti='junction',
+                           raw='junction', raw_anti='junction')
+PDGID_NAME_DICT[92] = dict(latex='string', latex_anti='string',
+                           raw='string', raw_anti='string')
+
 
 def check_pdgid(pdgid):
     """Check if entry corresponding to given pdgid. If not, throw KeyError."""

@@ -9,14 +9,9 @@ import argparse
 import os.path
 import utils.common as helpr
 import utils.requisite_checker as checkr
-from pprint import pprint
-import sys
 
 
 log = logging.getLogger(__name__)
-
-
-# global args
 
 
 def get_args(input_args):
@@ -39,10 +34,11 @@ def get_args(input_args):
 
     parser_opts = {"PYTHIA": "For screen output from Pythia 8",
                    "HEPMC": "For HEPMC files",
-                   "LHE": "For LHE files"}
+                   "LHE": "For LHE files",
+                   "CMSSW": "For ParticleListDrawer output from CMSSW"}
     parser_help_str = "Input format:\n"
     for k, v in parser_opts.items():
-        parser_help_str += k + ": " + v + "\n"
+        parser_help_str += "%s: %s\n" % (k, v)
     parser_help_str += "If unspecified, will try and make an educated guess, " \
                        "but could fail!"
 
