@@ -53,8 +53,9 @@ class Particle(object):
     "system" or such like.
     """
 
-    def __init__(self, barcode=-1, pdgid=0, px=0.0, py=0.0, pz=0.0,
-                 energy=0.0, mass=0.0, status=0, parent1=-1, parent2=-1):
+    def __init__(self, barcode=-1, pdgid=0,
+                 px=0.0, py=0.0, pz=0.0, et=0.0, pt=0.0, eta=0.0, phi=0.0,
+                 energy=0.0, mass=0.0, status=0):
         self.barcode = int(barcode)  # barcode - should be a unique **number**
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.px = float(px)  # Store as TLorentzVector?
@@ -65,18 +66,10 @@ class Particle(object):
         self.et = 0.0  # FIXME
         self.mass = float(mass)
         self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
-        # self.parent1_code = int(parent1)  # barcode range for parents
-        # self.parent2_code = int(parent2)
-        # to store barcodes of parents:
-        # self.parent_codes = range(self.parent1_code, self.parent2_code + 1)
-        # self.child_codes = None  # to store barcodes of children
         # self.skip = False  # Skip when writing to file
         self.final_state = False
         self.initial_state = False
-        # self.parent1_code == self.parent2_code == 0
         self.event = None  # parent event
-        # self.vtx_in_barcode = 0
-        # self.vtx_out_barcode = 0
 
     def __repr__(self):
         args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()
@@ -115,8 +108,6 @@ class NodeParticle(object):
         self.parent2_code = parent2_barcode
         # to store barcodes of parents:
         self.parent_codes = range(parent1_barcode, parent2_barcode + 1)
-        # self.child_codes = []  # to store barcodes of children
-        self.particle.initial_state = parent1_barcode == parent2_barcode == 0
 
     def __repr__(self):
         ignore = ["particle", "child_codes"]

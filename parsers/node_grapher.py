@@ -20,27 +20,34 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     for np in node_particles:
         gr.add_node(np.particle.barcode, particle=np.particle)
 
+    # get the barcode of the system to avoid useless edges
+    # and non-existent particles. 0 for Pythia8, -1 for CMSSW, but easiest
+    # is to check in the list of nodes (since node barcode = particle barcode)
+    system_barcode = -1 if 0 in gr.nodes() else 0
+
     # assign edges between Parent/Children
     # need to work backwards, since the Pythia daughter indices are
     # sometimes not complete, whereas mother IDs are
     for np in reversed(node_particles):
-        if np.parent1_code == 0 and np.parent2_code == 0:
+        if np.parent1_code == system_barcode and np.parent2_code == system_barcode:
             continue
         for i in xrange(np.parent1_code, np.parent2_code + 1):
             gr.add_edge(i, np.particle.barcode)
+    # Set initial_state and final_state flags, based on number of parents
+    # (for initial_state) or number of children (for final_state)
+    # This should be the only place it is done, otherwise confusing!
+    for np in gr.nodes():
+        if len(gr.predecessors(np)) == 0:
+            gr.node[np]['particle'].initial_state = True
 
-    # store daughters properly, mark final state particles
-    for node in gr.nodes():
-        children = list(gr.successors(node))
-        if not children:
-            gr.node[node]['particle'].final_state = True
-            # gr.node[node]['particle'].child_codes = children
-        # mark node as initial state or not, so we can align them on graph
-        gr.node[node]['initial_state'] = gr.node[node]['particle'].initial_state
+        if len(gr.successors(np)) == 0:
+            gr.node[np]['particle'].final_state = True
 
-    # remove redundant nodes from graph - NB they still exist in the Event tho
+    log.debug("Graph nodes after assigning: %s" % gr.node)
+
     if remove_redundants:
         remove_redundant_nodes(gr)
+        log.debug("Graph nodes after remove_redundants: %s" % gr.node)
 
     return gr
 
