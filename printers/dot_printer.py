@@ -1,13 +1,13 @@
 """
-Print Graph using dot/graphviz
+Print graph using GraphViz
 
-Aim to be fairly generic - so can have particles as edges or nodes. All we
+Aim to be fairly generic, so can have particles as edges or nodes. All we
 do is attach display attributes to each node/edge, then print these to file.
 
 Several stages:
-1. Go through nodes & edges and attach display attributes
-2. Write to dot format
-3. Render to PDF
+1. Go through nodes & edges and attach display attributes [add_display_attr()]
+2. Write to GraphViz format file [write_gv()]
+3. Render to PDF [print_pdf()]
 """
 
 
@@ -22,27 +22,32 @@ log = logging.getLogger(__name__)
 
 
 class DotPrinter(object):
-    """Class to easily print event to file using dot/Graphviz"""
+    """Class to print event to file using Graphviz"""
 
-    def __init__(self, gv_filename, pdf_filename, renderer="pdf"):
+    def __init__(self, gv_filename, pdf_filename, renderer="dot", output_format="pdf"):
         self.gv_filename = gv_filename
         self.pdf_filename = pdf_filename
         self.renderer = renderer
+        self.output_format = output_format
 
     def __repr__(self):
         return "{0}(gv_filename={1[barcode}, pdf_filename={1[pdf_filename]}, " \
-               "renderer={1[pdf]})".format(self.__class__.__name__, self)
+               "renderer={1[pdf]}, output_format={1[output_format]})".format(
+               self.__class__.__name__, self)
 
     def print_event(self, event):
         """Inclusive function to do the various stages of printing easily"""
         self.event = event
         self.add_display_attr(event.graph)
-        self.write_dot(event, self.gv_filename)
-        self.print_pdf(self.gv_filename, self.pdf_filename, self.renderer)
+        self.write_gv(event, self.gv_filename)
+        self.print_pdf(gv_filename=self.gv_filename,
+                       pdf_filename=self.pdf_filename,
+                       renderer=self.renderer,
+                       output_format=self.output_format)
 
     @staticmethod
     def add_display_attr(graph):
-        """Add display attribute to graph, nodes & edges"""
+        """Auto add display attribute to graph, nodes & edges"""
 
         graph.graph["attr"] = DotGraphAttr(graph)
 
@@ -56,10 +61,10 @@ class DotPrinter(object):
             edge["attr"] = DotEdgeAttr(edge)
 
     @staticmethod
-    def write_dot(event, dot_filename):
-        """Write event graph to file in dot format"""
-        log.info("Writing GraphViz file to %s" % dot_filename)
-        with open(dot_filename, "w") as dot_file:
+    def write_gv(event, gv_filename):
+        """Write event graph to file in GraphViz format"""
+        log.info("Writing GraphViz file to %s" % gv_filename)
+        with open(gv_filename, "w") as dot_file:
 
             graph = event.graph
 
@@ -97,33 +102,33 @@ class DotPrinter(object):
                 dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge))
 
             # Set all initial particles to be level in diagram
-            initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['particle'].initial_state])
+            initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['final_state']])
             dot_file.write("\t{{rank=same; {0} }}; "
                            "// initial particles on same level\n".format(initial))
 
             dot_file.write("}\n")
 
     @staticmethod
-    def print_pdf(dot_filename, pdf_filename, renderer):
-        """Run GraphViz file through dot to produce a PDF.
+    def print_pdf(gv_filename, pdf_filename, renderer, output_format):
+        """Run GraphViz file through a GraphViz program to produce a PDF.
 
-        Different renderer options: ps, pdf.
-        TODO: better way of handling this...
+        renderer: GraphViz program to use.
+
+        output_format: ps, ps2, or pdf. Each has its own advantages.
+            ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
+            ps2 - PDF searchable, but won't obey all HTML tags or unicode.
+            pdf - obeys HTML but not searchable
         """
 
         log.info("Writing PDF to %s", pdf_filename)
         log.info("To re-run:")
 
-        if renderer == "ps" or renderer == "ps2":
+        if output_format == "ps" or output_format == "ps2":
             # Do 2 stages: make a PostScript file, then convert to PDF.
-            # Note that there is no perfect renderer.
-            # ps2 - will make the PDF searchable,
-            # but won't obey all HTML tags or unicode.
-            # ps:cairo - obey HTML tags and unicode, but not be searchable.
             ps_filename = pdf_filename.replace(".pdf", ".ps")
-            if renderer == "ps2":
-                renderer += ":cairo"
-            psargs = ["dot", "-T%s" % renderer, dot_filename, "-o", ps_filename]
+            if output_format == "ps2":
+                output_format += ":cairo"
+            psargs = [renderer, "-T%s" % output_format, gv_filename, "-o", ps_filename]
             call(psargs)
             pdfargs = ["ps2pdf", ps_filename, pdf_filename]
             call(pdfargs)
@@ -132,10 +137,10 @@ class DotPrinter(object):
             log.info(" ".join(psargs))
             log.info(" ".join(pdfargs))
             log.info(" ".join(rmargs))
-        elif renderer == "pdf":
+        elif output_format == "pdf":
             # Or do straight to PDF: fast, obeys HTML tags, but not searchable.
-            dotargs = ["dot", "-Tpdf", dot_filename, "-o", pdf_filename]
+            dotargs = [renderer, "-Tpdf", gv_filename, "-o", pdf_filename]
             call(dotargs)
             log.info(" ".join(dotargs))
         else:
-            raise Exception("'%s' is not a valid renderer option: use ps or pdf" % renderer)
+            raise Exception("'%s' is not a valid output_format option: use ps, ps2, or pdf" % output_format)

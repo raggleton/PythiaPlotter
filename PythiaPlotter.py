@@ -48,7 +48,8 @@ class PythiaPlotter(object):
         if opts.render == "DOT":
             self.printer = printers.DotPrinter(gv_filename=opts.outputGV,
                                                pdf_filename=opts.outputPDF,
-                                               renderer="pdf")
+                                               renderer="dot",
+                                               output_format="pdf")
         elif opts.render == "LATEX":
             pass
 
