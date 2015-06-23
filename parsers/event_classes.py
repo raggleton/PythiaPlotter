@@ -102,7 +102,7 @@ class NodeParticle(object):
         parent2_barcode = int(parent2_barcode)
         self.particle = particle
         self.parent1_code = parent1_barcode  # barcode range for parents
-        self.parent2_code = parent2_barcode
+        self.parent2_code = parent2_barcode if parent2_barcode >= parent1_barcode else parent1_barcode
         # to store barcodes of parents:
         self.parent_codes = range(parent1_barcode, parent2_barcode + 1)
 
