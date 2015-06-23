@@ -1,5 +1,5 @@
 """
-Classes to describe visual attributes. Used when making GraphViz file.
+Classes to describe visual attributes. Used when making Graphviz file.
 
 Also set particle label in here, see get_particle_label(). Or should this be a
 method for the particle?
@@ -154,7 +154,7 @@ class DotNodeAttr(object):
 
 
 class DotGraphAttr(object):
-    """Hold GraphViz attributes for the graph as whole.
+    """Hold Graphviz attributes for the graph as whole.
 
     Auto-generates attributes from JSON file.
     """

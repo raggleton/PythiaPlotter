@@ -1,12 +1,12 @@
 """
-Print graph using GraphViz
+Print graph using Graphviz
 
 Aim to be fairly generic, so can have particles as edges or nodes. All we
 do is attach display attributes to each node/edge, then print these to file.
 
 Several stages:
 1. Go through nodes & edges and attach display attributes [add_display_attr()]
-2. Write to GraphViz format file [write_gv()]
+2. Write to Graphviz format file [write_gv()]
 3. Render to PDF [print_pdf()]
 """
 
@@ -62,8 +62,8 @@ class DotPrinter(object):
 
     @staticmethod
     def write_gv(event, gv_filename):
-        """Write event graph to file in GraphViz format"""
-        log.info("Writing GraphViz file to %s" % gv_filename)
+        """Write event graph to file in Graphviz format"""
+        log.info("Writing Graphviz file to %s" % gv_filename)
         with open(gv_filename, "w") as dot_file:
 
             graph = event.graph
@@ -110,9 +110,9 @@ class DotPrinter(object):
 
     @staticmethod
     def print_pdf(gv_filename, pdf_filename, renderer, output_format):
-        """Run GraphViz file through a GraphViz program to produce a PDF.
+        """Run Graphviz file through a Graphviz program to produce a PDF.
 
-        renderer: GraphViz program to use.
+        renderer: Graphviz program to use.
 
         output_format: ps, ps2, or pdf. Each has its own advantages.
             ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable

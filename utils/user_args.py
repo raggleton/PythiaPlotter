@@ -19,7 +19,7 @@ def get_args(input_args):
 
     parser = argparse.ArgumentParser(
         description="Convert MC event into particle evolution diagram.\n"
-                    "Uses dot/GraphViz/dot2tex/pdflatex to make a PDF.",
+                    "Uses dot/Graphviz/dot2tex/pdflatex to make a PDF.",
         # formatter_class=argparse.ArgumentDefaultsHelpFormatter
         formatter_class=argparse.RawTextHelpFormatter
     )
@@ -54,7 +54,7 @@ def get_args(input_args):
     # Output file options
     #################
     # parser.add_argument("-oGV", "--outputGV",
-    #                     help="output GraphViz filename "
+    #                     help="output Graphviz filename "
     #                          "(if unspecified, defaults to INPUT.gv)")
     parser.add_argument("-O", "--outputPDF",
                         help="Output PDF filename "
