@@ -99,6 +99,10 @@ def get_args(input_args):
                         choices=render_opts,
                         default="DOT" if "DOT" in render_opts else "LATEX")
 
+    parser.add_argument("--redundants",
+                        help="Keep redundant particles (defualt is to remove them)",
+                        action="store_true")
+
     #################
     # Testing options
     #################

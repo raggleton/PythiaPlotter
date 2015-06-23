@@ -26,22 +26,23 @@ class PythiaPlotter(object):
         self.printer = None
         self.event = None
 
+        remove_redundants = not opts.redundants
         # Choose parser & configure
         if opts.inputFormat == "PYTHIA":
             self.parser = parsers.Pythia8Parser(filename=opts.input,
                                                 event_num=opts.eventNumber,
-                                                remove_redundants=True)
+                                                remove_redundants=remove_redundants)
         elif opts.inputFormat == "HEPMC":
             self.parser = parsers.HepMCParser(filename=opts.input,
                                               event_num=opts.eventNumber,
-                                              remove_redundants=True)
+                                              remove_redundants=remove_redundants)
         elif opts.inputFormat == "LHE":
             self.parser = parsers.LHEParser(filename=opts.input,
                                             event_num=opts.eventNumber,
-                                            remove_redundants=True)
+                                            remove_redundants=remove_redundants)
         elif opts.inputFormat == "CMSSW":
             self.parser = parsers.CMSSWParticleListParser(filename=opts.input,
-                                                          remove_redundants=True)
+                                                          remove_redundants=remove_redundants)
 
         # Choose printer & configure
         if opts.render == "DOT":
