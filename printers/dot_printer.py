@@ -34,114 +34,114 @@ class DotPrinter(object):
         return "{0}(gv_filename={1[gv_filename]}, " \
                "pdf_filename={1[pdf_filename]}, " \
                "renderer={1[pdf]}, output_format={1[output_format]})".format(
-               self.__class__.__name__, self)
+            self.__class__.__name__, self)
 
     def print_event(self, event):
         """Inclusive function to do the various stages of printing easily"""
-        self.event = event
-        self.add_display_attr(event.graph)
-        self.write_gv(event, self.gv_filename)
-        self.print_pdf(gv_filename=self.gv_filename,
-                       pdf_filename=self.pdf_filename,
-                       renderer=self.renderer,
-                       output_format=self.output_format)
+        event = event
+        add_display_attr(event.graph)
+        write_gv(event, self.gv_filename)
+        print_pdf(gv_filename=self.gv_filename, pdf_filename=self.pdf_filename,
+                  renderer=self.renderer, output_format=self.output_format)
 
-    @staticmethod
-    def add_display_attr(graph):
-        """Auto add display attribute to graph, nodes & edges"""
 
-        graph.graph["attr"] = DotGraphAttr(graph)
+def add_display_attr(graph):
+    """Auto add display attribute to graph, nodes & edges"""
 
-        for node_ind in graph.nodes():
-            graph.node[node_ind]["attr"] = DotNodeAttr(graph.node[node_ind])
+    graph.graph["attr"] = DotGraphAttr(graph)
 
-        for edges_ind in graph.edges():
-            # NB if graph is a MultiDiGraph then need to add extra index [0]
-            # since could have multiple edge between same vertices
-            edge = graph.edge[edges_ind[0]][edges_ind[1]]
-            edge["attr"] = DotEdgeAttr(edge)
+    for node_ind in graph.nodes():
+        graph.node[node_ind]["attr"] = DotNodeAttr(graph.node[node_ind])
 
-    @staticmethod
-    def write_gv(event, gv_filename):
-        """Write event graph to file in Graphviz format"""
-        log.info("Writing Graphviz file to %s" % gv_filename)
-        with open(gv_filename, "w") as dot_file:
+    for edges_ind in graph.edges():
+        # NB if graph is a MultiDiGraph then need to add extra index [0]
+        # since could have multiple edge between same vertices
+        edge = graph.edge[edges_ind[0]][edges_ind[1]]
+        edge["attr"] = DotEdgeAttr(edge)
 
-            graph = event.graph
 
-            # Header-type info with graph-wide settings
-            dot_file.write("digraph g {\n")
-            dot_file.write("{attr}\n".format(**graph.graph))
+def write_gv(event, gv_filename):
+    """Write event graph to file in Graphviz format"""
+    log.info("Writing Graphviz file to %s" % gv_filename)
+    with open(gv_filename, "w") as dot_file:
 
-            # Add event info to plot
-            lbl = ""
-            if event.label:
-                # Event title
-                lbl = "<FONT POINT-SIZE=\"45\"><B>{0}</B></FONT><BR/>".format(event.label)
-            lbl += "<FONT POINT-SIZE=\"40\">  <BR/>"
-            # Event info
-            # Keep event.label as a title, not in attribute list
-            evt_lbl = [x for x in event.__str__().split("\n")
-                       if not (x.startswith("label") or x.startswith("Event"))]
-            lbl += '<BR/>'.join(evt_lbl)
-            lbl += "</FONT>"
-            dot_file.write("\tlabel=<{0}>;\n".format(lbl))
+        graph = event.graph
 
-            # Now print the graph to file
+        # Header-type info with graph-wide settings
+        dot_file.write("digraph g {\n")
+        dot_file.write("{attr}\n".format(**graph.graph))
 
-            # Write all the nodes to file, with their display attributes
-            for node in graph.nodes():
-                # Maybe use this form for smaller files when in NODE repr?
-                # Otherwise have line for *each* edge, even when parent same
-                # children = ' '.join(graph.successors())
-                # dot_file.write("{0} -> {{ {1} }}").format(node, children)
-                dot_file.write("\t{0} {attr};\n".format(node, **graph.node[node]))
+        # Add event info to plot
+        lbl = ""
+        if event.label:
+            # Event title
+            lbl = '<FONT POINT-SIZE="45"><B>{0}' \
+                  '</B></FONT><BR/>'.format(event.label)
+        lbl += '<FONT POINT-SIZE="40">  <BR/>'
+        # Event info
+        # Keep event.label as a title, not in attribute list
+        evt_lbl = [x for x in event.__str__().split("\n")
+                   if not (x.startswith("label") or x.startswith("Event"))]
+        lbl += '<BR/>'.join(evt_lbl)
+        lbl += '</FONT>'
+        dot_file.write("\tlabel=<{0}>;\n".format(lbl))
 
-            # Write all the edges to file, with their display attributes
-            for edge_ind in graph.edges():
-                edge = graph[edge_ind[0]][edge_ind[1]]
-                dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge))
+        # Now print the graph to file
 
-            # Set all initial particles to be level in diagram
-            initial = ' '.join([str(node) for node in graph.nodes() if graph.node[node]['final_state']])
-            dot_file.write("\t{{rank=same; {0} }}; "
-                           "// initial particles on same level\n".format(initial))
+        # Write all the nodes to file, with their display attributes
+        for node in graph.nodes():
+            # Maybe use this form for smaller files when in NODE repr?
+            # Otherwise have line for *each* edge, even when parent same
+            # children = ' '.join(graph.successors())
+            # dot_file.write("{0} -> {{ {1} }}").format(node, children)
+            dot_file.write("\t{0} {attr};\n".format(node, **graph.node[node]))
 
-            dot_file.write("}\n")
+        # Write all the edges to file, with their display attributes
+        for edge_ind in graph.edges():
+            edge = graph[edge_ind[0]][edge_ind[1]]
+            dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge))
 
-    @staticmethod
-    def print_pdf(gv_filename, pdf_filename, renderer, output_format):
-        """Run Graphviz file through a Graphviz program to produce a PDF.
+        # Set all initial particles to be level in diagram
+        initial = ' '.join([str(node) for node in graph.nodes()
+                            if graph.node[node]['initial_state']])
+        dot_file.write("\t{{rank=same; {0} }}; "
+                       "// initial particles on same level\n".format(initial))
 
-        renderer: Graphviz program to use.
+        dot_file.write("}\n")
 
-        output_format: ps, ps2, or pdf. Each has its own advantages.
-            ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
-            ps2 - PDF searchable, but won't obey all HTML tags or unicode.
-            pdf - obeys HTML but not searchable
-        """
 
-        log.info("Writing PDF to %s", pdf_filename)
-        log.info("To re-run:")
+def print_pdf(gv_filename, pdf_filename, renderer, output_format):
+    """Run Graphviz file through a Graphviz program to produce a PDF.
 
-        if output_format == "ps" or output_format == "ps2":
-            # Do 2 stages: make a PostScript file, then convert to PDF.
-            ps_filename = pdf_filename.replace(".pdf", ".ps")
-            if output_format == "ps2":
-                output_format += ":cairo"
-            psargs = [renderer, "-T%s" % output_format, gv_filename, "-o", ps_filename]
-            call(psargs)
-            pdfargs = ["ps2pdf", ps_filename, pdf_filename]
-            call(pdfargs)
-            rmargs = ["rm", ps_filename]
-            call(rmargs)
-            log.info(" ".join(psargs))
-            log.info(" ".join(pdfargs))
-            log.info(" ".join(rmargs))
-        elif output_format == "pdf":
-            # Or do straight to PDF: fast, obeys HTML tags, but not searchable.
-            dotargs = [renderer, "-Tpdf", gv_filename, "-o", pdf_filename]
-            call(dotargs)
-            log.info(" ".join(dotargs))
-        else:
-            raise Exception("'%s' is not a valid output_format option: use ps, ps2, or pdf" % output_format)
+    renderer: Graphviz program to use.
+
+    output_format: ps, ps2, or pdf. Each has its own advantages.
+        ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
+        ps2 - PDF searchable, but won't obey all HTML tags or unicode.
+        pdf - obeys HTML but not searchable
+    """
+
+    log.info("Writing PDF to %s", pdf_filename)
+    log.info("To re-run:")
+
+    if output_format == "ps" or output_format == "ps2":
+        # Do 2 stages: make a PostScript file, then convert to PDF.
+        ps_filename = pdf_filename.replace(".pdf", ".ps")
+        if output_format == "ps2":
+            output_format += ":cairo"
+        psargs = [renderer, "-T%s" % output_format, gv_filename, "-o", ps_filename]
+        call(psargs)
+        pdfargs = ["ps2pdf", ps_filename, pdf_filename]
+        call(pdfargs)
+        rmargs = ["rm", ps_filename]
+        call(rmargs)
+        log.info(" ".join(psargs))
+        log.info(" ".join(pdfargs))
+        log.info(" ".join(rmargs))
+    elif output_format == "pdf":
+        # Or do straight to PDF: fast, obeys HTML tags, but not searchable.
+        dotargs = [renderer, "-Tpdf", gv_filename, "-o", pdf_filename]
+        call(dotargs)
+        log.info(" ".join(dotargs))
+    else:
+        raise Exception("'%s' is not a valid output_format option: use ps, ps2, or pdf" % output_format)
