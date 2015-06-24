@@ -70,7 +70,7 @@ class HepMCParser(object):
                     # GenParticle info
                     edge_particle = self.parse_particle_line(line)
                     edge_particle.vtx_out_barcode = current_vertex.barcode
-
+                    log.debug(edge_particle.particle)
                     # If the particle has vtx_in_barcode = 0,
                     # then this is a 'dangling' vertex (i.e. not in the list
                     # of vertices) and we must create one instead.
@@ -79,7 +79,7 @@ class HepMCParser(object):
                     # in the file are < 0, and the particle barcode is unique.
                     # This is a final-state particle
                     if edge_particle.vtx_in_barcode == 0:
-                        edge_particle.vtx_in_barcode = (abs(edge_particle.vtx_out_barcode) \
+                        edge_particle.vtx_in_barcode = (1000*abs(edge_particle.vtx_out_barcode) \
                                                         + edge_particle.barcode)
                         edge_particle.particle.final_state = True
 
@@ -88,7 +88,7 @@ class HepMCParser(object):
                     # incoming proton. Need to create a new "out" node, since
                     # other particles will be outgoing from this node
                     if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
-                        edge_particle.vtx_out_barcode = (abs(edge_particle.vtx_out_barcode) \
+                        edge_particle.vtx_out_barcode = (1000*abs(edge_particle.vtx_out_barcode) \
                                                          + edge_particle.barcode)
                         edge_particle.particle.initial_state = True
 
@@ -120,7 +120,7 @@ class HepMCParser(object):
         """Parse a HepMC GenVertex line and return a GenVertex object"""
         fields = ["barcode", "id", "x", "y", "z", "ctau", "n_orphan_in", "n_out"]
         contents = map_columns(fields, line[1:])
-        return GenVertex(barcode=contents["barcode"],
+        return GenVertex(barcode=abs(int(contents["barcode"])),
                          n_orphan_in=contents["n_orphan_in"])
 
     def parse_particle_line(self, line):
@@ -137,8 +137,9 @@ class HepMCParser(object):
                      px=contents["px"], py=contents["py"], pz=contents["pz"],
                      energy=contents["energy"], mass=contents["mass"],
                      status=contents["status"])
+        log.debug(p)
         ep = EdgeParticle(particle=p,
-                          vtx_in_barcode=int(contents['vtx_in_barcode']),
+                          vtx_in_barcode=abs(int(contents['vtx_in_barcode'])),
                           vtx_out_barcode=0)
         return ep
 
