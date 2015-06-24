@@ -15,7 +15,7 @@ import utils.logging_config
 import logging
 import os.path
 from subprocess import call
-from display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
+from dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 
 log = logging.getLogger(__name__)
