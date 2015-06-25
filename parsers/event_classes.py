@@ -1,10 +1,11 @@
 """
-Classes to describe event & physical particles
+Classes to describe event & physical particles, along with helper classes to
+hold Particles in graph, and four-vectors.
 """
 
 import utils.logging_config
 import logging
-
+import numpy as np
 
 log = logging.getLogger(__name__)
 
@@ -58,17 +59,8 @@ class Particle(object):
                  energy=0.0, mass=0.0, status=0):
         self.barcode = int(barcode)  # barcode - should be a unique **number**
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
-        self.px = float(px)  # Store as TLorentzVector?
-        self.py = float(py)
-        self.pz = float(pz)
-        self.pt = float(pt)  # TODO: properties or 4vec for these so can set/get them properly
-        self.eta = float(eta)
-        self.phi = float(phi)
-        self.energy = float(energy)
-        self.et = float(et)
-        self.mass = float(mass)
+        self.four_mom = FourMomentum(px=px, py=py, pz=pz, et=et, pt=pt, eta=eta, energy=energy, mass=mass)
         self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
-        # self.skip = False  # Skip when writing to file
         self.final_state = False
         self.initial_state = False
         self.event = None  # parent event
@@ -81,10 +73,99 @@ class Particle(object):
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
-        return "Particle {0}, PDGID {1}".format(self.barcode, self.pdgid)
+        return "Particle {0}, PDGID {1}, {2}".format(self.barcode, self.pdgid, self.four_mom)
 
     def __eq__(self, other):
         return self.barcode == other.barcode and self.pdgid == other.pdgid
+
+    @property
+    def px(self):
+        return self.four_mom._px
+
+    @property
+    def py(self):
+        return self.four_mom._py
+
+    @property
+    def pz(self):
+        return self.four_mom._pz
+
+    @property
+    def pt(self):
+        return self.four_mom.pt
+
+    @property
+    def eta(self):
+        return self.four_mom.eta
+
+    @property
+    def phi(self):
+        return self.four_mom.phi
+
+
+class FourMomentum(object):
+    """Class to represent a 4-vector of energy-momentum
+
+    Conversion from px, py, pz to pt, eta, phi
+    px = pt * cos(phi)
+    py = pt * sin(phi)
+    pz = pt * sinh (eta)
+
+    Where:
+    eta is the pseudorapidity, = -ln(tanh(theta/2))
+    phi is the angle of the 3-momentum in the x-y plane relative to the x axis
+    theta is the angle of the 3-momentum in the x-z plane relative to the z axis
+
+    """
+
+    def __init__(self, px=0.0, py=0.0, pz=0.0, et=0.0,
+                 energy=0.0, mass=0.0, pt=0.0, eta=0.0, phi=0.0):
+        self._px = float(px)
+        self._py = float(py)
+        self._pz = float(pz)
+        self._pt = float(pt)
+        self._eta = float(eta)
+        self._phi = float(phi)
+        self._energy = float(energy)
+        self._et = float(et)
+        self._mass = float(mass)
+
+    def __repr__(self):
+        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()]
+        return "{0}({1})".format(self.__class__.__name__, ", ".join(args_str))
+
+    @property
+    def pt(self):
+        """Return the transverse momentum.
+
+        Defined as pt = sqrt(px^2 + py^2)
+        """
+        return np.hypot(self._px, self._py)
+
+    @property
+    def phi(self):
+        """Return the azimuthal angle.
+
+        phi = 0: along x axis
+        phi = pi/2: along y axis
+
+        Ensures that -pi < phi < pi"""
+        phi = np.arctan(self._py / self._px) if self._px != 0 else np.pi
+        return phi
+
+    @property
+    def eta(self):
+        """Return the pseudorapidity.
+
+        Formally, eta = -ln(tanh(theta/2)).
+        Here it is calculated using pz = pt * sinh(eta)
+
+        Note that if pt == 0, eta = sign(pz) * infinity.
+        """
+        if self.pt == 0:
+            return np.sign(self._pz) * np.inf
+        else:
+            return np.arcsinh(self._pz / self.pt)
 
 
 class NodeParticle(object):
@@ -138,7 +219,8 @@ class EdgeParticle(object):
     def __repr__(self):
         return "{0}(barcode={1}, " \
                "vtx_in_barcode={2[vtx_in_barcode]}, " \
-               "vtx_out_barcode={2[vtx_out_barcode]})\n".format(
+               "vtx_out_barcode={2[vtx_out_barcode]}," \
+               "particle={2[particle]})\n".format(
             self.__class__.__name__,
             self.barcode,
             self.__dict__)
