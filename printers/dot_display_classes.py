@@ -36,7 +36,7 @@ interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
 
 
 def load_json_settings(json_dict, attr):
-    """Load dict from JSON into attr dict. Checks to see if null value."""
+    """Load dict from json_dict into attr dict. Checks to see if null value."""
     if json_dict:
         for key, value in json_dict.iteritems():
             attr[key] = value
@@ -44,16 +44,25 @@ def load_json_settings(json_dict, attr):
 
 def get_particle_label(particle):
     """Return string for particle label to be displayed on graph"""
-    return "{0}: {1}".format(particle.barcode, pdgid_to_string(particle.pdgid))
+    return "{0}: {1}, pt: {2:.3f}, eta: {3:.3f}, phi: {4:.3f}".format(
+        particle.barcode, pdgid_to_string(particle.pdgid),
+        particle.pt, particle.eta, particle.phi)
 
 
 class DotEdgeAttr(object):
     """Hold display attributes for edge in dot graph
 
+    edge: dict. Holds properties for this edge.
+
     Auto-generates attributes from JSON file.
     """
 
     def __init__(self, edge):
+        """
+
+        :param edge: dict of edge properties
+        :return:
+        """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in edge.keys():  # edge represents a particle
             self.add_particle_attr(edge)
@@ -82,7 +91,7 @@ class DotEdgeAttr(object):
         # Displayed edge label
         self.attr["label"] = get_particle_label(particle)
 
-        # default stylings, if they exist
+        # load default edge styling
         load_json_settings(settings["default"]["edge"], self.attr)
 
         # style initial & final state
@@ -104,6 +113,10 @@ class DotNodeAttr(object):
     """
 
     def __init__(self, node):
+        """
+        :param node: dict of node properties.
+        :return:
+        """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in node.keys():  # node represents a particle
             self.add_particle_attr(node)
@@ -137,7 +150,7 @@ class DotNodeAttr(object):
         # Displayed node label
         self.attr["label"] = get_particle_label(particle)
 
-        # default stylings, if they exist
+        # default node styling
         load_json_settings(settings["default"]["node"], self.attr)
 
         # style initial & final state

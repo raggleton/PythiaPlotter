@@ -26,8 +26,15 @@ log = logging.getLogger(__name__)
 def assign_particles_edges(edge_particles, remove_redundants=True):
     """Attach particles to directed graph edges when EDGES represent particles.
 
+    The graph itself is a networkx MultiDiGraph: a directed graph, that can have
+    multiple edges between 2 nodes. We distinguish these via the edge['barcode']
+    attribute, where the barcode value = particle barcode. We can use
+    MultiDiGraph.edges(data=True) to correctly iterate over *all* edges.
+
+
     Additionally marks particles as initial/final state as necessary, based on
     whether they have any parents/children, respectively.
+
 
     edge_particles: list of EdgeParticle objects
         The Particle in each EdgeParticle will be assigned to a graph edge,
@@ -37,33 +44,36 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
         Optionally remove redundant particles from the graph.
         'Redundants' carry no extra physics information, but are only used
         internally by Pythia, etc
+
+    Returns a networkx.MultiDiGraph object.
     """
 
-    gr = nx.DiGraph(attr=None)  # placeholder attr for later in printer
+    gr = nx.MultiDiGraph(attr=None)  # placeholder attr for later in printer
 
     # assign an edge for each Particle object, preserving direction
     # note that NetworkX auto adds nodes when edges are added
     for ep in edge_particles:
-        log.debug("Adding edge %s -> %s" % (ep.vtx_out_barcode, ep.vtx_in_barcode))
+        log.debug("Adding edge %s -> %s for particle %s" % (ep.vtx_out_barcode, ep.vtx_in_barcode, ep.particle))
 
         gr.add_edge(ep.vtx_out_barcode, ep.vtx_in_barcode,
                     barcode=ep.barcode, particle=ep.particle)
 
     # Get in-degree for nodes so we can mark the initial state ones
     # (those with no incoming edges) and their particles
-    for n, i in gr.in_degree_iter(gr.nodes()):
-        gr.node[n]['initial_state'] = False
-        if i == 0:
-            for e, f in gr.out_edges_iter(n):
-                gr.edge[e][f]['particle'].initial_state = True
+    for node, degree in gr.in_degree_iter(gr.nodes()):
+        gr.node[node]['initial_state'] = False
+        if degree == 0:
+            gr.node[node]['initial_state'] = True
+            for e, f, edge_data in gr.out_edges_iter(node, data=True):
+                edge_data['particle'].initial_state = True
 
     # Do same for final-state nodes/particles (nodes which have no outgoing edges)
-    for n, i in gr.out_degree_iter(gr.nodes()):
-        gr.node[n]['final_state'] = False
-        if i == 0:
-            gr.node[n]['final_state'] = True
-            for e, f in gr.in_edges_iter(n):
-                gr.edge[e][f]['particle'].final_state = True
+    for node, degree in gr.out_degree_iter(gr.nodes()):
+        gr.node[node]['final_state'] = False
+        if degree == 0:
+            gr.node[node]['final_state'] = True
+            for e, f, edge_data in gr.in_edges_iter(node, data=True):
+                edge_data['particle'].final_state = True
 
     log.debug("Edges after assigning: %s" % gr.edges())
     log.debug("Nodes after assigning: %s" % gr.nodes())
@@ -73,7 +83,7 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
         remove_redundant_edges(gr)
 
         log.debug("After remove_redundant Edges:%s" % gr.edges())
-        log.debug("After remove_redundant Particles: %s" % [gr[i][j]['particle'] for i, j in gr.edges()])
+        log.debug("After remove_redundant Particles: %s" % [gr[degree][j]['particle'] for degree, j in gr.edges()])
         log.debug("After remove_redundant Nodes: %s" % gr.nodes())
 
     return gr

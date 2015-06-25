@@ -55,18 +55,16 @@ def add_display_attr(graph):
 
     graph.graph["attr"] = DotGraphAttr(graph)
 
-    for node_ind in graph.nodes():
-        graph.node[node_ind]["attr"] = DotNodeAttr(graph.node[node_ind])
+    for _, node_data in graph.nodes_iter(data=True):
+        node_data["attr"] = DotNodeAttr(node_data)
 
-    for edges_ind in graph.edges():
-        # NB if graph is a MultiDiGraph then need to add extra index [0]
-        # since could have multiple edge between same vertices
-        edge = graph.edge[edges_ind[0]][edges_ind[1]]
-        edge["attr"] = DotEdgeAttr(edge)
+    for _, _, edge_data in graph.edges_iter(data=True):
+        edge_data["attr"] = DotEdgeAttr(edge_data)
 
 
 def write_gv(event, gv_filename):
     """Write event graph to file in Graphviz format"""
+
     log.info("Writing Graphviz file to %s" % gv_filename)
     with open(gv_filename, "w") as dot_file:
 
@@ -94,21 +92,17 @@ def write_gv(event, gv_filename):
         # Now print the graph to file
 
         # Write all the nodes to file, with their display attributes
-        for node in graph.nodes():
-            # Maybe use this form for smaller files when in NODE repr?
-            # Otherwise have line for *each* edge, even when parent same
-            # children = ' '.join(graph.successors())
-            # dot_file.write("{0} -> {{ {1} }}").format(node, children)
-            dot_file.write("\t{0} {attr};\n".format(node, **graph.node[node]))
+        for node, node_data in graph.nodes_iter(data=True):
+            dot_file.write("\t{0} {attr};\n".format(node, **node_data))
 
         # Write all the edges to file, with their display attributes
-        for edge_ind in graph.edges():
-            edge = graph[edge_ind[0]][edge_ind[1]]
-            dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge))
+        edge_ind = [0, 0]
+        for edge_ind[0], edge_ind[1], edge_data in graph.edges_iter(data=True):
+            dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge_data))
 
         # Set all initial particles to be level in diagram
-        initial = ' '.join([str(node) for node in graph.nodes()
-                            if graph.node[node]['initial_state']])
+        initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
+                            if node_data['initial_state']])
         dot_file.write("\t{{rank=same; {0} }}; "
                        "// initial particles on same level\n".format(initial))
 
