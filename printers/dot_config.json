@@ -18,7 +18,7 @@
   "graph": {
     "rankdir": "LR",
     "ranksep": 0.4,
-    "nodesep": 0.4,
+    "nodesep": 0.6,
     "labelloc": "top",
     "labeljust": "left"
   },
@@ -42,7 +42,8 @@
     },
     "edge":{
       "color": "green3",
-      "fontcolor": "green3"
+      "fontcolor": "green3",
+      "penwidth": 5
     }
   },
 
@@ -66,6 +67,7 @@
     },
     "edge": {
       "color": "purple",
+      "fontcolor": "purple",
       "penwidth": 4
     }
   },
@@ -104,6 +106,44 @@
     "edge": {
       "color": "grey",
       "fontcolor": "grey"
+    }
+  },
+
+  "22": {
+    "_name": "photon",
+    "node": {
+      "style": "filled",
+      "color": "cadetblue1"
+    },
+    "edge": {
+      "color": "cadetblue1",
+      "fontcolor": "cadetblue1"
+    }
+  },
+
+  "25": {
+    "_name": "h1",
+    "node": {
+      "style": "filled",
+      "color": "blue"
+    },
+    "edge": {
+      "color": "blue",
+      "fontcolor": "blue",
+      "penwidth": 4
+    }
+  },
+
+  "36": {
+    "_name": "a1",
+    "node": {
+      "style": "filled",
+      "color": "limegreen"
+    },
+    "edge": {
+      "color": "limegreen",
+      "fontcolor": "limegreen",
+      "penwidth": 4
     }
   }
 }
