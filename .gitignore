@@ -1,3 +1,6 @@
+*.hepmc
+*.lhe
+*.pyc
 *.ps*
 *.aux
 *.dvi
@@ -6,15 +9,15 @@
 *.eps
 *.pdf
 *.gv
-*.pyc
 *.png
-pyhepmc-0.3.2
-hepmc2root.py
+*.svg
 *.dot
 *.tex
 *.txt
 .idea
 .coverage
+pyhepmc-0.3.2
+hepmc2root.py
 page
 testSite
 processing.min.js
