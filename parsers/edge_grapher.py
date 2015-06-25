@@ -122,7 +122,7 @@ def remove_redundant_edges(graph):
         # so make a dict ordered by barcode (which follows the time order)
         # graph_edges = {graph[j][k]['barcode']: (j, k) for j, k in graph.edges()}
 
-        for out_node, in_node in graph.edges():
+        for out_node, in_node in graph.edges_iter():
             edge = graph.edge[out_node][in_node]  # {barcode:...}
             log.debug("Doing edge:", )
             log.debug([out_node, in_node])
@@ -138,7 +138,7 @@ def remove_redundant_edges(graph):
             log.debug("Sibling edges: %s" % sibling_edges)
             if (len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1):
 
-                # dict of objets for this edge
+                # dict of objects for this edge
                 in_edge = graph[parent_edges[0][0]][parent_edges[0][1]]
 
                 # Do removal if parent PDGID matches

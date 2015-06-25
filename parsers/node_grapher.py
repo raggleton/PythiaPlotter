@@ -37,7 +37,7 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     # Set initial_state and final_state flags, based on number of parents
     # (for initial_state) or number of children (for final_state)
     # This should be the only place it is done, otherwise confusing!
-    for np in gr.nodes():
+    for np in gr.nodes_iter():
         if len(gr.predecessors(np)) == 0:
             gr.node[np]['particle'].initial_state = True
             gr.node[np]['initial_state'] = True
@@ -66,7 +66,7 @@ def remove_redundant_nodes(graph):
     These are useful to keep if considering Pythia8 internal workings,
     but otherwise are just confusing and a waste of space.
     """
-    for node in graph.nodes():
+    for node in graph.nodes_iter():
         if (len(graph.successors(node)) == 1
            and len(graph.predecessors(node)) == 1):
 
