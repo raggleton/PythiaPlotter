@@ -66,7 +66,7 @@ def remove_redundant_nodes(graph):
     These are useful to keep if considering Pythia8 internal workings,
     but otherwise are just confusing and a waste of space.
     """
-    for node in graph.nodes_iter():
+    for node in graph.nodes():
         if (len(graph.successors(node)) == 1
            and len(graph.predecessors(node)) == 1):
 
