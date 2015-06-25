@@ -68,7 +68,7 @@ class PythiaPlotter(object):
 
     def print_event(self):
         """Run the object's printer"""
-        self.printer.print_event(self.event)
+        self.printer.print_event(self.event, pdf=not self.opts.noPDF)
         if self.opts.openPDF:
             open_pdf(self.opts.outputPDF)
 

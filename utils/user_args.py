@@ -70,7 +70,7 @@ def get_args(input_args):
     #                     choices=["NODE", "EDGE"],
     #                     help="Particle representation (see README)")
     parser.add_argument("--noPDF",
-                        help="Don't convert to PDF",
+                        help="Don't convert Graphviz file to PDF",
                         action="store_true")
 
     # Check to see if certain render modes are available.
@@ -143,7 +143,7 @@ def get_args(input_args):
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
-
+    print_options(args)
     log.debug("Args: %s" % args)
 
     return args
@@ -187,3 +187,8 @@ def set_default_mode(args):
         else:
             args.particleMode = "NODE"
         log.info("You didn't set a particle mode. Using %s" % args.particleMode)
+
+def print_options(args):
+    """Printout for user arguments."""
+    for k,v in args.__dict__.iteritems():
+        print "{0}: {1}".format(k, v)
