@@ -13,7 +13,6 @@ Several stages:
 
 import utils.logging_config
 import logging
-import os.path
 from subprocess import call
 from dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
@@ -43,36 +42,52 @@ class DotPrinter(object):
             file to a graph PDF
         """
         event = event
-        add_display_attr(event.graph)
+        fancy = self.output_format in ["ps", "pdf"]
+        add_display_attr(event.graph, fancy)
         write_gv(event, self.gv_filename)
         if pdf:
             print_pdf(gv_filename=self.gv_filename, pdf_filename=self.pdf_filename,
                       renderer=self.renderer, output_format=self.output_format)
 
 
-def add_display_attr(graph):
-    """Auto add display attribute to graph, nodes & edges"""
+def add_display_attr(graph, fancy):
+    """Auto add display attribute to graph, nodes & edges
+
+    fancy: if True, will use HTML/unicode in labels
+    """
 
     graph.graph["attr"] = DotGraphAttr(graph)
 
     for _, node_data in graph.nodes_iter(data=True):
-        node_data["attr"] = DotNodeAttr(node_data)
+        node_data["attr"] = DotNodeAttr(node_data, fancy)
 
     for _, _, edge_data in graph.edges_iter(data=True):
-        edge_data["attr"] = DotEdgeAttr(edge_data)
+        edge_data["attr"] = DotEdgeAttr(edge_data, fancy)
+
+
+def write_nodes(graph, gv_file):
+    """Write all node to file, with their display attributes"""
+    for node, node_data in graph.nodes_iter(data=True):
+        gv_file.write("\t{0} {attr};\n".format(node, **node_data))
+
+
+def write_edges(graph, gv_file):
+    """Write all edges to file, with their display attributes"""
+    for out_node, in_node, edge_data in graph.edges_iter(data=True):
+        gv_file.write("\t{0} -> {1} {attr};\n".format(out_node, in_node, **edge_data))
 
 
 def write_gv(event, gv_filename):
     """Write event graph to file in Graphviz format"""
 
     log.info("Writing Graphviz file to %s" % gv_filename)
-    with open(gv_filename, "w") as dot_file:
+    with open(gv_filename, "w") as gv_file:
 
         graph = event.graph
 
         # Header-type info with graph-wide settings
-        dot_file.write("digraph g {\n")
-        dot_file.write("{attr}\n".format(**graph.graph))
+        gv_file.write("digraph g {\n")
+        gv_file.write("{attr}\n".format(**graph.graph))
 
         # Add event info to plot
         lbl = ""
@@ -87,26 +102,23 @@ def write_gv(event, gv_filename):
                    if not (x.startswith("label") or x.startswith("Event"))]
         lbl += '<BR/>'.join(evt_lbl)
         lbl += '</FONT>'
-        dot_file.write("\tlabel=<{0}>;\n".format(lbl))
+        gv_file.write("\tlabel=<{0}>;\n".format(lbl))
 
         # Now print the graph to file
 
         # Write all the nodes to file, with their display attributes
-        for node, node_data in graph.nodes_iter(data=True):
-            dot_file.write("\t{0} {attr};\n".format(node, **node_data))
+        write_nodes(graph, gv_file)
 
         # Write all the edges to file, with their display attributes
-        edge_ind = [0, 0]
-        for edge_ind[0], edge_ind[1], edge_data in graph.edges_iter(data=True):
-            dot_file.write("\t{0} -> {1} {attr};\n".format(*edge_ind, **edge_data))
+        write_edges(graph, gv_file)
 
         # Set all initial particles to be level in diagram
         initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
                             if node_data['initial_state']])
-        dot_file.write("\t{{rank=same; {0} }}; "
-                       "// initial particles on same level\n".format(initial))
+        gv_file.write("\t{{rank=same; {0} }}; "
+                      "// initial particles on same level\n".format(initial))
 
-        dot_file.write("}\n")
+        gv_file.write("}\n")
 
 
 def print_pdf(gv_filename, pdf_filename, renderer, output_format):

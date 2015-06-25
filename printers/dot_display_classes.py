@@ -13,6 +13,7 @@ from utils.pdgid_converter import pdgid_to_string
 import json
 import utils.logging_config
 import logging
+import numpy as np
 
 
 log = logging.getLogger(__name__)
@@ -42,54 +43,70 @@ def load_json_settings(json_dict, attr):
             attr[key] = value
 
 
-def get_particle_label(particle):
-    """Return string for particle label to be displayed on graph"""
-    return "{0}: {1}, pt: {2:.3f}, eta: {3:.3f}, phi: {4:.3f}".format(
-        particle.barcode, pdgid_to_string(particle.pdgid),
-        particle.pt, particle.eta, particle.phi)
+def get_particle_label(particle, fancy):
+    """Return string for particle label to be displayed on graph
+
+    fancy: if True, will use HTML/unicode in labels
+    """
+    if fancy:
+        label= r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
+            particle.barcode, pdgid_to_string(particle.pdgid), particle.pt, particle.eta, particle.phi)
+        label = label.replace("inf", "&#x221e;")
+        return label
+    else:
+        return '"{0}: {1}, pT: {2:.2f}, eta: {3:.2f}, phi: {4:.2f}"'.format(
+            particle.barcode, pdgid_to_string(particle.pdgid),
+            particle.pt, particle.eta, particle.phi)
 
 
 class DotEdgeAttr(object):
     """Hold display attributes for edge in dot graph
 
     edge: dict. Holds properties for this edge.
+    fancy: if True, will use HTML/unicode in labels
 
     Auto-generates attributes from JSON file.
     """
 
-    def __init__(self, edge):
+    def __init__(self, edge, fancy=False):
         """
 
         :param edge: dict of edge properties
+        :param fancy: bool. If True, uses HTML & unicode
         :return:
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in edge.keys():  # edge represents a particle
-            self.add_particle_attr(edge)
+            self.add_particle_attr(edge, fancy)
         else:
-            self.add_line_attr(edge)
+            self.add_line_attr(edge, fancy)
 
     def __repr__(self):
         return "DotEdgeAttrRepr"
 
     def __str__(self):
         """Print edge attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
         return "[{0}]".format(", ".join(attr_list)) if attr_list else ""
 
-    def add_line_attr(self, edge):
-        """Simple line to represent relationship between particles"""
+    def add_line_attr(self, edge, fancy):
+        """Simple line to represent relationship between particles
+
+        fancy: if True, will use HTML/unicode in labels
+        """
         pass
 
-    def add_particle_attr(self, edge):
+    def add_particle_attr(self, edge, fancy):
         """Style line as particle.
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
+
+        fancy: if True, will use HTML/unicode in labels
         """
         particle = edge["particle"]
 
         # Displayed edge label
-        self.attr["label"] = get_particle_label(particle)
+        self.attr["label"] = get_particle_label(particle, fancy)
 
         # load default edge styling
         load_json_settings(settings["default"]["edge"], self.attr)
@@ -112,35 +129,39 @@ class DotNodeAttr(object):
     Auto-generates attributes from JSON file.
     """
 
-    def __init__(self, node):
+    def __init__(self, node, fancy=False):
         """
         :param node: dict of node properties.
+        :param fancy: bool. If True, uses HTML & unicode
         :return:
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in node.keys():  # node represents a particle
-            self.add_particle_attr(node)
+            self.add_particle_attr(node, fancy)
         else:
-            self.add_point_attr(node)
+            self.add_point_attr(node, fancy)
 
     def __repr__(self):
         return "DotNodeAttrRepr"
 
     def __str__(self):
         """Print node attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
         return "[{0}]".format(", ".join(attr_list))
 
-    def add_point_attr(self, node, show_barcode=False):
+    def add_point_attr(self, node, fancy, show_barcode=False):
         """Simple point to show intersection of particles in EDGE representation
 
+        fancy: if True, will use HTML/unicode in labels
         Optional arg show_barcode shows the node/vertex barcode, for debugging
         purposes.
         """
         self.attr["shape"] = "circle" if show_barcode else "point"
 
-    def add_particle_attr(self, node):
+    def add_particle_attr(self, node, fancy):
         """Style node as particle
+
+        fancy: if True, will use HTML/unicode in labels
 
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
@@ -148,7 +169,7 @@ class DotNodeAttr(object):
         particle = node["particle"]
 
         # Displayed node label
-        self.attr["label"] = get_particle_label(particle)
+        self.attr["label"] = get_particle_label(particle, fancy)
 
         # default node styling
         load_json_settings(settings["default"]["node"], self.attr)
