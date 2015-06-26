@@ -79,7 +79,7 @@ class DotEdgeAttr(object):
         if "particle" in edge.keys():  # edge represents a particle
             self.add_particle_attr(edge, fancy)
         else:
-            self.add_line_attr(edge, fancy)
+            self.add_line_attr(edge)
 
     def __repr__(self):
         return "DotEdgeAttrRepr"
@@ -89,11 +89,8 @@ class DotEdgeAttr(object):
         attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
         return "[{0}]".format(", ".join(attr_list)) if attr_list else ""
 
-    def add_line_attr(self, edge, fancy):
-        """Simple line to represent relationship between particles
-
-        fancy: if True, will use HTML/unicode in labels
-        """
+    def add_line_attr(self, edge):
+        """Simple line to represent relationship between particles"""
         pass
 
     def add_particle_attr(self, edge, fancy):
@@ -139,7 +136,7 @@ class DotNodeAttr(object):
         if "particle" in node.keys():  # node represents a particle
             self.add_particle_attr(node, fancy)
         else:
-            self.add_point_attr(node, fancy)
+            self.add_point_attr(node)
 
     def __repr__(self):
         return "DotNodeAttrRepr"
@@ -149,12 +146,10 @@ class DotNodeAttr(object):
         attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
         return "[{0}]".format(", ".join(attr_list))
 
-    def add_point_attr(self, node, fancy, show_barcode=False):
+    def add_point_attr(self, node, show_barcode=False):
         """Simple point to show intersection of particles in EDGE representation
 
-        fancy: if True, will use HTML/unicode in labels
-        Optional arg show_barcode shows the node/vertex barcode, for debugging
-        purposes.
+        show_barcode: shows the node/vertex barcode, for debugging purposes.
         """
         self.attr["shape"] = "circle" if show_barcode else "point"
 
