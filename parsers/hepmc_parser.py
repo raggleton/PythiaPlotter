@@ -74,12 +74,11 @@ class HepMCParser(object):
                     # If the particle has vtx_in_barcode = 0,
                     # then this is a 'dangling' vertex (i.e. not in the list
                     # of vertices) and we must create one instead.
-                    # Use +(particle.vtx_out_barcode)+particle.barcode for a
-                    # unique barcode, since by convention all vertex barcodes
-                    # in the file are < 0, and the particle barcode is unique.
+                    # Use (1000*|particle.vtx_out_barcode|)+particle.barcode for a
+                    # unique barcode, since we won't have 10000 particles in an event.
                     # This is a final-state particle
                     if edge_particle.vtx_in_barcode == 0:
-                        edge_particle.vtx_in_barcode = (1000*abs(edge_particle.vtx_out_barcode) \
+                        edge_particle.vtx_in_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
                                                         + edge_particle.barcode)
                         edge_particle.particle.final_state = True
 
@@ -88,7 +87,7 @@ class HepMCParser(object):
                     # incoming proton. Need to create a new "out" node, since
                     # other particles will be outgoing from this node
                     if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
-                        edge_particle.vtx_out_barcode = (1000*abs(edge_particle.vtx_out_barcode) \
+                        edge_particle.vtx_out_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
                                                          + edge_particle.barcode)
                         edge_particle.particle.initial_state = True
 
