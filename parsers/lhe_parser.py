@@ -25,7 +25,7 @@ class LHEParser(object):
     return first event in file.
     """
 
-    def __init__(self, filename, event_num=1, remove_redundants=True):
+    def __init__(self, filename, event_num=0, remove_redundants=True):
         self.filename = filename
         self.event_num = event_num
         self.remove_redundants = remove_redundants

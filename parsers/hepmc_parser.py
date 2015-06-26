@@ -45,7 +45,12 @@ class HepMCParser(object):
         a list of Particles in the event, and a NetworkX graph obj
         with particles assigned to edges (natural representation of HepMC file).
         """
-        events = []
+        # Loop through file, line-by-line.
+        # Once we reach an event line with the require line number, then
+        # we start parsing the particle/vertex lines. Otherwise we eat up all
+        # the RAM!
+
+        parse_event = False
         current_event = None
         current_vertex = None
         edge_particles = []
@@ -59,52 +64,52 @@ class HepMCParser(object):
                         # Do only having read in all particles in an event
                         # current_event.particles = [ep.particle for ep in edge_particles]
                         current_event.particles = edge_particles
-                        edge_particles = []
-                        events.append(current_event)
+                        break
+
                     if line.startswith("E"):
                         current_event = self.parse_event_line(line)
-                elif line.startswith("V"):
-                    # GenVertex info
-                    current_vertex = self.parse_vertex_line(line)
-                elif line.startswith("P"):
-                    # GenParticle info
-                    edge_particle = self.parse_particle_line(line)
-                    edge_particle.vtx_out_barcode = current_vertex.barcode
-                    log.debug(edge_particle.particle)
-                    # If the particle has vtx_in_barcode = 0,
-                    # then this is a 'dangling' vertex (i.e. not in the list
-                    # of vertices) and we must create one instead.
-                    # Use (1000*|particle.vtx_out_barcode|)+particle.barcode for a
-                    # unique barcode, since we won't have 10000 particles in an event.
-                    # This is a final-state particle
-                    if edge_particle.vtx_in_barcode == 0:
-                        edge_particle.vtx_in_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
-                                                        + edge_particle.barcode)
-                        edge_particle.particle.final_state = True
+                        if current_event.event_num == self.event_num:
+                            parse_event = True
+                        else:
+                            current_event = None
 
-                    # If the vtx_in_barcode = vtx_out_barcode, then we have a
-                    # cyclical edge. This is normally reserved for an
-                    # incoming proton. Need to create a new "out" node, since
-                    # other particles will be outgoing from this node
-                    if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
-                        edge_particle.vtx_out_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
-                                                         + edge_particle.barcode)
-                        edge_particle.particle.initial_state = True
+                if parse_event:
+                    if line.startswith("V"):
+                        # GenVertex info
+                        current_vertex = self.parse_vertex_line(line)
+                    elif line.startswith("P"):
+                        # GenParticle info
+                        edge_particle = self.parse_particle_line(line)
+                        edge_particle.vtx_out_barcode = current_vertex.barcode
+                        log.debug(edge_particle.particle)
+                        # If the particle has vtx_in_barcode = 0,
+                        # then this is a 'dangling' vertex (i.e. not in the list
+                        # of vertices) and we must create one instead.
+                        # Use (1000*|particle.vtx_out_barcode|)+particle.barcode for a
+                        # unique barcode, since we won't have 10000 particles in an event.
+                        # This is a final-state particle
+                        if edge_particle.vtx_in_barcode == 0:
+                            edge_particle.vtx_in_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
+                                                            + edge_particle.barcode)
+                            edge_particle.particle.final_state = True
 
-                    edge_particles.append(edge_particle)
+                        # If the vtx_in_barcode = vtx_out_barcode, then we have a
+                        # cyclical edge. This is normally reserved for an
+                        # incoming proton. Need to create a new "out" node, since
+                        # other particles will be outgoing from this node
+                        if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
+                            edge_particle.vtx_out_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
+                                                             + edge_particle.barcode)
+                            edge_particle.particle.initial_state = True
 
-        # Get the event with the matching barcode, and assign particles to
-        # a NetworkX graph in edge representation
-        try:
-            event = next((x for x in events if x.event_num == self.event_num))
-        except StopIteration:
-            log.warn("Cannot find an event with event number %d, "
-                     "using first event in file instead" % self.event_num)
-            event = events[0]
+                        edge_particles.append(edge_particle)
 
-        event.graph = edge_grapher.assign_particles_edges(event.particles,
-                                                          self.remove_redundants)
-        return event
+        if not current_event:
+            raise IndexError("Cannot find an event with event number %d" % self.event_num)
+
+        current_event.graph = edge_grapher.assign_particles_edges(current_event.particles,
+                                                                  self.remove_redundants)
+        return current_event
 
     def parse_event_line(self, line):
         """Parse a HepMC GenEvent line and return an Event object"""

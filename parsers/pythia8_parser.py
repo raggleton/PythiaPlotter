@@ -134,9 +134,9 @@ class Pythia8Parser(object):
                        Info=info_blocks,
                        HardEvent=hard_evt_blocks)
 
-    def __init__(self, filename, event_num=1, remove_redundants=True):
+    def __init__(self, filename, event_num=0, remove_redundants=True):
         self.filename = filename
-        self.event_num = event_num  # 1 = first event, etc
+        self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
         log.info("Opening event file %s" % filename)
 
@@ -189,14 +189,14 @@ class Pythia8Parser(object):
         # Deal with each type
         # Info block: make a blank Event() object in case there's no Info block,
         # assigning grapher (TODO: move elsewhere?)
-        event = (self.block_types["Info"]["blocks"][self.event_num - 1].parser_results
+        event = (self.block_types["Info"]["blocks"][self.event_num].parser_results
                  if self.block_types["Info"]["blocks"] else Event())
 
         # Hard event blocks:
-        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num - 1].parser_results
+        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num].parser_results
 
         # Full event blocks:
-        full_node_particles = self.block_types["FullEvent"]["blocks"][self.event_num - 1].parser_results
+        full_node_particles = self.block_types["FullEvent"]["blocks"][self.event_num].parser_results
 
         # Assign particles to graph nodes
         event.particles = [np.particle for np in full_node_particles]

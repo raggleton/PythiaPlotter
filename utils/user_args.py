@@ -48,7 +48,7 @@ def get_args(input_args):
     parser.add_argument("-n", "--eventNumber",
                         help="Select event number to plot, starts at 1.\n"
                              "For: HEPMC, LHE input formats.\n",
-                        type=int, default=1)
+                        type=int, default=0)
 
     #################
     # Output file options
@@ -106,9 +106,6 @@ def get_args(input_args):
     #################
     # Testing options
     #################
-    # parser.add_argument("--straightEdges",
-    #                     help="Use straight edges instead of curvy",
-    #                     action="store_true")
     # parser.add_argument("--showVertexBarcode",  # think of a better opt name!
     #                     help="Show vertex barcodes, useful for figuring out "
     #                          "which are the hard interaction(s). Only useful "
@@ -119,9 +116,6 @@ def get_args(input_args):
     #                          'hard interaction, e.g. --hardVertices V2, V3 '
     #                          '(LATEX render only)',
     #                     default=None, nargs='*', type=str)
-    # parser.add_argument("--noTimeArrows",
-    #                     help='Turn off the "Time" arrows (LATEX render only)',
-    #                     action="store_true")
     # parser.add_argument("--scale",
     #                     help="Factor to scale PDF by (LATEX render only)",
     #                     default=0.7, type=float)
@@ -158,7 +152,7 @@ def set_default_output(args):
 
     # Set default PDF filename if not already done
     if not args.outputPDF:
-        args.outputPDF = os.path.join(args.in_dir, args.stem_name+".pdf")
+        args.outputPDF = os.path.join(args.in_dir, args.stem_name+"_"+str(args.eventNumber)+".pdf")
 
     # Set default graphviz filename from PDF name
     args.outputGV = args.outputPDF.replace(".pdf", ".gv")
