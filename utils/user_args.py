@@ -141,8 +141,9 @@ def get_args(input_args):
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
-    print_options(args)
-    log.debug("Args: %s" % args)
+    if args.verbose:
+        print_options(args)
+    # log.debug("Args: %s" % args)
 
     return args
 
