@@ -37,9 +37,12 @@ class PythiaPlotter(object):
                                                 event_num=opts.eventNumber,
                                                 remove_redundants=remove_redundants)
         elif opts.inputFormat == "HEPMC":
+            # For now, disable remove_redundants for HepMC until it gets fixed
+            log.warning("WARNING: Disabling removal of redundants for HepMC files as broken")
             self.parser = parsers.HepMCParser(filename=opts.input,
                                               event_num=opts.eventNumber,
-                                              remove_redundants=remove_redundants)
+                                              # remove_redundants=remove_redundants)
+                                              remove_redundants=False)
         elif opts.inputFormat == "LHE":
             self.parser = parsers.LHEParser(filename=opts.input,
                                             event_num=opts.eventNumber,
