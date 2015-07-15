@@ -72,10 +72,12 @@ class PythiaPlotter(object):
         self.event.label = "An example event"
         self.event.event_num = self.opts.eventNumber
         self.event.lumi_section = 123456798
+        if self.opts.stats:
+            self.event.print_stats()
 
     def print_event(self):
         """Run the object's printer"""
-        self.printer.print_event(self.event, pdf=not self.opts.noPDF)
+        self.printer.print_event(self.event, pdf=(not self.opts.noPDF))
         if self.opts.openPDF:
             open_pdf(self.opts.outputPDF)
 

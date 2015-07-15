@@ -122,6 +122,10 @@ def get_args(input_args):
     parser.add_argument("-v", "--verbose",
                         help="Print debug statements to screen",
                         action="store_true")
+    parser.add_argument("--stats",
+                        help="Print some statistics about the event/graph",
+                        action="store_true")
+
 
     #################
     # Post process user args

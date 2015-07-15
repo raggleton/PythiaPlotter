@@ -45,6 +45,10 @@ class Event(object):
         for p in self._particles:
             p.event = self
 
+    def print_stats(self):
+        """Print some basic statistics about the event"""
+        print "{0} particles in the event".format(len(self._particles))
+
 
 class Particle(object):
     """Representation of a physical particle.
