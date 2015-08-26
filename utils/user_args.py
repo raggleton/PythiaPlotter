@@ -28,9 +28,7 @@ def get_args(input_args):
     # Input options
     #################
     parser.add_argument("input",
-                        help="Input file",
-                        nargs="?",
-                        default="example/example_pythia8.txt")
+                        help="Input file")
 
     parser_opts = {"PYTHIA": "For screen output from Pythia 8",
                    "HEPMC": "For HEPMC files",
