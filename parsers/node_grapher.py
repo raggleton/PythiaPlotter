@@ -34,6 +34,7 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
             continue
         for i in xrange(np.parent1_code, np.parent2_code + 1):
             gr.add_edge(i, np.particle.barcode)
+            
     # Set initial_state and final_state flags, based on number of parents
     # (for initial_state) or number of children (for final_state)
     # This should be the only place it is done, otherwise confusing!
@@ -46,11 +47,11 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
             gr.node[np]['particle'].final_state = True
             gr.node[np]['final_state'] = True
 
-    log.debug("Graph nodes after assigning: %s" % gr.node)
+    # log.debug("Graph nodes after assigning: %s" % gr.node)
 
     if remove_redundants:
         remove_redundant_nodes(gr)
-        log.debug("Graph nodes after remove_redundants: %s" % gr.node)
+        # log.debug("Graph nodes after remove_redundants: %s" % gr.node)
 
     return gr
 
