@@ -118,6 +118,9 @@ def remove_redundant_edges(graph):
     and doesn't remove redundants. So the method loops through the graph edges
     until there are no more redundant edges.
 
+    Since we are dealing with MultiDiGraph, we have to be careful about siblings
+    that actually span the same set of nodes - these shouldn't be removed.
+
     There is probably a more sensible way to do this, currently brute
     force and slow.
     """
@@ -128,12 +131,7 @@ def remove_redundant_edges(graph):
         done_removing = True
         remove_nodes = set()  # use a set here to only keep unique nodes
 
-        # want the edges ordered by barcode (i.e in time order),
-        # so make a dict ordered by barcode (which follows the time order)
-        # graph_edges = {graph[j][k]['barcode']: (j, k) for j, k in graph.edges()}
-
-        for out_node, in_node in graph.edges_iter():
-            edge = graph.edge[out_node][in_node]  # {barcode:...}
+        for out_node, in_node, edge_data in graph.edges_iter(data=True):
             log.debug("Doing edge:", )
             log.debug([out_node, in_node])
 
@@ -152,12 +150,12 @@ def remove_redundant_edges(graph):
                 in_edge = graph[parent_edges[0][0]][parent_edges[0][1]]
 
                 # Do removal if parent PDGID matches
-                if in_edge["particle"].pdgid == edge["particle"].pdgid:
+                if in_edge["particle"].pdgid == edge_data["particle"].pdgid:
 
                     done_removing = False
 
-                    log.debug("Removing redundant edge %s" % edge)
-                    particle = edge["particle"]
+                    log.debug("Removing redundant edge %s" % edge_data)
+                    particle = edge_data["particle"]
 
                     # set incoming edges' incoming node to this edge's incoming node
                     # and mark this edge's outgoing node for removal
