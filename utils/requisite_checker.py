@@ -83,7 +83,6 @@ class RequisiteChecker():
     def __str__(self):
         return "RequisiteChecker: %s" % str(self.results)
 
-
     def all_exist(self):
         """Check if all modules and programs passed in constructor exist"""
         return all(list(self.results.values()))

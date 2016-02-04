@@ -6,7 +6,6 @@ See example/example_lhe.lhe for example input file.
 """
 
 import logging
-from itertools import izip
 from pprint import pformat
 import xml.etree.ElementTree as ET
 from event_classes import Event, Particle, NodeParticle
@@ -49,8 +48,8 @@ class LHEParser(object):
         """
         try:
             tree = ET.parse(self.filename)
-        except ET.ParseError as e:
-            log.error("Couldn't parse LHE file correctly - invalid XML\n")
+        except ET.ParseError:
+            log.exception("Couldn't parse LHE file correctly - invalid XML\n")
             raise
 
         root = tree.getroot()
@@ -60,8 +59,8 @@ class LHEParser(object):
         tags = [r.tag for r in root]
         try:
             init_ind = tags.index('init')
-        except ValueError as e:
-            log.error("Cannot find <init> block in LHE file")
+        except ValueError:
+            log.exception("Cannot find <init> block in LHE file")
             raise
         self.parse_init_text(root[init_ind].text)
 
@@ -69,8 +68,8 @@ class LHEParser(object):
         event_ind = init_ind
         try:
             event_ind = tags.index('event', self.event_num)
-        except ValueError as e:
-            log.error("Cannot find the <event> block %d in LHE file" % self.event_num)
+        except ValueError:
+            log.exception("Cannot find the <event> block %d in LHE file" % self.event_num)
             raise
 
         event = self.parse_event_text(root[event_ind].text)

@@ -193,7 +193,7 @@ class Pythia8Parser(object):
                  if self.block_types["Info"]["blocks"] else Event())
 
         # Hard event blocks:
-        hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num].parser_results
+        # hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num].parser_results
 
         # Full event blocks:
         full_node_particles = self.block_types["FullEvent"]["blocks"][self.event_num].parser_results

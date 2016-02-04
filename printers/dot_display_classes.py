@@ -25,10 +25,10 @@ try:
     with open(config_file) as jfile:
         settings = json.load(jfile)
 except IOError as e:
-    log.error("Cannot load settings file %s - no such file\n" % config_file)
+    log.exception("Cannot load settings file %s - no such file\n" % config_file)
     raise
 except ValueError as e:
-    log.error("Problem parsing settings file %s\n" % config_file)
+    log.exception("Problem parsing settings file %s\n" % config_file)
     raise
 
 interesting_pdgids = settings.keys()[:]
@@ -49,8 +49,9 @@ def get_particle_label(particle, fancy):
     fancy: if True, will use HTML/unicode in labels
     """
     if fancy:
-        label= r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
-            particle.barcode, pdgid_to_string(particle.pdgid), particle.pt, particle.eta, particle.phi)
+        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
+                particle.barcode, pdgid_to_string(particle.pdgid),
+                particle.pt, particle.eta, particle.phi)
         label = label.replace("inf", "&#x221e;")
         return label
     else:

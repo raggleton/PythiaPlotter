@@ -124,7 +124,6 @@ def get_args(input_args):
                         help="Print some statistics about the event/graph",
                         action="store_true")
 
-
     #################
     # Post process user args
     #################
@@ -155,7 +154,8 @@ def set_default_output(args):
 
     # Set default PDF filename if not already done
     if not args.outputPDF:
-        args.outputPDF = os.path.join(args.in_dir, args.stem_name+"_"+str(args.eventNumber)+".pdf")
+        filename = args.stem_name + "_" + str(args.eventNumber) + ".pdf"
+        args.outputPDF = os.path.join(args.in_dir, filename)
 
     # Set default graphviz filename from PDF name
     args.outputGV = args.outputPDF.replace(".pdf", ".gv")
@@ -185,7 +185,8 @@ def set_default_mode(args):
             args.particleMode = "NODE"
         log.info("You didn't set a particle mode. Using %s" % args.particleMode)
 
+
 def print_options(args):
     """Printout for user arguments."""
-    for k,v in args.__dict__.iteritems():
+    for k, v in args.__dict__.iteritems():
         print "{0}: {1}".format(k, v)

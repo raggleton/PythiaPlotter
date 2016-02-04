@@ -63,7 +63,8 @@ class Particle(object):
                  energy=0.0, mass=0.0, status=0):
         self.barcode = int(barcode)  # barcode - should be a unique **number**
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
-        self.four_mom = FourMomentum(px=px, py=py, pz=pz, et=et, pt=pt, eta=eta, energy=energy, mass=mass)
+        self.four_mom = FourMomentum(px=px, py=py, pz=pz, et=et,
+                                     pt=pt, eta=eta, energy=energy, mass=mass)
         self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
         self.final_state = False
         self.initial_state = False
@@ -187,7 +188,8 @@ class NodeParticle(object):
         parent2_barcode = int(parent2_barcode)
         self.particle = particle
         self.parent1_code = parent1_barcode  # barcode range for parents
-        self.parent2_code = parent2_barcode if parent2_barcode >= parent1_barcode else parent1_barcode
+        self.parent2_code = (parent2_barcode if parent2_barcode >= parent1_barcode
+                             else parent1_barcode)
         # to store barcodes of parents:
         self.parent_codes = range(parent1_barcode, parent2_barcode + 1)
 
@@ -224,7 +226,5 @@ class EdgeParticle(object):
         return "{0}(barcode={1}, " \
                "vtx_in_barcode={2[vtx_in_barcode]}, " \
                "vtx_out_barcode={2[vtx_out_barcode]}," \
-               "particle={2[particle]})\n".format(
-            self.__class__.__name__,
-            self.barcode,
-            self.__dict__)
+               "particle={2[particle]})\n".format(self.__class__.__name__,
+                                                  self.barcode, self.__dict__)

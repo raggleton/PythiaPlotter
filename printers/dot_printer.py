@@ -30,10 +30,8 @@ class DotPrinter(object):
         self.output_format = output_format
 
     def __repr__(self):
-        return "{0}(gv_filename={1[gv_filename]}, " \
-               "pdf_filename={1[pdf_filename]}, " \
-               "renderer={1[pdf]}, output_format={1[output_format]})".format(
-            self.__class__.__name__, self)
+        return "{0}(gv_filename={1[gv_filename]}, pdf_filename={1[pdf_filename]}, " \
+               "renderer={1[pdf]}, output_format={1[output_format]})".format(self.__class__.__name__, self)
 
     def print_event(self, event, pdf=True):
         """Inclusive function to do the various stages of printing easily

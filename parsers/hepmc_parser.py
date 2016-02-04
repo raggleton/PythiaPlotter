@@ -85,21 +85,24 @@ class HepMCParser(object):
                         # If the particle has vtx_in_barcode = 0,
                         # then this is a 'dangling' vertex (i.e. not in the list
                         # of vertices) and we must create one instead.
-                        # Use (1000*|particle.vtx_out_barcode|)+particle.barcode for a
-                        # unique barcode, since we won't have 10000 particles in an event.
+                        # Use (10000*|particle.vtx_out_barcode|)+particle.barcode
+                        # for a unique barcode, since we won't have 10000
+                        # particles in an event.
+
+                        def _generate_unique_id(edge_particle):
+                            return 10000 * abs(edge_particle.vtx_out_barcode) + edge_particle.barcode
+
                         # This is a final-state particle
                         if edge_particle.vtx_in_barcode == 0:
-                            edge_particle.vtx_in_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
-                                                            + edge_particle.barcode)
+                            edge_particle.vtx_in_barcode = _generate_unique_id(edge_particle)
                             edge_particle.particle.final_state = True
 
-                        # If the vtx_in_barcode = vtx_out_barcode, then we have a
-                        # cyclical edge. This is normally reserved for an
+                        # If the vtx_in_barcode = vtx_out_barcode, then we have
+                        # a cyclical edge. This is normally reserved for an
                         # incoming proton. Need to create a new "out" node, since
                         # other particles will be outgoing from this node
                         if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
-                            edge_particle.vtx_out_barcode = (10000*abs(edge_particle.vtx_out_barcode) \
-                                                             + edge_particle.barcode)
+                            edge_particle.vtx_out_barcode = _generate_unique_id(edge_particle)
                             edge_particle.particle.initial_state = True
 
                         edge_particles.append(edge_particle)
