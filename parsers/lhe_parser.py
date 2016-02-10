@@ -7,7 +7,8 @@ See example/example_lhe.lhe for example input file.
 
 import logging
 from pprint import pformat
-import xml.etree.ElementTree as ET
+# import xml.etree.ElementTree as ET  # slowwww
+from lxml import etree as ET  # MegaGainz
 from event_classes import Event, Particle, NodeParticle
 import node_grapher
 from utils.common import map_columns
