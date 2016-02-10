@@ -46,11 +46,7 @@ class LHEParser(object):
         assigned to a graph in NODE representation
 
         """
-        try:
-            tree = ET.parse(self.filename)
-        except ET.ParseError:
-            log.exception("Couldn't parse LHE file correctly - invalid XML\n")
-            raise
+        tree = ET.parse(self.filename)
 
         root = tree.getroot()
 
