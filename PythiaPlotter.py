@@ -69,9 +69,6 @@ class PythiaPlotter(object):
     def parse_event(self):
         """Run the object's parser"""
         self.event = self.parser.parse()
-        self.event.label = "An example event"
-        self.event.event_num = self.opts.eventNumber
-        self.event.lumi_section = 123456798
         if self.opts.stats:
             self.event.print_stats()
 
@@ -85,6 +82,9 @@ class PythiaPlotter(object):
 def main(args):
     pp = PythiaPlotter(user_args.get_args(args))
     pp.parse_event()
+    pp.event.label = "Alex's event in MG5_aMC@NLO"
+    pp.event.event_num = pp.opts.eventNumber
+    # pp.event.lumi_section = 123456798
     pp.print_event()
 
 
