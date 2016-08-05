@@ -54,6 +54,7 @@ class HepMCParser(object):
         current_event = None
         current_vertex = None
         edge_particles = []
+        vertices = []
 
         log.info("Opening event file %s" % self.filename)
         with open(self.filename) as f:
@@ -77,9 +78,11 @@ class HepMCParser(object):
                     if line.startswith("V"):
                         # GenVertex info
                         current_vertex = self.parse_vertex_line(line)
+                        vertices.append(current_vertex)
                     elif line.startswith("P"):
                         # GenParticle info
                         edge_particle = self.parse_particle_line(line)
+                        edge_particle.vtx_out = current_vertex
                         edge_particle.vtx_out_barcode = current_vertex.barcode
                         log.debug(edge_particle.particle)
                         # If the particle has vtx_in_barcode = 0,
@@ -128,6 +131,9 @@ class HepMCParser(object):
         fields = ["barcode", "id", "x", "y", "z", "ctau", "n_orphan_in", "n_out"]
         contents = map_columns(fields, line[1:])
         return GenVertex(barcode=abs(int(contents["barcode"])),
+                         x=float(contents['x']),
+                         y=float(contents['y']),
+                         z=float(contents['z']),
                          n_orphan_in=contents["n_orphan_in"])
 
     def parse_particle_line(self, line):
@@ -162,9 +168,12 @@ class GenVertex(object):
     Use a namedtuple instead?
     """
 
-    def __init__(self, barcode, n_orphan_in=0):
+    def __init__(self, barcode, x=0., y=0., z=0., n_orphan_in=0):
         self.barcode = int(barcode)
         self.n_orphan_in = n_orphan_in
+        self.x = x
+        self.y = y
+        self.z = z
 
     def __repr__(self):
         return "{0}(barcode={1[barcode]}, n_orphan_in={1[n_orphan_in]})".format(

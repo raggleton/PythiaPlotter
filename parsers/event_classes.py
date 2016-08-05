@@ -60,12 +60,16 @@ class Particle(object):
 
     def __init__(self, barcode=-1, pdgid=0,
                  px=0.0, py=0.0, pz=0.0, et=0.0, pt=0.0, eta=0.0, phi=0.0,
+                 x=0.0, y=0.0, z=0.0,
                  energy=0.0, mass=0.0, status=0):
         self.barcode = int(barcode)  # barcode - should be a unique **number**
         self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
         self.four_mom = FourMomentum(px=px, py=py, pz=pz, et=et,
                                      pt=pt, eta=eta, energy=energy, mass=mass)
         self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
+        self.x = x
+        self.y = y
+        self.z = z
         self.final_state = False
         self.initial_state = False
         self.event = None  # parent event
@@ -213,10 +217,23 @@ class EdgeParticle(object):
     Vertex barcodes are ints.
     """
 
-    def __init__(self, particle, vtx_in_barcode, vtx_out_barcode):
+    def __init__(self, particle, vtx_in_barcode, vtx_out_barcode, vtx_out=None):
         self.particle = particle
         self.vtx_in_barcode = int(vtx_in_barcode)
         self.vtx_out_barcode = int(vtx_out_barcode)
+        if vtx_out:
+            self.vtx_out = vtx_out
+
+    @property
+    def vtx_out(self):
+        return self._vtx_out
+
+    @vtx_out.setter
+    def vtx_out(self, vtx_out):
+        self._vtx_out = vtx_out
+        self.particle.x = vtx_out.x
+        self.particle.y = vtx_out.y
+        self.particle.z = vtx_out.z
 
     @property
     def barcode(self):

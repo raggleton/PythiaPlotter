@@ -49,10 +49,13 @@ def get_particle_label(particle, fancy):
     fancy: if True, will use HTML/unicode in labels
     """
     if fancy:
-        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
+        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}".format(
                 particle.barcode, pdgid_to_string(particle.pdgid),
                 particle.pt, particle.eta, particle.phi)
         label = label.replace("inf", "&#x221e;")
+        if abs(particle.z) > 0:
+            label += ", z: {0:.2E}".format(particle.z)
+        label += ">"
         return label
     else:
         return '"{0}: {1}, pT: {2:.2f}, eta: {3:.2f}, phi: {4:.2f}"'.format(
@@ -119,6 +122,16 @@ class DotEdgeAttr(object):
         pid = str(abs(particle.pdgid))
         if pid in interesting_pdgids:
             load_json_settings(settings[pid]["edge"], self.attr)
+
+        if abs(particle.z) > 1E-2:
+            self.attr["fontcolor"] = "orange"
+            self.attr["color"] = "orange"
+            self.attr["penwidth"] = 4
+
+        if abs(particle.z) > 1:
+            self.attr["fontcolor"] = "red"
+            self.attr["color"] = "red"
+            self.attr["penwidth"] = 6
 
 
 class DotNodeAttr(object):

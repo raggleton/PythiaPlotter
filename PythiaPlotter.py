@@ -82,7 +82,7 @@ class PythiaPlotter(object):
 def main(args):
     pp = PythiaPlotter(user_args.get_args(args))
     pp.parse_event()
-    pp.event.label = "Alex's event in MG5_aMC@NLO"
+    pp.event.label = "Pileup event"
     pp.event.event_num = pp.opts.eventNumber
     # pp.event.lumi_section = 123456798
     pp.print_event()
