@@ -1,9 +1,8 @@
 digraph g {
     rankdir="LR";
+    A -> C;
     A -> D;
     B -> D;
     B -> E;
-    C -> D;
-    C -> E;
 
 }
