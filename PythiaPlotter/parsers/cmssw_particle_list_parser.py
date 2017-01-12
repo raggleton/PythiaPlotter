@@ -13,7 +13,7 @@ from itertools import izip
 from pprint import pformat
 from event_classes import Event, Particle, NodeParticle
 from PythiaPlotter.utils.common import map_columns
-import node_grapher
+import PythiaPlotter.graphers.node_grapher as node_grapher
 
 
 log = logging.getLogger(__name__)

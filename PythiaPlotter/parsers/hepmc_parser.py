@@ -7,7 +7,7 @@ import logging
 from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle, EdgeParticle
-import edge_grapher
+import PythiaPlotter.graphers.edge_grapher as edge_grapher
 import PythiaPlotter.utils.user_args as user_args
 from PythiaPlotter.utils.common import check_file_exists
 from PythiaPlotter.utils.common import map_columns
