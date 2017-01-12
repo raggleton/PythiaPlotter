@@ -15,6 +15,7 @@
 *.tex
 *.txt
 *.root
+*.egg-info
 .idea
 .cache
 .coverage
