@@ -14,7 +14,9 @@
 *.dot
 *.tex
 *.txt
+*.root
 .idea
+.cache
 .coverage
 .vscode
 pyhepmc-0.3.2
@@ -27,5 +29,4 @@ Chris_QCD
 NEW
 htmlcov
 OLD
-test
 web
