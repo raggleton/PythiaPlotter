@@ -5,8 +5,7 @@ Some common functions used throughout, like opening PDFs, file checking.
 
 import os
 from itertools import izip
-from subprocess import call
-from subprocess import check_output
+from subprocess import call, check_output
 from sys import platform as _platform
 
 

@@ -9,8 +9,7 @@ from pprint import pprint, pformat
 from event_classes import Event, Particle, EdgeParticle
 import PythiaPlotter.graphers.edge_grapher as edge_grapher
 import PythiaPlotter.utils.user_args as user_args
-from PythiaPlotter.utils.common import check_file_exists
-from PythiaPlotter.utils.common import map_columns
+from PythiaPlotter.utils.common import check_file_exists, map_columns
 
 
 log = logging.getLogger(__name__)
