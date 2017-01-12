@@ -6,8 +6,8 @@ Unit tests for edge_grapher
 import unittest
 import sys
 import os.path
-import parsers.edge_grapher as eg
-from parsers.event_classes import Particle, EdgeParticle
+import pythiaplotter.graphers.edge_grapher as eg
+from pythiaplotter.parsers.event_classes import Particle, EdgeParticle
 from pprint import pprint
 
 

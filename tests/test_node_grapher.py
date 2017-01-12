@@ -5,8 +5,8 @@ Unit tests for node_grapher
 
 
 import unittest
-import parsers.node_grapher as ng
-from parsers.event_classes import Particle, NodeParticle
+import pythiaplotter.graphers.node_grapher as ng
+from pythiaplotter.parsers.event_classes import Particle, NodeParticle
 from pprint import pprint
 
 
