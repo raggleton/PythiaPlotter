@@ -16,7 +16,7 @@ outgoing edge for node c.
 
 
 import logging
-import utils.logging_config
+import PythiaPlotter.utils.logging_config
 import networkx as nx
 
 

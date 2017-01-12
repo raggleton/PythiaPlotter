@@ -7,8 +7,8 @@ import logging_config
 import logging
 import argparse
 import os.path
-import utils.common as helpr
-import utils.requisite_checker as checkr
+import PythiaPlotter.utils.common as helpr
+import PythiaPlotter.utils.requisite_checker as checkr
 
 
 log = logging.getLogger(__name__)

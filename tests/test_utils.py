@@ -10,9 +10,9 @@ import sys
 import os
 import os.path
 import shutil
-from utils.requisite_checker import RequisiteChecker
+from PythiaPlotter.utils.requisite_checker import RequisiteChecker
 from pprint import pprint
-from utils.common import *
+from PythiaPlotter.utils.common import *
 
 
 class Utils_Test(unittest.TestCase):

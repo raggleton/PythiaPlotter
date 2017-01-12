@@ -3,7 +3,7 @@ Classes to describe event & physical particles, along with helper classes to
 hold Particles in graph, and four-vectors.
 """
 
-import utils.logging_config
+import PythiaPlotter.utils.logging_config
 import logging
 import numpy as np
 

@@ -11,7 +11,7 @@ from pprint import pformat
 from lxml import etree as ET  # MegaGainz
 from event_classes import Event, Particle, NodeParticle
 import node_grapher
-from utils.common import map_columns
+from PythiaPlotter.utils.common import map_columns
 
 
 log = logging.getLogger(__name__)

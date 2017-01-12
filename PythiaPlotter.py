@@ -10,10 +10,10 @@ Get more help by doing:
 """
 
 import logging
-import utils.logging_config
+import PythiaPlotter.utils.logging_config
 import sys
-import utils.user_args as user_args
-from utils.common import open_pdf
+import PythiaPlotter.utils.user_args as user_args
+from PythiaPlotter.utils.common import open_pdf
 import parsers
 import printers
 

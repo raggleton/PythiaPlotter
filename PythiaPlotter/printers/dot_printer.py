@@ -11,7 +11,7 @@ Several stages:
 """
 
 
-import utils.logging_config
+import PythiaPlotter.utils.logging_config
 import logging
 from subprocess import call
 from dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr

@@ -12,7 +12,7 @@ import logging
 from itertools import izip
 from pprint import pformat
 from event_classes import Event, Particle, NodeParticle
-from utils.common import map_columns
+from PythiaPlotter.utils.common import map_columns
 import node_grapher
 
 
