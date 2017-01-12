@@ -9,9 +9,9 @@ possible to simplify things...
 """
 
 
-from PythiaPlotter.utils.pdgid_converter import pdgid_to_string
+from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 import json
-import PythiaPlotter.utils.logging_config
+import pythiaplotter.utils.logging_config
 import logging
 import numpy as np
 

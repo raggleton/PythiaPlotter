@@ -1,4 +1,4 @@
-import PythiaPlotter.utils.logging_config
+import pythiaplotter.utils.logging_config
 import logging
 import networkx as nx
 

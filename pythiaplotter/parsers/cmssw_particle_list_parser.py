@@ -12,8 +12,8 @@ import logging
 from itertools import izip
 from pprint import pformat
 from event_classes import Event, Particle, NodeParticle
-from PythiaPlotter.utils.common import map_columns
-import PythiaPlotter.graphers.node_grapher as node_grapher
+from pythiaplotter.utils.common import map_columns
+import pythiaplotter.graphers.node_grapher as node_grapher
 
 
 log = logging.getLogger(__name__)

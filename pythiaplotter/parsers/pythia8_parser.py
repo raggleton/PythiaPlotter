@@ -7,13 +7,13 @@ See example/example_pythia8.txt for example input file.
 TODO: reshuffle blocks - non optimal spreading out atm
 """
 
-import PythiaPlotter.utils.logging_config
+import pythiaplotter.utils.logging_config
 import logging
 from itertools import izip
 from pprint import pprint, pformat
 from event_classes import Event, Particle, NodeParticle
-import PythiaPlotter.graphers.node_grapher as node_grapher
-from PythiaPlotter.utils.common import map_columns
+import pythiaplotter.graphers.node_grapher as node_grapher
+from pythiaplotter.utils.common import map_columns
 
 
 log = logging.getLogger(__name__)

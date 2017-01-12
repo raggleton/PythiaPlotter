@@ -10,8 +10,8 @@ from pprint import pformat
 # import xml.etree.ElementTree as ET  # slowwww
 from lxml import etree as ET  # MegaGainz
 from event_classes import Event, Particle, NodeParticle
-import PythiaPlotter.graphers.node_grapher as node_grapher
-from PythiaPlotter.utils.common import map_columns
+import pythiaplotter.graphers.node_grapher as node_grapher
+from pythiaplotter.utils.common import map_columns
 
 
 log = logging.getLogger(__name__)
