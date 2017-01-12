@@ -9,6 +9,7 @@ TODO: deal with tex entries like: 25 h^0 / H_1^0
 
 import re
 import xml.etree.ElementTree as ET
+from pkg_resources import resource_string
 
 
 def load_pdgid_dict():
@@ -31,33 +32,32 @@ def load_pdgid_dict():
     pdgid_dict = {}
 
     # get latex names
-    particle_tex_file = "particledata/pdg_all.tex"
-    with open(particle_tex_file, "r") as particle_tex:
-        for line in particle_tex:
-            (pid, tex) = line.split(" ", 1)
-            tex = tex.strip()
-            # Generate anti-particle latex
-            tex_anti = ""
-            if "+" in tex:
-                tex_anti = tex.replace('+', '-')
-            elif "-" in tex:
-                tex_anti = tex.replace("-", "+")
+    particle_tex = resource_string('pythiaplotter', "particledata/pdg_all.tex")
+    for line in particle_tex.split('\n'):
+        (pid, tex) = line.split(" ", 1)
+        tex = tex.strip()
+        # Generate anti-particle latex
+        tex_anti = ""
+        if "+" in tex:
+            tex_anti = tex.replace('+', '-')
+        elif "-" in tex:
+            tex_anti = tex.replace("-", "+")
+        else:
+            # Only want the bar over the main bit of text - ignore _ or ^
+            pattern = re.compile(r"[_\^]")
+            stem = pattern.search(tex)
+            if stem:
+                tex_anti = "\\overline{%s}%s" % (tex[:stem.start()],
+                                                 tex[stem.end() - 1:])
             else:
-                # Only want the bar over the main bit of text - ignore _ or ^
-                pattern = re.compile(r"[_\^]")
-                stem = pattern.search(tex)
-                if stem:
-                    tex_anti = "\\overline{%s}%s" % (tex[:stem.start()],
-                                                     tex[stem.end() - 1:])
-                else:
-                    tex_anti = "\\overline{%s}" % tex
-            # add entry into dictionary, defaults for raw names = tex names
-            pdgid_dict[int(pid)] = dict(tex=tex, raw=tex,)
-            pdgid_dict[-1 * int(pid)] = dict(tex=tex_anti, raw=tex_anti)
+                tex_anti = "\\overline{%s}" % tex
+        # add entry into dictionary, defaults for raw names = tex names
+        pdgid_dict[int(pid)] = dict(tex=tex, raw=tex,)
+        pdgid_dict[-1 * int(pid)] = dict(tex=tex_anti, raw=tex_anti)
 
     # get raw string names
-    particle_str_file = "particledata/PythiaParticleData.xml"
-    root = ET.parse(particle_str_file).getroot()
+    particle_data = resource_string('pythiaplotter', "particledata/PythiaParticleData.xml")
+    root = ET.ElementTree(ET.fromstring(particle_data)).getroot()  # nasty hack...
     for child in root:
         pid = int(child.get('id'))
         name = child.get('name')
@@ -71,6 +71,12 @@ def load_pdgid_dict():
             pdgid_dict[pid] = dict(tex=name, raw=name)
             pdgid_dict[-1 * pid] = dict(tex=anti_name, raw=anti_name)
 
+    # These are for the CMSSW Pythia6 interface
+    pdgid_dict[88] = dict(latex='junction', latex_anti='junction',
+                          raw='junction', raw_anti='junction')
+    pdgid_dict[92] = dict(latex='string', latex_anti='string',
+                          raw='string', raw_anti='string')
+
     return pdgid_dict
 
 
@@ -81,12 +87,6 @@ PDGID_NAME_DICT = load_pdgid_dict()
 # Add in custom particles e.g.
 # PDGID_NAME_DICT[999] = dict(latex="I^0", latex_anti="\\overline{I}^0",
 #                             raw="I0", raw_anti="I0")
-
-# These are for the CMSSW Pythia6 interface
-PDGID_NAME_DICT[88] = dict(latex='junction', latex_anti='junction',
-                           raw='junction', raw_anti='junction')
-PDGID_NAME_DICT[92] = dict(latex='string', latex_anti='string',
-                           raw='string', raw_anti='string')
 
 
 def check_pdgid(pdgid):

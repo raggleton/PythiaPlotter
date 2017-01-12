@@ -14,5 +14,9 @@ setup(
         'console_scripts': [
             'PythiaPlotter=PythiaPlotter:main'
         ]
+    },
+    package_data={
+        'pythiaplotter': ['particledata/*.tex', 'particledata/*.xml',
+                          'printers/*.json']
     }
 )

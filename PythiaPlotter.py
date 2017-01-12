@@ -14,8 +14,8 @@ import pythiaplotter.utils.logging_config
 import sys
 import pythiaplotter.utils.user_args as user_args
 from pythiaplotter.utils.common import open_pdf
-import parsers
-import printers
+import pythiaplotter.parsers as parsers
+import pythiaplotter.printers as printers
 
 
 log = logging.getLogger(__name__)

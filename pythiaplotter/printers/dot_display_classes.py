@@ -14,16 +14,17 @@ import json
 import pythiaplotter.utils.logging_config
 import logging
 import numpy as np
+from pkg_resources import resource_string
 
 
 log = logging.getLogger(__name__)
 
 
 # Hold user-defined settings from JSON file
+# TODO: allow for user-defined JSON files
 config_file = "printers/dot_config.json"
 try:
-    with open(config_file) as jfile:
-        settings = json.load(jfile)
+    settings = json.loads(resource_string('pythiaplotter', config_file))
 except IOError as e:
     log.exception("Cannot load settings file %s - no such file\n" % config_file)
     raise
