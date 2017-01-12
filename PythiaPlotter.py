@@ -79,7 +79,7 @@ class PythiaPlotter(object):
             open_pdf(self.opts.outputPDF)
 
 
-def main(args):
+def main(args=sys.argv[1:]):
     pp = PythiaPlotter(user_args.get_args(args))
     pp.parse_event()
     pp.event.label = "Alex's event in MG5_aMC@NLO"
@@ -89,4 +89,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())
