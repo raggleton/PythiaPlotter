@@ -79,11 +79,11 @@ def get_args(input_args):
     latex_check = checkr.RequisiteChecker(modules=["pydot", "pyparsing"],
                                           programs=["dot2tex"])
     if not latex_check.all_exist():
-        del render_opts["LATEX"]
+        render_opts.pop("LATEX", None)
 
     dot_check = checkr.RequisiteChecker(programs=["dot"])
     if not dot_check.all_exist():
-        del render_opts["DOT"]
+        render_opts.pop("DOT", None)
 
     if len(render_opts.keys()) == 0:
         raise EnvironmentError("You are mising programs. Cannot render.")
