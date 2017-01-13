@@ -9,6 +9,7 @@ import argparse
 import os.path
 import pythiaplotter.utils.common as helpr
 import pythiaplotter.utils.requisite_checker as checkr
+from pythiaplotter.parsers import parser_opts
 
 
 log = logging.getLogger(__name__)
@@ -30,19 +31,16 @@ def get_args(input_args):
     parser.add_argument("input",
                         help="Input file")
 
-    parser_opts = {"PYTHIA": "For screen output from Pythia 8",
-                   "HEPMC": "For HEPMC files",
-                   "LHE": "For LHE files",
-                   "CMSSW": "For ParticleListDrawer output from CMSSW"}
-    parser_help_str = "Input format:\n"
-    for k, v in parser_opts.items():
-        parser_help_str += "%s: %s\n" % (k, v)
-    parser_help_str += "If unspecified, will try and make an educated guess, " \
-                       "but could fail!"
+    parser_help = ["Input formats:"]
+    for k, v in parser_opts.iteritems():
+        help_str = "{0}: {1}".format(k, v.description)
+        if v.file_extension:
+            help_str += " (default for files ending in {})".format(v.file_extension)
+        parser_help.append(help_str)
 
     parser.add_argument("--inputFormat",
-                        help=parser_help_str,
-                        choices=parser_opts)
+                        help="\n".join(parser_help),
+                        choices=parser_opts.keys())
     parser.add_argument("-n", "--eventNumber",
                         help="Select event number to plot, starts at 1.\n"
                              "For: HEPMC, LHE input formats.\n",
