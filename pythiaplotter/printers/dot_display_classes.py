@@ -13,7 +13,6 @@ from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 import json
 import pythiaplotter.utils.logging_config
 import logging
-import numpy as np
 from pkg_resources import resource_string
 
 

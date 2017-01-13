@@ -5,7 +5,7 @@ hold Particles in graph, and four-vectors.
 
 import pythiaplotter.utils.logging_config
 import logging
-import numpy as np
+import math
 
 log = logging.getLogger(__name__)
 
@@ -145,7 +145,7 @@ class FourMomentum(object):
 
         Defined as pt = sqrt(px^2 + py^2)
         """
-        return np.hypot(self._px, self._py)
+        return math.hypot(self._px, self._py)
 
     @property
     def phi(self):
@@ -154,8 +154,9 @@ class FourMomentum(object):
         phi = 0: along x axis
         phi = pi/2: along y axis
 
-        Ensures that -pi < phi < pi"""
-        phi = np.arctan(self._py / self._px) if self._px != 0 else np.pi
+        Ensures that -pi < phi < pi
+        """
+        phi = math.atan(self._py / self._px) if self._px != 0 else math.pi / 2.0
         return phi
 
     @property
@@ -168,9 +169,9 @@ class FourMomentum(object):
         Note that if pt == 0, eta = sign(pz) * infinity.
         """
         if self.pt == 0:
-            return np.sign(self._pz) * np.inf
+            return math.copysign(float('inf'), self._pz)
         else:
-            return np.arcsinh(self._pz / self.pt)
+            return math.asinh(self._pz / self.pt)
 
 
 class NodeParticle(object):
