@@ -162,15 +162,13 @@ def set_default_output(args):
 def set_default_format(args):
     """Set default input format if the user hasn't."""
     if not args.inputFormat:
-        if args.extension.lower() == ".hepmc":
-            args.inputFormat = "HEPMC"
-        elif args.extension.lower() in [".txt", ".out"]:
-            args.inputFormat = "PYTHIA"
-        elif args.extension.lower() == ".lhe":
-            args.inputFormat = "LHE"
+        for pname, popt in parser_opts.iteritems():
+            if args.extension.lower() == popt.file_extension:
+                args.inputFormat = pname
+                log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
+                break
         else:
             raise RuntimeError("Cannot determine input format. Please specify.")
-        log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
 
 
 def set_default_mode(args):
