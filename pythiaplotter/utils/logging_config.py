@@ -33,6 +33,7 @@ class LevelFormatter(logging.Formatter):
 
         return super(LevelFormatter, self).format(record)
 
+
 formatter = LevelFormatter(fmt='%(message)s',
                            level_fmts={logging.ERROR: '%(levelname)s - %(module)s: %(message)s',
                                        logging.WARNING: '%(levelname)s - %(module)s: %(message)s',

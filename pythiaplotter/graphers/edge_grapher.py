@@ -16,7 +16,7 @@ outgoing edge for node c.
 
 
 import logging
-import pythiaplotter.utils.logging_config
+import pythiaplotter.utils.logging_config  # NOQA
 import networkx as nx
 
 

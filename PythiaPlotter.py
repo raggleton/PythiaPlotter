@@ -10,6 +10,7 @@ Get more help by doing:
 """
 
 import logging
+import pythiaplotter.utils.logging_config  # NOQA
 import sys
 
 import pythiaplotter.parsers as parsers

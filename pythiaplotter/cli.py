@@ -3,7 +3,7 @@ To handle input args & subsequent modifications
 """
 
 
-import pythiaplotter.utils.logging_config
+import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import argparse
 import os.path

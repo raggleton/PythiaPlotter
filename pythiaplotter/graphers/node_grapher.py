@@ -1,4 +1,4 @@
-import pythiaplotter.utils.logging_config
+import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import networkx as nx
 

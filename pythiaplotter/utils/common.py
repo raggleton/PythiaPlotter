@@ -7,7 +7,7 @@ import os
 import imp
 from distutils.spawn import find_executable
 from itertools import izip
-from subprocess import call, check_output
+from subprocess import call
 from sys import platform as _platform
 
 

@@ -11,7 +11,7 @@ Several stages:
 """
 
 
-import pythiaplotter.utils.logging_config
+import pythiaplotter.utils.logging_config  # NOQA
 import logging
 from subprocess import call
 from dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr

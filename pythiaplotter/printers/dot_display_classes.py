@@ -11,7 +11,7 @@ possible to simplify things...
 
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 import json
-import pythiaplotter.utils.logging_config
+import pythiaplotter.utils.logging_config  # NOQA
 import logging
 from pkg_resources import resource_string
 
