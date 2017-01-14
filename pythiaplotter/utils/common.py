@@ -4,6 +4,8 @@ Some common functions used throughout, like opening PDFs, file checking.
 
 
 import os
+import imp
+from distutils.spawn import find_executable
 from itertools import izip
 from subprocess import call, check_output
 from sys import platform as _platform
@@ -62,3 +64,17 @@ def map_columns(fields, line, delim=None):
     """
     parts = line.strip().split(delim)[0:len(fields) + 1]
     return {k: v.strip() for k, v in izip(fields, parts)}
+
+
+def check_program_exists(program):
+    """Test if external program can be found."""
+    return bool(find_executable(program))
+
+
+def check_module_exists(module):
+    """Test if Python module exists."""
+    try:
+        imp.find_module(module)
+    except ImportError:
+        return False
+    return True

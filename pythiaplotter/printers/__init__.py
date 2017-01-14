@@ -1,5 +1,5 @@
 from dot_printer import DotPrinter
-from pythiaplotter.utils.requisite_checker import check_module_exists, check_program_exists
+from pythiaplotter.utils.common import check_program_exists, check_module_exists
 
 
 """
