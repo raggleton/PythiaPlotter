@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 def get_args(input_args):
-    """Define all command-line options. Returns ArgumentParser object."""
+    """Get argparse.Namespace of parsed user arguments, with sensible defaults set."""
 
     parser = argparse.ArgumentParser(
         prog="PythiaPlotter",
@@ -27,8 +27,8 @@ def get_args(input_args):
     #################
     # Input options
     #################
-    # Input options
     input_group = parser.add_argument_group('Input Options')
+
     input_group.add_argument("input",
                              help="Input file")
 
@@ -53,9 +53,6 @@ def get_args(input_args):
     #################
     output_group = parser.add_argument_group('Output Options')
 
-    # output_group.add_argument("-oGV", "--outputGV",
-    #                     help="output Graphviz filename "
-    #                          "(if unspecified, defaults to INPUT.gv)")
     output_group.add_argument("-O", "--outputPDF",
                               help="Output PDF filename "
                                    "(if unspecified, defaults to INPUT.pdf)")
@@ -66,9 +63,6 @@ def get_args(input_args):
     #################
     # Render options
     #################
-    # output_group.add_argument("-p", "--particleMode",
-    #                     choices=["NODE", "EDGE"],
-    #                     help="Particle representation (see README)")
     output_group.add_argument("--noPDF",
                               help="Don't convert Graphviz file to PDF",
                               action="store_true")
@@ -89,7 +83,8 @@ def get_args(input_args):
         exit(1)
 
     render_help = ["Render method:"]
-    render_help.extend(["{0}: {1}".format(k, v.description) for k, v in printer_opts_checked.iteritems()])
+    render_help.extend(["{0}: {1}".format(k, v.description)
+                        for k, v in printer_opts_checked.iteritems()])
     output_group.add_argument("-r", "--render",
                               help="\n".join(render_help),
                               choices=printer_opts_checked.keys(),
@@ -104,23 +99,6 @@ def get_args(input_args):
     #################
     misc_group = parser.add_argument_group("Miscellaneous Options")
 
-    # misc_group.add_argument("--showVertexBarcode",  # think of a better opt name!
-    #                         help="Show vertex barcodes, useful for figuring out "
-    #                              "which are the hard interaction(s). Only useful "
-    #                              "when in EDGE mode.",
-    #                         action="store_true")
-    # misc_group.add_argument("--hardVertices",
-    #                         help='List of vertex barcode(s) that contain the '
-    #                              'hard interaction, e.g. --hardVertices V2, V3 '
-    #                              '(LATEX render only)',
-    #                         default=None,
-    #                         nargs='*',
-    #                         type=str)
-    # misc_group.add_argument("--scale",
-    #                         help="Factor to scale PDF by (LATEX render only)",
-    #                         default=0.7,
-    #                         type=float)
-
     misc_group.add_argument("-v", "--verbose",
                             help="Print debug statements to screen",
                             action="store_true")
@@ -128,40 +106,39 @@ def get_args(input_args):
                             help="Print some statistics about the event/graph",
                             action="store_true")
 
-    #################
-    # Post process user args
-    #################
     args = parser.parse_args(input_args)
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
+    args.input = helpr.cleanup_filepath(args.input)  # sanitise input
+
     if not helpr.check_file_exists(args.input):
         raise IOError("No such file: '%s'" % args.input)
 
+    # Post process user args
     set_default_output(args)
     set_default_format(args)
     set_default_mode(args)
-    if args.verbose:
-        print_options(args)
-    # log.debug("Args: %s" % args)
+
+    for k, v in args.__dict__.iteritems():
+        log.debug("{0}: {1}".format(k, v))
 
     return args
 
 
 def set_default_output(args):
     """Set default output filenames and stems/dirs"""
-    args.input = helpr.cleanup_filepath(args.input)  # sanitise input
-    args.in_name = os.path.basename(args.input)  # just filename and extension
-    args.stem_name, args.extension = os.path.splitext(args.in_name)
-    args.in_dir = helpr.get_full_path(args.input)
+    args.stem_name, args.extension = os.path.splitext(os.path.basename(args.input))
+    args.input_dir = helpr.get_full_path(args.input)
 
     # Set default PDF filename if not already done
     if not args.outputPDF:
         filename = args.stem_name + "_" + str(args.eventNumber) + ".pdf"
-        args.outputPDF = os.path.join(args.in_dir, filename)
+        args.outputPDF = os.path.join(args.input_dir, filename)
 
     # Set default graphviz filename from PDF name
+    # TODO: too tightly coupled to dot printer - make more generic!
     args.outputGV = args.outputPDF.replace(".pdf", ".gv")
 
 
