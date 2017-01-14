@@ -3,7 +3,7 @@ To handle input args & subsequent modifications
 """
 
 
-import logging_config
+import pythiaplotter.utils.logging_config
 import logging
 import argparse
 import os.path
@@ -73,9 +73,11 @@ def get_args(input_args):
                               help="Don't convert Graphviz file to PDF",
                               action="store_true")
 
-    # TODO: unify printer vs renderer
+    # TODO: unify "printer" vs "renderer"
+    # TODO: printout usual help then this, not just this error message
     if len(printer_opts_checked.keys()) == 0:
-        require_error_str = ["ERROR: None of the required programs or modules for any rendering option exist.",
+        require_error_str = ["ERROR: None of the required programs or python modules "
+                             "for any rendering option exist.",
                              "Requirements for each printing option:"]
         for pname, popt in printer_opts_all.iteritems():
             require_error_str.append('{0}:'.format(pname))

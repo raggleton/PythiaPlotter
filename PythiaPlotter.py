@@ -10,12 +10,12 @@ Get more help by doing:
 """
 
 import logging
-import pythiaplotter.utils.logging_config
 import sys
-import pythiaplotter.utils.user_args as user_args
-from pythiaplotter.utils.common import open_pdf
+
 import pythiaplotter.parsers as parsers
 import pythiaplotter.printers as printers
+import pythiaplotter.cli as cli
+from pythiaplotter.utils.common import open_pdf
 
 
 log = logging.getLogger(__name__)
@@ -80,7 +80,7 @@ class PythiaPlotter(object):
 
 
 def main(args=sys.argv[1:]):
-    pp = PythiaPlotter(user_args.get_args(args))
+    pp = PythiaPlotter(cli.get_args(args))
     pp.parse_event()
     pp.event.label = "Alex's event in MG5_aMC@NLO"
     pp.event.event_num = pp.opts.eventNumber
