@@ -29,8 +29,10 @@ def get_args(input_args):
     #################
     # Input options
     #################
-    parser.add_argument("input",
-                        help="Input file")
+    # Input options
+    input_group = parser.add_argument_group('Input Options')
+    input_group.add_argument("input",
+                             help="Input file")
 
     parser_help = ["Input formats:"]
     for k, v in parser_opts.iteritems():
@@ -39,36 +41,39 @@ def get_args(input_args):
             help_str += " (default for files ending in {})".format(v.file_extension)
         parser_help.append(help_str)
 
-    parser.add_argument("--inputFormat",
-                        help="\n".join(parser_help),
-                        choices=parser_opts.keys())
-    parser.add_argument("-n", "--eventNumber",
-                        help="Select event number to plot, starts at 1.\n"
-                             "For: HEPMC, LHE input formats.\n",
-                        type=int, default=0)
+    input_group.add_argument("--inputFormat",
+                             help="\n".join(parser_help),
+                             choices=parser_opts.keys())
+    input_group.add_argument("-n", "--eventNumber",
+                             help="Select event number to plot, starts at 1.\n"
+                                  "For: HEPMC, LHE input formats.\n",
+                             type=int,
+                             default=0)
 
     #################
     # Output file options
     #################
-    # parser.add_argument("-oGV", "--outputGV",
+    output_group = parser.add_argument_group('Output Options')
+
+    # output_group.add_argument("-oGV", "--outputGV",
     #                     help="output Graphviz filename "
     #                          "(if unspecified, defaults to INPUT.gv)")
-    parser.add_argument("-O", "--outputPDF",
-                        help="Output PDF filename "
-                             "(if unspecified, defaults to INPUT.pdf)")
-    parser.add_argument("--openPDF",
-                        help="Automatically open PDF once plotted",
-                        action="store_true")
+    output_group.add_argument("-O", "--outputPDF",
+                              help="Output PDF filename "
+                                   "(if unspecified, defaults to INPUT.pdf)")
+    output_group.add_argument("--openPDF",
+                              help="Automatically open PDF once plotted",
+                              action="store_true")
 
     #################
     # Render options
     #################
-    # parser.add_argument("-p", "--particleMode",
+    # output_group.add_argument("-p", "--particleMode",
     #                     choices=["NODE", "EDGE"],
     #                     help="Particle representation (see README)")
-    parser.add_argument("--noPDF",
-                        help="Don't convert Graphviz file to PDF",
-                        action="store_true")
+    output_group.add_argument("--noPDF",
+                              help="Don't convert Graphviz file to PDF",
+                              action="store_true")
 
     # TODO: unify printer vs renderer
     if len(printer_opts_checked.keys()) == 0:
@@ -85,37 +90,43 @@ def get_args(input_args):
 
     render_help = ["Render method:"]
     render_help.extend(["{0}: {1}".format(k, v.description) for k, v in printer_opts_checked.iteritems()])
-    parser.add_argument("-r", "--render",
-                        help="\n".join(render_help),
-                        choices=printer_opts_checked.keys(),
-                        default="DOT" if "DOT" in printer_opts_checked else "LATEX")
+    output_group.add_argument("-r", "--render",
+                              help="\n".join(render_help),
+                              choices=printer_opts_checked.keys(),
+                              default="DOT" if "DOT" in printer_opts_checked else "LATEX")
 
-    parser.add_argument("--redundants",
-                        help="Keep redundant particles (defualt is to remove them)",
-                        action="store_true")
+    output_group.add_argument("--redundants",
+                              help="Keep redundant particles (defualt is to remove them)",
+                              action="store_true")
 
     #################
-    # Testing options
+    # Miscellaneous options
     #################
-    # parser.add_argument("--showVertexBarcode",  # think of a better opt name!
-    #                     help="Show vertex barcodes, useful for figuring out "
-    #                          "which are the hard interaction(s). Only useful "
-    #                          "when in EDGE mode.",
-    #                     action="store_true")
-    # parser.add_argument("--hardVertices",
-    #                     help='List of vertex barcode(s) that contain the '
-    #                          'hard interaction, e.g. --hardVertices V2, V3 '
-    #                          '(LATEX render only)',
-    #                     default=None, nargs='*', type=str)
-    # parser.add_argument("--scale",
-    #                     help="Factor to scale PDF by (LATEX render only)",
-    #                     default=0.7, type=float)
-    parser.add_argument("-v", "--verbose",
-                        help="Print debug statements to screen",
-                        action="store_true")
-    parser.add_argument("--stats",
-                        help="Print some statistics about the event/graph",
-                        action="store_true")
+    misc_group = parser.add_argument_group("Miscellaneous Options")
+
+    # misc_group.add_argument("--showVertexBarcode",  # think of a better opt name!
+    #                         help="Show vertex barcodes, useful for figuring out "
+    #                              "which are the hard interaction(s). Only useful "
+    #                              "when in EDGE mode.",
+    #                         action="store_true")
+    # misc_group.add_argument("--hardVertices",
+    #                         help='List of vertex barcode(s) that contain the '
+    #                              'hard interaction, e.g. --hardVertices V2, V3 '
+    #                              '(LATEX render only)',
+    #                         default=None,
+    #                         nargs='*',
+    #                         type=str)
+    # misc_group.add_argument("--scale",
+    #                         help="Factor to scale PDF by (LATEX render only)",
+    #                         default=0.7,
+    #                         type=float)
+
+    misc_group.add_argument("-v", "--verbose",
+                            help="Print debug statements to screen",
+                            action="store_true")
+    misc_group.add_argument("--stats",
+                            help="Print some statistics about the event/graph",
+                            action="store_true")
 
     #################
     # Post process user args
