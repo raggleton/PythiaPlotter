@@ -172,14 +172,9 @@ def set_default_format(args):
 
 
 def set_default_mode(args):
-    """Set default particle mode if the user hasn't."""
-    args.particleMode = None
-    if not args.particleMode:
-        if args.inputFormat == "HEPMC":
-            args.particleMode = "EDGE"
-        else:
-            args.particleMode = "NODE"
-        log.info("You didn't set a particle mode. Using %s" % args.particleMode)
+    """Set default particle mode (representation) if the user hasn't."""
+    args.particleMode = parser_opts[args.inputFormat].default_representation
+    log.info("Using %s particle representation" % args.particleMode)
 
 
 def print_options(args):
