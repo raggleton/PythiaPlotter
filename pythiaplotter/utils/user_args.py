@@ -10,6 +10,7 @@ import os.path
 import pythiaplotter.utils.common as helpr
 import pythiaplotter.utils.requisite_checker as checkr
 from pythiaplotter.parsers import parser_opts
+from pythiaplotter.printers import printer_opts_checked, printer_opts_all
 
 
 log = logging.getLogger(__name__)
@@ -69,31 +70,25 @@ def get_args(input_args):
                         help="Don't convert Graphviz file to PDF",
                         action="store_true")
 
-    # Check to see if certain render modes are available.
-    # If not, don't give them to the user as options
-    render_opts = {"DOT": "Fast, but basic formatting"}
-                   # "LATEX": "Slower, but nicer formatting"}
+    # TODO: unify printer vs renderer
+    if len(printer_opts_checked.keys()) == 0:
+        require_error_str = ["ERROR: None of the required programs or modules for any rendering option exist.",
+                             "Requirements for each printing option:"]
+        for pname, popt in printer_opts_all.iteritems():
+            require_error_str.append('{0}:'.format(pname))
+            require_error_str.append('\tPrograms: {0}'.format(popt.requires.get('programs', None)))
+            # TODO: really these are packages...
+            require_error_str.append('\tPython modules: {0}'.format(popt.requires.get('module', None)))
+            require_error_str.append('\n')
+        print "\n".join(require_error_str)
+        exit(1)
 
-    latex_check = checkr.RequisiteChecker(modules=["pydot", "pyparsing"],
-                                          programs=["dot2tex"])
-    if not latex_check.all_exist():
-        render_opts.pop("LATEX", None)
-
-    dot_check = checkr.RequisiteChecker(programs=["dot"])
-    if not dot_check.all_exist():
-        render_opts.pop("DOT", None)
-
-    if len(render_opts.keys()) == 0:
-        raise EnvironmentError("You are mising programs. Cannot render.")
-
-    render_help_str = "Render method:\n"
-    for k, v in render_opts.items():
-        render_help_str += k + ": " + v + "\n"
-
+    render_help = ["Render method:"]
+    render_help.extend(["{0}: {1}".format(k, v.description) for k, v in printer_opts_checked.iteritems()])
     parser.add_argument("-r", "--render",
-                        help=render_help_str,
-                        choices=render_opts,
-                        default="DOT" if "DOT" in render_opts else "LATEX")
+                        help="\n".join(render_help),
+                        choices=printer_opts_checked.keys(),
+                        default="DOT" if "DOT" in printer_opts_checked else "LATEX")
 
     parser.add_argument("--redundants",
                         help="Keep redundant particles (defualt is to remove them)",
