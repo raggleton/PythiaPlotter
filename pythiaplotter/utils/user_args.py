@@ -8,7 +8,6 @@ import logging
 import argparse
 import os.path
 import pythiaplotter.utils.common as helpr
-import pythiaplotter.utils.requisite_checker as checkr
 from pythiaplotter.parsers import parser_opts
 from pythiaplotter.printers import printer_opts_checked, printer_opts_all
 
@@ -20,9 +19,8 @@ def get_args(input_args):
     """Define all command-line options. Returns ArgumentParser object."""
 
     parser = argparse.ArgumentParser(
-        description="Convert MC event into particle evolution diagram.\n"
-                    "Uses dot/Graphviz/dot2tex/pdflatex to make a PDF.",
-        # formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        prog="PythiaPlotter",
+        description="Convert MC event into a particle evolution diagram.",
         formatter_class=argparse.RawTextHelpFormatter
     )
 
