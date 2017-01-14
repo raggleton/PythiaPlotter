@@ -63,3 +63,14 @@ for pname, popt in printer_opts_all.iteritems():
     if (all(check_program_exists(prog) for prog in required_progs)
         and all(check_module_exists(mod) for mod in required_mods)):
         printer_opts_checked[pname] = popt
+
+
+def print_printers_requirements():
+    """Print program and python package requirements for all printers"""
+    require_str = ["Requirements for each printing option:\n"]
+    for pname, popt in printer_opts_all.iteritems():
+        require_str.append('{0}:'.format(pname))
+        require_str.append('\tPrograms: {0}'.format(popt.requires.get('programs', None)))
+        require_str.append('\tPython packages: {0}'.format(popt.requires.get('module', None)))
+        require_str.append('\n')
+    print "\n".join(require_str)

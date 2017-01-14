@@ -9,7 +9,7 @@ import argparse
 import os.path
 import pythiaplotter.utils.common as helpr
 from pythiaplotter.parsers import parser_opts
-from pythiaplotter.printers import printer_opts_checked, printer_opts_all
+from pythiaplotter.printers import printer_opts_checked, print_printers_requirements
 
 
 log = logging.getLogger(__name__)
@@ -68,20 +68,6 @@ def get_args(input_args):
                               action="store_true")
 
     # TODO: unify "printer" vs "renderer"
-    # TODO: printout usual help then this, not just this error message
-    if len(printer_opts_checked.keys()) == 0:
-        require_error_str = ["ERROR: None of the required programs or python modules "
-                             "for any rendering option exist.",
-                             "Requirements for each printing option:"]
-        for pname, popt in printer_opts_all.iteritems():
-            require_error_str.append('{0}:'.format(pname))
-            require_error_str.append('\tPrograms: {0}'.format(popt.requires.get('programs', None)))
-            # TODO: really these are packages...
-            require_error_str.append('\tPython modules: {0}'.format(popt.requires.get('module', None)))
-            require_error_str.append('\n')
-        print "\n".join(require_error_str)
-        exit(1)
-
     render_help = ["Render method:"]
     render_help.extend(["{0}: {1}".format(k, v.description)
                         for k, v in printer_opts_checked.iteritems()])
@@ -105,6 +91,14 @@ def get_args(input_args):
     misc_group.add_argument("--stats",
                             help="Print some statistics about the event/graph",
                             action="store_true")
+
+    # Handle the scenario where there are no printers available
+    if len(printer_opts_checked) == 0:
+        parser.print_help()
+        print ("\nERROR: None of the required programs or python packages "
+               "for any rendering option exist.")
+        print_printers_requirements()
+        exit(1)
 
     args = parser.parse_args(input_args)
 
