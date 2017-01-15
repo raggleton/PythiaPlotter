@@ -2,11 +2,6 @@
 
 """
 Main script to run PythiaPlotter.
-
-Get more help by doing:
-
-    ./PythiaPlotter.py --help
-
 """
 
 import logging

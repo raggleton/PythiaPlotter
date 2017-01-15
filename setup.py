@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'PythiaPlotter=PythiaPlotter:main'
+            'PythiaPlotter=pythiaplotter.PythiaPlotter:main'
         ]
     },
     package_data={
