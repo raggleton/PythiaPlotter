@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
+from pythiaplotter import __VERSION__
+
 
 setup(
     name="PythiaPlotter",
-    version="0.2.0",
+    version=__VERSION__,
     description="Generate diagram of particles in the event tree from a "
                 "High-Energy Physics Monte Carlo event generator.",
     long_description="SOMETHING HERE",
