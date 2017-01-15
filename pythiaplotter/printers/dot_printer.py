@@ -33,17 +33,17 @@ class DotPrinter(object):
         return "{0}(gv_filename={1[gv_filename]}, pdf_filename={1[pdf_filename]}, " \
                "renderer={1[pdf]}, output_format={1[output_format]})".format(self.__class__.__name__, self)
 
-    def print_event(self, event, pdf=True):
+    def print_event(self, event, make_pdf=True):
         """Inclusive function to do the various stages of printing easily
 
-        pdf: bool. If True, the chosen renderer converts the Graphviz
+        make_pdf: bool. If True, the chosen renderer converts the Graphviz
             file to a graph PDF
         """
         event = event
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
         write_gv(event, self.gv_filename)
-        if pdf:
+        if make_pdf:
             print_pdf(gv_filename=self.gv_filename, pdf_filename=self.pdf_filename,
                       renderer=self.renderer, output_format=self.output_format)
 

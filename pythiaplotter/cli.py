@@ -114,7 +114,7 @@ def get_args(input_args):
 
     # Post process user args
     set_default_output(args)
-    set_default_format(args)
+    set_default_input_format(args)
     set_default_mode(args)
 
     for k, v in args.__dict__.iteritems():
@@ -138,7 +138,7 @@ def set_default_output(args):
     args.outputGV = args.outputPDF.replace(".pdf", ".gv")
 
 
-def set_default_format(args):
+def set_default_input_format(args):
     """Set default input format if the user hasn't."""
     if not args.inputFormat:
         for pname, popt in parser_opts.iteritems():
