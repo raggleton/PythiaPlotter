@@ -136,7 +136,7 @@ def print_pdf(gv_filename, pdf_filename, renderer, output_format):
     if output_format == "ps" or output_format == "ps2":
         # Do 2 stages: make a PostScript file, then convert to PDF.
         ps_filename = pdf_filename.replace(".pdf", ".ps")
-        if output_format == "ps2":
+        if output_format == "ps":
             output_format += ":cairo"
         psargs = [renderer, "-T%s" % output_format, gv_filename, "-o", ps_filename]
         call(psargs)
