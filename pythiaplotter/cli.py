@@ -52,20 +52,23 @@ def get_args(input_args):
     #################
     # Output file options
     #################
-    output_group = parser.add_argument_group('Output Options')
+    output_group = parser.add_argument_group('Output Diagram Options')
 
-    output_group.add_argument("-O", "--outputPDF",
-                              help="Output PDF filename "
+    output_group.add_argument("-O", "--output",
+                              help="Output diagram filename "
                                    "(if unspecified, defaults to INPUT.pdf)")
-    output_group.add_argument("--openPDF",
-                              help="Automatically open PDF once plotted",
+    output_group.add_argument("--outputFormat",
+                              help="Output diagram file format (defaults to "
+                                   "extension given to --output)")
+    output_group.add_argument("--open",
+                              help="Automatically open diagram once plotted",
                               action="store_true")
 
     #################
     # Render options
     #################
-    output_group.add_argument("--noPDF",
-                              help="Don't convert Graphviz file to PDF",
+    output_group.add_argument("--noOutput",
+                              help="Don't convert Graphviz file to diagram",
                               action="store_true")
 
     # TODO: unify "printer" vs "renderer"
@@ -128,14 +131,10 @@ def set_default_output(args):
     args.stem_name, args.extension = os.path.splitext(os.path.basename(args.input))
     args.input_dir = helpr.get_full_path(args.input)
 
-    # Set default PDF filename if not already done
-    if not args.outputPDF:
-        filename = args.stem_name + "_" + str(args.eventNumber) + ".pdf"
-        args.outputPDF = os.path.join(args.input_dir, filename)
-
-    # Set default graphviz filename from PDF name
-    # TODO: too tightly coupled to dot printer - make more generic!
-    args.outputGV = args.outputPDF.replace(".pdf", ".gv")
+    # Set default output filename if not already done
+    if not args.output:
+        filename = "".join([args.stem_name, "_", str(args.eventNumber), ".", args.outputFormat])
+        args.output = os.path.join(args.input_dir, filename)
 
 
 def set_default_input_format(args):

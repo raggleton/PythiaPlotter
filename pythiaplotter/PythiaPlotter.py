@@ -48,10 +48,9 @@ def choose_printer(opts):
     """Choose printer & configure"""
 
     if opts.render == "DOT":
-        return printers.DotPrinter(gv_filename=opts.outputGV,
-                                   pdf_filename=opts.outputPDF,
+        return printers.DotPrinter(output_filename=opts.output,
                                    renderer="dot",
-                                   output_format="pdf")
+                                   output_format=opts.outputFormat)
     elif opts.render == "LATEX":
         return None
 
@@ -66,9 +65,9 @@ def main(in_args=None):
     event.event_num = opts.eventNumber
     # pp.event.lumi_section = 123456798
     printer = choose_printer(opts)
-    printer.print_event(event, make_pdf=(not opts.noPDF))
-    if opts.openPDF:
-        open_pdf(opts.outputPDF)
+    printer.print_event(event, make_diagram=(not opts.noOutput))
+    if opts.open and not opts.noOutput:
+        open_pdf(opts.output)
     return 0
 
 

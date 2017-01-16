@@ -7,10 +7,11 @@ do is attach display attributes to each node/edge, then print these to file.
 Several stages:
 1. Go through nodes & edges and attach display attributes [add_display_attr()]
 2. Write to Graphviz format file [write_gv()]
-3. Render to PDF [print_pdf()]
+3. Render to file [print_diagram()]
 """
 
 
+import os
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 from subprocess import call
@@ -23,35 +24,36 @@ log = logging.getLogger(__name__)
 class DotPrinter(object):
     """Class to print event to file using Graphviz"""
 
-    def __init__(self, gv_filename, pdf_filename, renderer="dot", output_format="pdf"):
-        self.gv_filename = gv_filename
-        self.pdf_filename = pdf_filename
+    def __init__(self, output_filename, renderer="dot", output_format="pdf"):
+        self.output_filename = output_filename
+        self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
         self.renderer = renderer
-        self.output_format = output_format
+        self.output_format = output_format or os.path.splitext(self.output_filename)[1][1:]
 
     def __repr__(self):
-        return "{0}(gv_filename={1[gv_filename]}, pdf_filename={1[pdf_filename]}, " \
-               "renderer={1[pdf]}, output_format={1[output_format]})".format(self.__class__.__name__, self)
+        return "{0}(output_filename={1[output_filename]}, renderer={1[renderer]}, "\
+               "output_format={1[output_format]})".format(self.__class__.__name__, self)
 
-    def print_event(self, event, make_pdf=True):
+    def print_event(self, event, make_diagram=True):
         """Inclusive function to do the various stages of printing easily
 
-        make_pdf: bool. If True, the chosen renderer converts the Graphviz
-            file to a graph PDF
+        make_diagram: bool
+            If True, the chosen renderer converts the Graphviz file to a graph diagram.
         """
         event = event
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
         write_gv(event, self.gv_filename)
-        if make_pdf:
-            print_pdf(gv_filename=self.gv_filename, pdf_filename=self.pdf_filename,
-                      renderer=self.renderer, output_format=self.output_format)
+        if make_diagram:
+            print_diagram(gv_filename=self.gv_filename, output_filename=self.output_filename,
+                          renderer=self.renderer, output_format=self.output_format)
 
 
 def add_display_attr(graph, fancy):
     """Auto add display attribute to graph, nodes & edges
 
-    fancy: if True, will use HTML/unicode in labels
+    fancy: bool
+        If True, will use HTML/unicode in labels
     """
 
     graph.graph["attr"] = DotGraphAttr(graph)
@@ -119,38 +121,41 @@ def write_gv(event, gv_filename):
         gv_file.write("}\n")
 
 
-def print_pdf(gv_filename, pdf_filename, renderer, output_format):
-    """Run Graphviz file through a Graphviz program to produce a PDF.
+def print_diagram(gv_filename, output_filename, renderer, output_format):
+    """Run Graphviz file through a Graphviz program to produce a final diagram.
 
-    renderer: Graphviz program to use.
+    renderer: str
+        Graphviz program to use, defaults to dot
 
-    output_format: ps, ps2, or pdf. Each has its own advantages.
+    output_format: str
+        Each has its own advantages, see http://www.graphviz.org/doc/info/output.html
         ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
         ps2 - PDF searchable, but won't obey all HTML tags or unicode.
         pdf - obeys HTML but not searchable
     """
 
-    log.info("Writing PDF to %s", pdf_filename)
+    log.info("Printing diagram to %s", output_filename)
     log.info("To re-run:")
 
     if output_format == "ps" or output_format == "ps2":
         # Do 2 stages: make a PostScript file, then convert to PDF.
-        ps_filename = pdf_filename.replace(".pdf", ".ps")
-        if output_format == "ps":
+        ps_filename = os.path.splitext(output_filename)[0] + ".ps"
+
+        if output_format == "ps":  # hmm or should we get user to do this
             output_format += ":cairo"
-        psargs = [renderer, "-T%s" % output_format, gv_filename, "-o", ps_filename]
-        call(psargs)
-        pdfargs = ["ps2pdf", ps_filename, pdf_filename]
-        call(pdfargs)
-        rmargs = ["rm", ps_filename]
-        call(rmargs)
+
+        psargs = [renderer, "-T" + output_format, gv_filename, "-o", ps_filename]
         log.info(" ".join(psargs))
+        call(psargs)
+
+        pdfargs = ["ps2pdf", ps_filename, output_filename]
         log.info(" ".join(pdfargs))
+        call(pdfargs)
+
+        rmargs = ["rm", ps_filename]
         log.info(" ".join(rmargs))
-    elif output_format == "pdf":
-        # Or do straight to PDF: fast, obeys HTML tags, but not searchable.
-        dotargs = [renderer, "-Tpdf", gv_filename, "-o", pdf_filename]
-        call(dotargs)
-        log.info(" ".join(dotargs))
+        call(rmargs)
     else:
-        raise Exception("'%s' is not a valid output_format option: use ps, ps2, or pdf" % output_format)
+        dotargs = [renderer, "-T" + output_format, gv_filename, "-o", output_filename]
+        log.info(" ".join(dotargs))
+        call(dotargs)
