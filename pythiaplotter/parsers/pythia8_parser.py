@@ -145,7 +145,7 @@ class Pythia8Parser(object):
         self.contents = []
         with open(filename, "r") as f:
             lines = [l.replace("\n", "").strip() for l in list(f)]
-            self.contents = filter(None, lines)
+            self.contents = [l for l in lines if l]
 
     def __repr__(self):
         return "%s(filename=%r, event_num=%d)" % (self.__class__.__name__,
