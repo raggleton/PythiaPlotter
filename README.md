@@ -1,59 +1,61 @@
 # PythiaPlotter
 
-![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=restructure_jan_2015)
+![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=proper_restructure)
 
 ## What Is It
-Plots diagrams of particle decay trees in HEP Monte Carlo events. Very handy to figure out what is actually going on in your MC!
+Plots diagrams of particle decay trees from HEP Monte Carlo (MC) events. Very handy to figure out what is actually going on in your MC!
 
 See examples in [`example`](example) folder.
 
 ## What can I give it to plot?
 
-Currently supporting:
+PythiaPlotter currently supports:
 
-- Pythia 8 STDOUT (i.e. the big particle listing table) *(see [example/example_pythia8.txt](example/example_pythia8.txt))*
-- HepMC files *(see [example/example_hepmc.hepmc](example/example_hepmc.hepmc))*
-- LHE files *(see [example/example_lhe.lhe](example/example_lhe.lhe))*
-- ParticleListDrawer STDOUT as output by CMSSW *(see [example/example_cmssw.txt](example/example_cmssw.txt))*
+- Pythia 8 STDOUT (i.e. the big particle event table) *(e.g. [example/example_pythia8.txt](example/example_pythia8.txt))*
+- HepMC files *(e.g. [example/example_hepmc.hepmc](example/example_hepmc.hepmc))*
+- LHE files *(e.g. [example/example_lhe.lhe](example/example_lhe.lhe))*
+- ParticleListDrawer STDOUT as output by CMSSW *(e.g. [example/example_cmssw.txt](example/example_cmssw.txt))*
 
 ## What Do I Need:
 
-- graphviz (get it from www.graphviz.org)
-- Your favourite MC generator
-- Some python packages: networkx/pydot2/pyparsing/dot2tex. To easily install these:
-```
-pip install -r requirements.txt
-```
+- Currently, only python 2.7 is supported
+- [`graphviz`](www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
+- All other required python packages will be installed automatically
 
 ## How Do I Get It:
 
-- Clone this repo:
-	```
-	git clone https://github.com/raggleton/PythiaPlotter.git # https
+- The easiest way is to use `pip`:
 
-	# or
+```
+pip install git+https://github.com/raggleton/PythiaPlotter.git@proper_restructure
+```
 
-	git clone git@github.com:raggleton/PythiaPlotter.git # ssh
-	```
+- It can also be cloned from Github and installed locally from the base directory:
+
+```
+make install
+```
 
 ## How Do I Use It:
 
-Quick demo to see what it can do:
-```
-python PythiaPlotter.py --help
-python PythiaPlotter.py example/example_pythia8.txt --openPDF
-python PythiaPlotter.py example/example_hepmc.hepmc --openPDF
-```
+Example usage (requires downloading the example input files in the [example](example) directory)
 
-## What Else Should I Know:
+```
+PythiaPlotter example/example_pythia8.txt --open --inputFormat PYTHIA
+PythiaPlotter example/example_hepmc.hepmc --open
 
-- If you are feeling brave, use the latest, greatest version in the `restructure_jan_2015` branch, or for an example of the TikZ layout, look in the `hepMcReader` branch.
+# to show all options:
+PythiaPlotter --help
+```
 
 ## What Improvements Are Being Working On:
 
 See TODO.md
 
-Wishlist:
+- Support for Python3
+- Parser: More parsers? Heppy?
+- Printer: JS? TikZ/Latex printer for more formatting and more beautiful output?
 
-- Parse: More parsers?
-- Printer: JS?
+## Full documentation:
+
+See
