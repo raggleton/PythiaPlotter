@@ -1,5 +1,11 @@
-lint: ## check style with flake8
+flake: ## check style with flake8
 	flake8 --show-source --benchmark --exit-zero pythiaplotter
+
+lint: ## check linting with pylint
+	pylint --rcfile=.pylintrc pythiaplotter
+
+lint-py3: ## check py3 porting only
+	pylint --py3k pythiaplotter
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
