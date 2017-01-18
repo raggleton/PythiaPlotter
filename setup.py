@@ -2,6 +2,10 @@ from setuptools import setup, find_packages
 from pythiaplotter import __VERSION__
 
 
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
+
+
 setup(
     name="PythiaPlotter",
     version=__VERSION__,
@@ -12,6 +16,7 @@ setup(
     author_email="robinaggleton@gmail.com",
     url="https://github.com/raggleton/PythiaPlotter",
     packages=find_packages(),
+    install_requires=requirements,
     entry_points={
         'console_scripts': [
             'PythiaPlotter=pythiaplotter.PythiaPlotter:main'
@@ -20,5 +25,12 @@ setup(
     package_data={
         'pythiaplotter': ['particledata/*.tex', 'particledata/*.xml',
                           'printers/*.json']
-    }
+    },
+    classifiers=[
+        'Operating System :: Unix',
+        'Operating System :: POSIX',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2 :: Only',
+        'Programming Language :: Python :: 2.7'
+    ]
 )
