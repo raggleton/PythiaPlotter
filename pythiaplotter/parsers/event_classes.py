@@ -194,7 +194,7 @@ class NodeParticle(object):
         self.parent2_code = (parent2_barcode if parent2_barcode >= parent1_barcode
                              else parent1_barcode)
         # to store barcodes of parents:
-        self.parent_codes = range(parent1_barcode, parent2_barcode + 1)
+        self.parent_codes = list(range(parent1_barcode, parent2_barcode + 1))
 
     def __repr__(self):
         ignore = ["parent_codes"]
