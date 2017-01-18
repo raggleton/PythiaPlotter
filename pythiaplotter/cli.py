@@ -100,10 +100,10 @@ def get_args(input_args):
     # Handle the scenario where there are no printers available
     if len(printer_opts_checked) == 0:
         parser.print_help()
-        print ("\nERROR: None of the required programs or python packages "
-               "for any rendering option exist.")
-        print_printers_requirements()
-        exit(1)
+        log.info("\nERROR: None of the required programs or python packages "
+                 "for any rendering option exist.")
+        print_printers_requirements(log.info)
+        exit(11)
 
     args = parser.parse_args(input_args)
 
@@ -160,4 +160,4 @@ def set_default_mode(args):
 def print_options(args):
     """Printout for user arguments."""
     for k, v in args.__dict__.items():
-        print "{0}: {1}".format(k, v)
+        log.info("{0}: {1}".format(k, v))

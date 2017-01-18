@@ -49,7 +49,7 @@ class Event(object):
 
     def print_stats(self):
         """Print some basic statistics about the event"""
-        print "{0} particles in the event".format(len(self._particles))
+        log.info("{0} particles in the event".format(len(self._particles)))
 
 
 class Particle(object):
