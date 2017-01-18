@@ -3,9 +3,11 @@ Classes to describe event & physical particles, along with helper classes to
 hold Particles in graph, and four-vectors.
 """
 
+from __future__ import division
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import math
+
 
 log = logging.getLogger(__name__)
 
