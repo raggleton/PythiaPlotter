@@ -34,7 +34,7 @@ def get_args(input_args):
                              help="Input file")
 
     parser_help = ["Input formats:"]
-    for k, v in parser_opts.iteritems():
+    for k, v in parser_opts.items():
         help_str = "{0}: {1}".format(k, v.description)
         if v.file_extension:
             help_str += " (default for files ending in {})".format(v.file_extension)
@@ -74,7 +74,7 @@ def get_args(input_args):
     # TODO: unify "printer" vs "renderer"
     render_help = ["Render method:"]
     render_help.extend(["{0}: {1}".format(k, v.description)
-                        for k, v in printer_opts_checked.iteritems()])
+                        for k, v in printer_opts_checked.items()])
     output_group.add_argument("-r", "--render",
                               help="\n".join(render_help),
                               choices=printer_opts_checked.keys(),
@@ -120,7 +120,7 @@ def get_args(input_args):
     set_default_input_format(args)
     set_default_mode(args)
 
-    for k, v in args.__dict__.iteritems():
+    for k, v in args.__dict__.items():
         log.debug("{0}: {1}".format(k, v))
 
     return args
@@ -128,6 +128,7 @@ def get_args(input_args):
 
 def set_default_output(args):
     """Set default output filenames and stems/dirs"""
+    # TODO: shouldn't be setting args.X here as a side effect!
     args.stem_name, args.extension = os.path.splitext(os.path.basename(args.input))
     args.input_dir = helpr.get_full_path(args.input)
 
@@ -140,7 +141,8 @@ def set_default_output(args):
 def set_default_input_format(args):
     """Set default input format if the user hasn't."""
     if not args.inputFormat:
-        for pname, popt in parser_opts.iteritems():
+        for pname, popt in parser_opts.items():
+            # TODO: where did args.extension come from? Not obvious
             if args.extension.lower() == popt.file_extension:
                 args.inputFormat = pname
                 log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
@@ -157,5 +159,5 @@ def set_default_mode(args):
 
 def print_options(args):
     """Printout for user arguments."""
-    for k, v in args.__dict__.iteritems():
+    for k, v in args.__dict__.items():
         print "{0}: {1}".format(k, v)

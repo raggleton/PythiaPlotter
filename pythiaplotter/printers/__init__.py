@@ -56,7 +56,7 @@ printer_opts_all = {
 # Create a similar dict, but only if each printer has
 # the necessary programs and py modules available
 printer_opts_checked = {}
-for pname, popt in printer_opts_all.iteritems():
+for pname, popt in printer_opts_all.items():
     required_progs = popt.requires.get('programs', [])
     required_mods = popt.requires.get('modules', [])
 
@@ -68,7 +68,7 @@ for pname, popt in printer_opts_all.iteritems():
 def print_printers_requirements():
     """Print program and python package requirements for all printers"""
     require_str = ["Requirements for each printing option:\n"]
-    for pname, popt in printer_opts_all.iteritems():
+    for pname, popt in printer_opts_all.items():
         require_str.append('{0}:'.format(pname))
         require_str.append('\tPrograms: {0}'.format(popt.requires.get('programs', None)))
         require_str.append('\tPython packages: {0}'.format(popt.requires.get('module', None)))

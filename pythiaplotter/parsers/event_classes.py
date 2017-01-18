@@ -33,7 +33,7 @@ class Event(object):
     def __str__(self):
         """Print event info in format suitable for use on graph or printout"""
         ignore = ["graph", "_particles", "particles"]
-        info = [k + ": " + str(v) + "\n" for k, v in self.__dict__.iteritems()
+        info = [k + ": " + str(v) + "\n" for k, v in self.__dict__.items()
                 if k not in ignore]
         return "Event:\n{0}".format("".join(info))
 

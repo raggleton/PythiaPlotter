@@ -39,7 +39,7 @@ interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
 def load_json_settings(json_dict, attr):
     """Load dict from json_dict into attr dict. Checks to see if null value."""
     if json_dict:
-        for key, value in json_dict.iteritems():
+        for key, value in json_dict.items():
             attr[key] = value
 
 
@@ -87,7 +87,7 @@ class DotEdgeAttr(object):
 
     def __str__(self):
         """Print edge attributes in dot-friendly format"""
-        attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}={1}'.format(*it) for it in self.attr.items()]
         return "[{0}]".format(", ".join(attr_list)) if attr_list else ""
 
     def add_line_attr(self, edge):
@@ -144,7 +144,7 @@ class DotNodeAttr(object):
 
     def __str__(self):
         """Print node attributes in dot-friendly format"""
-        attr_list = ['{0}={1}'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}={1}'.format(*it) for it in self.attr.items()]
         return "[{0}]".format(", ".join(attr_list))
 
     def add_point_attr(self, node, show_barcode=False):
@@ -195,10 +195,10 @@ class DotGraphAttr(object):
         load_json_settings(settings["graph"], self.attr)
 
     def __repr__(self):
-        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.items()]
         return "DotGraphAttr(attr=dict({0}))".format(", ".join(attr_list))
 
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}";'.format(*it) for it in self.attr.iteritems()]
+        attr_list = ['{0}="{1}";'.format(*it) for it in self.attr.items()]
         return "\t{0}".format("\n\t".join(attr_list))
