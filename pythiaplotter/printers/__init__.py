@@ -1,3 +1,4 @@
+import sys
 from dot_printer import DotPrinter
 from pythiaplotter.utils.common import check_program_exists, check_module_exists
 
@@ -56,6 +57,7 @@ printer_opts_all = {
 # Create a similar dict, but only if each printer has
 # the necessary programs and py modules available
 printer_opts_checked = {}
+
 for pname, popt in printer_opts_all.items():
     required_progs = popt.requires.get('programs', [])
     required_mods = popt.requires.get('modules', [])
@@ -65,12 +67,17 @@ for pname, popt in printer_opts_all.items():
         printer_opts_checked[pname] = popt
 
 
-def print_printers_requirements():
-    """Print program and python package requirements for all printers"""
+def print_printers_requirements(output=sys.stdout.write):
+    """Print program and python package requirements for all printers
+
+    output : function
+        The outputmessage is passed as the parameter to this function.
+        Default is sys.stdout.write()
+    """
     require_str = ["Requirements for each printing option:\n"]
     for pname, popt in printer_opts_all.items():
         require_str.append('{0}:'.format(pname))
         require_str.append('\tPrograms: {0}'.format(popt.requires.get('programs', None)))
         require_str.append('\tPython packages: {0}'.format(popt.requires.get('module', None)))
         require_str.append('\n')
-    print "\n".join(require_str)
+    output("\n".join(require_str))
