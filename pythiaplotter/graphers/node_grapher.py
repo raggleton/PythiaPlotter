@@ -33,7 +33,7 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     for np in reversed(node_particles):
         if np.parent1_code == system_barcode and np.parent2_code == system_barcode:
             continue
-        for i in range(np.parent1_code, np.parent2_code + 1):
+        for i in np.parent_codes:
             gr.add_edge(i, np.particle.barcode)
 
     # Set initial_state and final_state flags, based on number of parents
