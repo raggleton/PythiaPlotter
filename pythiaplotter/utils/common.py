@@ -33,7 +33,7 @@ def cleanup_filepath(filepath):
     return os.path.abspath(os.path.expandvars(os.path.expanduser(filepath)))
 
 
-def get_full_path(filepath):
+def get_directory(filepath):
     """Return absolute, full directory of file.
     Resolve any environment vars, ~, sym links(?)"""
     return os.path.dirname(cleanup_filepath(filepath))

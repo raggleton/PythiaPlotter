@@ -117,7 +117,7 @@ def get_args(input_args):
         raise IOError("No such file: '%s'" % args.input)
 
     # Post process user args
-    set_default_output(args)
+    set_default_output_settings(args)
     set_default_input_format(args)
     set_default_mode(args)
 
@@ -127,29 +127,38 @@ def get_args(input_args):
     return args
 
 
-def set_default_output(args):
+def set_default_output_settings(args):
     """Set default output filenames and stems/dirs"""
     # TODO: shouldn't be setting args.X here as a side effect!
-    args.stem_name, args.extension = os.path.splitext(os.path.basename(args.input))
-    args.input_dir = helpr.get_full_path(args.input)
-
+    stem_name, _ = os.path.splitext(os.path.basename(args.input))
+    input_dir = helpr.get_directory(args.input)
+    # Set default output format if there is an output filename specified
+    if args.output:
+        args.output = helpr.cleanup_filepath(args.output)
+        args.outputFormat = os.path.splitext(args.output)[1][1:]
+        log.info("You didn't specify an output format, setting it to %s", args.outputFormat)
     # Set default output filename if not already done
-    if not args.output:
-        filename = "".join([args.stem_name, "_", str(args.eventNumber), ".", args.outputFormat])
-        args.output = os.path.join(args.input_dir, filename)
+    else:
+        # Hmm default hidden  here, not good
+        if not args.outputFormat:
+            args.outputFormat = "pdf"
+        filename = "".join([stem_name, "_", str(args.eventNumber), ".", args.outputFormat])
+        args.output = os.path.join(input_dir, filename)
+        log.info("You didn't specify an output filename, setting it to %s", args.output)
 
 
 def set_default_input_format(args):
     """Set default input format if the user hasn't."""
     if not args.inputFormat:
         for pname, popt in parser_opts.items():
-            # TODO: where did args.extension come from? Not obvious
-            if args.extension.lower() == popt.file_extension:
+            input_extension = os.path.splitext(args.input)[1]
+            if input_extension.lower() == popt.file_extension:
                 args.inputFormat = pname
                 log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
                 break
         else:
-            raise RuntimeError("Cannot determine input format. Please specify.")
+            raise RuntimeError("Cannot determine input format. "
+                               "Must be one of {}".format(list(parser_opts.keys())))
 
 
 def set_default_mode(args):
