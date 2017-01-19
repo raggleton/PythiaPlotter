@@ -8,8 +8,8 @@ flake: ## check style with flake8
 lint: ## check linting with pylint
 	pylint --rcfile=.pylintrc pythiaplotter
 
-lint-py3: ## check py3 porting only
-	pylint --py3k pythiaplotter
+lint-py3: ## check py3 porting only, but not perfect
+	pylint --rcfile=.pylintrc --py3k pythiaplotter
 
 examples: test ## update example outputs, but only if our tests are ok
 	@echo "Remaking examples..."
@@ -18,7 +18,7 @@ examples: test ## update example outputs, but only if our tests are ok
 	PythiaPlotter examples/example_lhe.lhe --inputFormat LHE
 	PythiaPlotter examples/example_hepmc.hepmc --inputFormat HEPMC
 
-test: ## run standard tests
+test: clean-test ## run standard tests
 	python -m pytest
 
 tests: test ## cos I always forget singular or plural
