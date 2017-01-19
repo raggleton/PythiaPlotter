@@ -1,6 +1,6 @@
 # PythiaPlotter
 
-[![PyPI](https://img.shields.io/pypi/pyversions/Django.svg)]() ![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=proper_restructure)
+![Supports python 2.7, 3.4, 3.5, 3.6](https://img.shields.io/pypi/pyversions/Django.svg) ![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=proper_restructure)
 
 ## What Is It
 Plots diagrams of particle decay trees from HEP Monte Carlo (MC) events. Very handy to figure out what is actually going on in your MC!
