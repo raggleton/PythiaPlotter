@@ -18,7 +18,7 @@ except ImportError:
 from pprint import pformat
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
-from pythiaplotter.utils.common import map_columns
+from pythiaplotter.utils.common import map_columns_to_dict
 
 
 log = logging.getLogger(__name__)
