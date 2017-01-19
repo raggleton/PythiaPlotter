@@ -56,3 +56,10 @@ reinstall: uninstall clean install
 
 reinstalle: uninstall clean installe
 	@echo "Reinstalling PythiaPlotter in editable mode"
+
+## list all targets, taken from http://stackoverflow.com/a/26339924
+.PHONY: list
+list:
+	@echo "Available targets:"
+	@echo "=================="
+	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
