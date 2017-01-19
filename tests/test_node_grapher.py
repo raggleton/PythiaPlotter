@@ -4,6 +4,7 @@ Unit tests for node_grapher
 """
 
 
+from __future__ import absolute_import
 import unittest
 import pythiaplotter.graphers.node_grapher as ng
 from pythiaplotter.parsers.event_classes import Particle, NodeParticle

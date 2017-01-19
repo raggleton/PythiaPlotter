@@ -3,6 +3,7 @@ These tests are designed to run the program in full using the included examples.
 """
 
 
+from __future__ import absolute_import
 import os
 from pythiaplotter.PythiaPlotter import main
 

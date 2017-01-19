@@ -5,6 +5,8 @@ If you run with nosetests -w unittest then $PWD=unittest
 If you run with python unittest/test_utils.py then $PWD=PythiaPlotter
 """
 
+
+from __future__ import absolute_import
 import unittest
 import sys
 import os
