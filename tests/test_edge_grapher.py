@@ -6,8 +6,8 @@ Unit tests for edge_grapher
 
 from __future__ import absolute_import
 import unittest
-import sys
 import os.path
+import sys
 import pythiaplotter.graphers.edge_grapher as eg
 from pythiaplotter.parsers.event_classes import Particle, EdgeParticle
 from pprint import pprint
@@ -22,7 +22,7 @@ class EdgeGrapher_Test(unittest.TestCase):
 
     def check_graph_particles(self, particles, graph, verbose=verbose):
         """To test particles were correctly assigned to edges"""
-        edge_particles = [graph.edge[i][j]['particle'] for i, j in graph.edges()]
+        edge_particles = [graph.edge[i][j][0]['particle'] for i, j in graph.edges()]
         if verbose:
             print "User particles:"
             pprint(set(particles))
