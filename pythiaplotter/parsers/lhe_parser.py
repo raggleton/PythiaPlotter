@@ -13,7 +13,7 @@ from pprint import pformat
 from lxml import etree as ET  # MegaGainz
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
-from pythiaplotter.utils.common import map_columns
+from pythiaplotter.utils.common import map_columns_to_dict
 
 
 log = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ class LHEParser(object):
     def parse_event_line(self, line, event_num):
         """Parse a LHE event info line"""
         fields = ["num_particles", "proc_id", "weight", "scale", "aQED", "aQCD"]
-        contents = map_columns(fields, line)
+        contents = map_columns_to_dict(fields, line)
         log.debug(contents)
         return Event(event_num=event_num)
 
@@ -131,7 +131,7 @@ class LHEParser(object):
         """
         fields = ["pdgid", "status", "parent1", "parent2", "col1", "col2",
                   "px", "py", "pz", "energy", "mass", "lifetime", "spin"]
-        contents = map_columns(fields, line)
+        contents = map_columns_to_dict(fields, line)
         log.debug(contents)
         p = Particle(barcode=barcode,
                      pdgid=contents["pdgid"],

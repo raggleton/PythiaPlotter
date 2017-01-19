@@ -12,7 +12,7 @@ from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 from .event_classes import Event, Particle, NodeParticle
-from pythiaplotter.utils.common import map_columns
+from pythiaplotter.utils.common import map_columns_to_dict
 import pythiaplotter.graphers.node_grapher as node_grapher
 
 
@@ -73,22 +73,22 @@ class CMSSWParticleListParser(object):
         # parents/children, nParents/Children, pt/eta/phi, px/py/pz/m]
         # parts1 = line.strip().split('|')
         fields = ['idx', 'pdg', 'status', 'family', 'nFamily', '3mom', '4mom']
-        contents = map_columns(fields, line.strip(), delim='|')
+        contents = map_columns_to_dict(fields, line.strip(), delim='|')
 
         # Get PDGID - we don't car about the name
         pdgid = contents['pdg'].strip().split()[0]
 
         # Get mother/daughter IDXs
         family_fields = ['parent1', 'parent2', 'child1', 'child2']
-        family_contents = map_columns(family_fields, contents['family'])
+        family_contents = map_columns_to_dict(family_fields, contents['family'])
 
         # Get pt/eta/phi
         three_mom_fields = ['pt', 'eta', 'phi']
-        three_mom_contents = map_columns(three_mom_fields, contents['3mom'])
+        three_mom_contents = map_columns_to_dict(three_mom_fields, contents['3mom'])
 
         # Get px/py/pz/m
         four_mom_fields = ['px', 'py', 'pz', 'm']
-        four_mom_contents = map_columns(four_mom_fields, contents['4mom'])
+        four_mom_contents = map_columns_to_dict(four_mom_fields, contents['4mom'])
 
         p = Particle(barcode=contents['idx'], pdgid=pdgid,
                      status=contents['status'],

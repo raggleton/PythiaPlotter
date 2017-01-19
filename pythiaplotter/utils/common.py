@@ -55,7 +55,7 @@ def check_dir_exists_create(filepath):
         os.makedirs(cleanup_filepath(filepath))
 
 
-def map_columns(fields, line, delim=None):
+def map_columns_to_dict(fields, line, delim=None):
     """Make dict from fields titles and line.
 
     fields: list of field names, MUST be in same order as the entries in

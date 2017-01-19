@@ -9,7 +9,7 @@ import logging
 from pprint import pformat
 from .event_classes import Event, Particle, EdgeParticle
 import pythiaplotter.graphers.edge_grapher as edge_grapher
-from pythiaplotter.utils.common import map_columns
+from pythiaplotter.utils.common import map_columns_to_dict
 
 
 log = logging.getLogger(__name__)
@@ -118,14 +118,14 @@ class HepMCParser(object):
         fields = ["event_num", "num_mpi", "scale", "aQCD", "aQED",
                   "signal_process_id", "signal_process_vtx_id", "n_vtx",
                   "beam1_pdgid", "beam2_pdgid"]
-        contents = map_columns(fields, line[1:])
+        contents = map_columns_to_dict(fields, line[1:])
         return Event(event_num=contents["event_num"],
                      signal_process_vtx_id=contents["signal_process_vtx_id"])
 
     def parse_vertex_line(self, line):
         """Parse a HepMC GenVertex line and return a GenVertex object"""
         fields = ["barcode", "id", "x", "y", "z", "ctau", "n_orphan_in", "n_out"]
-        contents = map_columns(fields, line[1:])
+        contents = map_columns_to_dict(fields, line[1:])
         return GenVertex(barcode=abs(int(contents["barcode"])),
                          n_orphan_in=contents["n_orphan_in"])
 
@@ -138,7 +138,7 @@ class HepMCParser(object):
         """
         fields = ["barcode", "pdgid", "px", "py", "pz", "energy", "mass",
                   "status", "pol_theta", "pol_phi", "vtx_in_barcode"]
-        contents = map_columns(fields, line[1:])
+        contents = map_columns_to_dict(fields, line[1:])
         p = Particle(barcode=contents["barcode"], pdgid=contents["pdgid"],
                      px=contents["px"], py=contents["py"], pz=contents["pz"],
                      energy=contents["energy"], mass=contents["mass"],

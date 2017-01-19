@@ -70,22 +70,23 @@ def parse_event_block(contents):
         fields = ["barcode", "pdgid", "name", "status", "parent1", "parent2",
                   "child1", "child2", "colours1", "colours2",
                   "px", "py", "pz", "energy", "mass"]
-        contents = map_columns(fields, line)
+        contents_dict = map_columns_to_dict(fields, line)
+        log.debug(contents_dict)
         # Create a Particle obj and add to total
-        p = Particle(barcode=contents['barcode'],
-                     pdgid=contents['pdgid'],
-                     status=contents['status'],
-                     px=contents['px'],
-                     py=contents['py'],
-                     pz=contents['pz'],
-                     energy=contents['energy'],
-                     mass=contents['mass'])
+        p = Particle(barcode=contents_dict['barcode'],
+                     pdgid=contents_dict['pdgid'],
+                     status=contents_dict['status'],
+                     px=contents_dict['px'],
+                     py=contents_dict['py'],
+                     pz=contents_dict['pz'],
+                     energy=contents_dict['energy'],
+                     mass=contents_dict['mass'])
         # Sometimes parent2 = 0, so set = parent1 if this is the case
         np = NodeParticle(particle=p,
-                          parent1_barcode=contents['parent1'],
-                          parent2_barcode=(contents['parent2']
-                                           if int(contents['parent2'])
-                                           else contents['parent1']))
+                          parent1_barcode=contents_dict['parent1'],
+                          parent2_barcode=(contents_dict['parent2']
+                                           if int(contents_dict['parent2'])
+                                           else contents_dict['parent1']))
         node_particles.append(np)
 
     return node_particles
