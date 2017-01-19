@@ -12,8 +12,6 @@ import sys
 import os
 import os.path
 import shutil
-from pythiaplotter.utils.requisite_checker import RequisiteChecker
-from pprint import pprint
 from pythiaplotter.utils.common import *
 
 
@@ -48,32 +46,19 @@ class Utils_Test(unittest.TestCase):
 
 
 class RequisiteChecker_Test(unittest.TestCase):
-    """Test RequisiteChecker"""
-
-    def setUp(self):
-        self.real_prog = "vim"
-        self.fake_prog = "fakeprog"
-        self.real_mod = "argparse"
-        self.fake_mod = "aaaaaaa"
-        self.all_prog = [self.real_prog, self.fake_prog]
-        self.all_mod = [self.real_mod, self.fake_mod]
-
-        # Setup with 1 real program, 1 fake, 1 real module, 1 fake
-        self.checkr = RequisiteChecker(programs=self.all_prog,
-                                       modules=self.all_mod)
-        # pprint(self.checkr.results)
+    """Test requisite checker methods"""
 
     def test_real_program(self):
-        self.assertTrue(self.checkr.results[self.real_prog])
+        self.assertTrue(check_program_exists("vim"))
 
     def test_fake_program(self):
-        self.assertFalse(self.checkr.results[self.fake_prog])
+        self.assertFalse(check_program_exists("fakeprog"))
 
     def test_real_module(self):
-        self.assertTrue(self.checkr.results[self.real_mod])
+        self.assertTrue(check_module_exists("argparse"))
 
     def test_fake_module(self):
-        self.assertFalse(self.checkr.results[self.fake_mod])
+        self.assertFalse(check_module_exists("aaaaaaa"))
 
 
 def main():
