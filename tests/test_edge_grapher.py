@@ -5,6 +5,7 @@ Unit tests for edge_grapher
 
 
 from __future__ import absolute_import
+from __future__ import print_function
 import pytest
 import unittest
 import os.path
@@ -25,9 +26,9 @@ class EdgeGrapher_Test(unittest.TestCase):
         """To test particles were correctly assigned to edges"""
         edge_particles = [graph.edge[i][j][0]['particle'] for i, j in graph.edges()]
         if verbose:
-            print "User particles:"
+            print("User particles:")
             pprint(set(particles))
-            print "Graph edge particles:"
+            print("Graph edge particles:")
             pprint(set(edge_particles))
         return set(particles) == set(edge_particles)
 
@@ -35,9 +36,9 @@ class EdgeGrapher_Test(unittest.TestCase):
         """To test edges were correctly assigned"""
         edges = [(int(i), int(j)) for i, j in edges]
         if verbose:
-            print "User edges:",
+            print("User edges:", end=' ')
             pprint(set(edges))
-            print "Graph edges:"
+            print("Graph edges:")
             pprint(set(graph.edges()))
         return set(edges) == set(graph.edges())
 

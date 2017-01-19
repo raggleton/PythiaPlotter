@@ -5,6 +5,7 @@ Unit tests for node_grapher
 
 
 from __future__ import absolute_import
+from __future__ import print_function
 import unittest
 import pythiaplotter.graphers.node_grapher as ng
 from pythiaplotter.parsers.event_classes import Particle, NodeParticle
@@ -23,9 +24,9 @@ class NodeGrapher_Test(unittest.TestCase):
         # print graph.nodes()
         node_particles = [graph.node[n]['particle'] for n in graph.nodes()]
         if verbose:
-            print "User particles:"
+            print("User particles:")
             pprint(node_particles)
-            print "Graph nodes:"
+            print("Graph nodes:")
             print (graph.node)
         return set(particles) == set(node_particles)
 
@@ -34,9 +35,9 @@ class NodeGrapher_Test(unittest.TestCase):
         ATM just a simpler way to print info...
         """
         if verbose:
-            print "User edges:"
+            print("User edges:")
             pprint(edges)
-            print "Graph edges:"
+            print("Graph edges:")
             pprint(graph.edges())
         return set(edges) == set(graph.edges())
 
