@@ -1,6 +1,6 @@
 # PythiaPlotter
 
-![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=proper_restructure)
+[![PyPI](https://img.shields.io/pypi/pyversions/Django.svg)]() ![Travis Build Status](https://travis-ci.org/raggleton/PythiaPlotter.svg?branch=proper_restructure)
 
 ## What Is It
 Plots diagrams of particle decay trees from HEP Monte Carlo (MC) events. Very handy to figure out what is actually going on in your MC!
@@ -18,7 +18,7 @@ PythiaPlotter currently supports:
 
 ## What Do I Need:
 
-- Currently, only python 2.7 is supported
+- Currently, both python 2.7 and python>=3.4 are supported
 - [`graphviz`](www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
 - All other required python packages will be installed automatically
 
@@ -52,7 +52,6 @@ PythiaPlotter --help
 
 See TODO.md
 
-- Support for Python3
 - Parser: More parsers? Heppy?
 - Printer: JS? TikZ/Latex printer for more formatting and more beautiful output?
 
