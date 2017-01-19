@@ -33,7 +33,9 @@ def load_pdgid_dict():
     pdgid_dict = {}
 
     # get latex names
-    particle_tex = resource_string('pythiaplotter', "particledata/pdg_all.tex")
+    # decode() necessary as "The resource is read in binary fashion, such that the returned
+    # string contains exactly the bytes that are stored in the resource."
+    particle_tex = resource_string('pythiaplotter', "particledata/pdg_all.tex").decode('utf-8')
     for line in particle_tex.split('\n'):
         (pid, tex) = line.split(" ", 1)
         tex = tex.strip()

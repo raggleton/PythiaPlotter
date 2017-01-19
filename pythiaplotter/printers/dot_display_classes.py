@@ -24,12 +24,14 @@ log = logging.getLogger(__name__)
 # TODO: allow for user-defined JSON files
 config_file = "printers/dot_config.json"
 try:
-    settings = json.loads(resource_string('pythiaplotter', config_file))
+    # decode() necessary as "The resource is read in binary fashion, such that the returned
+    # string contains exactly the bytes that are stored in the resource."
+    settings = json.loads(resource_string('pythiaplotter', config_file).decode('utf-8'))
 except IOError as e:
     log.exception("Cannot load settings file %s - no such file\n" % config_file)
     raise
 except ValueError as e:
-    log.exception("Problem parsing settings file %s\n" % config_file)
+    log.exception("Problem parsing settings file %s - please check your JSON\n" % config_file)
     raise
 
 interesting_pdgids = settings.keys()[:]
