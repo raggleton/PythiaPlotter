@@ -5,6 +5,7 @@ Unit tests for edge_grapher
 
 
 from __future__ import absolute_import
+import pytest
 import unittest
 import os.path
 import sys
@@ -84,6 +85,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         edges = [(0, 2), (1, 2), (2, 3), (3, 4), (3, 5), (3, 6)]
         self.assertTrue(self.check_graph_edges(edges, g))
 
+    @pytest.mark.skip
     def test_redundant_simple(self):
         """Check remove_redundants code with a very simple case.
 
