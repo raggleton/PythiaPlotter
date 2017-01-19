@@ -34,9 +34,8 @@ except ValueError as e:
     log.exception("Problem parsing settings file %s - please check your JSON\n" % config_file)
     raise
 
-interesting_pdgids = settings.keys()[:]
-non_pdgid_keys = ["_comment", "graph", "default", "initial", "final"]
-interesting_pdgids = [i for i in interesting_pdgids if i not in non_pdgid_keys]
+
+interesting_pdgids = [i for i in settings.keys() if i.isdigit()]
 
 
 def load_json_settings(json_dict, attr):
@@ -80,7 +79,7 @@ class DotEdgeAttr(object):
         :return:
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
-        if "particle" in edge.keys():  # edge represents a particle
+        if "particle" in list(edge.keys()):  # edge represents a particle
             self.add_particle_attr(edge, fancy)
         else:
             self.add_line_attr(edge)
@@ -137,7 +136,7 @@ class DotNodeAttr(object):
         :return:
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
-        if "particle" in node.keys():  # node represents a particle
+        if "particle" in list(node.keys()):  # node represents a particle
             self.add_particle_attr(node, fancy)
         else:
             self.add_point_attr(node)

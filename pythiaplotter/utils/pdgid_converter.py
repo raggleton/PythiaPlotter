@@ -66,7 +66,7 @@ def load_pdgid_dict():
         name = child.get('name')
         # if no antiparticle name, use particle name
         anti_name = child.get('antiName') if child.get('antiName') else name
-        if pid in pdgid_dict.keys():
+        if pid in list(pdgid_dict.keys()):
             pdgid_dict[pid]["raw"] = name
             pdgid_dict[-1 * pid]["raw"] = anti_name
         else:
@@ -95,7 +95,7 @@ PDGID_NAME_DICT = load_pdgid_dict()
 def check_pdgid(pdgid):
     """Check if entry corresponding to given pdgid. If not, throw KeyError."""
 
-    if int(pdgid) not in PDGID_NAME_DICT.keys():
+    if int(pdgid) not in list(PDGID_NAME_DICT.keys()):
         raise KeyError("%r not in list of valid particle names/PDGIDs. Please "
                        "add custom entry in pdgid_converter.py" % pdgid)
 

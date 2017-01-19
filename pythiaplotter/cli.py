@@ -43,7 +43,7 @@ def get_args(input_args):
 
     input_group.add_argument("--inputFormat",
                              help="\n".join(parser_help),
-                             choices=parser_opts.keys())
+                             choices=list(parser_opts.keys()))
     input_group.add_argument("-n", "--eventNumber",
                              help="Select event number to plot, starts at 1.\n"
                                   "For: HEPMC, LHE input formats.\n",
@@ -78,7 +78,7 @@ def get_args(input_args):
                         for k, v in printer_opts_checked.items()])
     output_group.add_argument("-r", "--render",
                               help="\n".join(render_help),
-                              choices=printer_opts_checked.keys(),
+                              choices=list(printer_opts_checked.keys()),
                               default="DOT" if "DOT" in printer_opts_checked else "LATEX")
 
     output_group.add_argument("--redundants",
