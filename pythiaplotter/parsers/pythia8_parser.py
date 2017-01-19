@@ -58,6 +58,10 @@ def parse_event_block(contents):
     # Store all the NodeParticles in the event
     node_particles = []
 
+    log.debug("start of raw contents")
+    log.debug(contents)
+    log.debug("end of raw contents")
+
     for line in contents:
         log.debug(line)
 
@@ -113,38 +117,42 @@ class Pythia8Parser(object):
     # and the parser method to handle this type of block
     info_start = "PYTHIA Info Listing"
     info_end = "End PYTHIA Info Listing"
-    info_blocks = dict(str_start=info_start, str_end=info_end,
-                       ind_start=[], ind_end=[], blocks=[],
-                       parser=parse_info_block)
 
     full_evt_start = "PYTHIA Event Listing  (complete event)"
     full_evt_end = "End PYTHIA Event Listing"
-    full_evt_blocks = dict(str_start=full_evt_start, str_end=full_evt_end,
-                           ind_start=[], ind_end=[], blocks=[],
-                           parser=parse_event_block)
 
     hard_evt_start = "PYTHIA Event Listing  (hard process)"
     hard_evt_end = "End PYTHIA Event Listing"
-    hard_evt_blocks = dict(str_start=hard_evt_start, str_end=hard_evt_end,
-                           ind_start=[], ind_end=[], blocks=[],
-                           parser=parse_event_block)
 
     stats_start = "PYTHIA Event and Cross Section Statistics"
     stats_end = "End PYTHIA Event and Cross Section Statistics"
-    stats_blocks = dict(str_start=stats_start, str_end=stats_end,
-                        ind_start=[], ind_end=[], blocks=[],
-                        parser=parse_stats_block)
-
-    # All the different blocks we want to be able to parse, with sensible names
-    block_types = dict(FullEvent=full_evt_blocks,
-                       Info=info_blocks,
-                       HardEvent=hard_evt_blocks)
 
     def __init__(self, filename, event_num=0, remove_redundants=True):
         self.filename = filename
         self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
         log.info("Opening event file %s" % filename)
+
+        self.info_blocks = dict(str_start=self.info_start, str_end=self.info_end,
+                                ind_start=[], ind_end=[], blocks=[],
+                                parser=parse_info_block)
+
+        self.full_evt_blocks = dict(str_start=self.full_evt_start, str_end=self.full_evt_end,
+                                    ind_start=[], ind_end=[], blocks=[],
+                                    parser=parse_event_block)
+
+        self.hard_evt_blocks = dict(str_start=self.hard_evt_start, str_end=self.hard_evt_end,
+                                    ind_start=[], ind_end=[], blocks=[],
+                                    parser=parse_event_block)
+
+        self.stats_blocks = dict(str_start=self.stats_start, str_end=self.stats_end,
+                                 ind_start=[], ind_end=[], blocks=[],
+                                 parser=parse_stats_block)
+
+        # All the different blocks we want to be able to parse, with sensible names
+        self.block_types = dict(FullEvent=self.full_evt_blocks,
+                                Info=self.info_blocks,
+                                HardEvent=self.hard_evt_blocks)
 
         # store file contents in list to slice up easily
         # TODO: change this - will use large amount of RAM for big files!
