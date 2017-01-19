@@ -6,9 +6,12 @@ Some common functions used throughout, like opening PDFs, file checking.
 import os
 import imp
 from distutils.spawn import find_executable
-from itertools import izip
 from subprocess import call
 from sys import platform as _platform
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 
 def open_pdf(pdf_filename):

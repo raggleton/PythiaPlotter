@@ -9,7 +9,10 @@ TODO: reshuffle blocks - non optimal spreading out atm
 
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
-from itertools import izip
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 from pprint import pformat
 from event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
