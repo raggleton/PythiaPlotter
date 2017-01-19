@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import networkx as nx

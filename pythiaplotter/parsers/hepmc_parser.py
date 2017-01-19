@@ -2,10 +2,12 @@
 Handle parsing of HepMC files.
 """
 
+
+from __future__ import absolute_import
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 from pprint import pformat
-from event_classes import Event, Particle, EdgeParticle
+from .event_classes import Event, Particle, EdgeParticle
 import pythiaplotter.graphers.edge_grapher as edge_grapher
 from pythiaplotter.utils.common import map_columns
 

@@ -7,6 +7,8 @@ See example/example_pythia8.txt for example input file.
 TODO: reshuffle blocks - non optimal spreading out atm
 """
 
+
+from __future__ import absolute_import
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 try:
@@ -14,7 +16,7 @@ try:
 except ImportError:
     izip = zip
 from pprint import pformat
-from event_classes import Event, Particle, NodeParticle
+from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import map_columns
 

@@ -11,11 +11,12 @@ Several stages:
 """
 
 
+from __future__ import absolute_import
 import os
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 from subprocess import call
-from dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
+from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 
 log = logging.getLogger(__name__)

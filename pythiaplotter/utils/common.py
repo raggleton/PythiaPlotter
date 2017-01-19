@@ -3,6 +3,7 @@ Some common functions used throughout, like opening PDFs, file checking.
 """
 
 
+from __future__ import absolute_import
 import os
 import imp
 from distutils.spawn import find_executable

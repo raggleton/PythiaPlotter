@@ -4,6 +4,8 @@
 Main script to run PythiaPlotter.
 """
 
+
+from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 import sys

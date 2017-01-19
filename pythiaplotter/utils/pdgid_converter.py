@@ -7,6 +7,7 @@ TODO: deal with tex entries like: 25 h^0 / H_1^0
 """
 
 
+from __future__ import absolute_import
 import re
 import xml.etree.ElementTree as ET
 from pkg_resources import resource_string

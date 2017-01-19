@@ -9,6 +9,7 @@ possible to simplify things...
 """
 
 
+from __future__ import absolute_import
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 import json
 import pythiaplotter.utils.logging_config  # NOQA

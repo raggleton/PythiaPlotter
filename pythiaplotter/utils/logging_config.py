@@ -4,6 +4,7 @@ We use a custom formatter which formats different severity levels differently.
 """
 
 
+from __future__ import absolute_import
 import logging
 
 

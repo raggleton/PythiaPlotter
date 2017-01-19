@@ -5,11 +5,13 @@ Default is NODE representation for particles.
 See example/example_lhe.lhe for example input file.
 """
 
+
+from __future__ import absolute_import
 import logging
 from pprint import pformat
 # import xml.etree.ElementTree as ET  # slowwww
 from lxml import etree as ET  # MegaGainz
-from event_classes import Event, Particle, NodeParticle
+from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import map_columns
 

@@ -1,7 +1,8 @@
-from pythia8_parser import Pythia8Parser
-from hepmc_parser import HepMCParser
-from lhe_parser import LHEParser
-from cmssw_particle_list_parser import CMSSWParticleListParser
+from __future__ import absolute_import
+from .pythia8_parser import Pythia8Parser
+from .hepmc_parser import HepMCParser
+from .lhe_parser import LHEParser
+from .cmssw_particle_list_parser import CMSSWParticleListParser
 
 
 """Store a record of all possible parsers, along with their metainfo."""
@@ -24,7 +25,7 @@ class ParserOption(object):
     def __str__(self):
         return self.description
 
-
+# Keys of this dict will be the commandline options for --inputFormat
 parser_opts = {
 
     "PYTHIA": ParserOption(

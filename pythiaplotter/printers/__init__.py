@@ -1,5 +1,6 @@
+from __future__ import absolute_import
 import sys
-from dot_printer import DotPrinter
+from .dot_printer import DotPrinter
 from pythiaplotter.utils.common import check_program_exists, check_module_exists
 
 
