@@ -7,6 +7,12 @@ lint: ## check linting with pylint
 lint-py3: ## check py3 porting only
 	pylint --py3k pythiaplotter
 
+examples: test ## update example outputs, but only if our tests are ok
+	@echo "Remaking examples..."
+	PythiaPlotter examples/example_pythia8.txt --inputFormat PYTHIA
+	PythiaPlotter examples/example_cmssw.txt --inputFormat CMSSW
+	PythiaPlotter examples/example_lhe.lhe --inputFormat LHE
+	PythiaPlotter examples/example_hepmc.hepmc --inputFormat HEPMC
 
 test: ## run standard tests
 	python -m pytest
