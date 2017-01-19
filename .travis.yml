@@ -9,7 +9,7 @@ os:
 install:
   - pip install -r requirements.txt
 
-script:  python -m pytest
+script:  make test
 
 addons:
   apt:

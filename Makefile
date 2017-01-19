@@ -7,6 +7,15 @@ lint: ## check linting with pylint
 lint-py3: ## check py3 porting only
 	pylint --py3k pythiaplotter
 
+
+test: ## run standard tests
+	python -m pytest
+
+tests: test ## cos I always forget singular or plural
+
+test-examples: ## run full examples test
+	pytest tests/test_examples_full.py
+
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 clean-build: ## remove build artifacts
