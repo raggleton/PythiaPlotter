@@ -18,7 +18,7 @@ except ImportError:
 from pprint import pformat
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
-from pythiaplotter.utils.common import map_columns_to_dict
+from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -34,10 +34,7 @@ class PythiaBlock(object):
         self.parser_results = None  # to hold output from self.parser
 
     def __repr__(self):
-        return "%s(%r, parser=%s, contents=%s)" % (self.__class__.__name__,
-                                                   self.name,
-                                                   self.parser,
-                                                   self.contents)
+        return generate_repr_str(self, ignore=['parser_results'])
 
     def __str__(self):
         return "%s:\n%s" % (self.name, '\n'.join(self.contents))
@@ -162,9 +159,8 @@ class Pythia8Parser(object):
             self.contents = [l for l in lines if l]
 
     def __repr__(self):
-        return "%s(filename=%r, event_num=%d)" % (self.__class__.__name__,
-                                                  self.filename,
-                                                  self.event_num)
+        return generate_repr_str(self, ignore=['contents', 'info_blocks', 'full_evt_blocks',
+                                               'hard_evt_blocks', 'stats_blocks', 'block_types'])
 
     def __str__(self):
         return "Pythia8Parser:\n%s" % pformat(self.block_types)

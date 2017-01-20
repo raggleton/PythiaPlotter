@@ -15,9 +15,10 @@ try:
     from itertools import izip
 except ImportError:
     izip = zip
+from contextlib import contextmanager
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
-from contextlib import contextmanager
+from pythiaplotter.utils.common import generate_repr_str
 import ROOT
 
 
@@ -40,9 +41,7 @@ class HeppyParser(object):
         log.info("Opening event file %s" % filename)
 
     def __repr__(self):
-        return "{0}(filename={1[filename]}, " \
-               "event_num={1[event_num]}, " \
-               "remove_redundants={1[remove_redundants]})".format(self.__class__.__name__, self)
+        return generate_repr_str(self, ignore=['events'])
 
     def __str__(self):
         return "HeppyParser: {0}".format(self.filename)

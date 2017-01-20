@@ -9,7 +9,7 @@ import logging
 from pprint import pformat
 from .event_classes import Event, Particle, EdgeParticle
 import pythiaplotter.graphers.edge_grapher as edge_grapher
-from pythiaplotter.utils.common import map_columns_to_dict
+from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -30,9 +30,7 @@ class HepMCParser(object):
         self.events = []
 
     def __repr__(self):
-        return "{0}(filename={1[filename]}, " \
-               "event_num={1[event_num]}, " \
-               "remove_redundants={1[remove_redundants]})".format(self.__class__.__name__, self)
+        return generate_repr_str(self, ignore=['events'])
 
     def __str__(self):
         return "HepMCParser:\n%s" % pformat(self.filename)
@@ -46,8 +44,7 @@ class HepMCParser(object):
         """
         # Loop through file, line-by-line.
         # Once we reach an event line with the require line number, then
-        # we start parsing the particle/vertex lines. Otherwise we eat up all
-        # the RAM!
+        # we start parsing the particle/vertex lines. Otherwise we eat up all the RAM!
 
         parse_event = False
         current_event = None

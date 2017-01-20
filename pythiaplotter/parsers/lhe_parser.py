@@ -13,7 +13,7 @@ from pprint import pformat
 from lxml import etree as ET  # MegaGainz
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
-from pythiaplotter.utils.common import map_columns_to_dict
+from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -34,12 +34,7 @@ class LHEParser(object):
         self.events = []
 
     def __repr__(self):
-        return "%s.%s(filename=%r, event_num=%d, remove_redundants=%s)" % (
-            self.__module__,
-            self.__class__.__name__,
-            self.filename,
-            self.event_num,
-            self.remove_redundants)
+        return generate_repr_str(self, ignore=['events'])
 
     def __str__(self):
         return "LHEParser: %s" % pformat(self.filename)

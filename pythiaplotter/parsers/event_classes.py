@@ -9,6 +9,7 @@ import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import math
 import networkx as nx
+from pythiaplotter.utils.common import generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -28,9 +29,7 @@ class Event(object):
 
     def __repr__(self):
         ignore = ["graph", "_particles", "particles"]
-        args_str = ["%s=%s" % (a, self.__dict__[a]) for a in
-                    self.__dict__ if a not in ignore]
-        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
+        return generate_repr_str(self, ignore)
 
     def __str__(self):
         """Print event info in format suitable for use on graph or printout"""
@@ -81,10 +80,8 @@ class Particle(object):
         self.event = None  # parent event
 
     def __repr__(self):
-        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()
-                    if k not in ['event', 'px', 'py', 'pz', 'energy', 'mass',
-                                 'pt', 'eta', 'phi', 'status', "et"]]
-        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
+        ignore = ['event', 'px', 'py', 'pz', 'energy', 'mass', 'pt', 'eta', 'phi', 'status', "et"]
+        return generate_repr_str(self, ignore)
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
@@ -146,8 +143,7 @@ class FourMomentum(object):
         self._mass = float(mass)
 
     def __repr__(self):
-        args_str = ["%s=%s" % (k, v) for k, v in self.__dict__.items()]
-        return "{0}({1})".format(self.__class__.__name__, ", ".join(args_str))
+        return generate_repr_str(self)
 
     @property
     def pt(self):
@@ -205,10 +201,7 @@ class NodeParticle(object):
         self.parent_codes = list(range(parent1_barcode, parent2_barcode + 1))
 
     def __repr__(self):
-        ignore = ["parent_codes"]
-        args_str = ["%s=%r" % (a, self.__dict__[a]) for a in
-                    self.__dict__ if a not in ignore]
-        return "%s(%s)" % (self.__class__.__name__, ", ".join(args_str))
+        return generate_repr_str(self)
 
     @property
     def barcode(self):
@@ -234,8 +227,4 @@ class EdgeParticle(object):
         return self.particle.barcode
 
     def __repr__(self):
-        return "{0}(barcode={1}, " \
-               "vtx_in_barcode={2[vtx_in_barcode]}, " \
-               "vtx_out_barcode={2[vtx_out_barcode]}," \
-               "particle={2[particle]})\n".format(self.__class__.__name__,
-                                                  self.barcode, self.__dict__)
+        return generate_repr_str(self)

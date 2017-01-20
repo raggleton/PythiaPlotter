@@ -82,3 +82,25 @@ def check_module_exists(module):
     except ImportError:
         return False
     return True
+
+
+def generate_repr_str(obj, ignore=None):
+    """Generate a generic string for use in __repr__, with object fields and their value.
+
+    Can optionally ignore chosen fields.
+
+    Parameters
+    ----------
+    obj : object
+        Object to create repr string for
+    ignore : list[str], optional
+        Optional list of object field names to ignore
+
+    Returns
+    -------
+    str
+        The repr string
+    """
+    ignore = ignore or []
+    args_str = ["%s=%s" % (k, repr(obj.__dict__[k])) for k in obj.__dict__ if k not in ignore]
+    return "{}({})".format(obj.__class__.__name__, ", ".join(args_str))
