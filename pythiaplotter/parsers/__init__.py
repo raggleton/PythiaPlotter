@@ -1,11 +1,16 @@
+"""Store a record of all possible parsers, along with their metainfo."""
+
+
 from __future__ import absolute_import
 from .pythia8_parser import Pythia8Parser
 from .hepmc_parser import HepMCParser
 from .lhe_parser import LHEParser
 from .cmssw_particle_list_parser import CMSSWParticleListParser
+import pythiaplotter.utils.logging_config  # NOQA
+import logging
 
 
-"""Store a record of all possible parsers, along with their metainfo."""
+log = logging.getLogger(__name__)
 
 
 class ParserOption(object):
@@ -20,10 +25,11 @@ class ParserOption(object):
             raise RuntimeError("default_representation must be one of NODE, EDGE")
 
     def __repr__(self):
-        return self.description
+        return "{0}({1})".format(self.__class__.__name__, self.description)
 
     def __str__(self):
-        return self.description
+        return "{0}({1})".format(self.__class__.__name__, self.description)
+
 
 # Keys of this dict will be the commandline options for --inputFormat
 parser_opts = {
@@ -55,5 +61,16 @@ parser_opts = {
         file_extension=None,
         default_representation="NODE"
     )
-
 }
+
+# Have to wrap the ROOT parts carefully, because it isn't installed easily with pip
+try:
+    from .heppy_parser import HeppyParser
+    parser_opts['HEPPY'] = ParserOption(
+        description="For Heppy ROOT files",
+        parser=HeppyParser,
+        file_extension=None,
+        default_representation="NODE"
+    )
+except ImportError:
+    log.warning("Cannot import PyROOT, no interface to Heppy tree")

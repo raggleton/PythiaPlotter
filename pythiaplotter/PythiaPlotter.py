@@ -42,6 +42,10 @@ def choose_parser(opts):
     elif opts.inputFormat == "CMSSW":
         return parsers.CMSSWParticleListParser(filename=opts.input,
                                                remove_redundants=remove_redundants)
+    elif opts.inputFormat == "HEPPY":
+        return parsers.HeppyParser(filename=opts.input,
+                                   event_num=opts.eventNumber,
+                                   remove_redundants=remove_redundants)
     else:
         return None
 
