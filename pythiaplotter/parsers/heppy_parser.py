@@ -10,7 +10,11 @@ the former adding in mother/daughter relationships, and the latter storing all g
 from __future__ import absolute_import
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
-from itertools import izip, chain
+from itertools import chain
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
 from contextlib import contextmanager
