@@ -1,9 +1,10 @@
-"""
-Functions to provide TeX and normal ("raw") particle names for a given PDGID.
+"""Functions to provide TeX and normal ("raw") particle names for a given PDGID.
+
 Uses the PDGID for TeX names, and Pythia8 for normal names.
 
 TODO: what if pdgid doesn't exist?
-TODO: deal with tex entries like: 25 h^0 / H_1^0
+
+TODO: deal with tex entries like: ``25 h^0 / H_1^0``
 """
 
 
@@ -14,20 +15,25 @@ from pkg_resources import resource_string
 
 
 def load_pdgid_dict():
-    """Generate dictionary with PDGIDs and corresponding names e.g. \pi^0, pi0
+    """Generate dictionary with PDGIDs and corresponding names e.g. ``\pi^0, pi0``
 
     For each PDGID key, we store the tex and "raw" string names,
     for both particle and antiparticle
 
     - Tex names taken from http://cepa.fnal.gov/psm/stdhep/numbers.shtml
+
     Although based on 2006 PDG, so bit out of date!
     To add new particles, either add above or in pdg_all.tex
 
     - String names use the ParticleData.xml file from Pythia8/xmldoc.
+
     Have copied it into repo, although should probably ask user to link to it.
     Although the original
-      - it has lots of standard text crap before it
-      - there are typos where <particle ... ends with />, not > giving error !
+
+    - it has lots of standard text crap before it
+
+    - there are typos where <particle ... ends with />, not > giving error !
+
     So stick with mine for now...
     """
     pdgid_dict = {}
@@ -101,14 +107,14 @@ def check_pdgid(pdgid):
 
 
 def pdgid_to_tex(pdgid):
-    """Convert PDGID to TeX-compatible name e.g. \pi^0"""
+    """Convert PDGID to TeX-compatible name e.g. ``\pi^0``"""
 
     check_pdgid(pdgid)
     return PDGID_NAME_DICT[int(pdgid)]["tex"]
 
 
 def pdgid_to_string(pdgid):
-    """Convert PDGID to readable string (raw) name e.g. pi0"""
+    """Convert PDGID to readable string (raw) name e.g. ``pi0``"""
 
     check_pdgid(pdgid)
     return PDGID_NAME_DICT[int(pdgid)]["raw"]

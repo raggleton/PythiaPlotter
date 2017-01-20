@@ -1,6 +1,4 @@
-"""
-Some common functions used throughout, like opening PDFs, file checking.
-"""
+"""Some common functions used throughout, like opening PDFs, file checking. """
 
 
 from __future__ import absolute_import
@@ -35,7 +33,9 @@ def cleanup_filepath(filepath):
 
 def get_directory(filepath):
     """Return absolute, full directory of file.
-    Resolve any environment vars, ~, sym links(?)"""
+
+    Resolve any environment vars, ~, sym links(?)
+    """
     return os.path.dirname(cleanup_filepath(filepath))
 
 
@@ -56,27 +56,66 @@ def check_dir_exists_create(filepath):
 
 
 def map_columns_to_dict(fields, line, delim=None):
-    """Make dict from fields titles and line.
+    """Split up line into fields, storing them in a dict.
 
-    fields: list of field names, MUST be in same order as the entries in
-        line.
+    Note that entreis are assumed to start at line[0], and thus
+    any extra entries in the line are ignored.
 
-    line: line to be split and mapped into dict.
+    >>> line = "123:police:999:Higgs"
+    >>> fields = ["id", "name", "phone"]
+    >>> map_columns_to_dict(fields, line, ":")
+    {'id': '123', 'name': 'abc', 'phone': '999'}
 
-    delim: optional delimiter to separate columns. Default is greedy
+    Parameters
+    ----------
+    fields: list[str]
+        List of field names, MUST be in same order as the entries in line.
+
+    line: str
+        Line to be split and mapped into dict.
+
+    delim: str, optional
+        Optional delimiter to separate columns. Default is greedy
         whitespace, like for split(). For non-greedy whitepsace, use ' '.
+
+    Returns
+    -------
+    dict {str:str}
+        Dict of field names: values
     """
     parts = line.strip().split(delim)[0:len(fields) + 1]
     return {k: v.strip() for k, v in izip(fields, parts)}
 
 
 def check_program_exists(program):
-    """Test if external program can be found."""
+    """Test if external program can be found.
+
+    Parameters
+    ----------
+    program : str
+        Program name
+
+    Returns
+    -------
+    bool
+        Whether program is in PATH
+    """
     return bool(find_executable(program))
 
 
 def check_module_exists(module):
-    """Test if Python module exists."""
+    """Test if Python module exists.
+
+    Parameters
+    ----------
+    module : str
+        Name of module to check
+
+    Returns
+    -------
+    bool
+        Whether module exists
+    """
     try:
         imp.find_module(module)
     except ImportError:
