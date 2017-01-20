@@ -128,7 +128,6 @@ class Pythia8Parser(object):
         self.filename = filename
         self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
-        log.info("Opening event file %s" % filename)
 
         self.info_blocks = dict(str_start=self.info_start, str_end=self.info_end,
                                 ind_start=[], ind_end=[], blocks=[],
@@ -152,11 +151,7 @@ class Pythia8Parser(object):
                                 HardEvent=self.hard_evt_blocks)
 
         # store file contents in list to slice up easily
-        # TODO: change this - will use large amount of RAM for big files!
         self.contents = []
-        with open(filename, "r") as f:
-            lines = [l.replace("\n", "").strip() for l in list(f)]
-            self.contents = [l for l in lines if l]
 
     def __repr__(self):
         return generate_repr_str(self, ignore=['contents', 'info_blocks', 'full_evt_blocks',
@@ -172,6 +167,10 @@ class Pythia8Parser(object):
         a list of Particles in the event, and a NetworkX graph obj
         with particles assigned to nodes.
         """
+        log.info("Opening event file %s" % self.filename)
+        with open(self.filename, "r") as f:
+            lines = [l.replace("\n", "").strip() for l in list(f)]
+            self.contents = [l for l in lines if l]
 
         # Find all start & end indices for blocks
         for i, line in enumerate(self.contents):
