@@ -1,6 +1,4 @@
-"""
-To handle input args & subsequent modifications
-"""
+"""Setup commandline interface, process args, and set defaults for those unspecified."""
 
 
 from __future__ import absolute_import
@@ -137,12 +135,14 @@ def set_default_output_settings(args):
     if args.output:
         args.output = helpr.cleanup_filepath(args.output)
         args.outputFormat = os.path.splitext(args.output)[1][1:]
-        log.info("You didn't specify an output format, setting it to %s", args.outputFormat)
+        log.info("You didn't specify an output format, "
+                 "assuming from output filename that it is %s", args.outputFormat)
     # Set default output filename if not already done
     else:
         # Hmm default hidden  here, not good
         if not args.outputFormat:
             args.outputFormat = "pdf"
+            log.info("You didn't specify an output format, defaulted to %s", args.outputFormat)
         filename = "".join([stem_name, "_", str(args.eventNumber), ".", args.outputFormat])
         args.output = os.path.join(input_dir, filename)
         log.info("You didn't specify an output filename, setting it to %s", args.output)
