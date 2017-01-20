@@ -53,11 +53,11 @@ def choose_parser(opts):
 def choose_printer(opts):
     """Choose printer & configure"""
 
-    if opts.render == "DOT":
+    if opts.printer == "DOT":
         return printers.DotPrinter(output_filename=opts.output,
                                    renderer="dot",
                                    output_format=opts.outputFormat)
-    elif opts.render == "LATEX":
+    elif opts.printer == "LATEX":
         return None
 
 

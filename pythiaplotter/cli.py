@@ -22,7 +22,8 @@ def get_args(input_args):
 
     parser = argparse.ArgumentParser(
         prog="PythiaPlotter",
-        description="Convert MC event into a particle evolution diagram.",
+        description="Convert MC event into a particle evolution diagram. "
+                    "Requires you to choose an input format, and an output printer.",
         formatter_class=argparse.RawTextHelpFormatter
     )
 
@@ -66,18 +67,17 @@ def get_args(input_args):
                               action="store_true")
 
     #################
-    # Render options
+    # Printer options
     #################
     output_group.add_argument("--noOutput",
                               help="Don't convert Graphviz file to diagram",
                               action="store_true")
 
-    # TODO: unify "printer" vs "renderer"
-    render_help = ["Render method:"]
-    render_help.extend(["{0}: {1}".format(k, v.description)
+    printer_help = ["Printing methods:"]
+    printer_help.extend(["{0}: {1}".format(k, v.description)
                         for k, v in printer_opts_checked.items()])
-    output_group.add_argument("-r", "--render",
-                              help="\n".join(render_help),
+    output_group.add_argument("-p", "--printer",
+                              help="\n".join(printer_help),
                               choices=list(printer_opts_checked.keys()),
                               default="DOT" if "DOT" in printer_opts_checked else "LATEX")
 
@@ -103,7 +103,7 @@ def get_args(input_args):
         parser.print_help()
         log.info("")
         log.error("None of the required programs or python packages "
-                  "for any rendering option exist.")
+                  "for any printing option exist.")
         print_printers_requirements(log.info)
         exit(11)
 
