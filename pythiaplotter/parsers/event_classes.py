@@ -8,6 +8,7 @@ from __future__ import absolute_import, division
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
 import math
+import networkx as nx
 
 
 log = logging.getLogger(__name__)
@@ -50,7 +51,13 @@ class Event(object):
 
     def print_stats(self):
         """Print some basic statistics about the event"""
-        log.info("{0} particles in the event".format(len(self._particles)))
+        log.info("Some statistics:")
+        log.info("----------------")
+        log.info(nx.info(self.graph))
+        log.info("Graph density {}".format(nx.density(self.graph)))
+        log.info("Histogram of node degree:")
+        for i, h in enumerate(nx.degree_histogram(self.graph)):
+            log.info("{:2d} {}".format(i, "#"*h))
 
 
 class Particle(object):
