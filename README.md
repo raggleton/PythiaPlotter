@@ -5,9 +5,9 @@
 ## What Is It
 Plots diagrams of particle decay trees from HEP Monte Carlo (MC) events. Very handy to figure out what is actually going on in your MC!
 
-See examples in [`example`](example) folder.
+See examples in [`example`](example) folder, for example [this diagram](example/example_pythia8.pdf).
 
-## What can I give it to plot?
+## What Can I Give It To Plot?
 
 PythiaPlotter currently supports:
 
@@ -15,11 +15,15 @@ PythiaPlotter currently supports:
 - HepMC files *(e.g. [example/example_hepmc.hepmc](example/example_hepmc.hepmc))*
 - LHE files *(e.g. [example/example_lhe.lhe](example/example_lhe.lhe))*
 - ParticleListDrawer STDOUT as output by CMSSW *(e.g. [example/example_cmssw.txt](example/example_cmssw.txt))*
+- Heppy ROOT files (requires the `GeneratorRelationshipAnalyer` module, see [here]()), *(e.g. [example/example_heppy.root](example_heppy.root))*
 
 ## What Do I Need:
 
-- Currently, both python 2.7 and python>=3.4 are supported
+- Currently, both python 2.7 and python>=3.4 are supported (although the Heppy
+ input is only supported by python 2.7 due to ROOT limitations)
 - [`graphviz`](www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
+- [`PyROOT`](root.cern.ch) if you want to parse Heppy ROOT NTuples. Note that if you are in a virtualenv, 
+you will need to enable global site packages. If ROOT cannot be found, then the `--inputFormat HEPPY` options will be disabled. 
 - All other required python packages will be installed automatically
 
 ## How Do I Get It:
@@ -52,7 +56,7 @@ PythiaPlotter --help
 
 See TODO.md
 
-- Parser: More parsers? Heppy?
+- Parser: More parsers? Some under-the-hood magic for faster/safer processing
 - Printer: JS? TikZ/Latex printer for more formatting and more beautiful output?
 
 ## Full documentation:
