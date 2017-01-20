@@ -1,7 +1,4 @@
-"""
-Classes to describe event & physical particles, along with helper classes to
-hold Particles in graph, and four-vectors.
-"""
+"""Classes to describe event & physical particles, as well as four-vectors."""
 
 
 from __future__ import absolute_import, division

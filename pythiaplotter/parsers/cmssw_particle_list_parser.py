@@ -1,10 +1,10 @@
-"""
-Handle parsing of ParticleListDrawer as output by CMSSW.
+"""Handle parsing of ParticleListDrawer as output by CMSSW.
 
 Default is NODE representation for particles.
+
 See example/example_cmssw.txt for example input file.
 
-TODO: parhaps this needs a name change...
+TODO: perhaps this needs a name change...
 """
 
 
@@ -23,11 +23,26 @@ class CMSSWParticleListParser(object):
     """Main class to parse ParticleListDrawer as output by CMSSW"""
 
     def __init__(self, filename, remove_redundants=True):
+        """
+        Parameters
+        ----------
+        filename : str
+            Input filename.
+        remove_redundants : bool, optional
+            Remove redundant particles from the graph.
+        """
         self.filename = filename
         self.remove_redundants = remove_redundants
 
     def parse(self):
-        """Parse the file."""
+        """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
+
+        Returns
+        -------
+        Event
+            Event object, which contains info about the event, a list of Particles in the event,
+            and a NetworkX graph object with particles assigned to nodes.
+        """
 
         log.info("Opening event file %s" % self.filename)
         event = Event()

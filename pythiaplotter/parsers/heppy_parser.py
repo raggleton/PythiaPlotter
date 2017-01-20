@@ -1,9 +1,11 @@
-"""
-Handle parsing of Heppy ROOT input files.
+"""Handle parsing of Heppy ROOT input files.
 
 These must be made with both the GeneratorRelationshipAnalyzer and GeneratorAnalyzer modules,
 the former adding in mother/daughter relationships, and the latter storing all gen particles.
 
+Default is NODE representation.
+
+See example/example_heppy.root for example input file.
 """
 
 
@@ -34,6 +36,16 @@ class HeppyParser(object):
     """Main class to parse Heppy ROOT file."""
 
     def __init__(self, filename, event_num=0, remove_redundants=False):
+        """
+        Parameters
+        ----------
+        filename : str
+            Input filename.
+        event_num : int, optional
+            Index of event to parse in input file. (0 = first event)
+        remove_redundants : bool, optional
+            Remove redundant particles from the graph.
+        """
         self.filename = filename
         self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
@@ -46,7 +58,14 @@ class HeppyParser(object):
         return "HeppyParser: {0}".format(self.filename)
 
     def parse(self):
-        """Open ROOT file, parse the chosen event, returns an Event object with NodeParticles"""
+        """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
+
+        Returns
+        -------
+        Event
+            Event object, which contains info about the event, a list of Particles in the event,
+            and a NetworkX graph object with particles assigned to nodes.
+        """
 
         log.info("Opening event file %s" % self.filename)
         with root_open(self.filename) as f:

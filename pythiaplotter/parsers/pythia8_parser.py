@@ -1,7 +1,7 @@
-"""
-Handle parsing of standalone Pythia 8 screen output.
+"""Handle parsing of standalone Pythia 8 screen output.
 
 Default is NODE representation for particles.
+
 See example/example_pythia8.txt for example input file.
 
 TODO: reshuffle blocks - non optimal spreading out atm
@@ -25,9 +25,24 @@ log = logging.getLogger(__name__)
 
 
 class PythiaBlock(object):
-    """Represent a 'block' in Pythia output e.g. Event Listing"""
 
     def __init__(self, name, contents=None, parser=None):
+        """Represent a 'block' in Pythia output e.g. Event Listing
+
+        Parameters
+        ----------
+        name : str
+            Name of the block
+        contents : list[str], optional
+            Block contents to be parsed
+        parser : function, optional
+            Function that takes `contents` as argument.
+
+        Attributes
+        ----------
+        parser_results : list[object]
+            Results from the parser function
+        """
         self.name = name
         self.contents = contents if contents else []
         self.parser = parser  # method to parser contents
@@ -40,14 +55,23 @@ class PythiaBlock(object):
         return "%s:\n%s" % (self.name, '\n'.join(self.contents))
 
     def parse_block(self):
-        """Run the instance parser over contents."""
+        """Run the instance parser over contents, and store results."""
         log.debug("Parsing block %s" % self.name)
         self.parser_results = self.parser(self.contents)
 
 
 def parse_event_block(contents):
-    """
-    Parses Event Listing block in Pythia output
+    """Parse Event listing block in Pythia output
+
+    Parameters
+    ----------
+    contents : list[str]
+        Contents of event block.
+
+    Returns
+    -------
+    list[NodeParticle]
+        NodeParticles extracted from event, with mother barcodes set.
     """
     # These indicate non-particle lines - matches words
     ignore = (("no", "id"), ("Charge", "sum:"), ("0", "90", "(system)"))
@@ -125,8 +149,18 @@ class Pythia8Parser(object):
     stats_end = "End PYTHIA Event and Cross Section Statistics"
 
     def __init__(self, filename, event_num=0, remove_redundants=True):
+        """
+        Parameters
+        ----------
+        filename : str
+            Input filename.
+        event_num : int, optional
+            Index of event to parse in input file. (0 = first event)
+        remove_redundants : bool, optional
+            Remove redundant particles from the graph.
+        """
         self.filename = filename
-        self.event_num = event_num  # 0 = first event, etc
+        self.event_num = event_num
         self.remove_redundants = remove_redundants
 
         self.info_blocks = dict(str_start=self.info_start, str_end=self.info_end,
@@ -161,11 +195,13 @@ class Pythia8Parser(object):
         return "Pythia8Parser:\n%s" % pformat(self.block_types)
 
     def parse(self):
-        """Go through contents and find blocks, then deal with them.
+        """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
 
-        Returns an Event object, which contains info about the event,
-        a list of Particles in the event, and a NetworkX graph obj
-        with particles assigned to nodes.
+        Returns
+        -------
+        Event
+            Event object, which contains info about the event, a list of Particles in the event,
+            and a NetworkX graph object with particles assigned to nodes.
         """
         log.info("Opening event file %s" % self.filename)
         with open(self.filename, "r") as f:

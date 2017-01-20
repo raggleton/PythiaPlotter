@@ -1,4 +1,10 @@
-"""Store a record of all possible parsers, along with their metainfo."""
+"""Parsers read the input file, and convert the information into a NetworkX graph of particles.
+
+Attributes
+----------
+parser_opts : dict[str, ParserOption]
+    Dictionary of all available parsers, along with info about each.
+"""
 
 
 from __future__ import absolute_import
@@ -14,9 +20,24 @@ log = logging.getLogger(__name__)
 
 
 class ParserOption(object):
-    """Basic class to hold info about a parser and associated fields."""
 
-    def __init__(self, description, parser, file_extension, default_representation):
+    def __init__(self, description, parser, default_representation, file_extension):
+        """Basic class to hold info about a parser and associated fields.
+
+        Parameters
+        ----------
+        description : str
+            Brief description about parser
+
+        parser : class
+            The Parser class
+
+        default_representation : {'NODE', 'EDGE'}
+            Default particle representation of the parser.
+
+        file_extension : str, optional
+            Optional file extension to associate with this parser. (no preceeding .)
+        """
         self.description = description
         self.parser = parser
         self.file_extension = file_extension

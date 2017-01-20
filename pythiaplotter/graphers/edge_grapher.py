@@ -1,5 +1,4 @@
-"""
-Attaches particles etc to a NetworkX graph, when EDGES represent particles.
+"""Attaches particles to a NetworkX graph, when EDGES represent particles.
 
 Note about convention:
 
@@ -32,21 +31,24 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
     attribute, where the barcode value = particle barcode. We can use
     MultiDiGraph.edges(data=True) to correctly iterate over *all* edges.
 
-
     Additionally marks particles as initial/final state as necessary, based on
     whether they have any parents/children, respectively.
 
-
-    edge_particles: list of EdgeParticle objects
+    Parameters
+    ----------
+    edge_particles: list[EdgeParticle]
         The Particle in each EdgeParticle will be assigned to a graph edge,
         using the vertex information in the EdgeParticle object.
 
-    remove_redundants: bool
-        Optionally remove redundant particles from the graph.
+    remove_redundants: bool, optional
+        Remove redundant particles from the graph.
         'Redundants' carry no extra physics information, but are only used
         internally by Pythia, etc
 
-    Returns a networkx.MultiDiGraph object.
+    Returns
+    -------
+    NetworkX.MultiDiGraph
+        Directed graph with particles assigned to edges, and nodes to represent relationships.
     """
 
     gr = nx.MultiDiGraph(attr=None)  # placeholder attr for later in printer
@@ -103,11 +105,11 @@ def remove_redundant_edges(graph):
     Note that NetworkX includes an edge as its own sibling, so actually we
     require len(sibling_edges) == 1
 
-    e.g.
+    e.g.::
 
-    --q-->-g->-g->-g->--u---->
-        |             |
-    --q->             --ubar->
+        --q-->-g->-g->-g->--u---->
+            |             |
+        --q->             --ubar->
 
 
     Remove the middle gluon and last gluon, since they add no information.
@@ -125,6 +127,11 @@ def remove_redundant_edges(graph):
 
     There is probably a more sensible way to do this, currently brute
     force and slow.
+
+    Parameters
+    ----------
+    graph : NetworkX.MultiDiGraph
+        Graph to remove redundant nodes from.
     """
 
     done_removing = False

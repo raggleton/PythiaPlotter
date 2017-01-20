@@ -1,3 +1,6 @@
+"""Attaches particles to a NetworkX graph, when NODES represent particles."""
+
+
 from __future__ import absolute_import
 import pythiaplotter.utils.logging_config  # NOQA
 import logging
@@ -8,11 +11,26 @@ log = logging.getLogger(__name__)
 
 
 def assign_particles_nodes(node_particles, remove_redundants=True):
-    """
-    Attach particles to a NetworkX directed graph when NODES represent particles
-    via NodeParticle objects.
+    """ Attach Particles to a directed graph when NODES represent particles via NodeParticles.
 
-    It automatically attaches directed edges, from parent to child nodes.
+    NodeParticle objects must have their parent_codes specified for this to work.
+
+    It automatically attaches directed edges, between parent and child nodes.
+
+    Parameters
+    ----------
+    node_particles : list[NodeParticle]
+        List of NodeParticles, whose Particle's will be attached to a graph
+        with the relationship specified by self.parent_codes.
+
+    remove_redundants : bool, optional
+        Bool to remove redundant nodes that have the same PDGID as parent,
+        and only 1 parent and 1 child.
+
+    Returns
+    -------
+    NetworkX.DiGraph
+        Directed graph with particles assigned to nodes, and edges to represent relationships.
     """
 
     gr = nx.DiGraph()
@@ -29,7 +47,8 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
 
     # assign edges between Parent/Children
     # need to work backwards, since the Pythia daughter indices are
-    # sometimes not complete, whereas mother IDs are
+    # sometimes not complete (cannot be expressed as d1 < daughter_id < d2),
+    # whereas mother IDs are
     for np in reversed(node_particles):
         if np.parent1_code == system_barcode and np.parent2_code == system_barcode:
             continue
@@ -58,15 +77,23 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
 
 
 def remove_redundant_nodes(graph):
-    """
-    Remove redundant particle nodes - i.e. when you have a particles which has
-    1 parent who has the same PDGID, and 1 child (no PDGID requirement)
+    """ Remove redundant particle nodes from a graph.
 
-    e.g.
-    ->-g->-g->-g->-
+    i.e. when you have a particles which has 1 parent who has the same PDGID,
+    and 1 child (no PDGID requirement).
+
+    e.g.::
+
+        ->-g->-g->-g->-
 
     These are useful to keep if considering Pythia8 internal workings,
     but otherwise are just confusing and a waste of space.
+
+    Parameters
+    ----------
+    graph : NetworkX.DiGraph
+        Graph to remove redundant nodes from
+
     """
     for node in graph.nodes():
         if (len(graph.successors(node)) == 1 and len(graph.predecessors(node)) == 1):

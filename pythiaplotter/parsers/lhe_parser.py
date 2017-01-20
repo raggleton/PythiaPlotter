@@ -1,7 +1,7 @@
-"""
-Handle parsing of LHE files.
+"""Handle parsing of LHE files.
 
 Default is NODE representation for particles.
+
 See example/example_lhe.lhe for example input file.
 """
 
@@ -28,6 +28,16 @@ class LHEParser(object):
     """
 
     def __init__(self, filename, event_num=0, remove_redundants=True):
+        """
+        Parameters
+        ----------
+        filename : str
+            Input filename.
+        event_num : int, optional
+            Index of event to parse in input file. (0 = first event)
+        remove_redundants : bool, optional
+            Remove redundant particles from the graph.
+        """
         self.filename = filename
         self.event_num = event_num
         self.remove_redundants = remove_redundants
@@ -40,9 +50,13 @@ class LHEParser(object):
         return "LHEParser: %s" % pformat(self.filename)
 
     def parse(self):
-        """Parse LHE file, returning an Event object with list of Particles
-        assigned to a graph in NODE representation
+        """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
 
+        Returns
+        -------
+        Event
+            Event object, which contains info about the event, a list of Particles in the event,
+            and a NetworkX graph object with particles assigned to nodes.
         """
         log.info("Opening event file %s" % self.filename)
         tree = ET.parse(self.filename)
@@ -73,10 +87,19 @@ class LHEParser(object):
         return event
 
     def parse_init_text(self, text):
-        """Parse the initialisation info.
+        """Parse the initialisation info. Currently does nothing.
 
         The first line is compulsory process-numer-independent info.
         Each line after represents a process
+
+        Parameters
+        ----------
+        text : str
+            Text in the <init></init> tags.
+
+        Returns
+        -------
+        None
         """
         pass
 
@@ -85,6 +108,16 @@ class LHEParser(object):
 
         The first line is compulsory event info
         Each line after represents a particle.
+
+        Parameters
+        ----------
+        text : str
+            Event text block to be parsed.
+
+        Returns
+        -------
+        Event
+            Event object filled with info about the event, as well as NodeParticles in the event.
         """
         event = None
         node_particles = []
@@ -111,19 +144,42 @@ class LHEParser(object):
         return event
 
     def parse_event_line(self, line, event_num):
-        """Parse a LHE event info line"""
+        """Parse a LHE event info line.
+
+        Parameters
+        ----------
+        line : str
+            Line of text describing the event.
+        event_num : int
+            Event number, as it is not included in the event line.
+
+        Returns
+        -------
+        Event
+            Event object with information from the line.
+        """
         fields = ["num_particles", "proc_id", "weight", "scale", "aQED", "aQCD"]
         contents = map_columns_to_dict(fields, line)
         log.debug(contents)
-        return Event(event_num=event_num)
+        return Event(event_num=int(event_num))
 
     def parse_particle_line(self, line, barcode):
-        """Parse a LHE particle line
+        """Parse a line that describes a particle and its mothers from a LHE file.
 
-        Returns a NodeParticle object
-
-        Need to supply barcode to make Particle obj unique, not supplied as
+        Need to supply barcode to make Particle obj unique, since not supplied as
         part of LHE format
+
+        Parameters
+        ----------
+        line : str
+            Line of text describing a particle
+        barcode : int
+            Unique barcode for this particle
+
+        Returns
+        -------
+        NodeParticle
+            NodeParticle object that contains the Particle, as well as its mother barcodes.
         """
         fields = ["pdgid", "status", "parent1", "parent2", "col1", "col2",
                   "px", "py", "pz", "energy", "mass", "lifetime", "spin"]

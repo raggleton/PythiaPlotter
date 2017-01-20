@@ -1,5 +1,8 @@
-"""
-Handle parsing of HepMC files.
+"""Handle parsing of HepMC files.
+
+Default is EDGE representation.
+
+See example/example_hepmc.hepmc for example input file.
 """
 
 
@@ -24,6 +27,16 @@ class HepMCParser(object):
     """
 
     def __init__(self, filename, event_num=0, remove_redundants=True):
+        """
+        Parameters
+        ----------
+        filename : str
+            Input filename.
+        event_num : int, optional
+            Index of event to parse in input file. (0 = first event)
+        remove_redundants : bool, optional
+            Remove redundant particles from the graph.
+        """
         self.filename = filename
         self.event_num = event_num
         self.remove_redundants = remove_redundants
@@ -36,11 +49,13 @@ class HepMCParser(object):
         return "HepMCParser:\n%s" % pformat(self.filename)
 
     def parse(self):
-        """Loop through HepMC file and construct events with particles.
+        """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
 
-        Returns an Event object, which contains info about the event,
-        a list of Particles in the event, and a NetworkX graph obj
-        with particles assigned to edges (natural representation of HepMC file).
+        Returns
+        -------
+        Event
+            Event object, which contains info about the event, a list of Particles in the event,
+            and a NetworkX graph object with particles assigned to edges.
         """
         # Loop through file, line-by-line.
         # Once we reach an event line with the require line number, then
