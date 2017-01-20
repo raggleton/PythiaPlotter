@@ -44,6 +44,7 @@ class LHEParser(object):
         assigned to a graph in NODE representation
 
         """
+        log.info("Opening event file %s" % self.filename)
         tree = ET.parse(self.filename)
 
         root = tree.getroot()

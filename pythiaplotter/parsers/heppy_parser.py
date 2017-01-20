@@ -38,7 +38,6 @@ class HeppyParser(object):
         self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
         self.collection_name = "allGenPart"
-        log.info("Opening event file %s" % filename)
 
     def __repr__(self):
         return generate_repr_str(self, ignore=['events'])
@@ -49,6 +48,7 @@ class HeppyParser(object):
     def parse(self):
         """Open ROOT file, parse the chosen event, returns an Event object with NodeParticles"""
 
+        log.info("Opening event file %s" % self.filename)
         with root_open(self.filename) as f:
             tree = f.tree
             if not tree:
@@ -57,15 +57,7 @@ class HeppyParser(object):
             tree.SetBranchStatus("*", 0)  # To speedup reading the Tree
 
             # TODO: Need to make branch names configurable somehow...
-            particle_fields = [
-                "charge",
-                "status",
-                "pdgId",
-                "pt",
-                "eta",
-                "phi",
-                "mass",
-            ]
+            particle_fields = ["charge", "status", "pdgId", "pt", "eta", "phi", "mass"]
 
             particle_branch_names = ["_".join([self.collection_name, bn])
                                      for bn in particle_fields]
@@ -90,7 +82,8 @@ class HeppyParser(object):
             # Make a dict, such that a key of daughter's index returns all mother indices
             mother_map = dict()
             for daughter in set(daughter_indices):
-                mother_map[daughter] = sorted([m for m, d in izip(mother_indices, daughter_indices)
+                mother_map[daughter] = sorted([m for m, d
+                                               in izip(mother_indices, daughter_indices)
                                                if d == daughter])
             log.debug('Daughter/mothers mapping: %s', mother_map)
 
@@ -164,7 +157,8 @@ def get_entry(tree, entry_num):
     """
     nbytes = tree.GetEntry(entry_num)
     if nbytes == 0:
-        raise IOError("Cannot get entry {}, tree only has {} entries".format(entry_num, tree.GetEntries()))
+        raise IOError("Cannot get entry {}, "
+                      "tree only has {} entries".format(entry_num, tree.GetEntries()))
     elif nbytes == -1:
         raise IOError("Error getting entry {}".format(entry_num))
     return nbytes

@@ -101,8 +101,9 @@ def get_args(input_args):
     # Handle the scenario where there are no printers available
     if len(printer_opts_checked) == 0:
         parser.print_help()
-        log.info("\nERROR: None of the required programs or python packages "
-                 "for any rendering option exist.")
+        log.info("")
+        log.error("None of the required programs or python packages "
+                  "for any rendering option exist.")
         print_printers_requirements(log.info)
         exit(11)
 
