@@ -1,7 +1,6 @@
-"""
-Classes to describe visual attributes. Used when making Graphviz file.
+"""Classes to describe visual attributes. Used when making Graphviz file.
 
-Also set particle label in here, see get_particle_label(). Or should this be a
+Also set particle label in here, see ``get_particle_label()``. Or should this be a
 method for the particle?
 
 TODO: there's so much common between the two classes, surely it must be
@@ -46,9 +45,19 @@ def load_json_settings(json_dict, attr):
 
 
 def get_particle_label(particle, fancy):
-    """Return string for particle label to be displayed on graph
+    """Return string for particle label to be displayed on graph.
 
-    fancy: if True, will use HTML/unicode in labels
+    Parameters
+    ----------
+    particle : Particle
+        Particle under consideration
+    fancy : bool
+        If True, will use HTML/unicode in labels
+
+    Returns
+    -------
+    str
+        Particle label string
     """
     if fancy:
         label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
@@ -63,20 +72,19 @@ def get_particle_label(particle, fancy):
 
 
 class DotEdgeAttr(object):
-    """Hold display attributes for edge in dot graph
-
-    edge: dict. Holds properties for this edge.
-    fancy: if True, will use HTML/unicode in labels
+    """Hold display attributes for edge in dot graph.
 
     Auto-generates attributes from JSON file.
     """
 
     def __init__(self, edge, fancy=False):
         """
-
-        :param edge: dict of edge properties
-        :param fancy: bool. If True, uses HTML & unicode
-        :return:
+        Parameters
+        ----------
+        edge : dict
+            Edge under consideration.
+        fancy : bool
+            If True, will use HTML/unicode in labels
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in list(edge.keys()):  # edge represents a particle
@@ -98,10 +106,16 @@ class DotEdgeAttr(object):
 
     def add_particle_attr(self, edge, fancy):
         """Style line as particle.
+
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
 
-        fancy: if True, will use HTML/unicode in labels
+        Parameters
+        ----------
+        edge : dict
+            Edge containing a particle
+        fancy : bool
+            Use HTML/unicode in labels
         """
         particle = edge["particle"]
 
@@ -124,16 +138,18 @@ class DotEdgeAttr(object):
 
 
 class DotNodeAttr(object):
-    """Hold display attributes for node in dot graph
-
-    Auto-generates attributes from JSON file.
-    """
 
     def __init__(self, node, fancy=False):
-        """
-        :param node: dict of node properties.
-        :param fancy: bool. If True, uses HTML & unicode
-        :return:
+        """Hold display attributes for node in dot graph.
+
+        Auto-generates attributes from JSON file.
+
+        Parameters
+        ----------
+        node : dict
+            Node under consideration
+        fancy : bool, optional
+            Use HTML/unicode in labels
         """
         self.attr = {}  # dict to hold attributes - key must be same as in GV
         if "particle" in list(node.keys()):  # node represents a particle
@@ -152,17 +168,27 @@ class DotNodeAttr(object):
     def add_point_attr(self, node, show_barcode=False):
         """Simple point to show intersection of particles in EDGE representation
 
-        show_barcode: shows the node/vertex barcode, for debugging purposes.
+        Parameters
+        ----------
+        node : dict
+            ???
+        show_barcode : bool, optional
+            Shows the node/vertex barcode, for debugging purposes.
         """
         self.attr["shape"] = "circle" if show_barcode else "point"
 
     def add_particle_attr(self, node, fancy):
         """Style node as particle
 
-        fancy: if True, will use HTML/unicode in labels
-
         Uses external config file to get PDGID-specific settings, as well as
         initial & final state particles.
+
+        Parameters
+        ----------
+        node : dict
+            Node containing a Particle
+        fancy : bool, optional
+            Use HTML/unicode in labels
         """
         particle = node["particle"]
 

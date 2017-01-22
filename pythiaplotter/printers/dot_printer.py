@@ -1,5 +1,4 @@
-"""
-Print graph using Graphviz
+"""Print graph using Graphviz.
 
 Aim to be fairly generic, so can have particles as edges or nodes. All we
 do is attach display attributes to each node/edge, then print these to file.
@@ -26,6 +25,22 @@ class DotPrinter(object):
     """Class to print event to file using Graphviz"""
 
     def __init__(self, output_filename, renderer="dot", output_format="pdf"):
+        """
+
+        Parameters
+        ----------
+        output_filename : str
+            Final output filename (e.g of the pdf, not the intermediate graphviz file)
+        renderer : str, optional
+            Graphviz program to use for rendering layout, default is dot since dealing with DAGs
+        output_format : str, optional
+            Output format for diagram. Defaults to PDF.
+
+        Attributes
+        ----------
+        gv_filename : str
+            Filename for intermediate Graphviz file
+        """
         self.output_filename = output_filename
         self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
         self.renderer = renderer
@@ -36,12 +51,15 @@ class DotPrinter(object):
                "output_format={1[output_format]})".format(self.__class__.__name__, self)
 
     def print_event(self, event, make_diagram=True):
-        """Inclusive function to do the various stages of printing easily
+        """Write the event diagram to Graphivz file and run the renderer.
 
-        make_diagram: bool
+        Parameters
+        ----------
+        event : Event
+            Event to print
+        make_diagram : bool
             If True, the chosen renderer converts the Graphviz file to a graph diagram.
         """
-        event = event
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
         write_gv(event, self.gv_filename)
@@ -53,7 +71,11 @@ class DotPrinter(object):
 def add_display_attr(graph, fancy):
     """Auto add display attribute to graph, nodes & edges
 
-    fancy: bool
+    Parameters
+    ----------
+    graph : NetworkX.DiGraph
+        Grpah to process
+    fancy : bool
         If True, will use HTML/unicode in labels
     """
 
@@ -125,14 +147,20 @@ def write_gv(event, gv_filename):
 def print_diagram(gv_filename, output_filename, renderer, output_format):
     """Run Graphviz file through a Graphviz program to produce a final diagram.
 
-    renderer: str
+    Parameters
+    ----------
+    output_filename : str
+        Final diagram filename
+
+    renderer : str
         Graphviz program to use, defaults to dot
 
-    output_format: str
+    output_format : str
         Each has its own advantages, see http://www.graphviz.org/doc/info/output.html
-        ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
-        ps2 - PDF searchable, but won't obey all HTML tags or unicode.
-        pdf - obeys HTML but not searchable
+
+        * ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
+        * ps2 - PDF searchable, but won't obey all HTML tags or unicode.
+        * pdf - obeys HTML but not searchable
     """
 
     log.info("Printing diagram to %s", output_filename)
