@@ -105,10 +105,13 @@ class CMSSWParticleListParser(object):
         four_mom_fields = ['px', 'py', 'pz', 'm']
         four_mom_contents = map_columns_to_dict(four_mom_fields, contents['4mom'])
 
-        p = Particle(barcode=contents['idx'], pdgid=pdgid,
-                     status=contents['status'],
-                     px=four_mom_contents['px'], py=four_mom_contents['py'],
-                     pz=four_mom_contents['pz'], mass=four_mom_contents['m'])
+        p = Particle(barcode=int(contents['idx']),
+                     pdgid=int(pdgid),
+                     status=int(contents['status']),
+                     px=float(four_mom_contents['px']),
+                     py=float(four_mom_contents['py']),
+                     pz=float(four_mom_contents['pz']),
+                     mass=float(four_mom_contents['m']))
         np = NodeParticle(particle=p,
                           parent1_barcode=family_contents['parent1'],
                           parent2_barcode=family_contents['parent2'])

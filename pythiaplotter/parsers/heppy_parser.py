@@ -113,12 +113,12 @@ class HeppyParser(object):
             for ind, entry in enumerate(izip(*particle_branches)):
                 entry_map = {k: v for k, v in izip(particle_fields, entry)}
                 p = Particle(barcode=ind,
-                             pdgid=entry_map['pdgId'],
-                             status=entry_map['status'],
-                             pt=entry_map['pt'],
-                             eta=entry_map['eta'],
-                             phi=entry_map['phi'],
-                             mass=entry_map['mass'])
+                             pdgid=int(entry_map['pdgId']),
+                             status=int(entry_map['status']),
+                             pt=float(entry_map['pt']),
+                             eta=float(entry_map['eta']),
+                             phi=float(entry_map['phi']),
+                             mass=float(entry_map['mass']))
                 np = NodeParticle(p, 0, 0)  # we don't care about parent1/2 barcodes
                 np.parent_codes = mother_map.get(ind, [])
 

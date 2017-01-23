@@ -185,15 +185,15 @@ class LHEParser(object):
         fields = ["pdgid", "status", "parent1", "parent2", "col1", "col2",
                   "px", "py", "pz", "energy", "mass", "lifetime", "spin"]
         contents = map_columns_to_dict(fields, line)
-        log.debug(contents)
         p = Particle(barcode=barcode,
-                     pdgid=contents["pdgid"],
-                     px=contents["px"],
-                     py=contents["py"],
-                     pz=contents["pz"],
-                     energy=contents["energy"],
-                     mass=contents["mass"],
-                     status=contents["status"])
+                     pdgid=int(contents["pdgid"]),
+                     status=int(contents["status"]),
+                     px=float(contents["px"]),
+                     py=float(contents["py"]),
+                     pz=float(contents["pz"]),
+                     energy=float(contents["energy"]),
+                     mass=float(contents["mass"]))
+        log.debug(contents)
         np = NodeParticle(particle=p,
                           parent1_barcode=int(contents['parent1']),
                           parent2_barcode=int(contents['parent2']))

@@ -98,14 +98,14 @@ def parse_event_block(contents):
         contents_dict = map_columns_to_dict(fields, line)
         log.debug(contents_dict)
         # Create a Particle obj and add to total
-        p = Particle(barcode=contents_dict['barcode'],
-                     pdgid=contents_dict['pdgid'],
-                     status=contents_dict['status'],
-                     px=contents_dict['px'],
-                     py=contents_dict['py'],
-                     pz=contents_dict['pz'],
-                     energy=contents_dict['energy'],
-                     mass=contents_dict['mass'])
+        p = Particle(barcode=int(contents_dict['barcode']),
+                     pdgid=int(contents_dict['pdgid']),
+                     status=int(contents_dict['status']),
+                     px=float(contents_dict['px']),
+                     py=float(contents_dict['py']),
+                     pz=float(contents_dict['pz']),
+                     energy=float(contents_dict['energy']),
+                     mass=float(contents_dict['mass']))
         # Sometimes parent2 = 0, so set = parent1 if this is the case
         np = NodeParticle(particle=p,
                           parent1_barcode=contents_dict['parent1'],

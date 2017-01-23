@@ -151,10 +151,14 @@ class HepMCParser(object):
         fields = ["barcode", "pdgid", "px", "py", "pz", "energy", "mass",
                   "status", "pol_theta", "pol_phi", "vtx_in_barcode"]
         contents = map_columns_to_dict(fields, line[1:])
-        p = Particle(barcode=contents["barcode"], pdgid=contents["pdgid"],
-                     px=contents["px"], py=contents["py"], pz=contents["pz"],
-                     energy=contents["energy"], mass=contents["mass"],
-                     status=contents["status"])
+        p = Particle(barcode=int(contents["barcode"]),
+                     pdgid=int(contents["pdgid"]),
+                     status=contents["status"],
+                     px=float(contents["px"]),
+                     py=float(contents["py"]),
+                     pz=float(contents["pz"]),
+                     energy=float(contents["energy"]),
+                     mass=float(contents["mass"]))
         log.debug(p)
         ep = EdgeParticle(particle=p,
                           vtx_in_barcode=abs(int(contents['vtx_in_barcode'])),
