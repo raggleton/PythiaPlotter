@@ -122,7 +122,7 @@ def convert_px_py_pz_e_m(px, py, pz):
 
         p_z &= p_T * \sinh (\eta) = p * \cos(\\theta)
 
-    Note that if :math:`p_T = 0`, :math:`\eta = \sign(p_z) * \infty`.
+    Note that if :math:`p_T = 0`, :math:`\eta = \mathrm{sign}(p_z) * \infty`.
 
     Parameters
     ----------
@@ -140,7 +140,7 @@ def convert_px_py_pz_e_m(px, py, pz):
     p = math.sqrt(math.fsum([math.pow(pt, 2), math.pow(pz, 2)]))
     if pt != 0:
         eta = math.asinh(pz / pt)
-        phi = math.atan(py / px)
+        phi = math.asin(py / pt)
     else:
         eta = math.copysign(float('inf'), pz)
         phi = 0
