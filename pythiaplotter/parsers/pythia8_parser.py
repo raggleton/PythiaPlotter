@@ -9,16 +9,16 @@ TODO: reshuffle blocks - non optimal spreading out atm
 
 
 from __future__ import absolute_import
-import pythiaplotter.utils.logging_config  # NOQA
+from pprint import pformat
 import logging
+import pythiaplotter.utils.logging_config  # NOQA
 try:
     from itertools import izip
 except ImportError:
     izip = zip
-from pprint import pformat
-from .event_classes import Event, Particle, NodeParticle
-import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
+import pythiaplotter.graphers.node_grapher as node_grapher
+from .event_classes import Event, Particle, NodeParticle
 
 
 log = logging.getLogger(__name__)

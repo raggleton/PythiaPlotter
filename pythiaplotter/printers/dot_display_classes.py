@@ -9,10 +9,10 @@ possible to simplify things...
 
 
 from __future__ import absolute_import
-from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 import json
-import pythiaplotter.utils.logging_config  # NOQA
 import logging
+import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 from pkg_resources import resource_string
 
 
@@ -61,8 +61,8 @@ def get_particle_label(particle, fancy):
     """
     if fancy:
         label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
-                particle.barcode, pdgid_to_string(particle.pdgid),
-                particle.pt, particle.eta, particle.phi)
+            particle.barcode, pdgid_to_string(particle.pdgid),
+            particle.pt, particle.eta, particle.phi)
         label = label.replace("inf", "&#x221e;")
         return label
     else:

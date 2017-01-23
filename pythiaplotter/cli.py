@@ -2,10 +2,10 @@
 
 
 from __future__ import absolute_import
-import pythiaplotter.utils.logging_config  # NOQA
-import logging
 import argparse
 import os.path
+import logging
+import pythiaplotter.utils.logging_config  # NOQA
 import pythiaplotter.utils.common as helpr
 from pythiaplotter.parsers import parser_opts
 from pythiaplotter.printers import printer_opts_checked, print_printers_requirements
@@ -73,7 +73,7 @@ def get_args(input_args):
 
     printer_help = ["Printing methods:"]
     printer_help.extend(["{0}: {1}".format(k, v.description)
-                        for k, v in printer_opts_checked.items()])
+                         for k, v in printer_opts_checked.items()])
     output_group.add_argument("-p", "--printer",
                               help="\n".join(printer_help),
                               choices=list(printer_opts_checked.keys()),

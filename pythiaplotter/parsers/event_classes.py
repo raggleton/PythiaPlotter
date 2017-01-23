@@ -2,8 +2,8 @@
 
 
 from __future__ import absolute_import, division
-import pythiaplotter.utils.logging_config  # NOQA
 import logging
+import pythiaplotter.utils.logging_config  # NOQA
 import math
 import networkx as nx
 from pythiaplotter.utils.common import generate_repr_str

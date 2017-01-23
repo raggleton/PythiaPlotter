@@ -6,9 +6,9 @@ Main script to run PythiaPlotter.
 
 
 from __future__ import absolute_import
+import sys
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
-import sys
 
 import pythiaplotter.parsers as parsers
 import pythiaplotter.printers as printers

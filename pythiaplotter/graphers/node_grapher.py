@@ -2,8 +2,8 @@
 
 
 from __future__ import absolute_import
-import pythiaplotter.utils.logging_config  # NOQA
 import logging
+import pythiaplotter.utils.logging_config  # NOQA
 import networkx as nx
 
 
@@ -96,7 +96,7 @@ def remove_redundant_nodes(graph):
 
     """
     for node in graph.nodes():
-        if (len(graph.successors(node)) == 1 and len(graph.predecessors(node)) == 1):
+        if len(graph.successors(node)) == 1 and len(graph.predecessors(node)) == 1:
 
             p = graph.node[node]['particle']
             parent = graph.node[graph.predecessors(node)[0]]['particle']

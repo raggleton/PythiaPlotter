@@ -8,12 +8,12 @@ parser_opts : dict[str, ParserOption]
 
 
 from __future__ import absolute_import
+import logging
+import pythiaplotter.utils.logging_config  # NOQA
 from .pythia8_parser import Pythia8Parser
 from .hepmc_parser import HepMCParser
 from .lhe_parser import LHEParser
 from .cmssw_particle_list_parser import CMSSWParticleListParser
-import pythiaplotter.utils.logging_config  # NOQA
-import logging
 
 
 log = logging.getLogger(__name__)

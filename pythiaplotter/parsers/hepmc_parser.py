@@ -7,12 +7,12 @@ See example/example_hepmc.hepmc for example input file.
 
 
 from __future__ import absolute_import
-import pythiaplotter.utils.logging_config  # NOQA
-import logging
 from pprint import pformat
-from .event_classes import Event, Particle, EdgeParticle
+import logging
+import pythiaplotter.utils.logging_config  # NOQA
 import pythiaplotter.graphers.edge_grapher as edge_grapher
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
+from .event_classes import Event, Particle, EdgeParticle
 
 
 log = logging.getLogger(__name__)

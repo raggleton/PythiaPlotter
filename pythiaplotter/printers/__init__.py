@@ -13,8 +13,8 @@ printer_opts_checked : dict{str: PrinterOption}
 
 from __future__ import absolute_import
 import sys
-from .dot_printer import DotPrinter
 from pythiaplotter.utils.common import check_program_exists, check_module_exists
+from .dot_printer import DotPrinter
 
 
 class PrinterOption(object):

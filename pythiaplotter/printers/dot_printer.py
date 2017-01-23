@@ -11,10 +11,10 @@ Several stages:
 
 
 from __future__ import absolute_import
-import os
-import pythiaplotter.utils.logging_config  # NOQA
 import logging
+import os
 from subprocess import call
+import pythiaplotter.utils.logging_config  # NOQA
 from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 

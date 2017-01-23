@@ -10,18 +10,18 @@ See example/example_heppy.root for example input file.
 
 
 from __future__ import absolute_import
-import pythiaplotter.utils.logging_config  # NOQA
-import logging
+from contextlib import contextmanager
 from itertools import chain
+import logging
+import pythiaplotter.utils.logging_config  # NOQA
 try:
     from itertools import izip
 except ImportError:
     izip = zip
-from contextlib import contextmanager
-from .event_classes import Event, Particle, NodeParticle
 import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import generate_repr_str
 import ROOT
+from .event_classes import Event, Particle, NodeParticle
 
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True  # stop stealing sys.argv

@@ -11,9 +11,9 @@ TODO: perhaps this needs a name change...
 from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
-from .event_classes import Event, Particle, NodeParticle
 from pythiaplotter.utils.common import map_columns_to_dict
 import pythiaplotter.graphers.node_grapher as node_grapher
+from .event_classes import Event, Particle, NodeParticle
 
 
 log = logging.getLogger(__name__)
