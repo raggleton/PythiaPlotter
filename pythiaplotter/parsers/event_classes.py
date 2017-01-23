@@ -57,124 +57,94 @@ class Event(object):
 
 
 class Particle(object):
-    """Representation of a physical particle.
 
-    Each Particle object should have a unique integer barcode,
-    to uniquely identify it in an event. 0 should be used for the initial
-    "system" or such like.
-    """
+    def __init__(self, barcode, pdgid=0, status=0,
+                 initial_state=False, final_state=False, **kwargs):
+        """Hold information about a particle in an event.
 
-    def __init__(self, barcode=-1, pdgid=0,
-                 px=0.0, py=0.0, pz=0.0, et=0.0, pt=0.0, eta=0.0, phi=0.0,
-                 energy=0.0, mass=0.0, status=0):
-        self.barcode = int(barcode)  # barcode - should be a unique **number**
-        self.pdgid = int(pdgid)  # PDGID - see section 43 (?) in PDGID
-        self.four_mom = FourMomentum(px=px, py=py, pz=pz, et=et,
-                                     pt=pt, eta=eta, energy=energy, mass=mass)
-        self.status = int(status)  # status code NB diff for Pythia, hepmc, etc
+        Parameters
+        ----------
+        barcode : int
+            Unique integer for this particle to identify it in an event.
+        pdgid : int, optional
+            PDGID code for this particle, see PDG
+        status : int, optional
+            Status code for the particle. NB conventions differ between generators
+        initial_state : bool, optional
+            Flag initial state particle (no parents)
+        final_state : bool, optional
+            Flag final state particle (no children)
+        kwargs : dict
+            Store any other particle attributes, such as px/py/pz/pt/energy/mass
+        """
+        self.barcode = int(barcode)
+        self.pdgid = int(pdgid)
+        self.status = int(status)
         self.final_state = False
         self.initial_state = False
         self.event = None  # parent event
+        self.__dict__.update(**kwargs)
+        if all([k in kwargs for k in ['px', 'py', 'pz']]):
+            pt, eta, phi = convert_px_py_pz_e_m(float(self.px), float(self.py), float(self.pz))
+            self.__dict__['pt'] = pt
+            self.__dict__['eta'] = eta
+            self.__dict__['phi'] = phi
 
     def __repr__(self):
-        ignore = ['event', 'px', 'py', 'pz', 'energy', 'mass', 'pt', 'eta', 'phi', 'status', "et"]
+        ignore = ['event']
         return generate_repr_str(self, ignore)
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
-        return "Particle {0}, PDGID {1}, {2}".format(self.barcode, self.pdgid, self.four_mom)
+        return "Particle {0}, PDGID {1}".format(self.barcode, self.pdgid)
 
     def __eq__(self, other):
         return self.barcode == other.barcode and self.pdgid == other.pdgid
 
-    @property
-    def px(self):
-        return self.four_mom._px
 
-    @property
-    def py(self):
-        return self.four_mom._py
+def convert_px_py_pz_e_m(px, py, pz):
+    """Convert cartesian momentum components :math:`p_x, p_y, p_z` into :math:`p_T, \eta, \phi`
 
-    @property
-    def pz(self):
-        return self.four_mom._pz
+    Notes
+    -----
+    * pt (:math:`p_T`) is the momentum in the transverse (x-y) plane
+    * eta (:math:`\eta`) is the pseudorapidity, :math:`\eta = -\ln(\\tanh(\\theta/2))`
+      where :math:`\\theta` is the angle of the 3-momentum in the x-z plane relative to the z axis
+    * phi (:math:`\phi`) is the angle of the 3-momentum in the x-y plane relative to the x axis
 
-    @property
-    def pt(self):
-        return self.four_mom.pt
+    Relationships between :math:`p_T, \eta, \phi` and :math:`p_x, p_y, p_z`:
 
-    @property
-    def eta(self):
-        return self.four_mom.eta
+    .. math::
 
-    @property
-    def phi(self):
-        return self.four_mom.phi
+        p_x &= p_T * \cos(\phi)
 
+        p_y &= p_T * \sin(\phi)
 
-class FourMomentum(object):
-    """Class to represent a 4-vector of energy-momentum
+        p_z &= p_T * \sinh (\eta) = p * \cos(\\theta)
 
-    Conversion from px, py, pz to pt, eta, phi
-    px = pt * cos(phi)
-    py = pt * sin(phi)
-    pz = pt * sinh (eta)
+    Note that if :math:`p_T = 0`, :math:`\eta = \sign(p_z) * \infty`.
 
-    Where:
-    eta is the pseudorapidity, = -ln(tanh(theta/2))
-    phi is the angle of the 3-momentum in the x-y plane relative to the x axis
-    theta is the angle of the 3-momentum in the x-z plane relative to the z axis
+    Parameters
+    ----------
+    px, py, pz : float
+        Cartesian component of momentum along x, y, z axis, respectively
 
+    Returns
+    -------
+    pt, eta, phi : float
+        Transverse momentum, pseudorapidity, and azimuthal angle (in radians).
     """
-
-    def __init__(self, px=0.0, py=0.0, pz=0.0, et=0.0,
-                 energy=0.0, mass=0.0, pt=0.0, eta=0.0, phi=0.0):
-        self._px = float(px)
-        self._py = float(py)
-        self._pz = float(pz)
-        self._pt = float(pt)
-        self._eta = float(eta)
-        self._phi = float(phi)
-        self._energy = float(energy)
-        self._et = float(et)
-        self._mass = float(mass)
-
-    def __repr__(self):
-        return generate_repr_str(self)
-
-    @property
-    def pt(self):
-        """Return the transverse momentum.
-
-        Defined as pt = sqrt(px^2 + py^2)
-        """
-        return math.hypot(self._px, self._py)
-
-    @property
-    def phi(self):
-        """Return the azimuthal angle.
-
-        phi = 0: along x axis
-        phi = pi/2: along y axis
-
-        Ensures that -pi < phi < pi
-        """
-        phi = math.atan(self._py / self._px) if self._px != 0 else math.pi / 2.0
-        return phi
-
-    @property
-    def eta(self):
-        """Return the pseudorapidity.
-
-        Formally, eta = -ln(tanh(theta/2)).
-        Here it is calculated using pz = pt * sinh(eta)
-
-        Note that if pt == 0, eta = sign(pz) * infinity.
-        """
-        if self.pt == 0:
-            return math.copysign(float('inf'), self._pz)
-        else:
-            return math.asinh(self._pz / self.pt)
+    # transverse momentum
+    pt = math.sqrt(math.fsum([math.pow(px, 2), math.pow(py, 2)]))
+    # total momentum
+    p = math.sqrt(math.fsum([math.pow(pt, 2), math.pow(pz, 2)]))
+    if pt != 0:
+        eta = math.asinh(pz / pt)
+        phi = math.atan(py / px)
+    else:
+        eta = math.copysign(float('inf'), pz)
+        phi = 0
+    return pt, eta, phi
 
 
 class NodeParticle(object):
