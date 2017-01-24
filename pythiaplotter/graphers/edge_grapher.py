@@ -86,7 +86,7 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
         remove_redundant_edges(gr)
 
         log.debug("After remove_redundant Edges:%s", gr.edges())
-        log.debug("After remove_redundant Particles: %s", [gr[degree][j]['particle']
+        log.debug("After remove_redundant Particles: %s", [gr[degree][j][0]['particle']
                                                            for degree, j in gr.edges()])
         log.debug("After remove_redundant Nodes: %s", gr.nodes())
 
@@ -156,7 +156,7 @@ def remove_redundant_edges(graph):
             if len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1:
 
                 # dict of objects for this edge
-                in_edge = graph[parent_edges[0][0]][parent_edges[0][1]]
+                in_edge = (graph[parent_edges[0][0]][parent_edges[0][1]])[0]
 
                 # Do removal if parent PDGID matches
                 if in_edge["particle"].pdgid == edge_data["particle"].pdgid:
