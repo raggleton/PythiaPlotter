@@ -1,4 +1,4 @@
-"""Classes to describe visual attributes. Used when making Graphviz file.
+"""Classes to describe visual attributes. Used when making the Graphviz file.
 
 Also set particle label in here, see ``get_particle_label()``. Or should this be a
 method for the particle?
@@ -9,39 +9,13 @@ possible to simplify things...
 
 
 from __future__ import absolute_import
-import json
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
-from pkg_resources import resource_string
+from .dot_config import DOT_PARTICLE_OPTS, DOT_GRAPH_OPTS
 
 
 log = logging.getLogger(__name__)
-
-
-# Hold user-defined settings from JSON file
-# TODO: allow for user-defined JSON files
-config_file = "printers/dot_config.json"
-try:
-    # decode() necessary as "The resource is read in binary fashion, such that the returned
-    # string contains exactly the bytes that are stored in the resource."
-    settings = json.loads(resource_string('pythiaplotter', config_file).decode('utf-8'))
-except IOError as e:
-    log.exception("Cannot load settings file %s - no such file\n" % config_file)
-    raise
-except ValueError as e:
-    log.exception("Problem parsing settings file %s - please check your JSON\n" % config_file)
-    raise
-
-
-interesting_pdgids = [i for i in settings.keys() if i.isdigit()]
-
-
-def load_json_settings(json_dict, attr):
-    """Load dict from json_dict into attr dict. Checks to see if null value."""
-    if json_dict:
-        for key, value in json_dict.items():
-            attr[key] = value
 
 
 def get_particle_label(particle, fancy):
@@ -74,13 +48,10 @@ def get_particle_label(particle, fancy):
 
 
 class DotEdgeAttr(object):
-    """Hold display attributes for edge in dot graph.
-
-    Auto-generates attributes from JSON file.
-    """
 
     def __init__(self, edge, fancy=False):
-        """
+        """Hold display attributes for edge in dot graph.
+
         Parameters
         ----------
         edge : dict
@@ -109,9 +80,6 @@ class DotEdgeAttr(object):
     def add_particle_attr(self, edge, fancy):
         """Style line as particle.
 
-        Uses external config file to get PDGID-specific settings, as well as
-        initial & final state particles.
-
         Parameters
         ----------
         edge : dict
@@ -124,27 +92,16 @@ class DotEdgeAttr(object):
         # Displayed edge label
         self.attr["label"] = get_particle_label(particle, fancy)
 
-        # load default edge styling
-        load_json_settings(settings["default"]["edge"], self.attr)
-
-        # style initial & final state
-        if particle.initial_state:
-            load_json_settings(settings["initial"]["edge"], self.attr)
-        elif particle.final_state:
-            load_json_settings(settings["final"]["edge"], self.attr)
-
-        # other interesting particles
-        pid = str(abs(particle.pdgid))
-        if pid in interesting_pdgids:
-            load_json_settings(settings[pid]["edge"], self.attr)
+        for opt in DOT_PARTICLE_OPTS:
+            if opt.filter(particle):
+                self.attr.update(opt.attr['edge'])
+                break
 
 
 class DotNodeAttr(object):
 
     def __init__(self, node, fancy=False):
         """Hold display attributes for node in dot graph.
-
-        Auto-generates attributes from JSON file.
 
         Parameters
         ----------
@@ -168,7 +125,7 @@ class DotNodeAttr(object):
         return "[{0}]".format(", ".join(attr_list))
 
     def add_point_attr(self, node, show_barcode=False):
-        """Simple point to show intersection of particles in EDGE representation
+        """Simple point to show intersection of particles in EDGE representation.
 
         Parameters
         ----------
@@ -180,10 +137,7 @@ class DotNodeAttr(object):
         self.attr["shape"] = "circle" if show_barcode else "point"
 
     def add_particle_attr(self, node, fancy):
-        """Style node as particle
-
-        Uses external config file to get PDGID-specific settings, as well as
-        initial & final state particles.
+        """Style node as particle.
 
         Parameters
         ----------
@@ -197,32 +151,18 @@ class DotNodeAttr(object):
         # Displayed node label
         self.attr["label"] = get_particle_label(particle, fancy)
 
-        # default node styling
-        load_json_settings(settings["default"]["node"], self.attr)
-
-        # style initial & final state
-        if particle.initial_state:
-            load_json_settings(settings["initial"]["node"], self.attr)
-        elif particle.final_state:
-            load_json_settings(settings["final"]["node"], self.attr)
-
-        # other interesting particles
-        # do last so it overrides other initial/final settings
-        pid = str(abs(particle.pdgid))
-        if pid in interesting_pdgids:
-            load_json_settings(settings[pid]["node"], self.attr)
+        for opt in DOT_PARTICLE_OPTS:
+            if opt.filter(particle):
+                self.attr.update(opt.attr['node'])
+                break
 
 
 class DotGraphAttr(object):
-    """Hold Graphviz attributes for the graph as whole.
-
-    Auto-generates attributes from JSON file.
-    """
+    """Hold Graphviz attributes for the graph as whole."""
 
     def __init__(self, graph):
         self.graph = graph
-        self.attr = {}
-        load_json_settings(settings["graph"], self.attr)
+        self.attr = DOT_GRAPH_OPTS
 
     def __repr__(self):
         attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.items()]
