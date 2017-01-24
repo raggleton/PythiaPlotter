@@ -165,10 +165,10 @@ class DotGraphAttr(object):
         self.attr = DOT_GRAPH_OPTS
 
     def __repr__(self):
-        attr_list = ['{0}="{1}"'.format(*it) for it in self.attr.items()]
+        attr_list = ['{0}={1}'.format(*it) for it in self.attr.items()]
         return "DotGraphAttr(attr=dict({0}))".format(", ".join(attr_list))
 
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
-        attr_list = ['{0}="{1}";'.format(*it) for it in self.attr.items()]
+        attr_list = ['{0}={1};'.format(*it) for it in self.attr.items()]
         return "\t{0}".format("\n\t".join(attr_list))

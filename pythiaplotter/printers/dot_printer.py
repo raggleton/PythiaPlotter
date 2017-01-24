@@ -112,23 +112,6 @@ def write_gv(event, gv_filename):
         gv_file.write("digraph g {\n")
         gv_file.write("{attr}\n".format(**graph.graph))
 
-        # Add event info to plot
-        lbl = ""
-        if event.label:
-            # Event title
-            lbl = '<FONT POINT-SIZE="45"><B>{0}' \
-                  '</B></FONT><BR/>'.format(event.label)
-        lbl += '<FONT POINT-SIZE="40">  <BR/>'
-        # Event info
-        # Keep event.label as a title, not in attribute list
-        evt_lbl = [x for x in event.__str__().split("\n")
-                   if not (x.startswith("label") or x.startswith("Event"))]
-        lbl += '<BR/>'.join(evt_lbl)
-        lbl += '</FONT>'
-        gv_file.write("\tlabel=<{0}>;\n".format(lbl))
-
-        # Now print the graph to file
-
         # Write all the nodes to file, with their display attributes
         write_nodes(graph, gv_file)
 

@@ -31,7 +31,8 @@ DOT_GRAPH_OPTS = {
     "ranksep": 0.4,
     "nodesep": 0.6,
     "labelloc": "top",
-    "labeljust": "left"
+    "labeljust": "left",
+    "label": '<<FONT POINT-SIZE="45"><B>Event</B></FONT>>'
 }
 
 

@@ -64,9 +64,6 @@ def main(in_args=None):
     event = parser.parse()
     if opts.stats:
         event.print_stats()
-    event.label = "Alex's event in MG5_aMC@NLO"
-    event.event_num = opts.eventNumber
-    # pp.event.lumi_section = 123456798
     printer = choose_printer(opts)
     printer.print_event(event, make_diagram=(not opts.noOutput))
     if opts.open and not opts.noOutput:
