@@ -184,7 +184,9 @@ def print_diagram(gv_filename, output_filename, renderer, output_format):
         rmargs = ["rm", ps_filename]
         log.info(" ".join(rmargs))
         call(rmargs)
-    else:
+    elif output_format is not None:
         dotargs = [renderer, "-T" + output_format, gv_filename, "-o", output_filename]
         log.info(" ".join(dotargs))
         call(dotargs)
+    else:
+        raise RuntimeError("Need an output format for graphviz")
