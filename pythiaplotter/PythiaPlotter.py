@@ -29,7 +29,6 @@ def choose_parser(opts):
                                      event_num=opts.eventNumber,
                                      remove_redundants=remove_redundants)
     elif opts.inputFormat == "HEPMC":
-        log.warning("Disabling removal of redundants for HepMC files as broken")
         return parsers.HepMCParser(filename=opts.input,
                                    event_num=opts.eventNumber,
                                    remove_redundants=remove_redundants)
