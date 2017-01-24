@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def assign_particles_nodes(node_particles, remove_redundants=True):
-    """ Attach Particles to a directed graph when NODES represent particles via NodeParticles.
+    """Attach Particles to a directed graph when NODES represent particles via NodeParticles.
 
     NodeParticle objects must have their parent_codes specified for this to work.
 
@@ -45,15 +45,13 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     # is to check in the list of nodes (since node barcode = particle barcode)
     system_barcode = -1 if 0 in gr.nodes() else 0
 
-    # assign edges between Parent/Children
-    # need to work backwards, since the Pythia daughter indices are
-    # sometimes not complete (cannot be expressed as d1 < daughter_id < d2),
-    # whereas mother IDs are
-    for np in reversed(node_particles):
-        if np.parent1_code == system_barcode and np.parent2_code == system_barcode:
-            continue
-        for i in np.parent_codes:
-            gr.add_edge(i, np.particle.barcode)
+    # assign edges between Parents/Children
+    for np in node_particles:
+        if np.parent_codes:
+            if np.parent_codes[0] == system_barcode and np.parent_codes[-1] == system_barcode:
+                continue
+            for i in np.parent_codes:
+                gr.add_edge(i, np.particle.barcode)
 
     # Set initial_state and final_state flags, based on number of parents
     # (for initial_state) or number of children (for final_state)
@@ -103,8 +101,6 @@ def remove_redundant_nodes(graph):
             child = graph.node[graph.successors(node)[0]]['particle']
             if parent.pdgid == p.pdgid:
                 # rewire the graph
-                # parent.child_codes = p.child_codes
-                child.parent1_code = parent.barcode
-                child.parent2_code = parent.barcode
+                child.parent_codes = [parent.barcode]
                 graph.remove_node(node)  # also removes the relevant edges
                 graph.add_edge(parent.barcode, child.barcode)

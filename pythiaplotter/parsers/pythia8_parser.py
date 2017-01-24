@@ -107,11 +107,11 @@ def parse_event_block(contents):
                      energy=float(contents_dict['energy']),
                      mass=float(contents_dict['mass']))
         # Sometimes parent2 = 0, so set = parent1 if this is the case
+        if int(contents_dict['parent2']) == 0:
+            contents_dict['parent2'] = contents_dict['parent1']
         np = NodeParticle(particle=p,
-                          parent1_barcode=contents_dict['parent1'],
-                          parent2_barcode=(contents_dict['parent2']
-                                           if int(contents_dict['parent2'])
-                                           else contents_dict['parent1']))
+                          parent_barcodes=list(range(int(contents_dict['parent1']),
+                                                     int(contents_dict['parent2']) + 1)))
         node_particles.append(np)
 
     return node_particles

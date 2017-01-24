@@ -45,36 +45,36 @@ class NodeGrapher_Test(unittest.TestCase):
         """Very simple scenario: 1 particle decays to 2 daughters"""
 
         p1 = NodeParticle(particle=Particle(barcode=1, pdgid=1),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p2 = NodeParticle(particle=Particle(barcode=2, pdgid=2),
-                          parent1_barcode="1", parent2_barcode="1")
+                          parent_barcodes=list(range(1, 2)))
         p3 = NodeParticle(particle=Particle(barcode=3, pdgid=3),
-                          parent1_barcode="1", parent2_barcode="1")
+                          parent_barcodes=list(range(1, 2)))
         particles = [p1, p2, p3]
         g = ng.assign_particles_nodes(particles)
-        self.assertTrue(self.check_graph_nodes([p.particle for p in particles], g))
+        self.check_graph_nodes([p.particle for p in particles], g)
         edges = [(1, 3), (1, 2)]
-        self.assertTrue(self.check_graph_edges(edges, g))
+        self.check_graph_edges(edges, g)
 
     def test_2_to_1_to_3(self):
         """2 particles (1,2) to 1 (3) to 3 (4,5,6)"""
         p1 = NodeParticle(particle=Particle(barcode=1, pdgid=11),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p2 = NodeParticle(particle=Particle(barcode=2, pdgid=-11),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p3 = NodeParticle(particle=Particle(barcode=3, pdgid=22),
-                          parent1_barcode="1", parent2_barcode="2")
+                          parent_barcodes=list(range(1, 3)))
         p4 = NodeParticle(particle=Particle(barcode=4, pdgid=11),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         p5 = NodeParticle(particle=Particle(barcode=5, pdgid=12),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         p6 = NodeParticle(particle=Particle(barcode=6, pdgid=13),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         particles = [p1, p2, p3, p4, p5, p6]
         g = ng.assign_particles_nodes(particles)
-        self.assertTrue(self.check_graph_nodes([p.particle for p in particles], g))
+        self.check_graph_nodes([p.particle for p in particles], g)
         edges = [(1, 3), (2, 3), (3, 4), (3, 5), (3, 6)]
-        self.assertTrue(self.check_graph_edges(edges, g))
+        self.check_graph_edges(edges, g)
 
     def test_redundant(self):
         """Check remove_redundants code.
@@ -82,21 +82,21 @@ class NodeGrapher_Test(unittest.TestCase):
         So (4) should be redundant.
         """
         p1 = NodeParticle(particle=Particle(barcode=1, pdgid=11),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p2 = NodeParticle(particle=Particle(barcode=2, pdgid=-11),
-                          parent1_barcode="1", parent2_barcode="1")
+                          parent_barcodes=list(range(1, 2)))
         p3 = NodeParticle(particle=Particle(barcode=3, pdgid=22),
-                          parent1_barcode="1", parent2_barcode="1")
+                          parent_barcodes=list(range(1, 2)))
         p4 = NodeParticle(particle=Particle(barcode=4, pdgid=-11),
-                          parent1_barcode="2", parent2_barcode="2")
+                          parent_barcodes=list(range(2, 3)))
         p5 = NodeParticle(particle=Particle(barcode=5, pdgid=12),
-                          parent1_barcode="3", parent2_barcode="4")
+                          parent_barcodes=list(range(3, 5)))
         particles = [p1, p2, p3, p4, p5]
         g = ng.assign_particles_nodes(particles)
         particles.remove(p4)
-        self.assertTrue(self.check_graph_nodes([p.particle for p in particles], g))
+        self.check_graph_nodes([p.particle for p in particles], g)
         edges = [(1, 2), (1, 3), (2, 5), (3, 5)]
-        self.assertTrue(self.check_graph_edges(edges, g))
+        self.check_graph_edges(edges, g)
 
     def test_intial_final_state(self):
         """Test whether particles marked as initial/final state correctly
@@ -104,17 +104,17 @@ class NodeGrapher_Test(unittest.TestCase):
         (1)+(2) -> (3) -> (4),(5),(6)
         """
         p1 = NodeParticle(particle=Particle(barcode=1, pdgid=11),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p2 = NodeParticle(particle=Particle(barcode=2, pdgid=-11),
-                          parent1_barcode="0", parent2_barcode="0")
+                          parent_barcodes=list(range(0, 1)))
         p3 = NodeParticle(particle=Particle(barcode=3, pdgid=22),
-                          parent1_barcode="1", parent2_barcode="2")
+                          parent_barcodes=list(range(1, 3)))
         p4 = NodeParticle(particle=Particle(barcode=4, pdgid=11),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         p5 = NodeParticle(particle=Particle(barcode=5, pdgid=12),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         p6 = NodeParticle(particle=Particle(barcode=6, pdgid=13),
-                          parent1_barcode="3", parent2_barcode="3")
+                          parent_barcodes=list(range(3, 4)))
         particles = [p1, p2, p3, p4, p5, p6]
         g = ng.assign_particles_nodes(particles)  # dummy var to hold graph
         self.assertTrue(p1.particle.initial_state)

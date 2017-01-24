@@ -148,24 +148,19 @@ def convert_px_py_pz_e_m(px, py, pz):
 
 
 class NodeParticle(object):
-    """Class to hold info when particle is represented by a node.
 
-    This contains the physical Particle object, and associated info that
-    is node-specific, such as parent node and children node codes.
+    def __init__(self, particle, parent_barcodes):
+        """Class to hold info when particle is represented by a node.
 
-    parent1 and parent2 barcodes mark the edge of the range of barcodes
-    of parent particles.
-    """
-
-    def __init__(self, particle, parent1_barcode, parent2_barcode):
-        parent1_barcode = int(parent1_barcode)
-        parent2_barcode = int(parent2_barcode)
+        Parameters
+        ----------
+        particle : Particle
+            The particle of interest
+        parent_barcodes : list[int]
+            List of parent barcodes
+        """
         self.particle = particle
-        self.parent1_code = parent1_barcode  # barcode range for parents
-        self.parent2_code = (parent2_barcode if parent2_barcode >= parent1_barcode
-                             else parent1_barcode)
-        # to store barcodes of parents:
-        self.parent_codes = list(range(parent1_barcode, parent2_barcode + 1))
+        self.parent_codes = parent_barcodes
 
     def __repr__(self):
         return generate_repr_str(self)

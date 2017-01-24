@@ -88,33 +88,33 @@ class CMSSWParticleListParser(object):
         # parents/children, nParents/Children, pt/eta/phi, px/py/pz/m]
         # parts1 = line.strip().split('|')
         fields = ['idx', 'pdg', 'status', 'family', 'nFamily', '3mom', '4mom']
-        contents = map_columns_to_dict(fields, line.strip(), delim='|')
+        contents_dict = map_columns_to_dict(fields, line.strip(), delim='|')
 
         # Get PDGID - we don't car about the name
-        pdgid = contents['pdg'].strip().split()[0]
+        pdgid = contents_dict['pdg'].strip().split()[0]
 
         # Get mother/daughter IDXs
         family_fields = ['parent1', 'parent2', 'child1', 'child2']
-        family_contents = map_columns_to_dict(family_fields, contents['family'])
+        family_contents = map_columns_to_dict(family_fields, contents_dict['family'])
 
         # Get pt/eta/phi
         three_mom_fields = ['pt', 'eta', 'phi']
-        three_mom_contents = map_columns_to_dict(three_mom_fields, contents['3mom'])
+        three_mom_contents = map_columns_to_dict(three_mom_fields, contents_dict['3mom'])
 
         # Get px/py/pz/m
         four_mom_fields = ['px', 'py', 'pz', 'm']
-        four_mom_contents = map_columns_to_dict(four_mom_fields, contents['4mom'])
+        four_mom_contents = map_columns_to_dict(four_mom_fields, contents_dict['4mom'])
 
-        p = Particle(barcode=int(contents['idx']),
+        p = Particle(barcode=int(contents_dict['idx']),
                      pdgid=int(pdgid),
-                     status=int(contents['status']),
+                     status=int(contents_dict['status']),
                      px=float(four_mom_contents['px']),
                      py=float(four_mom_contents['py']),
                      pz=float(four_mom_contents['pz']),
                      mass=float(four_mom_contents['m']))
         np = NodeParticle(particle=p,
-                          parent1_barcode=family_contents['parent1'],
-                          parent2_barcode=family_contents['parent2'])
+                          parent_barcodes=list(range(int(family_contents['parent1']),
+                                                     int(family_contents['parent2']) + 1)))
 
         log.debug(np)
         return np
