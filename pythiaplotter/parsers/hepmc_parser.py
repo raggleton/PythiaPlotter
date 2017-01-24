@@ -6,7 +6,7 @@ See example/example_hepmc.hepmc for example input file.
 """
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 from pprint import pformat
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
@@ -65,6 +65,9 @@ class HepMCParser(object):
         current_event = None
         current_vertex = None
         edge_particles = []
+        # since HepMC can output in either MeV or GeV, but we all prefer GeV,
+        # this allows conversion to GeV
+        energy_multiplier = 1.
 
         log.info("Opening event file %s" % self.filename)
         with open(self.filename) as f:
@@ -117,9 +120,23 @@ class HepMCParser(object):
                             edge_particle.particle.initial_state = True
 
                         edge_particles.append(edge_particle)
+                    if line.startswith("U"):
+                        # Units info
+                        energy, length = self.parse_units_line(line)
+                        if energy == "MEV":
+                            energy_multiplier = 1 / 1000
 
         if not current_event:
             raise IndexError("Cannot find an event with event number %d" % self.event_num)
+
+        # Correct units
+        for p in current_event.particles:
+            for attr in ['px', 'py', 'pz', 'mass', 'energy', 'pt']:
+                try:
+                    val = getattr(p.particle, attr)
+                    setattr(p.particle, attr, val * energy_multiplier)
+                except AttributeError:
+                    pass
 
         current_event.graph = edge_grapher.assign_particles_edges(current_event.particles,
                                                                   self.remove_redundants)
@@ -164,6 +181,21 @@ class HepMCParser(object):
                           vtx_in_barcode=abs(int(contents['vtx_in_barcode'])),
                           vtx_out_barcode=0)
         return ep
+
+    def parse_units_line(self, line):
+        """Parse units specification line.
+
+        Parameters
+        ----------
+        line : str
+            Line to parse
+
+        Returns
+        -------
+        str, str
+            Energy and length units
+        """
+        return line.split()[1:]
 
 
 class GenVertex(object):
