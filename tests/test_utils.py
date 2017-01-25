@@ -1,9 +1,4 @@
-"""
-Unit tests for modules in utils dir
-
-If you run with nosetests -w unittest then $PWD=unittest
-If you run with python unittest/test_utils.py then $PWD=PythiaPlotter
-"""
+"""Unit tests for modules in utils dir"""
 
 
 from __future__ import absolute_import
@@ -15,7 +10,7 @@ import shutil
 from pythiaplotter.utils.common import *
 
 
-class Utils_Test(unittest.TestCase):
+class Common_Test(unittest.TestCase):
     """Test fns in common.py"""
 
     def test_check_file_exists(self):
@@ -43,6 +38,12 @@ class Utils_Test(unittest.TestCase):
         self.assertTrue(check_dir_exists(createDir))
         os.rmdir(createDir)
         self.assertFalse(check_dir_exists(createDir))
+
+    def test_map_columns_to_dict(self):
+        line = "123:police:999:Higgs"
+        fields = ["id", "name", "phone"]
+        d = map_columns_to_dict(fields, line, delim=":")
+        self.assertDictEqual(d, {"id": "123", "name": "police", "phone": "999"})
 
 
 class RequisiteChecker_Test(unittest.TestCase):
