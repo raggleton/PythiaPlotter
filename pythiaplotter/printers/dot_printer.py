@@ -160,13 +160,15 @@ def print_diagram(gv_filename, output_filename, renderer, output_format):
         log.info(" ".join(psargs))
         call(psargs)
 
-        pdfargs = ["ps2pdf", ps_filename, output_filename]
-        log.info(" ".join(pdfargs))
-        call(pdfargs)
+        if output_filename.endswith(".pdf"):
+            pdfargs = ["ps2pdf", ps_filename, output_filename]
+            log.info(" ".join(pdfargs))
+            call(pdfargs)
 
-        rmargs = ["rm", ps_filename]
-        log.info(" ".join(rmargs))
-        call(rmargs)
+            rmargs = ["rm", ps_filename]
+            log.info(" ".join(rmargs))
+            call(rmargs)
+
     elif output_format is not None:
         dotargs = [renderer, "-T" + output_format, gv_filename, "-o", output_filename]
         log.info(" ".join(dotargs))
