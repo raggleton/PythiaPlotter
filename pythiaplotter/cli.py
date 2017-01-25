@@ -134,12 +134,13 @@ def set_default_output_settings(args):
     # Set default output format if there is an output filename specified
     if args.output:
         args.output = helpr.cleanup_filepath(args.output)
-        args.outputFormat = os.path.splitext(args.output)[1][1:]
-        log.info("You didn't specify an output format, "
-                 "assuming from output filename that it is %s", args.outputFormat)
+        if not args.outputFormat:
+            args.outputFormat = os.path.splitext(args.output)[1][1:]
+            log.info("You didn't specify an output format, "
+                     "assuming from output filename that it is %s", args.outputFormat)
     # Set default output filename if not already done
     else:
-        # Hmm default hidden  here, not good
+        # Hmm default hidden here, not good
         if not args.outputFormat:
             args.outputFormat = "pdf"
             log.info("You didn't specify an output format, defaulted to %s", args.outputFormat)
