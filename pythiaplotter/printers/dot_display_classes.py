@@ -163,6 +163,14 @@ class DotGraphAttr(object):
     def __init__(self, graph):
         self.graph = graph
         self.attr = DOT_GRAPH_OPTS
+        # Add units to plot title
+        label = self.attr.get("label", "")
+        if not label.endswith(">"):
+            label += "<"
+        else:
+            label = label[:-1]
+        label += '<br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
+        self.attr['label'] = label
 
     def __repr__(self):
         attr_list = ['{0}={1}'.format(*it) for it in self.attr.items()]
