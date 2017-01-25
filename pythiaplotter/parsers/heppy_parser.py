@@ -35,7 +35,10 @@ log = logging.getLogger(__name__)
 class HeppyParser(object):
     """Main class to parse Heppy ROOT file."""
 
-    def __init__(self, filename, event_num=0, remove_redundants=False):
+    def __init__(self, filename, event_num=0, remove_redundants=False,
+                 particle_collection_name="allGenPart",
+                 mother_index_branch_name="motherIndices",
+                 daughter_index_branch_name="daughterIndices"):
         """
         Parameters
         ----------
@@ -45,11 +48,20 @@ class HeppyParser(object):
             Index of event to parse in input file. (0 = first event)
         remove_redundants : bool, optional
             Remove redundant particles from the graph.
+        particle_collection_name : str
+            Stem for the gen particle collection. e.g. if pt stored in `allGenPart_pt`,
+            this should be `allGenPart`
+        mother_index_branch_name : str
+            Name of branch with mother indices
+        daughter_index_branch_name : str
+            Name of branch with daughter indices
         """
         self.filename = filename
         self.event_num = event_num  # 0 = first event, etc
         self.remove_redundants = remove_redundants
-        self.collection_name = "allGenPart"
+        self.particle_collection_name = particle_collection_name
+        self.mother_index_branch_name = mother_index_branch_name
+        self.daughter_index_branch_name = daughter_index_branch_name
 
     def __repr__(self):
         return generate_repr_str(self, ignore=['events'])
@@ -75,14 +87,12 @@ class HeppyParser(object):
 
             tree.SetBranchStatus("*", 0)  # To speedup reading the Tree
 
-            # TODO: Need to make branch names configurable somehow...
             particle_fields = ["charge", "status", "pdgId", "pt", "eta", "phi", "mass"]
 
-            particle_branch_names = ["_".join([self.collection_name, bn])
+            particle_branch_names = ["_".join([self.particle_collection_name, bn])
                                      for bn in particle_fields]
 
-            # TODO: make these configurable, somehow
-            relationship_fields = ['motherIndices', 'daughterIndices']
+            relationship_fields = [self.mother_index_branch_name, self.daughter_index_branch_name]
 
             for bn in chain(particle_branch_names, relationship_fields):
                 tree.SetBranchStatus(bn, 1)
