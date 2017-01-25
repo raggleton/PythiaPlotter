@@ -103,7 +103,7 @@ def write_edges(graph, gv_file):
 def write_gv(event, gv_filename):
     """Write event graph to file in Graphviz format"""
 
-    log.info("Writing Graphviz file to %s" % gv_filename)
+    log.info("Writing Graphviz file to %s", gv_filename)
     with open(gv_filename, "w") as gv_file:
 
         graph = event.graph

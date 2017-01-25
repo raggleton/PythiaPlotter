@@ -44,7 +44,7 @@ class CMSSWParticleListParser(object):
             and a NetworkX graph object with particles assigned to nodes.
         """
 
-        log.info("Opening event file %s" % self.filename)
+        log.info("Opening event file %s", self.filename)
         event = Event()
 
         with open(self.filename, 'r') as f:

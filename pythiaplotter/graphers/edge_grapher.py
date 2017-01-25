@@ -177,6 +177,6 @@ def remove_redundant_edges(graph):
                     break
 
         # Remove all redundant nodes, also removes the associated edges usefully
-        log.debug("removing nodes %s" % remove_nodes)
+        log.debug("removing nodes %s", remove_nodes)
         for node in remove_nodes:
             graph.remove_node(node)

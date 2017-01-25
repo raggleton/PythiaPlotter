@@ -69,7 +69,7 @@ class HepMCParser(object):
         # this allows conversion to GeV
         energy_multiplier = 1.
 
-        log.info("Opening event file %s" % self.filename)
+        log.info("Opening event file %s", self.filename)
         with open(self.filename) as f:
             for line in f:
                 if line.startswith("E") or "END_EVENT_LISTING" in line:

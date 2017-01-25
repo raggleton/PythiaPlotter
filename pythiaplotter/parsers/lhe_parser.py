@@ -59,7 +59,7 @@ class LHEParser(object):
             Event object, which contains info about the event, a list of Particles in the event,
             and a NetworkX graph object with particles assigned to nodes.
         """
-        log.info("Opening event file %s" % self.filename)
+        log.info("Opening event file %s", self.filename)
         tree = ET.parse(self.filename)
 
         root = tree.getroot()
@@ -79,7 +79,7 @@ class LHEParser(object):
         try:
             event_ind = tags.index('event', self.event_num)
         except ValueError:
-            log.exception("Cannot find the <event> block %d in LHE file" % self.event_num)
+            log.exception("Cannot find the <event> block %d in LHE file", self.event_num)
             raise
 
         event = self.parse_event_text(root[event_ind].text)

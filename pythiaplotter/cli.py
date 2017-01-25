@@ -121,7 +121,7 @@ def get_args(input_args):
     set_default_mode(args)
 
     for k, v in args.__dict__.items():
-        log.debug("{0}: {1}".format(k, v))
+        log.debug("%s: %s", k, v)
 
     return args
 
@@ -156,7 +156,7 @@ def set_default_input_format(args):
             input_extension = os.path.splitext(args.input)[1]
             if input_extension.lower() == popt.file_extension:
                 args.inputFormat = pname
-                log.info("You didn't set an input format. Assuming %s" % args.inputFormat)
+                log.info("You didn't set an input format. Assuming %s", args.inputFormat)
                 break
         else:
             raise RuntimeError("Cannot determine input format. "
@@ -166,10 +166,10 @@ def set_default_input_format(args):
 def set_default_mode(args):
     """Set default particle mode (representation) if the user hasn't."""
     args.particleMode = parser_opts[args.inputFormat].default_representation
-    log.info("Using %s particle representation" % args.particleMode)
+    log.info("Using %s particle representation", args.particleMode)
 
 
 def print_options(args):
     """Printout for user arguments."""
     for k, v in args.__dict__.items():
-        log.info("{0}: {1}".format(k, v))
+        log.info("%s: %s", k, v)

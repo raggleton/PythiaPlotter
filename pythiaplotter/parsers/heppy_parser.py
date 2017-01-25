@@ -67,7 +67,7 @@ class HeppyParser(object):
             and a NetworkX graph object with particles assigned to nodes.
         """
 
-        log.info("Opening event file %s" % self.filename)
+        log.info("Opening event file %s", self.filename)
         with root_open(self.filename) as f:
             tree = f.tree
             if not tree:

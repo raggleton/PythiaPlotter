@@ -56,7 +56,7 @@ class PythiaBlock(object):
 
     def parse_block(self):
         """Run the instance parser over contents, and store results."""
-        log.debug("Parsing block %s" % self.name)
+        log.debug("Parsing block %s", self.name)
         self.parser_results = self.parser(self.contents)
 
 
@@ -203,7 +203,7 @@ class Pythia8Parser(object):
             Event object, which contains info about the event, a list of Particles in the event,
             and a NetworkX graph object with particles assigned to nodes.
         """
-        log.info("Opening event file %s" % self.filename)
+        log.info("Opening event file %s", self.filename)
         with open(self.filename, "r") as f:
             lines = [l.replace("\n", "").strip() for l in list(f)]
             self.contents = [l for l in lines if l]
@@ -213,12 +213,12 @@ class Pythia8Parser(object):
             for block in self.block_types.values():
                 if block["str_start"] in line:
                     block["ind_start"].append(i)
-                    log.debug("Block starting line: %s" % line)
+                    log.debug("Block starting line: %s", line)
                 if block["str_end"] in line:
                     # check that there's at least one ind_start < i
                     if sum([j < i for j in block["ind_start"]]):
                         block["ind_end"].append(i)
-                        log.debug("Block ending line: %s" % line)
+                        log.debug("Block ending line: %s", line)
 
         # Now pull the contents from files & parse
         for name, block in self.block_types.items():
