@@ -162,7 +162,7 @@ class DotGraphAttr(object):
 
     def __init__(self, graph):
         self.graph = graph
-        self.attr = DOT_GRAPH_OPTS
+        self.attr = DOT_GRAPH_OPTS.copy()
         # Add units to plot title
         label = self.attr.get("label", "")
         if not label.endswith(">"):
