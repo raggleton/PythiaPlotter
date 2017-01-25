@@ -67,6 +67,8 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
 
     # log.debug("Graph nodes after assigning: %s" % gr.node)
 
+    remove_isolated_nodes(gr)
+
     if remove_redundants:
         remove_redundant_nodes(gr)
         # log.debug("Graph nodes after remove_redundants: %s" % gr.node)
@@ -74,8 +76,21 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     return gr
 
 
+def remove_isolated_nodes(gr):
+    """Remove nodes with no parents and no children.
+
+    Parameters
+    ----------
+    gr : NetworkX.DiGraph
+    """
+    nodes = gr.nodes()[:]
+    for np in nodes:
+        if len(gr.predecessors(np)) == 0 and len(gr.successors(np)) == 0:
+            gr.remove_node(np)
+
+
 def remove_redundant_nodes(graph):
-    """ Remove redundant particle nodes from a graph.
+    """Remove redundant particle nodes from a graph.
 
     i.e. when you have a particles which has 1 parent who has the same PDGID,
     and 1 child (no PDGID requirement).
