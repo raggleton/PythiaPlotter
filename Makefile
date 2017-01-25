@@ -18,7 +18,7 @@ examples: test ## update example outputs, but only if our tests are ok
 	PythiaPlotter examples/example_lhe.lhe --inputFormat LHE
 	PythiaPlotter examples/example_hepmc.hepmc --inputFormat HEPMC
 
-test: clean-test ## run standard tests
+test: ## run standard tests
 	python -m pytest
 
 tests: test ## cos I always forget singular or plural
