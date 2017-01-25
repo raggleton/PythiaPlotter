@@ -1,7 +1,4 @@
-"""
-Unit tests for node_grapher
-
-"""
+"""Unit tests for node_grapher"""
 
 
 from __future__ import absolute_import
@@ -10,6 +7,7 @@ import unittest
 import pythiaplotter.graphers.node_grapher as ng
 from pythiaplotter.parsers.event_classes import Particle, NodeParticle
 from pprint import pprint
+import sys
 
 
 class NodeGrapher_Test(unittest.TestCase):
@@ -18,6 +16,15 @@ class NodeGrapher_Test(unittest.TestCase):
 
     def setUp(self):
         pass
+
+    def compare_lists(self, thing, other):
+        if sys.version_info.major == 2:
+            self.assertItemsEqual(thing, other)
+        else:
+            # self.assertCountEqual(thing, other)  # doesn't work as Particle unhashable in py3
+            # logically equivalent?
+            self.assertEqual(len(thing), len(other))
+            self.assertTrue(all([x in other for x in thing]))
 
     def check_graph_nodes(self, particles, graph, verbose=verbose):
         """To test particles were correctly assigned to nodes"""
@@ -28,7 +35,7 @@ class NodeGrapher_Test(unittest.TestCase):
             pprint(node_particles)
             print("Graph nodes:")
             print (graph.node)
-        return set(particles) == set(node_particles)
+        self.compare_lists(particles, node_particles)
 
     def check_graph_edges(self, edges, graph, verbose=verbose):
         """To test edges were correctly assigned
@@ -39,7 +46,7 @@ class NodeGrapher_Test(unittest.TestCase):
             pprint(edges)
             print("Graph edges:")
             pprint(graph.edges())
-        return set(edges) == set(graph.edges())
+        self.compare_lists(edges, graph.edges())
 
     def test_1_to_2(self):
         """Very simple scenario: 1 particle decays to 2 daughters"""

@@ -1,14 +1,9 @@
-"""
-Unit tests for edge_grapher
-
-"""
+"""Unit tests for edge_grapher"""
 
 
 from __future__ import absolute_import
 from __future__ import print_function
-import pytest
 import unittest
-import os.path
 import sys
 import pythiaplotter.graphers.edge_grapher as eg
 from pythiaplotter.parsers.event_classes import Particle, EdgeParticle
@@ -22,25 +17,34 @@ class EdgeGrapher_Test(unittest.TestCase):
     def setUp(self):
         pass
 
+    def compare_lists(self, thing, other):
+        if sys.version_info.major == 2:
+            self.assertItemsEqual(thing, other)
+        else:
+            # self.assertCountEqual(thing, other)  # doesn't work as Particle unhashable in py3
+            # logically equivalent?
+            self.assertEqual(len(thing), len(other))
+            self.assertTrue(all([x in other for x in thing]))
+
     def check_graph_particles(self, particles, graph, verbose=verbose):
         """To test particles were correctly assigned to edges"""
         edge_particles = [graph.edge[i][j][0]['particle'] for i, j in graph.edges()]
         if verbose:
             print("User particles:")
-            pprint(set(particles))
+            pprint(particles)
             print("Graph edge particles:")
-            pprint(set(edge_particles))
-        return set(particles) == set(edge_particles)
+            pprint(edge_particles)
+        self.compare_lists(particles, edge_particles)
 
     def check_graph_edges(self, edges, graph, verbose=verbose):
         """To test edges were correctly assigned"""
         edges = [(int(i), int(j)) for i, j in edges]
         if verbose:
             print("User edges:", end=' ')
-            pprint(set(edges))
+            pprint(edges)
             print("Graph edges:")
-            pprint(set(graph.edges()))
-        return set(edges) == set(graph.edges())
+            pprint(graph.edges())
+        self.compare_lists(edges, graph.edges())
 
     def test_1_to_2(self):
         """Very simple scenario: 1 particle decays to 2 daughters
@@ -57,9 +61,9 @@ class EdgeGrapher_Test(unittest.TestCase):
                           vtx_out_barcode="1", vtx_in_barcode="3")
         particles = [p1, p2, p3]
         g = eg.assign_particles_edges(particles, remove_redundants=False)
-        self.assertTrue(self.check_graph_particles([p.particle for p in particles], g))
+        self.check_graph_particles([p.particle for p in particles], g)
         edges = [(0, 1), (1, 3), (1, 2)]
-        self.assertTrue(self.check_graph_edges(edges, g))
+        self.check_graph_edges(edges, g)
 
     def test_2_to_1_to_3(self):
         """2 particles to 1 to 3
@@ -82,11 +86,10 @@ class EdgeGrapher_Test(unittest.TestCase):
                           vtx_out_barcode=3, vtx_in_barcode=6)
         particles = [p1, p2, p3, p4, p5, p6]
         g = eg.assign_particles_edges(particles, remove_redundants=False)
-        self.assertTrue(self.check_graph_particles([p.particle for p in particles], g))
+        self.check_graph_particles([p.particle for p in particles], g)
         edges = [(0, 2), (1, 2), (2, 3), (3, 4), (3, 5), (3, 6)]
-        self.assertTrue(self.check_graph_edges(edges, g))
+        self.check_graph_edges(edges, g)
 
-    @pytest.mark.skip
     def test_redundant_simple(self):
         """Check remove_redundants code with a very simple case.
 
@@ -122,7 +125,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         particles = [p1, p2, p3, p4, p5, p6, p7]
         graph = eg.assign_particles_edges(particles, remove_redundants=True)
         edges = [(-1, -2), (-2, -4), (-2, -6), (-6, -7), (-6, -8)]
-        self.assertTrue(self.check_graph_edges(edges, graph))
+        self.check_graph_edges(edges, graph)
 
     def test_intial_final_state(self):
         """Test whether particles marked as initial/final state correctly
