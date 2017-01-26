@@ -64,6 +64,7 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
     # Get in-degree for nodes so we can mark the initial state ones
     # (those with no incoming edges) and their particles
     for node, degree in gr.in_degree_iter(gr.nodes()):
+        gr.node[node]['initial_state'] = False
         if degree == 0:
             gr.node[node]['initial_state'] = True
             for _, _, edge_data in gr.out_edges_iter(node, data=True):
@@ -71,6 +72,7 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
 
     # Do same for final-state nodes/particles (nodes which have no outgoing edges)
     for node, degree in gr.out_degree_iter(gr.nodes()):
+        gr.node[node]['Final_state'] = False
         if degree == 0:
             gr.node[node]['final_state'] = True
             for _, _, edge_data in gr.in_edges_iter(node, data=True):
