@@ -56,14 +56,14 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     # Set initial_state and final_state flags, based on number of parents
     # (for initial_state) or number of children (for final_state)
     # This should be the only place it is done, otherwise confusing!
-    for np in gr.nodes_iter():
-        if len(gr.predecessors(np)) == 0:
-            gr.node[np]['particle'].initial_state = True
-            gr.node[np]['initial_state'] = True
+    for node, data in gr.nodes_iter(data=True):
+        if len(gr.predecessors(node)) == 0:
+            data['particle'].initial_state = True
+            data['initial_state'] = True
 
-        if len(gr.successors(np)) == 0:
-            gr.node[np]['particle'].final_state = True
-            gr.node[np]['final_state'] = True
+        if len(gr.successors(node)) == 0:
+            data['particle'].final_state = True
+            data['final_state'] = True
 
     # log.debug("Graph nodes after assigning: %s" % gr.node)
 
@@ -108,12 +108,14 @@ def remove_redundant_nodes(graph):
         Graph to remove redundant nodes from
 
     """
-    for node in graph.nodes():
-        if len(graph.successors(node)) == 1 and len(graph.predecessors(node)) == 1:
+    for node, data in graph.nodes_iter(data=True):
+        children = graph.successors(node)
+        parents = graph.predecessors(node)
+        if len(children) == 1 and len(parents) == 1:
 
-            p = graph.node[node]['particle']
-            parent = graph.node[graph.predecessors(node)[0]]['particle']
-            child = graph.node[graph.successors(node)[0]]['particle']
+            p = data['particle']
+            parent = graph.node[parents[0]]['particle']
+            child = graph.node[children[0]]['particle']
             if parent.pdgid == p.pdgid:
                 # rewire the graph
                 child.parent_codes = [parent.barcode]

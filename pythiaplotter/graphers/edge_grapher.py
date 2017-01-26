@@ -56,26 +56,24 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
     # assign an edge for each Particle object, preserving direction
     # note that NetworkX auto adds nodes when edges are added
     for ep in edge_particles:
-        log.debug("Add edge %s > %s for %s", ep.vtx_out_barcode, ep.vtx_in_barcode, ep.particle)
-
         gr.add_edge(ep.vtx_out_barcode, ep.vtx_in_barcode,
-                    barcode=ep.barcode, particle=ep.particle)
+                    barcode=ep.barcode, particle=ep.particle,
+                    initial_state=False, final_state=False)
+        log.debug("Add edge %s > %s for %s", ep.vtx_out_barcode, ep.vtx_in_barcode, ep.particle)
 
     # Get in-degree for nodes so we can mark the initial state ones
     # (those with no incoming edges) and their particles
     for node, degree in gr.in_degree_iter(gr.nodes()):
-        gr.node[node]['initial_state'] = False
         if degree == 0:
             gr.node[node]['initial_state'] = True
-            for e, f, edge_data in gr.out_edges_iter(node, data=True):
+            for _, _, edge_data in gr.out_edges_iter(node, data=True):
                 edge_data['particle'].initial_state = True
 
     # Do same for final-state nodes/particles (nodes which have no outgoing edges)
     for node, degree in gr.out_degree_iter(gr.nodes()):
-        gr.node[node]['final_state'] = False
         if degree == 0:
             gr.node[node]['final_state'] = True
-            for e, f, edge_data in gr.in_edges_iter(node, data=True):
+            for _, _, edge_data in gr.in_edges_iter(node, data=True):
                 edge_data['particle'].final_state = True
 
     log.debug("Edges after assigning: %s", gr.edges())
@@ -86,8 +84,8 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
         remove_redundant_edges(gr)
 
         log.debug("After remove_redundant Edges:%s", gr.edges())
-        log.debug("After remove_redundant Particles: %s", [gr[degree][j][0]['particle']
-                                                           for degree, j in gr.edges()])
+        log.debug("After remove_redundant Particles: %s", [data['particle'] for _, _, data
+                                                           in gr.edges_iter(data=True)])
         log.debug("After remove_redundant Nodes: %s", gr.nodes())
 
     return gr
@@ -145,7 +143,7 @@ def remove_redundant_edges(graph):
             log.debug([out_node, in_node])
 
             # get all incoming edges to this particle's out node (parents)
-            parent_edges = graph.in_edges(out_node)  # [(a,b), ...]
+            parent_edges = graph.in_edges(out_node, data=True)
             # get all outgoing edges from this particle's out node (siblings)
             sibling_edges = graph.out_edges(out_node)
             # get all outgoing edges from this particle's in node (children)
@@ -153,13 +151,12 @@ def remove_redundant_edges(graph):
             log.debug("Parent edges: %s", parent_edges)
             log.debug("Child edges: %s", child_edges)
             log.debug("Sibling edges: %s", sibling_edges)
-            if len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1:
 
-                # dict of objects for this edge
-                in_edge = (graph[parent_edges[0][0]][parent_edges[0][1]])[0]
+            if len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1:
+                parent_out, parent_in, parent_data = parent_edges[0]
 
                 # Do removal if parent PDGID matches
-                if in_edge["particle"].pdgid == edge_data["particle"].pdgid:
+                if parent_data["particle"].pdgid == edge_data["particle"].pdgid:
 
                     done_removing = False
 
@@ -168,10 +165,9 @@ def remove_redundant_edges(graph):
 
                     # set incoming edges' incoming node to this edge's incoming node
                     # and mark this edge's outgoing node for removal
-                    graph.add_edge(parent_edges[0][0], in_node,
-                                   barcode=particle.barcode, particle=particle)
+                    graph.add_edge(parent_out, in_node, barcode=particle.barcode, particle=particle)
                     log.debug("Adding new edge %d -- %d with barcode %d",
-                              parent_edges[0][0], in_node, particle.barcode)
+                              parent_out, in_node, particle.barcode)
                     remove_nodes.add(out_node)
 
                     break
