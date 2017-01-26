@@ -20,12 +20,12 @@ examples: test ## update example outputs, but only if our tests are ok
 	PythiaPlotter examples/example_hepmc.hepmc --inputFormat HEPMC
 
 test: ## run standard tests
-	python -m pytest
+	python -m pytest -k "not test_examples_full"
 
 tests: test ## cos I always forget singular or plural
 
 test-examples: ## run full examples test
-	pytest tests/test_examples_full.py
+	python -m pytest tests/test_examples_full.py
 
 benchmark: ## run full examples test
 	python tests/run_performance_metrics.py
