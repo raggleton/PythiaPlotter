@@ -16,14 +16,11 @@ log = logging.getLogger(__name__)
 class Event(object):
     """Hold event info"""
 
-    def __init__(self, event_num=0, run_num=0, lumi_section=0, label="",
-                 signal_process_vtx_id=0):
+    def __init__(self, event_num=0, **kwargs):
         self.event_num = int(event_num)
-        self.run_num = int(run_num)
-        self.lumi_section = int(lumi_section)
-        self.label = label
         self.graph = None  # to hold NetworkX graph
         self._particles = None
+        self.__dict__.update(**kwargs)
 
     def __repr__(self):
         ignore = ["graph", "_particles", "particles"]
