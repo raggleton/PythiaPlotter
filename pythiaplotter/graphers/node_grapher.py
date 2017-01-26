@@ -29,11 +29,11 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
 
     Returns
     -------
-    NetworkX.DiGraph
+    NetworkX.MultiDiGraph
         Directed graph with particles assigned to nodes, and edges to represent relationships.
     """
 
-    gr = nx.DiGraph()
+    gr = nx.MultiDiGraph(attr=None)  # placeholder attr for later in printer
 
     # assign a node for each Particle obj
     for np in node_particles:
@@ -81,7 +81,7 @@ def remove_isolated_nodes(gr):
 
     Parameters
     ----------
-    gr : NetworkX.DiGraph
+    gr : NetworkX.MultiDiGraph
     """
     nodes = gr.nodes()[:]
     for np in nodes:
@@ -104,7 +104,7 @@ def remove_redundant_nodes(graph):
 
     Parameters
     ----------
-    graph : NetworkX.DiGraph
+    graph : NetworkX.MultiDiGraph
         Graph to remove redundant nodes from
 
     """

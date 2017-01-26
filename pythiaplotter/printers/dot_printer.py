@@ -73,8 +73,8 @@ def add_display_attr(graph, fancy):
 
     Parameters
     ----------
-    graph : NetworkX.DiGraph
-        Grpah to process
+    graph : NetworkX.MultiDiGraph
+        Graph to process
     fancy : bool
         If True, will use HTML/unicode in labels
     """
