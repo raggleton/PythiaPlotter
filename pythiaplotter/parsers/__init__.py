@@ -14,6 +14,7 @@ from .pythia8_parser import Pythia8Parser
 from .hepmc_parser import HepMCParser
 from .lhe_parser import LHEParser
 from .cmssw_particle_list_parser import CMSSWParticleListParser
+from pythiaplotter.utils.common import generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -46,7 +47,7 @@ class ParserOption(object):
             raise RuntimeError("default_representation must be one of NODE, EDGE")
 
     def __repr__(self):
-        return "{0}({1})".format(self.__class__.__name__, self.description)
+        return generate_repr_str(self)
 
     def __str__(self):
         return "{0}({1})".format(self.__class__.__name__, self.description)

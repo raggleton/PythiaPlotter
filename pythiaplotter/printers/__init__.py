@@ -13,7 +13,7 @@ printer_opts_checked : dict{str: PrinterOption}
 
 from __future__ import absolute_import
 import sys
-from pythiaplotter.utils.common import check_program_exists, check_module_exists
+from pythiaplotter.utils.common import check_program_exists, check_module_exists, generate_repr_str
 from .dot_printer import DotPrinter
 
 
@@ -38,7 +38,7 @@ class PrinterOption(object):
         self.requires = requires
 
     def __repr__(self):
-        return self.description
+        return generate_repr_str(self)
 
     def __str__(self):
         return self.description

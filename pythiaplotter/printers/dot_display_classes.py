@@ -12,6 +12,7 @@ from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
+from pythiaplotter.utils.common import generate_repr_str
 from .dot_config import DOT_PARTICLE_OPTS, DOT_GRAPH_OPTS
 
 
@@ -66,7 +67,7 @@ class DotEdgeAttr(object):
             self.add_line_attr(edge)
 
     def __repr__(self):
-        return "DotEdgeAttrRepr"
+        return generate_repr_str(self)
 
     def __str__(self):
         """Print edge attributes in dot-friendly format"""
@@ -117,7 +118,7 @@ class DotNodeAttr(object):
             self.add_point_attr(node)
 
     def __repr__(self):
-        return "DotNodeAttrRepr"
+        return generate_repr_str(self)
 
     def __str__(self):
         """Print node attributes in dot-friendly format"""
@@ -173,8 +174,7 @@ class DotGraphAttr(object):
         self.attr['label'] = label
 
     def __repr__(self):
-        attr_list = ['{0}={1}'.format(*it) for it in self.attr.items()]
-        return "DotGraphAttr(attr=dict({0}))".format(", ".join(attr_list))
+        return generate_repr_str(self)
 
     def __str__(self):
         """Print graph attributes in dot-friendly format"""

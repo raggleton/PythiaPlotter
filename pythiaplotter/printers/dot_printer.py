@@ -16,6 +16,7 @@ import os
 from subprocess import call
 import pythiaplotter.utils.logging_config  # NOQA
 from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
+from pythiaplotter.utils.common import generate_repr_str
 
 
 log = logging.getLogger(__name__)
@@ -47,8 +48,7 @@ class DotPrinter(object):
         self.output_format = output_format or os.path.splitext(self.output_filename)[1][1:]
 
     def __repr__(self):
-        return "{0}(output_filename={1[output_filename]}, renderer={1[renderer]}, "\
-               "output_format={1[output_format]})".format(self.__class__.__name__, self)
+        return generate_repr_str(self)
 
     def print_event(self, event, make_diagram=True):
         """Write the event diagram to Graphivz file and run the renderer.

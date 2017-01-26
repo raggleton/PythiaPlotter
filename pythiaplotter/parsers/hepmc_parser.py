@@ -11,6 +11,7 @@ from pprint import pformat
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 import pythiaplotter.graphers.edge_grapher as edge_grapher
+from pythiaplotter.graphers.converters import edge_to_node
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, EdgeParticle
 
@@ -214,5 +215,4 @@ class GenVertex(object):
         self.n_orphan_in = n_orphan_in
 
     def __repr__(self):
-        return "{0}(barcode={1[barcode]}, n_orphan_in={1[n_orphan_in]})".format(
-            self.__class__.__name__, self.__dict__)
+        return generate_repr_str(self)
