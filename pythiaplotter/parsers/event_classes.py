@@ -7,6 +7,7 @@ import pythiaplotter.utils.logging_config  # NOQA
 import math
 import networkx as nx
 from pythiaplotter.utils.common import generate_repr_str
+from functools import total_ordering
 
 
 log = logging.getLogger(__name__)
@@ -56,6 +57,7 @@ class Event(object):
             log.info("{:2d} {}".format(i, "#"*h))
 
 
+@total_ordering
 class Particle(object):
 
     def __init__(self, barcode, pdgid=0, status=0,
@@ -99,7 +101,10 @@ class Particle(object):
         return "Particle {0}, PDGID {1}".format(self.barcode, self.pdgid)
 
     def __eq__(self, other):
-        return self.barcode == other.barcode and self.pdgid == other.pdgid
+        return self.barcode == other.barcode
+
+    def __lt__(self, other):
+        return self.barcode < other.barcode
 
 
 def convert_px_py_pz_e_m(px, py, pz):
