@@ -9,7 +9,7 @@ import pythiaplotter.utils.logging_config  # NOQA
 import pythiaplotter.utils.common as helpr
 from pythiaplotter.parsers import parser_opts
 from pythiaplotter.printers import printer_opts_checked, print_printers_requirements
-from pythiaplotter import __VERSION__
+from pythiaplotter import __version__
 
 
 log = logging.getLogger(__name__)
@@ -99,7 +99,7 @@ def get_args(input_args):
     misc_group.add_argument("--stats",
                             help="Print some statistics about the event/graph",
                             action="store_true")
-    misc_group.add_argument('--version', action='version', version='%(prog)s ' + __VERSION__)
+    misc_group.add_argument('--version', action='version', version='%(prog)s ' + __version__)
 
     # Handle the scenario where there are no printers available
     if len(printer_opts_checked) == 0:

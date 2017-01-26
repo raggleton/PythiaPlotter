@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from pythiaplotter import __VERSION__
+from pythiaplotter import __version__
 
 
 with open("requirements.txt") as f:
@@ -8,7 +8,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="PythiaPlotter",
-    version=__VERSION__,
+    version=__version__,
     description="Generate diagram of particles in the event tree from a "
                 "High-Energy Physics Monte Carlo event generator.",
     long_description="SOMETHING HERE",
