@@ -6,7 +6,7 @@ import logging
 import pythiaplotter.utils.logging_config  # NOQA
 import math
 import networkx as nx
-from pythiaplotter.utils.common import generate_repr_str
+from pythiaplotter.utils.common import generate_repr_str, get_terminal_width
 from functools import total_ordering
 
 
@@ -53,7 +53,14 @@ class Event(object):
         log.info(nx.info(self.graph))
         log.info("Graph density {}".format(nx.density(self.graph)))
         log.info("Histogram of node degree:")
-        for i, h in enumerate(nx.degree_histogram(self.graph)):
+        # Deal with bin contents larger than the terminal width by scaling bins
+        bin_contents = nx.degree_histogram(self.graph)
+        tw = get_terminal_width()
+        offset = 5  # for bin labels, etc
+        if max(bin_contents) > (tw - offset):
+            scale = (tw - offset) / max(bin_contents)
+            bin_contents = [int(round(b*scale)) for b in bin_contents]
+        for i, h in enumerate(bin_contents):
             log.info("{:2d} {}".format(i, "#"*h))
 
 

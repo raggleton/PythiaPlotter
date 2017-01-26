@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import os
 import imp
 from distutils.spawn import find_executable
-from subprocess import call
+from subprocess import call, check_output
 from sys import platform as _platform
 try:
     from itertools import izip
@@ -143,3 +143,8 @@ def generate_repr_str(obj, ignore=None):
     ignore = ignore or []
     args_str = ["%s=%s" % (k, repr(obj.__dict__[k])) for k in obj.__dict__ if k not in ignore]
     return "{}({})".format(obj.__class__.__name__, ", ".join(args_str))
+
+
+def get_terminal_width():
+    """Get the width of the user's terminal. Requires tput."""
+    return int(check_output(['tput', 'cols']))
