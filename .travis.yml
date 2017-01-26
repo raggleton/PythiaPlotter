@@ -11,7 +11,7 @@ os:
 
 # no need for pytest, travis already has it
 install:
-  - pip install -r requirements.txt
+  - pip install .
 
 script:
   - make test
