@@ -53,6 +53,8 @@ def assign_particles_nodes(node_particles):
     # (for initial_state) or number of children (for final_state)
     # This should be the only place it is done, otherwise confusing!
     for node, data in gr.nodes_iter(data=True):
+        data['initial_state'] = False
+        data['final_state'] = False
         if len(gr.predecessors(node)) == 0:
             data['particle'].initial_state = True
             data['initial_state'] = True
@@ -98,18 +100,22 @@ def remove_redundant_nodes(graph):
     ----------
     graph : NetworkX.MultiDiGraph
         Graph to remove redundant nodes from
-
     """
-    for node, data in graph.nodes_iter(data=True):
+    graph_new = graph.copy()  # use copy to avoid modifying the thing we're iterating over
+    removed_nodes = []  # need to keep track of things we've removed
+    for node, data in graph_new.nodes_iter(data=True):
+        if node in removed_nodes:
+            continue
         children = graph.successors(node)
         parents = graph.predecessors(node)
         if len(children) == 1 and len(parents) == 1:
-
             p = data['particle']
             parent = graph.node[parents[0]]['particle']
             child = graph.node[children[0]]['particle']
             if parent.pdgid == p.pdgid:
+                removed_nodes.append(node)
                 # rewire the graph
+                log.debug("Removing (%d) %s", node, data['particle'])
                 child.parent_codes = [parent.barcode]
                 graph.remove_node(node)  # also removes the relevant edges
                 graph.add_edge(parent.barcode, child.barcode)
