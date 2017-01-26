@@ -1,4 +1,4 @@
-*.hepmc
+*.hep*
 *.lhe
 *.pyc
 *.ps*
@@ -16,6 +16,8 @@
 *.txt
 *.root
 *.egg-info
+*.out
+*.bak
 .idea
 .cache
 .coverage
@@ -31,3 +33,5 @@ NEW
 htmlcov
 OLD
 web
+docs/_*
+random_examples
