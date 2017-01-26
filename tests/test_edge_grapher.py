@@ -4,10 +4,10 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import unittest
-import sys
 import pythiaplotter.graphers.edge_grapher as eg
 from pythiaplotter.parsers.event_classes import Particle, EdgeParticle
 from pprint import pprint
+import pytest
 
 
 class EdgeGrapher_Test(unittest.TestCase):
@@ -18,13 +18,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         pass
 
     def compare_lists(self, thing, other):
-        if sys.version_info.major == 2:
-            self.assertItemsEqual(thing, other)
-        else:
-            # self.assertCountEqual(thing, other)  # doesn't work as Particle unhashable in py3
-            # logically equivalent?
-            self.assertEqual(len(thing), len(other))
-            self.assertTrue(all([x in other for x in thing]))
+        self.assertEqual(sorted(thing), sorted(other))
 
     def check_graph_particles(self, particles, graph, verbose=verbose):
         """To test particles were correctly assigned to edges"""

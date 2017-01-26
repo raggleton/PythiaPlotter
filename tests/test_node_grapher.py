@@ -7,7 +7,6 @@ import unittest
 import pythiaplotter.graphers.node_grapher as ng
 from pythiaplotter.parsers.event_classes import Particle, NodeParticle
 from pprint import pprint
-import sys
 
 
 class NodeGrapher_Test(unittest.TestCase):
@@ -18,13 +17,7 @@ class NodeGrapher_Test(unittest.TestCase):
         pass
 
     def compare_lists(self, thing, other):
-        if sys.version_info.major == 2:
-            self.assertItemsEqual(thing, other)
-        else:
-            # self.assertCountEqual(thing, other)  # doesn't work as Particle unhashable in py3
-            # logically equivalent?
-            self.assertEqual(len(thing), len(other))
-            self.assertTrue(all([x in other for x in thing]))
+        self.assertEqual(sorted(thing), sorted(other))
 
     def check_graph_nodes(self, particles, graph, verbose=verbose):
         """To test particles were correctly assigned to nodes"""
