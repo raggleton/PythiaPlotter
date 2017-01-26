@@ -66,12 +66,16 @@ test_settings['lhe parser'] = dict(
     number=n_iter
 )
 
-test_settings['heppy parser'] = dict(
-    stmt='HeppyParser(cf("example/example_heppy.root"), 0).parse()',
-    setup=std_import+"from pythiaplotter.parsers import HeppyParser",
-    repeat=n_repeat,
-    number=n_iter
-)
+try:
+    import ROOT
+    test_settings['heppy parser'] = dict(
+        stmt='HeppyParser(cf("example/example_heppy.root"), 0).parse()',
+        setup=std_import+"from pythiaplotter.parsers import HeppyParser",
+        repeat=n_repeat,
+        number=n_iter
+    )
+except:
+    pass
 
 test_settings['cmssw parser'] = dict(
     stmt='CMSSWParticleListParser(cf("example/example_cmssw.txt")).parse()',
@@ -103,6 +107,29 @@ test_settings['edge grapher'] = dict(
     setup=std_import+'from pythiaplotter.parsers import HepMCParser;'
                      'from pythiaplotter.graphers.edge_grapher import assign_particles_edges;'
                      '_, particles = HepMCParser(cf("example/example_hepmc.hepmc"), 0).parse()',
+    repeat=n_repeat,
+    number=n_iter
+)
+
+# Graph converters
+test_settings['edge to node conversion'] = dict(
+    stmt="edge_to_node(graph)",
+    setup=std_import+'from pythiaplotter.parsers import HepMCParser;'
+                     'from pythiaplotter.graphers.edge_grapher import assign_particles_edges;'
+                     'from pythiaplotter.graphers.converters import edge_to_node;'
+                     '_, particles = HepMCParser(cf("example/example_hepmc.hepmc"), 0).parse();'
+                     'graph = assign_particles_edges(particles)',
+    repeat=n_repeat,
+    number=n_iter
+)
+
+test_settings['node to edge conversion'] = dict(
+    stmt="node_to_edge(graph)",
+    setup=std_import+'from pythiaplotter.parsers import Pythia8Parser;'
+                     'from pythiaplotter.graphers.node_grapher import assign_particles_nodes;'
+                     'from pythiaplotter.graphers.converters import node_to_edge;'
+                     '_, particles = Pythia8Parser(cf("example/example_pythia8.txt"), 0).parse();'
+                     'graph = assign_particles_nodes(particles)',
     repeat=n_repeat,
     number=n_iter
 )
