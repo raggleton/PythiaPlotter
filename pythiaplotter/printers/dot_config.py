@@ -1,9 +1,9 @@
 """Default configuration for dot printer.
 
-Settings for the graph as whole are stored in DOT_GRAPH_OPTS.
+Settings for the graph as whole are stored in `DOT_GRAPH_OPTS`.
 This stores attribute name: value pairs, see TODO
 
-Settings for particles are stored in DOT_PARTICLE_OPTS, in a variety of
+Settings for particles are stored in `DOT_PARTICLE_OPTS`, in a variety of
 ParticleDotDisplayAttr namedtuples, with fields `filter` and `attr`.
 
 The `filter` field is a lambda, which acts upon each `Particle` in the `Event`.
@@ -36,8 +36,7 @@ DOT_GRAPH_OPTS = {
 }
 
 
-ParticleDotDisplayAttr = namedtuple("ParticleDotDisplayAttr",
-                                    ["filter", "attr"])
+ParticleDotDisplayAttr = namedtuple("ParticleDotDisplayAttr", ["filter", "attr"])
 
 # Settings for particles.
 DOT_PARTICLE_OPTS = [

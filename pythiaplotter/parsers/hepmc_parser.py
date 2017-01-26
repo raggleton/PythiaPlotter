@@ -82,44 +82,46 @@ class HepMCParser(object):
                         else:
                             current_event = None
 
-                if parse_event:
-                    if line.startswith("V"):
-                        # GenVertex info
-                        current_vertex = self.parse_vertex_line(line)
-                    elif line.startswith("P"):
-                        # GenParticle info
-                        edge_particle = self.parse_particle_line(line)
-                        edge_particle.vtx_out_barcode = current_vertex.barcode
-                        log.debug(edge_particle.particle)
-                        # If the particle has vtx_in_barcode = 0,
-                        # then this is a 'dangling' vertex (i.e. not in the list
-                        # of vertices) and we must create one instead.
-                        # Use (10000*|particle.vtx_out_barcode|)+particle.barcode
-                        # for a unique barcode, since we won't have 10000
-                        # particles in an event.
+                if not parse_event:
+                    continue
 
-                        def _generate_unique_id(edge_particle):
-                            return 10000 * abs(edge_particle.vtx_out_barcode) + edge_particle.barcode
+                if line.startswith("V"):
+                    # GenVertex info
+                    current_vertex = self.parse_vertex_line(line)
+                elif line.startswith("P"):
+                    # GenParticle info
+                    edge_particle = self.parse_particle_line(line)
+                    edge_particle.vtx_out_barcode = current_vertex.barcode
+                    log.debug(edge_particle.particle)
+                    # If the particle has vtx_in_barcode = 0,
+                    # then this is a 'dangling' vertex (i.e. not in the list
+                    # of vertices) and we must create one instead.
+                    # Use (10000*|particle.vtx_out_barcode|)+particle.barcode
+                    # for a unique barcode, since we won't have 10000
+                    # particles in an event.
 
-                        # This is a final-state particle
-                        if edge_particle.vtx_in_barcode == 0:
-                            edge_particle.vtx_in_barcode = _generate_unique_id(edge_particle)
-                            edge_particle.particle.final_state = True
+                    def _generate_unique_id(edge_particle):
+                        return 10000 * abs(edge_particle.vtx_out_barcode) + edge_particle.barcode
 
-                        # If the vtx_in_barcode = vtx_out_barcode, then we have
-                        # a cyclical edge. This is normally reserved for an
-                        # incoming proton. Need to create a new "out" node, since
-                        # other particles will be outgoing from this node
-                        if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
-                            edge_particle.vtx_out_barcode = _generate_unique_id(edge_particle)
-                            edge_particle.particle.initial_state = True
+                    # This is a final-state particle
+                    if edge_particle.vtx_in_barcode == 0:
+                        edge_particle.vtx_in_barcode = _generate_unique_id(edge_particle)
+                        edge_particle.particle.final_state = True
 
-                        edge_particles.append(edge_particle)
-                    if line.startswith("U"):
-                        # Units info
-                        energy, length = self.parse_units_line(line)
-                        if energy == "MEV":
-                            energy_multiplier = 1 / 1000
+                    # If the vtx_in_barcode = vtx_out_barcode, then we have
+                    # a cyclical edge. This is normally reserved for an
+                    # incoming proton. Need to create a new "out" node, since
+                    # other particles will be outgoing from this node
+                    if edge_particle.vtx_in_barcode == edge_particle.vtx_out_barcode:
+                        edge_particle.vtx_out_barcode = _generate_unique_id(edge_particle)
+                        edge_particle.particle.initial_state = True
+
+                    edge_particles.append(edge_particle)
+                if line.startswith("U"):
+                    # Units info
+                    energy, length = self.parse_units_line(line)
+                    if energy == "MEV":
+                        energy_multiplier = 1. / 1000
 
         if not current_event:
             raise IndexError("Cannot find an event with event number %d" % self.event_num)

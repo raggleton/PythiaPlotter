@@ -1,6 +1,7 @@
 freeze: ## freeze package requirements
 	pip freeze -l > requirements_new.txt
 	sed -i '.bak' '/.*PythiaPlotter.*/d' requirements_new.txt
+	rm requirements_new.txt.bak
 
 flake: ## check style with flake8
 	flake8 --show-source --benchmark --exit-zero pythiaplotter

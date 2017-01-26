@@ -86,8 +86,8 @@ class Particle(object):
         self.barcode = int(barcode)
         self.pdgid = int(pdgid)
         self.status = int(status)
-        self.final_state = False
-        self.initial_state = False
+        self.final_state = final_state
+        self.initial_state = initial_state
         self.event = None  # parent event
         self.__dict__.update(**kwargs)
         if all([k in kwargs for k in ['px', 'py', 'pz']]):

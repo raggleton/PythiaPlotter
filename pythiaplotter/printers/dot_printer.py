@@ -15,8 +15,8 @@ import logging
 import os
 from subprocess import call
 import pythiaplotter.utils.logging_config  # NOQA
-from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 from pythiaplotter.utils.common import generate_repr_str
+from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 
 log = logging.getLogger(__name__)

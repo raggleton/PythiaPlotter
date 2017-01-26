@@ -170,9 +170,12 @@ def set_default_input_format(args):
 
 def set_default_mode(args):
     """Set default particle mode (representation) if the user hasn't."""
+    default_repr = parser_opts[args.inputFormat].default_representation
     if not args.representation:
-        args.representation = parser_opts[args.inputFormat].default_representation
+        args.representation = default_repr
     log.info("Using %s particle representation", args.representation)
+    if args.representation != default_repr:
+        log.info("Will convert from %s -> %s representation", default_repr, args.representation)
 
 
 def print_options(args):

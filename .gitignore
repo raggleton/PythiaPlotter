@@ -22,6 +22,8 @@
 .cache
 .coverage
 .vscode
+.benchmark_cache
+.ipynb_checkpoints
 pyhepmc-0.3.2
 hepmc2root.py
 page

@@ -40,7 +40,7 @@ formatter = LevelFormatter(fmt='%(message)s',
                            level_fmts={logging.ERROR: '%(levelname)s: %(message)s',
                                        logging.WARNING: '%(levelname)s: %(message)s',
                                        logging.INFO: '%(message)s',
-                                       logging.DEBUG: '%(levelname)s - %(module)s: %(message)s'})
+                                       logging.DEBUG: '%(levelname)s[%(module)s]: %(message)s'})
 
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(formatter)

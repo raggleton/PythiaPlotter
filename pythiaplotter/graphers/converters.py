@@ -5,8 +5,8 @@ from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 import networkx as nx
-from .node_grapher import assign_particles_nodes
 from pythiaplotter.parsers.event_classes import NodeParticle
+from .node_grapher import assign_particles_nodes
 
 
 log = logging.getLogger(__name__)
