@@ -37,7 +37,7 @@ def edge_to_node(graph):
                            in graph.in_edges_iter(out_node, data=True)]
         np = NodeParticle(particle, parent_barcodes)
         node_particles.append(np)
-    return assign_particles_nodes(node_particles, False)
+    return assign_particles_nodes(node_particles)
 
 
 def node_to_edge(graph):

@@ -71,6 +71,11 @@ def get_args(input_args):
                               help="Don't convert Graphviz file to diagram",
                               action="store_true")
 
+    output_group.add_argument("-r", "--representation",
+                              help="Particle representation for output diagram, "
+                                   "either representated by Nodes or as Edges",
+                              choices=["NODE", "EDGE"])
+
     printer_help = ["Printing methods:"]
     printer_help.extend(["{0}: {1}".format(k, v.description)
                          for k, v in printer_opts_checked.items()])
@@ -165,8 +170,9 @@ def set_default_input_format(args):
 
 def set_default_mode(args):
     """Set default particle mode (representation) if the user hasn't."""
-    args.particleMode = parser_opts[args.inputFormat].default_representation
-    log.info("Using %s particle representation", args.particleMode)
+    if not args.representation:
+        args.representation = parser_opts[args.inputFormat].default_representation
+    log.info("Using %s particle representation", args.representation)
 
 
 def print_options(args):

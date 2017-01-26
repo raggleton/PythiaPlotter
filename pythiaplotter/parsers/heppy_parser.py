@@ -1,7 +1,7 @@
 """Handle parsing of Heppy ROOT input files.
 
-These must be made with both the GeneratorRelationshipAnalyzer and GeneratorAnalyzer modules,
-the former adding in mother/daughter relationships, and the latter storing all gen particles.
+These must be made with the GeneratorRelationshipAnalyzer modules,
+adding in mother/daughter relationships, and storing all gen particles.
 
 Default is NODE representation.
 
@@ -18,7 +18,6 @@ try:
     from itertools import izip
 except ImportError:
     izip = zip
-import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import generate_repr_str
 import ROOT
 from .event_classes import Event, Particle, NodeParticle
@@ -35,7 +34,7 @@ log = logging.getLogger(__name__)
 class HeppyParser(object):
     """Main class to parse Heppy ROOT file."""
 
-    def __init__(self, filename, event_num=0, remove_redundants=False,
+    def __init__(self, filename, event_num=0,
                  particle_collection_name="allGenPart",
                  mother_index_branch_name="motherIndices",
                  daughter_index_branch_name="daughterIndices"):
@@ -46,8 +45,6 @@ class HeppyParser(object):
             Input filename.
         event_num : int, optional
             Index of event to parse in input file. (0 = first event)
-        remove_redundants : bool, optional
-            Remove redundant particles from the graph.
         particle_collection_name : str
             Stem for the gen particle collection. e.g. if pt stored in `allGenPart_pt`,
             this should be `allGenPart`
@@ -58,7 +55,6 @@ class HeppyParser(object):
         """
         self.filename = filename
         self.event_num = event_num  # 0 = first event, etc
-        self.remove_redundants = remove_redundants
         self.particle_collection_name = particle_collection_name
         self.mother_index_branch_name = mother_index_branch_name
         self.daughter_index_branch_name = daughter_index_branch_name
@@ -75,8 +71,9 @@ class HeppyParser(object):
         Returns
         -------
         Event
-            Event object, which contains info about the event, a list of Particles in the event,
-            and a NetworkX graph object with particles assigned to nodes.
+            Event object containing info about the event.
+        list[NodeParticle]
+            Collection of NodeParticles to be assigned to a graph.
         """
 
         log.info("Opening event file %s", self.filename)
@@ -136,10 +133,7 @@ class HeppyParser(object):
                 node_particles.append(np)
 
             event = Event()
-            event.particles = [np.particle for np in node_particles]
-            event.graph = node_grapher.assign_particles_nodes(node_particles=node_particles,
-                                                              remove_redundants=self.remove_redundants)
-            return event
+            return event, node_particles
 
 
 @contextmanager

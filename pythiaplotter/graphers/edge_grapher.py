@@ -23,7 +23,7 @@ import networkx as nx
 log = logging.getLogger(__name__)
 
 
-def assign_particles_edges(edge_particles, remove_redundants=True):
+def assign_particles_edges(edge_particles):
     """Attach particles to directed graph edges when EDGES represent particles.
 
     The graph itself is a networkx MultiDiGraph: a directed graph, that can have
@@ -39,11 +39,6 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
     edge_particles: list[EdgeParticle]
         The Particle in each EdgeParticle will be assigned to a graph edge,
         using the vertex information in the EdgeParticle object.
-
-    remove_redundants: bool, optional
-        Remove redundant particles from the graph.
-        'Redundants' carry no extra physics information, but are only used
-        internally by Pythia, etc
 
     Returns
     -------
@@ -80,15 +75,6 @@ def assign_particles_edges(edge_particles, remove_redundants=True):
 
     log.debug("Edges after assigning: %s", gr.edges())
     log.debug("Nodes after assigning: %s", gr.nodes())
-
-    # optionally remove redundant edges
-    if remove_redundants:
-        remove_redundant_edges(gr)
-
-        log.debug("After remove_redundant Edges:%s", gr.edges())
-        log.debug("After remove_redundant Particles: %s", [data['particle'] for _, _, data
-                                                           in gr.edges_iter(data=True)])
-        log.debug("After remove_redundant Nodes: %s", gr.nodes())
 
     return gr
 

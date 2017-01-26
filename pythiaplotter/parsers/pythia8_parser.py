@@ -17,7 +17,6 @@ try:
 except ImportError:
     izip = zip
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
-import pythiaplotter.graphers.node_grapher as node_grapher
 from .event_classes import Event, Particle, NodeParticle
 
 
@@ -148,7 +147,7 @@ class Pythia8Parser(object):
     stats_start = "PYTHIA Event and Cross Section Statistics"
     stats_end = "End PYTHIA Event and Cross Section Statistics"
 
-    def __init__(self, filename, event_num=0, remove_redundants=True):
+    def __init__(self, filename, event_num=0):
         """
         Parameters
         ----------
@@ -156,12 +155,9 @@ class Pythia8Parser(object):
             Input filename.
         event_num : int, optional
             Index of event to parse in input file. (0 = first event)
-        remove_redundants : bool, optional
-            Remove redundant particles from the graph.
         """
         self.filename = filename
         self.event_num = event_num
-        self.remove_redundants = remove_redundants
 
         self.info_blocks = dict(str_start=self.info_start, str_end=self.info_end,
                                 ind_start=[], ind_end=[], blocks=[],
@@ -200,8 +196,9 @@ class Pythia8Parser(object):
         Returns
         -------
         Event
-            Event object, which contains info about the event, a list of Particles in the event,
-            and a NetworkX graph object with particles assigned to nodes.
+            Event object containing info about the event.
+        list[NodeParticle]
+            Collection of NodeParticles to be assigned to a graph.
         """
         log.info("Opening event file %s", self.filename)
         with open(self.filename, "r") as f:
@@ -243,9 +240,4 @@ class Pythia8Parser(object):
         # Full event blocks:
         full_node_particles = self.block_types["FullEvent"]["blocks"][self.event_num].parser_results
 
-        # Assign particles to graph nodes
-        event.particles = [np.particle for np in full_node_particles]
-        event.graph = node_grapher.assign_particles_nodes(node_particles=full_node_particles,
-                                                          remove_redundants=self.remove_redundants)
-
-        return event
+        return event, full_node_particles

@@ -10,8 +10,6 @@ from __future__ import absolute_import, division
 from pprint import pformat
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
-import pythiaplotter.graphers.edge_grapher as edge_grapher
-from pythiaplotter.graphers.converters import edge_to_node
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, EdgeParticle
 
@@ -27,7 +25,7 @@ class HepMCParser(object):
     return first event in file.
     """
 
-    def __init__(self, filename, event_num=0, remove_redundants=True):
+    def __init__(self, filename, event_num=0):
         """
         Parameters
         ----------
@@ -35,12 +33,9 @@ class HepMCParser(object):
             Input filename.
         event_num : int, optional
             Index of event to parse in input file. (0 = first event)
-        remove_redundants : bool, optional
-            Remove redundant particles from the graph.
         """
         self.filename = filename
         self.event_num = event_num
-        self.remove_redundants = remove_redundants
         self.events = []
 
     def __repr__(self):
@@ -55,8 +50,9 @@ class HepMCParser(object):
         Returns
         -------
         Event
-            Event object, which contains info about the event, a list of Particles in the event,
-            and a NetworkX graph object with particles assigned to edges.
+            Event object containing info about the event.
+        list[EdgeParticle]
+            Collection of EdgeParticles to be assigned to a graph.
         """
         # Loop through file, line-by-line.
         # Once we reach an event line with the require line number, then
@@ -77,8 +73,6 @@ class HepMCParser(object):
                     # General GenEvent information
                     if current_event:
                         # Do only having read in all particles in an event
-                        # current_event.particles = [ep.particle for ep in edge_particles]
-                        current_event.particles = edge_particles
                         break
 
                     if line.startswith("E"):
@@ -131,7 +125,7 @@ class HepMCParser(object):
             raise IndexError("Cannot find an event with event number %d" % self.event_num)
 
         # Correct units
-        for p in current_event.particles:
+        for p in edge_particles:
             for attr in ['px', 'py', 'pz', 'mass', 'energy', 'pt']:
                 try:
                     val = getattr(p.particle, attr)
@@ -139,9 +133,7 @@ class HepMCParser(object):
                 except AttributeError:
                     pass
 
-        current_event.graph = edge_grapher.assign_particles_edges(current_event.particles,
-                                                                  self.remove_redundants)
-        return current_event
+        return current_event, edge_particles
 
     def parse_event_line(self, line):
         """Parse a HepMC GenEvent line and return an Event object"""

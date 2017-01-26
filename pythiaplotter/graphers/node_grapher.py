@@ -10,7 +10,7 @@ import networkx as nx
 log = logging.getLogger(__name__)
 
 
-def assign_particles_nodes(node_particles, remove_redundants=True):
+def assign_particles_nodes(node_particles):
     """Attach Particles to a directed graph when NODES represent particles via NodeParticles.
 
     NodeParticle objects must have their parent_codes specified for this to work.
@@ -22,10 +22,6 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     node_particles : list[NodeParticle]
         List of NodeParticles, whose Particle's will be attached to a graph
         with the relationship specified by self.parent_codes.
-
-    remove_redundants : bool, optional
-        Bool to remove redundant nodes that have the same PDGID as parent,
-        and only 1 parent and 1 child.
 
     Returns
     -------
@@ -68,10 +64,6 @@ def assign_particles_nodes(node_particles, remove_redundants=True):
     # log.debug("Graph nodes after assigning: %s" % gr.node)
 
     remove_isolated_nodes(gr)
-
-    if remove_redundants:
-        remove_redundant_nodes(gr)
-        # log.debug("Graph nodes after remove_redundants: %s" % gr.node)
 
     return gr
 

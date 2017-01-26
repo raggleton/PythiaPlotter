@@ -12,7 +12,6 @@ from __future__ import absolute_import
 import logging
 import pythiaplotter.utils.logging_config  # NOQA
 from pythiaplotter.utils.common import map_columns_to_dict
-import pythiaplotter.graphers.node_grapher as node_grapher
 from .event_classes import Event, Particle, NodeParticle
 
 
@@ -22,7 +21,7 @@ log = logging.getLogger(__name__)
 class CMSSWParticleListParser(object):
     """Main class to parse ParticleListDrawer as output by CMSSW"""
 
-    def __init__(self, filename, remove_redundants=True):
+    def __init__(self, filename):
         """
         Parameters
         ----------
@@ -32,7 +31,6 @@ class CMSSWParticleListParser(object):
             Remove redundant particles from the graph.
         """
         self.filename = filename
-        self.remove_redundants = remove_redundants
 
     def parse(self):
         """Parse contents of the input file, extract particles, and assign to a NetworkX graph.
@@ -40,8 +38,9 @@ class CMSSWParticleListParser(object):
         Returns
         -------
         Event
-            Event object, which contains info about the event, a list of Particles in the event,
-            and a NetworkX graph object with particles assigned to nodes.
+            Event object containing info about the event.
+        list[NodeParticle]
+            Collection of NodeParticles to be assigned to a graph.
         """
 
         log.info("Opening event file %s", self.filename)
@@ -74,10 +73,7 @@ class CMSSWParticleListParser(object):
                         particle_line = False
                         break
 
-        event.particles = [np.particle for np in node_particles]
-        event.graph = node_grapher.assign_particles_nodes(node_particles,
-                                                          self.remove_redundants)
-        return event
+        return event, node_particles
 
     def parse_particle_line(self, line):
         """Parse line representing a particle, return a NodeParticle."""

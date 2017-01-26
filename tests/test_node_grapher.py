@@ -93,6 +93,7 @@ class NodeGrapher_Test(unittest.TestCase):
                           parent_barcodes=list(range(3, 5)))
         particles = [p1, p2, p3, p4, p5]
         g = ng.assign_particles_nodes(particles)
+        ng.remove_redundant_nodes(g)
         particles.remove(p4)
         self.check_graph_nodes([p.particle for p in particles], g)
         edges = [(1, 2), (1, 3), (2, 5), (3, 5)]

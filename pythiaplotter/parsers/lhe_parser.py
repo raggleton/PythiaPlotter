@@ -12,7 +12,6 @@ import logging
 import pythiaplotter.utils.logging_config  # NOQA
 # import xml.etree.ElementTree as ET  # slowwww
 from lxml import etree as ET  # MegaGainz
-import pythiaplotter.graphers.node_grapher as node_grapher
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
 
@@ -28,7 +27,7 @@ class LHEParser(object):
     return first event in file.
     """
 
-    def __init__(self, filename, event_num=0, remove_redundants=True):
+    def __init__(self, filename, event_num=0):
         """
         Parameters
         ----------
@@ -36,12 +35,9 @@ class LHEParser(object):
             Input filename.
         event_num : int, optional
             Index of event to parse in input file. (0 = first event)
-        remove_redundants : bool, optional
-            Remove redundant particles from the graph.
         """
         self.filename = filename
         self.event_num = event_num
-        self.remove_redundants = remove_redundants
         self.events = []
 
     def __repr__(self):
@@ -56,8 +52,9 @@ class LHEParser(object):
         Returns
         -------
         Event
-            Event object, which contains info about the event, a list of Particles in the event,
-            and a NetworkX graph object with particles assigned to nodes.
+            Event object containing info about the event.
+        list[NodeParticle]
+            Collection of NodeParticles to be assigned to a graph.
         """
         log.info("Opening event file %s", self.filename)
         tree = ET.parse(self.filename)
@@ -82,10 +79,9 @@ class LHEParser(object):
             log.exception("Cannot find the <event> block %d in LHE file", self.event_num)
             raise
 
-        event = self.parse_event_text(root[event_ind].text)
-        log.debug(event.particles)
-        event.graph = node_grapher.assign_particles_nodes(event.particles, self.remove_redundants)
-        return event
+        event, node_particles = self.parse_event_text(root[event_ind].text)
+        log.debug(node_particles)
+        return event, node_particles
 
     def parse_init_text(self, text):
         """Parse the initialisation info. Currently does nothing.
@@ -141,8 +137,8 @@ class LHEParser(object):
                 node_particles.append(node_particle)
                 counter += 1
 
-        event.particles = node_particles
-        return event
+        # event.particles = node_particles
+        return event, node_particles
 
     def parse_event_line(self, line, event_num):
         """Parse a LHE event info line.

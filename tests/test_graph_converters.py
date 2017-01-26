@@ -65,7 +65,7 @@ class EdgeToNodeConverter_Test(unittest.TestCase):
         p3 = EdgeParticle(particle=Particle(barcode=3, pdgid=13),
                           vtx_out_barcode="1", vtx_in_barcode="3")
         particles = [p1, p2, p3]
-        g_edge = assign_particles_edges(particles, remove_redundants=False)
+        g_edge = assign_particles_edges(particles)
         g_node = edge_to_node(g_edge)
 
         n1 = Particle(barcode=1, pdgid=11)
@@ -103,7 +103,7 @@ class EdgeToNodeConverter_Test(unittest.TestCase):
         p6 = EdgeParticle(particle=Particle(barcode=6, pdgid=16),
                           vtx_out_barcode=3, vtx_in_barcode=6)
         particles = [p1, p2, p3, p4, p5, p6]
-        g_edge = assign_particles_edges(particles, remove_redundants=False)
+        g_edge = assign_particles_edges(particles)
         g_node = edge_to_node(g_edge)
         n1 = Particle(barcode=1, pdgid=11)
         n2 = Particle(barcode=2, pdgid=12)

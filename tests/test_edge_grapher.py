@@ -54,7 +54,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         p3 = EdgeParticle(particle=Particle(barcode=3, pdgid=11),
                           vtx_out_barcode="1", vtx_in_barcode="3")
         particles = [p1, p2, p3]
-        g = eg.assign_particles_edges(particles, remove_redundants=False)
+        g = eg.assign_particles_edges(particles)
         self.check_graph_particles([p.particle for p in particles], g)
         edges = [(0, 1), (1, 3), (1, 2)]
         self.check_graph_edges(edges, g)
@@ -79,7 +79,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         p6 = EdgeParticle(particle=Particle(barcode=6, pdgid=13),
                           vtx_out_barcode=3, vtx_in_barcode=6)
         particles = [p1, p2, p3, p4, p5, p6]
-        g = eg.assign_particles_edges(particles, remove_redundants=False)
+        g = eg.assign_particles_edges(particles)
         self.check_graph_particles([p.particle for p in particles], g)
         edges = [(0, 2), (1, 2), (2, 3), (3, 4), (3, 5), (3, 6)]
         self.check_graph_edges(edges, g)
@@ -117,7 +117,8 @@ class EdgeGrapher_Test(unittest.TestCase):
         p7 = EdgeParticle(particle=Particle(barcode=7, pdgid=22),
                           vtx_out_barcode=-6, vtx_in_barcode=-8)
         particles = [p1, p2, p3, p4, p5, p6, p7]
-        graph = eg.assign_particles_edges(particles, remove_redundants=True)
+        graph = eg.assign_particles_edges(particles)
+        eg.remove_redundant_edges(graph)
         edges = [(-1, -2), (-2, -4), (-2, -6), (-6, -7), (-6, -8)]
         self.check_graph_edges(edges, graph)
 
@@ -143,7 +144,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         p6 = EdgeParticle(particle=Particle(barcode=6, pdgid=13),
                           vtx_out_barcode=3, vtx_in_barcode=6)
         particles = [p1, p2, p3, p4, p5, p6]
-        g = eg.assign_particles_edges(particles, remove_redundants=False)
+        g = eg.assign_particles_edges(particles)
         self.assertTrue(p1.particle.initial_state)
         self.assertTrue(p2.particle.initial_state)
         self.assertTrue(p4.particle.final_state)

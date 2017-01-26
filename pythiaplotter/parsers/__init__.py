@@ -1,4 +1,5 @@
-"""Parsers read the input file, and convert the information into a NetworkX graph of particles.
+"""Parsers read the input file, and convert the information into a set of particles.
+These can then be attached to a graph.
 
 Attributes
 ----------
