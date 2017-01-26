@@ -27,6 +27,9 @@ tests: test ## cos I always forget singular or plural
 test-examples: ## run full examples test
 	pytest tests/test_examples_full.py
 
+benchmark: ## run full examples test
+	python tests/run_performance_metrics.py
+
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 clean-build: ## remove build artifacts
