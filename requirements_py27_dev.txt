@@ -85,6 +85,7 @@ six==1.10.0
 snowballstemmer==1.2.1
 Sphinx==1.5.2
 sphinx-autobuild==0.6.0
+sphinx-rtd-theme==0.1.9
 terminado==0.6
 testpath==0.3
 tornado==4.4.2
