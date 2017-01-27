@@ -9,14 +9,15 @@ python:
 os:
   - linux
 
-# no need for pytest, travis already has it
 install:
   - pip install .
+  - pip install tests/requirements.txt
 
 script:
   - make test
   - make test-examples
   - make benchmark
+  - make cov
 
 addons:
   apt:
