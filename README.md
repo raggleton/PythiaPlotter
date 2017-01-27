@@ -21,8 +21,8 @@ PythiaPlotter currently supports:
 
 - Currently, both python 2.7 and python>=3.4 are supported (although the Heppy
  input is only supported by python 2.7 due to ROOT limitations)
-- [`graphviz`](www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
-- [`PyROOT`](root.cern.ch) if you want to parse Heppy ROOT NTuples. Note that if you are in a virtualenv, 
+- [graphviz](http://www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
+- [PyROOT](https://root.cern.ch/) if you want to parse Heppy ROOT NTuples. Note that if you are in a virtualenv,
 you will need to enable global site packages. If ROOT cannot be found, then the `--inputFormat HEPPY` option will be disabled. 
 - All other required python packages will be installed automatically
 
@@ -57,6 +57,11 @@ Although only 1 printer, `dot`, is currently implemented, more are envisaged.
 You should specify the input format using `--inputFormat` (although it does try to guess), and and output printer using `-p` (defaults to DOT).
 There are also other options for specifying the output filename and format.
 
+MC generators often internally make several sequential copies of a particle, updating it as the event evolves.
+For our purposes, these are redundant particles that add no information, and just make things more complicated.
+Therefore they are removed by default.
+To keep these redundant particles use the `--redundants` flag.
+
 ### Advanced: particle representations
 
 Briefly, particles can be represented as _nodes_ (graphically represented as a dot or blob) or _edges_ (a line).
@@ -65,11 +70,14 @@ Here, we make use of the directionality of edges.
 
 - **Node representation**: edges indicate a relationship between particles, where the direction may be read as "produces" or "decays into". For example, `a ->- b` represents `a` decaying into `b`.
 
-- **Edge representation**: edges represent particles, like in a Feynman diagram. Nodes therefore join connected particles, such that all _incoming edges_ into a node may be seen a "producing" or "decaying into" all _outoping edges_.
+- **Edge representation**: edges represent particles, like in a Feynman diagram. Nodes therefore join connected particles, such that all _incoming edges_ into a node may be seen a "producing" or "decaying into" all _outgoing edges_.
 
 This difference is that input formats naturally fall into one of the two representations.
 Pythia8, LHE, Heppy are all in the **node** representation, whilst HepMC is in the **edge** representation.
-Included in this program is the possibility to convert from the default representation into the other representation using the `-r {NODE, EDGE}` flag.
+Included in this program is the possibility to convert from the default representation into the other representation using the `-r {NODE, EDGE}` option.
+This can be useful to help elucidate what's going on in an event.
+
+Note that redundant particle removal is done _after_ representation conversion.
 
 ## What Improvements Are Being Working On:
 
