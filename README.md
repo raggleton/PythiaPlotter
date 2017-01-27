@@ -23,7 +23,7 @@ PythiaPlotter currently supports:
  input is only supported by python 2.7 due to ROOT limitations)
 - [`graphviz`](www.graphviz.org) (If the command `which dot` returns a filepath, you will be fine)
 - [`PyROOT`](root.cern.ch) if you want to parse Heppy ROOT NTuples. Note that if you are in a virtualenv, 
-you will need to enable global site packages. If ROOT cannot be found, then the `--inputFormat HEPPY` options will be disabled. 
+you will need to enable global site packages. If ROOT cannot be found, then the `--inputFormat HEPPY` option will be disabled. 
 - All other required python packages will be installed automatically
 
 ## How Do I Get It:
@@ -52,9 +52,26 @@ PythiaPlotter example/example_hepmc.hepmc --open
 PythiaPlotter --help
 ```
 
-## What Improvements Are Being Working On:
+There are various input (_parser_) and output (_printer_) options.
+Although only 1 printer, `dot`, is currently implemented, more are envisaged.
+You should specify the input format using `--inputFormat` (although it does try to guess), and and output printer using `-p` (defaults to DOT).
+There are also other options for specifying the output filename and format.
 
-See TODO.md
+### Advanced: particle representations
+
+Briefly, particles can be represented as _nodes_ (graphically represented as a dot or blob) or _edges_ (a line).
+In a generic graph, edges join together nodes, and may or may not have a direction.
+Here, we make use of the directionality of edges.
+
+- **Node representation**: edges indicate a relationship between particles, where the direction may be read as "produces" or "decays into". For example, `a ->- b` represents `a` decaying into `b`.
+
+- **Edge representation**: edges represent particles, like in a Feynman diagram. Nodes therefore join connected particles, such that all _incoming edges_ into a node may be seen a "producing" or "decaying into" all _outoping edges_.
+
+This difference is that input formats naturally fall into one of the two representations.
+Pythia8, LHE, Heppy are all in the **node** representation, whilst HepMC is in the **edge** representation.
+Included in this program is the possibility to convert from the default representation into the other representation using the `-r {NODE, EDGE}` flag.
+
+## What Improvements Are Being Working On:
 
 - Parser: More parsers? Some under-the-hood magic for faster/safer processing
 - Printer: JS? TikZ/Latex printer for more formatting and more beautiful output?
