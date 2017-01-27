@@ -1,3 +1,11 @@
+.PHONY: clean clean-test clean-pyc clean-build docs
+docs:
+	sed -i '.bak' 's@docs/@@g' docs/main.rst
+	sphinx-apidoc -f -H PythiaPlotter -o docs/ pythiaplotter/
+	$(MAKE) -C docs clean
+	$(MAKE) -C docs html
+	@echo "HTML index: docs/_build/html/index.html"
+
 freeze: ## freeze package requirements
 	pip freeze -l > requirements_new.txt
 	sed -i '.bak' '/.*PythiaPlotter.*/d' requirements_new.txt
