@@ -4,7 +4,8 @@
 from __future__ import absolute_import
 import os
 import imp
-from distutils.spawn import find_executable
+# https://github.com/PyCQA/pylint/issues/73
+from distutils.spawn import find_executable  # pylint: disable=import-error,no-name-in-module
 from subprocess import call, check_output
 from sys import platform as _platform
 try:
