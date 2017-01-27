@@ -10,11 +10,11 @@ TODO: reshuffle blocks - non optimal spreading out atm
 
 from __future__ import absolute_import
 from pprint import pformat
-from pythiaplotter.utils.logging_config import get_logger
 try:
     from itertools import izip
 except ImportError:
     izip = zip
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
 

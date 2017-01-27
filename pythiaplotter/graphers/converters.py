@@ -2,9 +2,9 @@
 
 
 from __future__ import absolute_import
-from pythiaplotter.utils.logging_config import get_logger
 import copy
 import networkx as nx
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.parsers.event_classes import NodeParticle, EdgeParticle
 from .node_grapher import assign_particles_nodes
 from .edge_grapher import assign_particles_edges

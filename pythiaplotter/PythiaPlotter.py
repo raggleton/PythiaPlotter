@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Main script to run PythiaPlotter.
-"""
+"""Main script to run PythiaPlotter."""
 
 
 from __future__ import absolute_import
@@ -52,6 +50,7 @@ def choose_printer(opts):
 
 
 def main(in_args=None):
+    """Main entry point to run the whole thing."""
     opts = cli.get_args(in_args)
     parser = choose_parser(opts)
     event, particles = parser.parse()

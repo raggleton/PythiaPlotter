@@ -50,4 +50,14 @@ root.setLevel(logging.INFO)
 
 
 def get_logger(name):
+    """Get a logger with a given name.
+
+    Parameters
+    ----------
+    name : str
+
+    Returns
+    -------
+    logging.Logger
+    """
     return logging.getLogger(name)

@@ -176,6 +176,8 @@ def set_default_mode(args):
         log.info("Using default %s particle representation", args.representation)
     if args.representation != default_repr:
         log.info("Will convert from %s -> %s representation", default_repr, args.representation)
+    else:
+        log.info("Using default %s particle representation", args.representation)
 
 
 def print_options(args):

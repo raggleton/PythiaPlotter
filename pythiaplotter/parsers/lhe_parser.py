@@ -8,9 +8,9 @@ See example/example_lhe.lhe for example input file.
 
 from __future__ import absolute_import
 from pprint import pformat
-from pythiaplotter.utils.logging_config import get_logger
 # import xml.etree.ElementTree as ET  # slowwww
 from lxml import etree as ET  # MegaGainz
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
 
@@ -136,7 +136,6 @@ class LHEParser(object):
                 node_particles.append(node_particle)
                 counter += 1
 
-        # event.particles = node_particles
         return event, node_particles
 
     def parse_event_line(self, line, event_num):

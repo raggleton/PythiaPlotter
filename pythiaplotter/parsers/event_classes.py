@@ -2,9 +2,9 @@
 
 
 from __future__ import absolute_import, division
-from pythiaplotter.utils.logging_config import get_logger
 import math
 import networkx as nx
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str, get_terminal_width
 from functools import total_ordering
 

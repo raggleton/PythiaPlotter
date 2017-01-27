@@ -48,11 +48,11 @@ class EdgeGrapher_Test(unittest.TestCase):
 
         """
         p1 = EdgeParticle(particle=Particle(barcode=1, pdgid=11),
-                          vtx_out_barcode="0", vtx_in_barcode="1")
+                          vtx_out_barcode=0, vtx_in_barcode=1)
         p2 = EdgeParticle(particle=Particle(barcode=2, pdgid=11),
-                          vtx_out_barcode="1", vtx_in_barcode="2")
+                          vtx_out_barcode=1, vtx_in_barcode=2)
         p3 = EdgeParticle(particle=Particle(barcode=3, pdgid=11),
-                          vtx_out_barcode="1", vtx_in_barcode="3")
+                          vtx_out_barcode=1, vtx_in_barcode=3)
         particles = [p1, p2, p3]
         g = eg.assign_particles_edges(particles)
         self.check_graph_particles([p.particle for p in particles], g)
