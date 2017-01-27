@@ -18,29 +18,17 @@ class Event(object):
     def __init__(self, event_num=0, **kwargs):
         self.event_num = int(event_num)
         self.graph = None  # to hold NetworkX graph
-        self._particles = None
         self.__dict__.update(**kwargs)
 
     def __repr__(self):
-        ignore = ["graph", "_particles", "particles"]
+        ignore = ["graph"]
         return generate_repr_str(self, ignore)
 
     def __str__(self):
         """Print event info in format suitable for use on graph or printout"""
-        ignore = ["graph", "_particles", "particles"]
-        info = [k + ": " + str(v) + "\n" for k, v in self.__dict__.items()
-                if k not in ignore]
+        ignore = ["graph"]
+        info = [k + ": " + str(v) + "\n" for k, v in self.__dict__.items() if k not in ignore]
         return "Event:\n{0}".format("".join(info))
-
-    @property
-    def particles(self):
-        return self._particles
-
-    @particles.setter
-    def particles(self, particles):
-        self._particles = particles
-        for p in self._particles:
-            p.event = self
 
     def print_stats(self):
         """Print some basic statistics about the event"""
