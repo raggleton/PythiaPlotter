@@ -34,10 +34,10 @@ def get_particle_label(particle, fancy):
         Particle label string
     """
     if fancy:
-        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}>".format(
+        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}<br/>status: {5}>".format(
             particle.barcode, pdgid_to_string(particle.pdgid),
             float(particle.__dict__.get('pt', 0)), float(particle.__dict__.get('eta', 0)),
-            float(particle.__dict__.get('phi', 0)))
+            float(particle.__dict__.get('phi', 0)), particle.status)
         label = label.replace("inf", "&#x221e;")
         return label
     else:
