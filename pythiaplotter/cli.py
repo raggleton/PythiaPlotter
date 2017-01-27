@@ -173,7 +173,7 @@ def set_default_mode(args):
     default_repr = parser_opts[args.inputFormat].default_representation
     if not args.representation:
         args.representation = default_repr
-    log.info("Using %s particle representation", args.representation)
+        log.info("Using default %s particle representation", args.representation)
     if args.representation != default_repr:
         log.info("Will convert from %s -> %s representation", default_repr, args.representation)
 
