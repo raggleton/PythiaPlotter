@@ -12,8 +12,7 @@ See example/example_heppy.root for example input file.
 from __future__ import absolute_import
 from contextlib import contextmanager
 from itertools import chain
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 try:
     from itertools import izip
 except ImportError:
@@ -28,7 +27,7 @@ ROOT.gErrorIgnoreLevel = 1  # turn off the printing output
 ROOT.gROOT.SetBatch(1)
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class HeppyParser(object):

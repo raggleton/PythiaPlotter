@@ -2,8 +2,7 @@
 
 
 from __future__ import absolute_import
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 import copy
 import networkx as nx
 from pythiaplotter.parsers.event_classes import NodeParticle, EdgeParticle
@@ -11,7 +10,7 @@ from .node_grapher import assign_particles_nodes
 from .edge_grapher import assign_particles_edges
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def edge_to_node(graph):

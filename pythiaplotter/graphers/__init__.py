@@ -2,14 +2,13 @@
 
 
 from __future__ import absolute_import
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.graphers.edge_grapher import assign_particles_edges, remove_redundant_edges
 from pythiaplotter.graphers.node_grapher import assign_particles_nodes, remove_redundant_nodes
 from pythiaplotter.graphers.converters import node_to_edge, edge_to_node
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove_redundants=True):

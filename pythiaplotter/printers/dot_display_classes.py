@@ -9,14 +9,13 @@ possible to simplify things...
 
 
 from __future__ import absolute_import
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 from pythiaplotter.utils.common import generate_repr_str
 from .dot_config import DOT_PARTICLE_OPTS, DOT_GRAPH_OPTS
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def get_particle_label(particle, fancy):
@@ -162,7 +161,7 @@ class DotGraphAttr(object):
     """Hold Graphviz attributes for the graph as whole."""
 
     def __init__(self, graph):
-        self.graph = graph
+        self.graph = graph  # TODO: does this do anything?
         self.attr = DOT_GRAPH_OPTS.copy()
         # Add units to plot title
         label = self.attr.get("label", "")

@@ -7,8 +7,7 @@ Main script to run PythiaPlotter.
 
 from __future__ import absolute_import
 import sys
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 
 import pythiaplotter.parsers as parsers
 import pythiaplotter.printers as printers
@@ -17,7 +16,7 @@ import pythiaplotter.cli as cli
 from pythiaplotter.utils.common import open_pdf
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def choose_parser(opts):

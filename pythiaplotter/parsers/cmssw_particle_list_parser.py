@@ -9,13 +9,12 @@ TODO: perhaps this needs a name change...
 
 
 from __future__ import absolute_import
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import map_columns_to_dict
 from .event_classes import Event, Particle, NodeParticle
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class CMSSWParticleListParser(object):

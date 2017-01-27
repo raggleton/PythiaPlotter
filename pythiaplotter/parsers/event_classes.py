@@ -2,15 +2,14 @@
 
 
 from __future__ import absolute_import, division
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 import math
 import networkx as nx
 from pythiaplotter.utils.common import generate_repr_str, get_terminal_width
 from functools import total_ordering
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class Event(object):

@@ -15,12 +15,11 @@ outgoing edge for node c.
 
 
 from __future__ import absolute_import
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 import networkx as nx
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def assign_particles_edges(edge_particles):

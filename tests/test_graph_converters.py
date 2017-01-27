@@ -2,8 +2,7 @@
 
 
 from __future__ import absolute_import, print_function
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 import unittest
 from pprint import pprint
 import pytest
@@ -15,8 +14,7 @@ from pythiaplotter.graphers.node_grapher import assign_particles_nodes
 import networkx as nx
 
 
-log = logging.getLogger(__name__)
-# log.setLevel(logging.DEBUG)
+log = get_logger(__name__)
 
 
 class Converter_Tests(unittest.TestCase):

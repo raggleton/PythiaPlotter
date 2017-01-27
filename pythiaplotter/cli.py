@@ -2,17 +2,17 @@
 
 
 from __future__ import absolute_import
+import logging
 import argparse
 import os.path
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 import pythiaplotter.utils.common as helpr
 from pythiaplotter.parsers import parser_opts
 from pythiaplotter.printers import printer_opts_checked, print_printers_requirements
 from pythiaplotter import __version__
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 def get_args(input_args):

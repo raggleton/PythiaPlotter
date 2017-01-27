@@ -11,15 +11,14 @@ Several stages:
 
 
 from __future__ import absolute_import
-import logging
 import os
 from subprocess import call
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class DotPrinter(object):

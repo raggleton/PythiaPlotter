@@ -8,15 +8,14 @@ See example/example_lhe.lhe for example input file.
 
 from __future__ import absolute_import
 from pprint import pformat
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 # import xml.etree.ElementTree as ET  # slowwww
 from lxml import etree as ET  # MegaGainz
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class LHEParser(object):

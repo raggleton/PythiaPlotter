@@ -47,3 +47,7 @@ console_handler.setFormatter(formatter)
 root = logging.getLogger()
 root.addHandler(console_handler)
 root.setLevel(logging.INFO)
+
+
+def get_logger(name):
+    return logging.getLogger(name)

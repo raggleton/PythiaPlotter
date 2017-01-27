@@ -10,8 +10,7 @@ TODO: reshuffle blocks - non optimal spreading out atm
 
 from __future__ import absolute_import
 from pprint import pformat
-import logging
-import pythiaplotter.utils.logging_config  # NOQA
+from pythiaplotter.utils.logging_config import get_logger
 try:
     from itertools import izip
 except ImportError:
@@ -20,7 +19,7 @@ from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
 
 
-log = logging.getLogger(__name__)
+log = get_logger(__name__)
 
 
 class PythiaBlock(object):
