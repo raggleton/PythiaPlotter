@@ -11,7 +11,7 @@ os:
 
 install:
   - pip install .
-  - pip install tests/requirements.txt
+  - pip install -r tests/requirements.txt
 
 script:
   - make test
