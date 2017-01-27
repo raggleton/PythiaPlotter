@@ -10,8 +10,16 @@ def test_run_py8():
     main(["example/example_pythia8.txt", '-O', 'test_py8.pdf', '--inputFormat', 'PYTHIA'])
 
 
+def test_run_py8_convert():
+    main(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '-r', 'EDGE'])
+
+
 def test_run_hepmc():
     main(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC'])
+
+
+def test_run_hepmc_convert():
+    main(["example/example_hepmc.hepmc", '-O', 'test_hepmc_conv.pdf', '--inputFormat', 'HEPMC', '-r', 'NODE'])
 
 
 def test_run_cmssw():
