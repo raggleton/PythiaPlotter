@@ -12,13 +12,13 @@ See example/example_heppy.root for example input file.
 from __future__ import absolute_import
 from contextlib import contextmanager
 from itertools import chain
-from pythiaplotter.utils.logging_config import get_logger
 try:
     from itertools import izip
 except ImportError:
     izip = zip
+import ROOT  # pylint: disable=import-error
+from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
-import ROOT
 from .event_classes import Event, Particle, NodeParticle
 
 
