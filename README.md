@@ -31,7 +31,7 @@ you will need to enable global site packages. If ROOT cannot be found, then the 
 - The easiest way is to use `pip`:
 
 ```
-pip install git+https://github.com/raggleton/PythiaPlotter.git@proper_restructure
+pip install git+https://github.com/raggleton/PythiaPlotter.git
 ```
 
 - It can also be cloned from Github and installed locally from the base directory:
