@@ -13,7 +13,12 @@ This is easily done using ``make installe`` (note the **e**), or
 ``make reinstalle`` to uninstall and reinstall.
 
 Developers should install the packages in ``tests/requirements.txt`` for
-running the tests, and ``docs/requirements.txt`` for making the docs.
+running the tests, and ``docs/requirements.txt`` for making the docs:
+
+::
+
+    pip install docs/requirements.txt
+    pip install tests/requirements.txt
 
 Design Notes
 ============
