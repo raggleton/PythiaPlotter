@@ -30,6 +30,12 @@ test-examples: ## run full examples test
 benchmark: ## run full examples test
 	python tests/run_performance_metrics.py
 
+cov:  ## run coverage
+	coverage run -m pytest
+	coverage report
+	coverage html
+	@echo "Report in htmlcov/index.html"
+
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
 clean-build: ## remove build artifacts
