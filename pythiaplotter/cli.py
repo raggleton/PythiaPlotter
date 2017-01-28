@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import logging
 import argparse
 import os.path
+from collections import OrderedDict
 from pythiaplotter.utils.logging_config import get_logger
 import pythiaplotter.utils.common as helpr
 from pythiaplotter.parsers import parser_opts
@@ -75,6 +76,21 @@ def get_args(input_args):
                               help="Particle representation for output diagram, "
                                    "either representated by Nodes or as Edges",
                               choices=["NODE", "EDGE"])
+
+    layouts = OrderedDict()
+    layouts["dot"] = "(Default) Hierarchical drawings of directed graphs."
+    layouts["neato"] = "'Spring model' layout by minimizing a global energy function."
+    layouts["fdp"] = "'Spring model' layout by reducing forces."
+    layouts["sfdp"] = "Multiscale version of fdp for the layout of large graphs."
+    layouts["twopi"] = "Radial layout. Nodes are placed on concentric circles " \
+                       "depending their distance from a given root node."
+    layouts["circo"] = "Circular layout."
+    layout_help = ["{}: {}".format(k, v) for k, v in layouts.items()]
+    output_group.add_argument("--layout",
+                              help=("Algorithm to use for arranging nodes & edges:\n"
+                                    + "\n".join(layout_help)),
+                              choices=list(layouts.keys()),
+                              default="dot")
 
     printer_help = ["Printing methods:"]
     printer_help.extend(["{0}: {1}".format(k, v.description)

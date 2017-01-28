@@ -14,6 +14,10 @@ def test_run_py8_convert():
     main(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '-r', 'EDGE'])
 
 
+def test_run_py8_sfdp():
+    main(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '--layout', 'sfdp'])
+
+
 def test_run_hepmc():
     main(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC'])
 

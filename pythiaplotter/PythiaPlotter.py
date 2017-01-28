@@ -43,7 +43,7 @@ def choose_printer(opts):
 
     if opts.printer == "DOT":
         return printers.DotPrinter(output_filename=opts.output,
-                                   renderer="dot",
+                                   renderer=opts.layout,
                                    output_format=opts.outputFormat)
     elif opts.printer == "LATEX":
         return None
