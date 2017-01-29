@@ -12,7 +12,7 @@ log = get_logger(__name__)
 def assign_particles_nodes(node_particles):
     """Attach Particles to a directed graph when NODES represent particles via NodeParticles.
 
-    NodeParticle objects must have their parent_codes specified for this to work.
+    NodeParticle objects must have their parent_barcodes specified for this to work.
 
     It automatically attaches directed edges, between parent and child nodes.
 
@@ -20,7 +20,7 @@ def assign_particles_nodes(node_particles):
     ----------
     node_particles : list[NodeParticle]
         List of NodeParticles, whose Particle's will be attached to a graph
-        with the relationship specified by self.parent_codes.
+        with the relationship specified by self.parent_barcodes.
 
     Returns
     -------
@@ -42,10 +42,10 @@ def assign_particles_nodes(node_particles):
 
     # assign edges between Parents/Children
     for np in node_particles:
-        if np.parent_codes:
-            if np.parent_codes[0] == system_barcode and np.parent_codes[-1] == system_barcode:
+        if np.parent_barcodes:
+            if np.parent_barcodes[0] == system_barcode and np.parent_barcodes[-1] == system_barcode:
                 continue
-            for i in np.parent_codes:
+            for i in np.parent_barcodes:
                 gr.add_edge(i, np.particle.barcode)
 
     # Set initial_state and final_state flags, based on number of parents
@@ -115,6 +115,6 @@ def remove_redundant_nodes(graph):
                 removed_nodes.append(node)
                 # rewire the graph
                 log.debug("Removing (%d) %s", node, data['particle'])
-                child.parent_codes = [parent.barcode]
+                child.parent_barcodes = [parent.barcode]
                 graph.remove_node(node)  # also removes the relevant edges
                 graph.add_edge(parent.barcode, child.barcode)

@@ -156,7 +156,7 @@ class NodeParticle(object):
             List of parent barcodes
         """
         self.particle = particle
-        self.parent_codes = parent_barcodes
+        self.parent_barcodes = parent_barcodes
 
     def __repr__(self):
         return generate_repr_str(self)
