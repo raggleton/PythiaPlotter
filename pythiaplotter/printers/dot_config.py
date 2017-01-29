@@ -1,10 +1,10 @@
 """Default configuration for dot printer.
 
 Settings for the graph as whole are stored in `DOT_GRAPH_OPTS`.
-This stores attribute name: value pairs, see TODO
+This stores attribute name: value pairs. See link below for possible options.
 
 Settings for particles are stored in `DOT_PARTICLE_OPTS`, in a variety of
-ParticleDotDisplayAttr namedtuples, with fields `filter` and `attr`.
+dicts, with fields `filter` and `attr`.
 
 The `filter` field is a lambda, which acts upon each `Particle` in the `Event`.
 Therefore you are free to insert any expression to select particles.
@@ -16,19 +16,18 @@ suitable attribute name & value as described in the GraphViz documentation:
 http://www.graphviz.org/doc/info/attrs.html
 http://www.graphviz.org/doc/info/colors.html
 
-Note that in the event of several ParticleDotDisplayAttr evaulating True,
-only the first matching ParticleDotDisplayAttr in the list will be used.
+Note that in the event of several option dicts evaulating True,
+only the first matching dict in the list will be used.
 """
 
 
 from __future__ import absolute_import, division
-from collections import namedtuple
 
 
 # Settings for the entire graph
 DOT_GRAPH_OPTS = {
     "rankdir": "LR",
-    "ranksep": 0.4,
+    "ranksep": 0.6,
     "nodesep": 0.6,
     "labelloc": "top",
     "labeljust": "left",
@@ -36,13 +35,10 @@ DOT_GRAPH_OPTS = {
 }
 
 
-ParticleDotDisplayAttr = namedtuple("ParticleDotDisplayAttr", ["filter", "attr"])
-
 # Settings for particles.
 DOT_PARTICLE_OPTS = [
-
     # Example for b quarks
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: abs(p.pdgid) == 5,
         attr={
             "node": {
@@ -55,9 +51,8 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-
     # Example for muons, taus
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: abs(p.pdgid) in [13, 15],
         attr={
             "node": {
@@ -71,9 +66,8 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-
     # Example for gluons
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: abs(p.pdgid) == 21,
         attr={
             "node": {
@@ -86,9 +80,8 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-
     # Example for photons
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: abs(p.pdgid) == 22,
         attr={
             "node": {
@@ -103,7 +96,7 @@ DOT_PARTICLE_OPTS = [
     ),
 
     # Default for initial-state particles
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: p.initial_state,
         attr={
             "node": {
@@ -120,7 +113,7 @@ DOT_PARTICLE_OPTS = [
     ),
 
     # Default for final-state particles
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: p.final_state,
         attr={
             "node": {
@@ -134,9 +127,8 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-
     # Default for all particles
-    ParticleDotDisplayAttr(
+    dict(
         filter=lambda p: True,
         attr={
             "node": {},

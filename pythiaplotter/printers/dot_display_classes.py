@@ -18,6 +18,21 @@ from .dot_config import DOT_PARTICLE_OPTS, DOT_GRAPH_OPTS
 log = get_logger(__name__)
 
 
+def validate_particle_opt(opt):
+    """Validate particle options dict"""
+    for key in ['filter', 'attr']:
+        if key not in opt:
+            raise KeyError("Key '%s' must be in particle options dict" % key)
+    for key in ['node', 'edge']:
+        if key not in opt['attr']:
+            raise KeyError("Key '%s' must be in particle options dict['attr']" % key)
+
+
+# Quick check to ensure dicts are valid
+for opt in DOT_PARTICLE_OPTS:
+    validate_particle_opt(opt)
+
+
 def get_particle_label(particle, fancy):
     """Return string for particle label to be displayed on graph.
 
@@ -93,8 +108,8 @@ class DotEdgeAttr(object):
         self.attr["label"] = get_particle_label(particle, fancy)
 
         for opt in DOT_PARTICLE_OPTS:
-            if opt.filter(particle):
-                self.attr.update(opt.attr['edge'])
+            if opt['filter'](particle):
+                self.attr.update(opt['attr']['edge'])
                 break
 
 
@@ -152,8 +167,8 @@ class DotNodeAttr(object):
         self.attr["label"] = get_particle_label(particle, fancy)
 
         for opt in DOT_PARTICLE_OPTS:
-            if opt.filter(particle):
-                self.attr.update(opt.attr['node'])
+            if opt['filter'](particle):
+                self.attr.update(opt['attr']['node'])
                 break
 
 
