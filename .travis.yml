@@ -50,10 +50,8 @@ install:
   - pip install -r tests/requirements.txt
 
 script:
-  - make test
-  - make test-examples
-  - make benchmark
   - make cov
+  - make benchmark
 
 addons:
   apt:
