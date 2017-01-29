@@ -7,7 +7,11 @@ import pytest
 
 
 def test_run_py8():
-    main(["example/example_pythia8.txt", '-O', 'test_py8.pdf', '--inputFormat', 'PYTHIA'])
+    main(["example/example_pythia8.txt", '-O', 'test_py8.pdf', '--inputFormat', 'PYTHIA', '--stats'])
+
+
+def test_run_py8_redundants():
+    main(["example/example_pythia8.txt", '-O', 'test_py8.pdf', '--inputFormat', 'PYTHIA', '--redundants'])
 
 
 def test_run_py8_convert():
@@ -20,6 +24,10 @@ def test_run_py8_sfdp():
 
 def test_run_hepmc():
     main(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC'])
+
+
+def test_run_hepmc_redundants():
+    main(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC', '--redundants'])
 
 
 def test_run_hepmc_convert():
@@ -35,8 +43,7 @@ def test_run_lhe():
 
 
 def test_run_lhe_ps():
-    main(["example/example_lhe.lhe", '-O', 'test_lhe_ps.pdf', '--inputFormat', 'LHE',
-          '--outputFormat', 'ps'])
+    main(["example/example_lhe.lhe", '-O', 'test_lhe_ps.pdf', '--inputFormat', 'LHE', '--outputFormat', 'ps'])
 
 
 def test_run_lhe_jpeg():
@@ -44,5 +51,5 @@ def test_run_lhe_jpeg():
 
 
 def test_run_heppy():
-    pyroot = pytest.importorskip("ROOT")
+    pytest.importorskip("ROOT")
     main(["example/example_heppy.root", '-O', "test_heppy.pdf", '--inputFormat', "HEPPY"])
