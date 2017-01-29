@@ -78,7 +78,7 @@ class Particle(object):
         self.event = None  # parent event
         self.__dict__.update(**kwargs)
         if all([k in kwargs for k in ['px', 'py', 'pz']]):
-            pt, eta, phi = convert_px_py_pz_e_m(float(self.px), float(self.py), float(self.pz))
+            pt, eta, phi = convert_px_py_pz(float(self.px), float(self.py), float(self.pz))
             self.__dict__['pt'] = pt
             self.__dict__['eta'] = eta
             self.__dict__['phi'] = phi
@@ -98,7 +98,7 @@ class Particle(object):
         return self.barcode < other.barcode
 
 
-def convert_px_py_pz_e_m(px, py, pz):
+def convert_px_py_pz(px, py, pz):
     """Convert cartesian momentum components :math:`p_x, p_y, p_z` into :math:`p_T, \eta, \phi`
 
     Notes
