@@ -8,15 +8,23 @@ python:
 env:
   - ROOT=5.34.32
   - ROOT=6.04
+  - ROOT=NONE
 
-# matrix:
-#   exclude:
-#     - python: 3.4
-#       env: ROOT=5.34.32
-#     - python: 3.5
-#       env: ROOT=5.34.32
-#     - python: 3.6
-#       env: ROOT=5.34.32
+# stop duplicate jobs
+matrix:
+  exclude:
+    - python: 2.7
+      env: ROOT=NONE
+    - python: 3.4
+      env: ROOT=NONE
+    - python: 3.5
+      env: ROOT=5.34.32
+    - python: 3.5
+      env: ROOT=6.04
+    - python: 3.6
+      env: ROOT=5.34.32
+    - python: 3.6
+      env: ROOT=6.04
 
 # don't add osx, python not supported
 os:
@@ -33,11 +41,11 @@ install:
   - conda config --add channels http://conda.anaconda.org/NLeSC
   - conda config --set show_channel_urls yes
   - echo $TRAVIS_PYTHON_VERSION
-  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION}
-  - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
-  - source activate testenv
-  # - if [[ ${TRAVIS_PYTHON_VERSION} == 2* ]]; then conda install root=${ROOT} root-numpy numpy matplotlib nose sphinx pytables; fi  # only install ROOT for py2.7
-  - conda install root=${ROOT} root-numpy numpy matplotlib nose sphinx pytables
+  - MYENV=testenv
+  - conda create -q -n ${MYENV} python=${TRAVIS_PYTHON_VERSION}
+  - export CONDA_ENV_PATH=$HOME/miniconda/envs/${MYENV}
+  - if [[ ${ROOT} != "NONE" ]]; then conda install --name ${MYENV} root=${ROOT}; fi
+  - source activate ${MYENV}
   - pip install .
   - pip install -r tests/requirements.txt
 
