@@ -127,6 +127,14 @@ class HeppyParser(object):
                              mass=float(contents_dict['mass']))
                 np = NodeParticle(p, parent_barcodes=mother_map.get(ind, []))
 
+                # Kill the load of final-state particles who are children of an
+                # incoming proton, heppy like to produce loads of these
+                parent_particles = [n for n in node_particles
+                                    if n.barcode in np.parent_barcodes]
+                if (p.status == 1 and len(parent_particles) == 1 and
+                    parent_particles[0].barcode in [0, 1]):
+                    continue
+
                 log.debug(np)
 
                 node_particles.append(np)
