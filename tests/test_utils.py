@@ -35,6 +35,8 @@ class Common_Test(unittest.TestCase):
         if check_dir_exists(createDir):
             os.rmdir(createDir)
         check_dir_exists_create(createDir)
+        # do it again, to ensure no errors if already exists
+        check_dir_exists_create(createDir)
         self.assertTrue(check_dir_exists(createDir))
         os.rmdir(createDir)
         self.assertFalse(check_dir_exists(createDir))
