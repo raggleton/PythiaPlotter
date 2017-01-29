@@ -35,7 +35,7 @@ def choose_parser(opts):
         return parsers.HeppyParser(filename=opts.input,
                                    event_num=opts.eventNumber)
     else:
-        return None
+        raise NotImplementedError("Cannot parse input format %s" % opts.inputFormat)
 
 
 def choose_printer(opts):
