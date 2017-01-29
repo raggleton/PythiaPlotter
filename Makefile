@@ -35,11 +35,11 @@ tests: test ## cos I always forget singular or plural
 test-examples: ## run full examples test
 	python -m pytest -r fEsp tests/test_examples_full.py
 
-benchmark: ## run full examples test
+benchmark: ## run performance metrics
 	python tests/run_performance_metrics.py
 
-cov:  ## run coverage
-	coverage run -m pytest
+cov:  ## run coverage with all tests
+	coverage run -m pytest -r fEsp
 	coverage report
 	coverage html
 	@echo "Report in htmlcov/index.html"
