@@ -9,14 +9,14 @@ env:
   - ROOT=5.34.32
   - ROOT=6.04
 
-matrix:
-  exclude:
-    - python: 3.4
-      env: ROOT=5.34.32
-    - python: 3.5
-      env: ROOT=5.34.32
-    - python: 3.6
-      env: ROOT=5.34.32
+# matrix:
+#   exclude:
+#     - python: 3.4
+#       env: ROOT=5.34.32
+#     - python: 3.5
+#       env: ROOT=5.34.32
+#     - python: 3.6
+#       env: ROOT=5.34.32
 
 # don't add osx, python not supported
 os:
@@ -36,7 +36,8 @@ install:
   - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION}
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
-  - if [[ ${TRAVIS_PYTHON_VERSION} == 2* ]]; then conda install root=${ROOT} root-numpy numpy matplotlib nose sphinx pytables; fi  # only install ROOT for py2.7
+  # - if [[ ${TRAVIS_PYTHON_VERSION} == 2* ]]; then conda install root=${ROOT} root-numpy numpy matplotlib nose sphinx pytables; fi  # only install ROOT for py2.7
+  - conda install root=${ROOT} root-numpy numpy matplotlib nose sphinx pytables
   - pip install .
   - pip install -r tests/requirements.txt
 
