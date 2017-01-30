@@ -8,8 +8,10 @@ See example/example_lhe.lhe for example input file.
 
 from __future__ import absolute_import
 from pprint import pformat
-# import xml.etree.ElementTree as ET  # slowwww
-from lxml import etree as ET  # MegaGainz
+try:
+    from lxml import etree as ET  # MegaGainz
+except ImportError:
+    import xml.etree.ElementTree as ET  # slowwww
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import map_columns_to_dict, generate_repr_str
 from .event_classes import Event, Particle, NodeParticle
