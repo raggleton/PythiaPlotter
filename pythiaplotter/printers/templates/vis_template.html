@@ -6,12 +6,10 @@
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
 
   <style type="text/css">
-    h2 {
+    * {
       font-family: sans-serif;
     }
-    h3 {
-      font-family: sans-serif;
-    }
+
     #mynetwork {
       margin: auto;
       width: 98%;
@@ -24,8 +22,11 @@
 
 <body>
 <h2>Diagram of {{inputfile}}</h2>
-<h3>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel.</h3>
-
+<span style="vertical-align: middle;">
+  <b>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel.</b>
+  <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
+</span>
+<p></p>
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
@@ -40,7 +41,7 @@
     var container = document.getElementById('mynetwork');
     var options = {
       nodes: {
-         font: {
+        font: {
           size: 18
         }
       },
@@ -73,7 +74,16 @@
     // network.on("click",neighbourhoodHighlight);
   }
 
-  redrawAll()
+  redrawAll();
+
+ function switchNodeDirection() {
+    var changes = [];
+    nodesDataset.get({fields: ['id', 'x', 'y']}).forEach(function(node) {
+      changes.push({id: node.id, x: node.y, y: node.x});
+    });
+    nodesDataset.update(changes);
+    network.fit();
+  }
 
 </script>
 
