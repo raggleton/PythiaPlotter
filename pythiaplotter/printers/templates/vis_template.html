@@ -39,23 +39,11 @@
   function redrawAll() {
     var container = document.getElementById('mynetwork');
     var options = {
-      // nodes: {
-      //   shape: 'dot',
-      //   scaling: {
-      //     min: 10,
-      //     max: 30,
-      //     label: {
-      //       min: 8,
-      //       max: 30,
-      //       drawThreshold: 12,
-      //       maxVisible: 20
-      //     }
-      //   },
-      //   font: {
-      //     size: 12,
-      //     face: 'Tahoma'
-      //   }
-      // },
+      nodes: {
+         font: {
+          size: 18
+        }
+      },
       autoResize: true,
       width: '100%',
       height: '100%',
@@ -75,7 +63,7 @@
         hideEdgesOnDrag: false
       }
     };
-    var data = {nodes:nodesDataset, edges:edgesDataset}
+    var data = {nodes:nodesDataset, edges:edgesDataset};
 
     network = new vis.Network(container, data, options);
 

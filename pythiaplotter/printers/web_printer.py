@@ -32,28 +32,25 @@ class VisPrinter(object):
         return generate_repr_str(self)
 
     def print_event(self, event):
-        """Calculate layout, add to graph, and make website file for this event.
+        """Calculate layout, add to graph nodes, and make website file for this event.
 
         Parameters
         ----------
         event : Event
         """
 
-        # create a graphviz suitable input
-        gv = construct_gv_edges(event.graph)
+        graph_attr = {
+            "rankdir": "LR",
+            "ranksep": 1,
+            "nodesep": 0.6
+        }
+        gv = construct_gv_edges(event.graph, graph_attr)
 
-        # pass to dot to get JSON output with layout co-ordinates
         raw_json = get_dot_json(gv, self.renderer)
 
-        # update graph with layout co-ord
         add_node_positions(event.graph, raw_json)
 
-        # parse this and create dicts suitable for vis.js
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
-
-        # parse this and create a new JSON suitable for vis.js
-        # data_js = "test.js"
-        # write_vis_json(vis_node_dicts, vis_edge_dicts, data_js)
 
         dkwargs = dict(indent=None, sort_keys=True)
 
@@ -68,18 +65,27 @@ class VisPrinter(object):
         write_webpage(field_data, self.output_filename)
 
 
-def construct_gv_edges(graph):
-    """
+def construct_gv_edges(graph, graph_attr=None):
+    """Create a graph in DOT language with just edges specified.
+
+    This is a minimal graph, just used to determine the node positioning.
 
     Parameters
     ----------
     graph : NetworkX.MultiDiGraph
 
+    graph_attr : dict, optional
+        Graph attributes such as rankdir, nodesep
+
     Returns
     -------
     str
+        The graph in DOT language
     """
-    gv_str = ["digraph g{ rankdir=LR;ranksep=0.6;nodesep=0.4;"]
+    gv_str = ["digraph g{"]
+    if graph_attr:
+        for k, v in graph_attr.items():
+            gv_str.append("{}={};".format(k, v))
     for out_node, in_node in graph.edges_iter(data=False):
         gv_str.append("{0} -> {1};".format(out_node, in_node))
     initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
@@ -90,16 +96,19 @@ def construct_gv_edges(graph):
 
 
 def get_dot_json(graphviz_str, renderer="dot"):
-    """
+    """Get the JSON output (with co-ords) from running a layout renderer.
 
     Parameters
     ----------
     graphviz_str : str
+        Graph in DOT language.
     renderer : str, optional
+        Renderer to use. Default is dot.
 
     Returns
     -------
     str
+        JSON string
     """
     dot_args = [renderer, "-Tjson0"]
     p = Popen(dot_args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -110,12 +119,14 @@ def get_dot_json(graphviz_str, renderer="dot"):
 
 
 def add_node_positions(graph, raw_json):
-    """
+    """Update graph nodes with their positions, using info in `raw_json`.
 
     Parameters
     ----------
     graph : NetworkX.MultiDiGraph
+        Graph to be updated
     raw_json : str
+        JSON with nodes & their positions
     """
     gv_dict = json.loads(raw_json)
 
@@ -131,7 +142,7 @@ def add_node_positions(graph, raw_json):
 
 
 def create_vis_dicts(graph):
-    """
+    """Create list of dicts for nodes & edges suitable for input to vis.js
 
     Parameters
     ----------
@@ -139,12 +150,13 @@ def create_vis_dicts(graph):
 
     Returns
     -------
-    dict, dict
+    list[dict], list[dict]
+        Lists of dicts corresponding to (nodes, edges)
     """
     node_dicts = []
     for node, node_data in graph.nodes_iter(data=True):
         node_dicts.append({
-            "id": node_data['particle'].barcode,
+            "id": node,
             "label": pdgid_to_string(node_data['particle'].pdgid),
             "x": node_data['pos'][0],
             "y": node_data['pos'][1]
@@ -155,29 +167,6 @@ def create_vis_dicts(graph):
         edge_dicts.append({"from": out_vtx, "to": in_vtx})
 
     return node_dicts, edge_dicts
-
-
-def write_vis_json(node_dicts, edge_dicts, json_filename):
-    """Write node and edge data to JSON.
-
-    Parameters
-    ----------
-    node_dicts : list[dict]
-
-    edge_dicts : list[dict]
-
-    json_filename : str
-        Output JSON filename
-    """
-
-    with open(json_filename, "w") as f:
-        f.write("var nodes = ")
-        dkwargs = dict(indent=None, sort_keys=True)
-        f.write(json.dumps(node_dicts, **dkwargs))
-        f.write(";\n")
-        f.write("var edges = ")
-        f.write(json.dumps(edge_dicts, **dkwargs))
-        f.write(";")
 
 
 def write_webpage(field_data, output_filename):
