@@ -1,4 +1,4 @@
-"""These tests are designed to run the program either in full using the included examples, or just parsing args."""
+"""These tests are meant to run using the included examples either in full, or just parsing args."""
 
 
 from __future__ import absolute_import
@@ -66,3 +66,7 @@ def test_run_lhe_ps(main_func=FUNC):
 def test_run_heppy(main_func=FUNC):
     pytest.importorskip("ROOT")
     main_func(["example/example_heppy.root", '-O', "test_heppy.pdf", '--inputFormat', "HEPPY"])
+
+
+def test_run_py8_web(main_func=FUNC):
+    main_func(["example/example_pythia8.txt", '-O', 'test_py8.html', '--inputFormat', 'PYTHIA', '--printer', 'WEB'])
