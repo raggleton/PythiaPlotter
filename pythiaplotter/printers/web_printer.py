@@ -7,6 +7,7 @@ from subprocess import PIPE, Popen
 from pkg_resources import resource_string
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
+from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 
 
 log = get_logger(__name__)
@@ -139,7 +140,7 @@ def create_vis_dicts(graph):
     for node, node_data in graph.nodes_iter(data=True):
         node_dicts.append({
             "id": node_data['particle'].barcode,
-            "label": node_data['particle'].barcode,
+            "label": pdgid_to_string(node_data['particle'].pdgid),
             "x": node_data['pos'][0],
             "y": node_data['pos'][1]
         })
