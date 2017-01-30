@@ -155,16 +155,22 @@ def create_vis_dicts(graph):
     """
     node_dicts = []
     for node, node_data in graph.nodes_iter(data=True):
-        node_dicts.append({
+        nd = {
             "id": node,
-            "label": pdgid_to_string(node_data['particle'].pdgid),
+            "label": "",
             "x": node_data['pos'][0],
             "y": node_data['pos'][1]
-        })
+        }
+        if 'particle' in node_data:
+            nd['label'] = pdgid_to_string(node_data['particle'].pdgid)
+        node_dicts.append(nd)
 
     edge_dicts = []
     for out_vtx, in_vtx, edge_data in graph.edges_iter(data=True):
-        edge_dicts.append({"from": out_vtx, "to": in_vtx})
+        ed = {"from": out_vtx, "to": in_vtx}
+        if 'particle' in edge_data:
+            ed['label'] = pdgid_to_string(edge_data['particle'].pdgid)
+        edge_dicts.append(ed)
 
     return node_dicts, edge_dicts
 

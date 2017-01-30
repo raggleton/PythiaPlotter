@@ -35,6 +35,10 @@ def test_run_py8_sfdp(main_func=FUNC):
     main_func(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '--layout', 'sfdp'])
 
 
+def test_run_py8_web(main_func=FUNC):
+    main_func(["example/example_pythia8.txt", '-O', 'test_py8.html', '--inputFormat', 'PYTHIA', '--printer', 'WEB'])
+
+
 def test_run_hepmc(main_func=FUNC):
     main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC'])
 
@@ -49,6 +53,10 @@ def test_run_hepmc_redundants(main_func=FUNC):
 
 def test_run_hepmc_convert(main_func=FUNC):
     main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc_conv.pdf', '--inputFormat', 'HEPMC', '-r', 'NODE'])
+
+
+def test_run_hepmc_web(main_func=FUNC):
+    main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc.html', '--inputFormat', 'HEPMC', '--printer', 'WEB'])
 
 
 def test_run_cmssw(main_func=FUNC):
@@ -66,7 +74,3 @@ def test_run_lhe_ps(main_func=FUNC):
 def test_run_heppy(main_func=FUNC):
     pytest.importorskip("ROOT")
     main_func(["example/example_heppy.root", '-O', "test_heppy.pdf", '--inputFormat', "HEPPY"])
-
-
-def test_run_py8_web(main_func=FUNC):
-    main_func(["example/example_pythia8.txt", '-O', 'test_py8.html', '--inputFormat', 'PYTHIA', '--printer', 'WEB'])
