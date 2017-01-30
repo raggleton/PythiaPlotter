@@ -23,7 +23,8 @@ setup(
         ]
     },
     package_data={
-        'pythiaplotter': ['particledata/*.tex', 'particledata/*.xml']
+        'pythiaplotter': ['particledata/*.tex', 'particledata/*.xml',
+                          'printers/templates/vis_template.html']
     },
     classifiers=[
         'Operating System :: Unix',

@@ -15,6 +15,7 @@ from __future__ import absolute_import
 import sys
 from pythiaplotter.utils.common import check_program_exists, check_module_exists, generate_repr_str
 from .dot_printer import DotPrinter
+from .web_printer import VisPrinter
 
 
 class PrinterOption(object):
@@ -49,6 +50,13 @@ printer_opts_all = {
     "DOT": PrinterOption(
         description="Fast, but basic formatting",
         printer=DotPrinter,
+        requires={
+            "programs": ["dot"]  # assuming that sfdp, neato etc also work...
+        }
+    ),
+    "WEB": PrinterOption(
+        description="Interactive diagram in your browser",
+        printer=VisPrinter,
         requires={
             "programs": ["dot"]
         }

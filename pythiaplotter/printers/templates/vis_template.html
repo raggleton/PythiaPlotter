@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <title>PythiaPlotter - {{title}}</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
+
+  <style type="text/css">
+    h2 {
+      font-family: sans-serif;
+    }
+    h3 {
+      font-family: sans-serif;
+    }
+    #mynetwork {
+      margin: auto;
+      width: 98%;
+      position: absolute;
+      height: 80%;
+      border: 1px solid lightgray;
+    }
+  </style>
+</head>
+
+<body>
+<h2>Diagram of {{inputfile}}</h2>
+<h3>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel.</h3>
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+  var network;
+  var allNodes;
+  var highlightActive = false;
+
+  var nodesDataset = new vis.DataSet({{nodedata}});
+  var edgesDataset = new vis.DataSet({{edgedata}});
+
+  function redrawAll() {
+    var container = document.getElementById('mynetwork');
+    var options = {
+      // nodes: {
+      //   shape: 'dot',
+      //   scaling: {
+      //     min: 10,
+      //     max: 30,
+      //     label: {
+      //       min: 8,
+      //       max: 30,
+      //       drawThreshold: 12,
+      //       maxVisible: 20
+      //     }
+      //   },
+      //   font: {
+      //     size: 12,
+      //     face: 'Tahoma'
+      //   }
+      // },
+      autoResize: true,
+      width: '100%',
+      height: '100%',
+      edges: {
+        arrows: {to: {enabled: true}},
+        width: 0.15,
+        color: {inherit: 'from'},
+        smooth: {
+          type: 'continuous'
+        }
+      },
+      physics: false,
+      interaction: {
+        keyboard: true,
+        navigationButtons: true,
+        tooltipDelay: 200,
+        hideEdgesOnDrag: false
+      }
+    };
+    var data = {nodes:nodesDataset, edges:edgesDataset}
+
+    network = new vis.Network(container, data, options);
+
+    // get a JSON object
+    allNodes = nodesDataset.get({returnType:"Object"});
+
+    // network.on("click",neighbourhoodHighlight);
+  }
+
+  redrawAll()
+
+</script>
+
+</body></html>

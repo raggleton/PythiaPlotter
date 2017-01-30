@@ -47,6 +47,8 @@ def choose_printer(opts):
                                    output_format=opts.outputFormat)
     elif opts.printer == "LATEX":
         return None
+    elif opts.printer == "WEB":
+        return printers.VisPrinter(output_filename=opts.output, renderer=opts.layout)
 
 
 def main(in_args=None):
