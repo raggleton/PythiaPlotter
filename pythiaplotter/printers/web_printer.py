@@ -20,7 +20,7 @@ class VisPrinter(object):
 
         Parameters
         ----------
-        output_filename : str
+        output_filename : str, optional
             Final web page output filename
         renderer : str, optional
             Graphviz program to use for rendering layout, default is dot since dealing with DAGs
@@ -31,8 +31,13 @@ class VisPrinter(object):
     def __repr__(self):
         return generate_repr_str(self)
 
-    def print_event(self, event, make_diagram):
-        """Calculate layout, add to graph, and make website file for this event."""
+    def print_event(self, event):
+        """Calculate layout, add to graph, and make website file for this event.
+
+        Parameters
+        ----------
+        event : Event
+        """
 
         # create a graphviz suitable input
         gv = construct_gv_edges(event.graph)
@@ -192,3 +197,5 @@ def write_webpage(field_data, output_filename):
 
     with open(output_filename, 'w') as f:
         f.write(template)
+
+    log.info("Webpage written to %s", output_filename)

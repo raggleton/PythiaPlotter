@@ -24,7 +24,7 @@ log = get_logger(__name__)
 class DotPrinter(object):
     """Class to print event to file using Graphviz"""
 
-    def __init__(self, output_filename, renderer="dot", output_format="pdf"):
+    def __init__(self, output_filename, renderer="dot", output_format="pdf", make_diagram=True):
         """
 
         Parameters
@@ -35,6 +35,8 @@ class DotPrinter(object):
             Graphviz program to use for rendering layout, default is dot since dealing with DAGs
         output_format : str, optional
             Output format for diagram. Defaults to PDF.
+        make_diagram : bool, optional
+            If True, the chosen renderer converts the Graphviz file to a graph diagram.
 
         Attributes
         ----------
@@ -45,24 +47,23 @@ class DotPrinter(object):
         self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
         self.renderer = renderer
         self.output_format = output_format or os.path.splitext(self.output_filename)[1][1:]
+        self.make_diagram = make_diagram
 
     def __repr__(self):
         return generate_repr_str(self)
 
-    def print_event(self, event, make_diagram=True):
+    def print_event(self, event):
         """Write the event diagram to Graphivz file and run the renderer.
 
         Parameters
         ----------
         event : Event
             Event to print
-        make_diagram : bool
-            If True, the chosen renderer converts the Graphviz file to a graph diagram.
         """
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
         write_gv(event, self.gv_filename)
-        if make_diagram:
+        if self.make_diagram:
             print_diagram(gv_filename=self.gv_filename, output_filename=self.output_filename,
                           renderer=self.renderer, output_format=self.output_format)
 
@@ -131,11 +132,14 @@ def print_diagram(gv_filename, output_filename, renderer, output_format):
 
     Parameters
     ----------
+    gv_filename : str
+        Name of graphviz file to process
+
     output_filename : str
         Final diagram filename
 
     renderer : str
-        Graphviz program to use, defaults to dot
+        Graphviz program to use
 
     output_format : str
         Each has its own advantages, see http://www.graphviz.org/doc/info/output.html

@@ -44,7 +44,8 @@ def choose_printer(opts):
     if opts.printer == "DOT":
         return printers.DotPrinter(output_filename=opts.output,
                                    renderer=opts.layout,
-                                   output_format=opts.outputFormat)
+                                   output_format=opts.outputFormat,
+                                   make_diagram=(not opts.noOutput))
     elif opts.printer == "LATEX":
         return None
     elif opts.printer == "WEB":
@@ -64,7 +65,7 @@ def main(in_args=None):
     if opts.stats:
         event.print_stats()
     printer = choose_printer(opts)
-    printer.print_event(event, make_diagram=(not opts.noOutput))
+    printer.print_event(event)
     if opts.open and not opts.noOutput:
         open_pdf(opts.output)
     return 0
