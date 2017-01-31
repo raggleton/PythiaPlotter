@@ -37,10 +37,24 @@
   var nodesDataset = new vis.DataSet({{nodedata}});
   var edgesDataset = new vis.DataSet({{edgedata}});
 
+  var defaultNodeColor = {
+    border: '#2B7CE9',
+    background: '#97C2FC',
+    highlight: {
+      border: '#2B7CE9',
+      background: '#D2E5FF'
+    },
+    hover: {
+      border: '#2B7CE9',
+      background: '#D2E5FF'
+    }
+  };
+
   function redrawAll() {
     var container = document.getElementById('mynetwork');
     var options = {
       nodes: {
+        color: defaultNodeColor,
         font: {
           size: 18
         }
@@ -71,12 +85,12 @@
     // get a JSON object
     allNodes = nodesDataset.get({returnType:"Object"});
 
-    // network.on("click",neighbourhoodHighlight);
+     network.on("click", neighbourhoodHighlight);
   }
 
   redrawAll();
 
- function switchNodeDirection() {
+  function switchNodeDirection() {
     var changes = [];
     nodesDataset.get({fields: ['id', 'x', 'y']}).forEach(function(node) {
       changes.push({id: node.id, x: node.y, y: node.x});
@@ -85,6 +99,76 @@
     network.fit();
   }
 
+  function neighbourhoodHighlight(params) {
+    // if something is selected:
+    if (params.nodes.length > 0) {
+      highlightActive = true;
+
+      // mark all nodes as hard to read.
+      for (var node in allNodes) {hideNode(allNodes[node]);}
+
+      var selectedNodeId = params.nodes[0];
+      var selectedNode = allNodes[selectedNodeId];
+
+      // TODO: only selects children, not parents
+      var connectedNodes = network.getConnectedNodes(selectedNodeId);
+      var allConnectedNodes = [];
+
+      // get the second degree nodes
+      var i,j;
+      var degrees = 2;
+      for (i = 1; i < degrees; i++) {
+        for (j = 0; j < connectedNodes.length; j++) {
+          allConnectedNodes = allConnectedNodes.concat(network.getConnectedNodes(connectedNodes[j]));
+        }
+      }
+
+      // all first + second degree nodes get their color + label back
+      for (var node in connectedNodes) {showNode(node);}
+      for (var node in allConnectedNodes) {showNode(node);}
+
+      // the main node gets its own color and its label back.
+      showNode(selectedNode);
+    }
+    else if (highlightActive === true) {
+      // reset all nodes
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  function hideNode(node) {
+    // required cos node.color doesn't actually get the default node color...s
+    if (node.color === undefined) {
+      node.color = defaultNodeColor;
+    }
+    node.hiddenColor = node.color;
+    node.color = 'rgba(200,200,200,0.5)';
+    if (node.hiddenLabel === undefined) {
+      node.hiddenLabel = node.label;
+      node.label = undefined;
+    }
+  }
+
+  function showNode(node) {
+    if (node.hiddenColor !== undefined) {
+      node.color = node.hiddenColor;
+      node.hiddenColor = undefined;
+    }
+    if (node.hiddenLabel !== undefined) {
+      node.label = node.hiddenLabel;
+      node.hiddenLabel = undefined;
+    }
+  }
 </script>
 
 </body></html>
