@@ -105,8 +105,15 @@
     // get JSON Object with node.id as keys
     var allNodes = nodesDataset.get({returnType:"Object"});
 
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
     // if something is selected:
     if (params.nodes.length > 0) {
+
       highlightActive = true;
       // mark all nodes as hard to read.
       for (var node in allNodes) {hideNode(allNodes[node]);}
@@ -134,11 +141,6 @@
 
       // the main node gets its own color and its label back.
       showNode(selectedNode);
-    }
-    else if (highlightActive === true) {
-      // reset all nodes
-      for (var node in allNodes) {showNode(allNodes[node]);}
-      highlightActive = false;
     }
 
     // transform the object into an array
