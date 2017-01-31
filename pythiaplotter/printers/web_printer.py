@@ -8,6 +8,7 @@ from pkg_resources import resource_string
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
+from pythiaplotter.printers.web_config import WEB_LAYOUT_OPTS, WEB_GRAPH_OPTS, WEB_PARTICLE_OPTS
 
 
 log = get_logger(__name__)
@@ -39,12 +40,7 @@ class VisPrinter(object):
         event : Event
         """
 
-        graph_attr = {
-            "rankdir": "LR",
-            "ranksep": 1,
-            "nodesep": 0.6
-        }
-        gv = construct_gv_edges(event.graph, graph_attr)
+        gv = construct_gv_only_edges(event.graph, WEB_LAYOUT_OPTS)
 
         raw_json = get_dot_json(gv, self.renderer)
 
@@ -65,7 +61,7 @@ class VisPrinter(object):
         write_webpage(field_data, self.output_filename)
 
 
-def construct_gv_edges(graph, graph_attr=None):
+def construct_gv_only_edges(graph, graph_attr=None):
     """Create a graph in DOT language with just edges specified.
 
     This is a minimal graph, just used to determine the node positioning.
