@@ -33,6 +33,8 @@
 
   var nodesDataset = new vis.DataSet({{nodedata}});
   var edgesDataset = new vis.DataSet({{edgedata}});
+  var network = null;
+  var highlightActive = false;
 
   var defaultNodeColor = {
     border: '#2B7CE9',
@@ -75,10 +77,9 @@
         hideEdgesOnDrag: false
       }
     };
-    var data = {nodes:nodesDataset, edges:edgesDataset};
 
-    var highlightActive = false;
-    var network = new vis.Network(container, data, options);
+    var data = {nodes:nodesDataset, edges:edgesDataset};
+    network = new vis.Network(container, data, options);
 
     network.on("click", neighbourhoodHighlight);
   }
