@@ -109,23 +109,24 @@
 
       var selectedNodeId = params.nodes[0];
       var selectedNode = allNodes[selectedNodeId];
-
-      // TODO: only selects children, not parents
       var connectedNodes = network.getConnectedNodes(selectedNodeId);
       var allConnectedNodes = [];
-
       // get the second degree nodes
       var i,j;
       var degrees = 2;
       for (i = 1; i < degrees; i++) {
         for (j = 0; j < connectedNodes.length; j++) {
-          allConnectedNodes = allConnectedNodes.concat(network.getConnectedNodes(connectedNodes[j]));
+          network.getConnectedNodes(connectedNodes[j]).forEach(function (ind) {
+            if (!allConnectedNodes.includes(ind) && !connectedNodes.includes(ind)) {
+              allConnectedNodes.push(ind);
+            }
+          })
         }
       }
 
       // all first + second degree nodes get their color + label back
-      for (var node in connectedNodes) {showNode(node);}
-      for (var node in allConnectedNodes) {showNode(node);}
+      connectedNodes.forEach(function(i) {showNode(allNodes[i]);});
+      allConnectedNodes.forEach(function(i) {showNode(allNodes[i]);});
 
       // the main node gets its own color and its label back.
       showNode(selectedNode);
