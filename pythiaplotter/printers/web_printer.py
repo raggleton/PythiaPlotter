@@ -144,6 +144,8 @@ def add_node_positions(graph, raw_json):
 def create_vis_dicts(graph):
     """Create list of dicts for nodes & edges suitable for input to vis.js
 
+    This includes node position, label, hover info, etc
+
     Parameters
     ----------
     graph : NetworkX.MultiDiGraph
@@ -153,6 +155,16 @@ def create_vis_dicts(graph):
     list[dict], list[dict]
         Lists of dicts corresponding to (nodes, edges)
     """
+    def _generate_particle_opts(particle):
+        return {
+            'label': pdgid_to_string(particle.pdgid),
+            # does tooltip, can use HTML, css
+            'title': "{}<br/>"
+                     "p<sub>T</sub>: {pt:.3g} GeV<br/>"
+                     "&eta;: {eta:.3g}<br/>"
+                     "&phi;: {phi:.3g}".format(pdgid_to_string(particle.pdgid), **vars(particle))
+        }
+
     node_dicts = []
     for node, node_data in graph.nodes_iter(data=True):
         nd = {
@@ -162,14 +174,14 @@ def create_vis_dicts(graph):
             "y": node_data['pos'][1]
         }
         if 'particle' in node_data:
-            nd['label'] = pdgid_to_string(node_data['particle'].pdgid)
+            nd.update(_generate_particle_opts(node_data['particle']))
         node_dicts.append(nd)
 
     edge_dicts = []
     for out_vtx, in_vtx, edge_data in graph.edges_iter(data=True):
         ed = {"from": out_vtx, "to": in_vtx}
         if 'particle' in edge_data:
-            ed['label'] = pdgid_to_string(edge_data['particle'].pdgid)
+            ed.update(_generate_particle_opts(edge_data['particle']))
         edge_dicts.append(ed)
 
     return node_dicts, edge_dicts
