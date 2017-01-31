@@ -163,7 +163,7 @@ def set_default_output_settings(args):
     else:
         # Hmm default hidden here, not good
         if not args.outputFormat:
-            args.outputFormat = "pdf"
+            args.outputFormat = printer_opts_checked[args.printer].default_output_fmt
             log.info("You didn't specify an output format, defaulted to %s", args.outputFormat)
         filename = "".join([stem_name, "_", str(args.eventNumber), ".", args.outputFormat])
         args.output = os.path.join(input_dir, filename)

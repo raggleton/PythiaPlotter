@@ -20,23 +20,24 @@ from .web_printer import VisPrinter
 
 class PrinterOption(object):
 
-    def __init__(self, description, printer, requires):
+    def __init__(self, description, printer, requires, default_output_fmt):
         """Basic class to hold info about an output printer.
 
         Parameters
         ----------
         description : str
             Short description about this printer
-
         printer : class
             Printer class
-
         requires : dict
             Dict of program and module lists that are needed for this printer
+        default_output_fmt : str
+            Default output file extension
         """
         self.description = description
         self.printer = printer
         self.requires = requires
+        self.default_output_fmt = default_output_fmt
 
     def __repr__(self):
         return generate_repr_str(self)
@@ -52,14 +53,16 @@ printer_opts_all = {
         printer=DotPrinter,
         requires={
             "programs": ["dot"]  # assuming that sfdp, neato etc also work...
-        }
+        },
+        default_output_fmt="pdf"
     ),
     "WEB": PrinterOption(
         description="Interactive diagram in your browser",
         printer=VisPrinter,
         requires={
             "programs": ["dot"]
-        }
+        },
+        default_output_fmt="html"
     ),
     # "LATEX": PrinterOption(
     #     description="Slower, but fancier formatting",
