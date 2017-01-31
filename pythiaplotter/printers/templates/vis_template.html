@@ -23,7 +23,7 @@
 <body>
 <h2>Diagram of {{inputfile}}</h2>
 <span style="vertical-align: middle;">
-  <b>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel.</b>
+  <b>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel. Reset zoom using r.</b>
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
 </span>
 <p></p>
@@ -89,6 +89,13 @@
   }
 
   redrawAll();
+
+  document.addEventListener('keypress', function(e) {
+    // map "r" to rezet zoom
+    if (String.fromCharCode(e.charCode) === "r") {
+      network.fit();
+    }
+  });
 
   function switchNodeDirection() {
     var changes = [];
