@@ -145,6 +145,14 @@
 
   var options = {
     nodes: {
+      chosen: {
+        node: function(values, id, selected, hovering) {
+          values.size *= 2;
+        },
+        label: function(ctx, values, id) {
+          values.size *= 2;
+        }
+      },
       color: defaultNodeColor,
       font: {
         size: 18
@@ -166,7 +174,8 @@
       keyboard: true,
       navigationButtons: true,
       tooltipDelay: 200,
-      hideEdgesOnDrag: false
+      hideEdgesOnDrag: false,
+      hover: true
     }
   };
 
