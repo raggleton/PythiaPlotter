@@ -17,17 +17,109 @@
       height: 80%;
       border: 1px solid lightgray;
     }
+
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      text-align: center; /* makes the content horizontally centered PRAISE THE LORD!!!! */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% 30% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: auto;
+      display: inline-block; /* important for centering!! */
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    td, th {
+      border: 0px solid #dddddd;
+      text-align: left;
+      padding: 10px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
   </style>
 </head>
 
 <body>
 <h2>Diagram of {{inputfile}}</h2>
 <span style="vertical-align: middle;">
-  <b>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel. Reset zoom using r.</b>
+  Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
 </span>
-<p>Clicking on a node will highlight 2 generations of parents and children. Increase/descrease this amount using m/n.</p>
+
 <p></p>
+
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Keyboard shortcuts</h2>
+    <table>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>h</td>
+        <td>Bring up help</td>
+      </tr>
+      <tr>
+        <td>Up/down/left/right</td>
+        <td>Navigate</td>
+      </tr>
+      <tr>
+        <td>[, =</td>
+        <td>Zoom in</td>
+      </tr>
+      <tr>
+        <td>], -</td>
+        <td>Zoom out</td>
+      </tr>
+      <tr>
+        <td>r</td>
+        <td>Reset zoom</td>
+      </tr>
+      <tr>
+        <td>m</td>
+        <td>Highlight one more generation</td>
+      </tr>
+      <tr>
+        <td>n</td>
+        <td>Highlight one fewer generations</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
@@ -89,6 +181,26 @@
 
   redrawAll();
 
+  var helpModal = document.getElementById('helpModal');
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  function hideHelp() {
+    helpModal.style.display = "none";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    hideHelp()
+  };
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == helpModal) {
+      hideHelp()
+    }
+  };
+
   document.addEventListener('keypress', function(e) {
     if (String.fromCharCode(e.charCode) === "r") {
       network.fit();
@@ -98,6 +210,8 @@
     } else if (String.fromCharCode(e.charCode) === "n") {
       generationsHighlight--;
       familyHighlight(network.getSelection());
+    } else if (String.fromCharCode(e.charCode) === "h") {
+      helpModal.style.display = "block";
     }
   });
 
