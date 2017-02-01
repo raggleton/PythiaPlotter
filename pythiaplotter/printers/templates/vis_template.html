@@ -121,24 +121,22 @@
 
       var selectedNodeId = params.nodes[0];
       var selectedNode = allNodes[selectedNodeId];
+
       var connectedNodes = network.getConnectedNodes(selectedNodeId);
-      var allConnectedNodes = [];
-      // get the second degree nodes
-      var i,j;
-      var degrees = 2;
-      for (i = 1; i < degrees; i++) {
-        for (j = 0; j < connectedNodes.length; j++) {
-          network.getConnectedNodes(connectedNodes[j]).forEach(function (ind) {
-            if (!allConnectedNodes.includes(ind) && !connectedNodes.includes(ind)) {
-              allConnectedNodes.push(ind);
-            }
-          })
-        }
-      }
+
+      // only highlight direct ancestors, not siblings or cousins
+      var pc = getParentsChildren(selectedNodeId);
+      pc.parents.forEach(function (entry) {
+        var dd = getParentsChildren(entry);
+        connectedNodes.push.apply(connectedNodes, dd.parents);
+      });
+      pc.children.forEach(function (entry) {
+        var ee = getParentsChildren(entry);
+        connectedNodes.push.apply(connectedNodes, ee.children);
+      });
 
       // all first + second degree nodes get their color + label back
-      connectedNodes.forEach(function(i) {showNode(allNodes[i]);});
-      allConnectedNodes.forEach(function(i) {showNode(allNodes[i]);});
+      connectedNodes.forEach(function (i) {showNode(allNodes[i]);});
 
       // the main node gets its own color and its label back.
       showNode(selectedNode);
@@ -152,6 +150,32 @@
       }
     }
     nodesDataset.update(updateArray);
+  }
+
+  function isParent(nodeA, nodeB) {
+    // checks if A is a parent of B
+    var allEdges = edgesDataset.get({fields: ["from", "to"]});
+    for (var i=0; i < allEdges.length; i++) {
+      if ((allEdges[i].from === nodeA) && (allEdges[i].to === nodeB)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getParentsChildren(node) {
+    var allNodes = nodesDataset.get({returnType:"Object"});
+    var connections = network.getConnectedNodes(node);
+    var parents = [];
+    var children = [];
+    connections.forEach(function (entry) {
+      if (isParent(entry, node)) {
+        parents.push(entry);
+      } else {
+        children.push(entry);
+      }
+    });
+    return {parents:parents, children:children};
   }
 
   function hideNode(node) {
