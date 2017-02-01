@@ -26,6 +26,7 @@
   <b>Navigate using arrow keys or click-n-drag. Zoom in/out using [/] or =/-, or the mouse wheel. Reset zoom using r.</b>
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
 </span>
+<p>Clicking on a node will highlight 2 generations of parents and children. Increase/descrease this amount using m/n.</p>
 <p></p>
 <div id="mynetwork"></div>
 
@@ -83,15 +84,20 @@
     var data = {nodes:nodesDataset, edges:edgesDataset};
     network = new vis.Network(container, data, options);
 
-    network.on("click", neighbourhoodHighlight);
+    network.on("click", familyHighlight);
   }
 
   redrawAll();
 
   document.addEventListener('keypress', function(e) {
-    // map "r" to rezet zoom
     if (String.fromCharCode(e.charCode) === "r") {
       network.fit();
+    } else if (String.fromCharCode(e.charCode) === "m") {
+      generationsHighlight++;
+      familyHighlight(network.getSelection());
+    } else if (String.fromCharCode(e.charCode) === "n") {
+      generationsHighlight--;
+      familyHighlight(network.getSelection());
     }
   });
 
@@ -104,17 +110,15 @@
     network.fit();
   }
 
-  function neighbourhoodHighlight(params) {
+  var generationsHighlight = 2;
+
+  function familyHighlight(params) {
     // get JSON Object with node.id as keys
     var allNodes = nodesDataset.get({returnType:"Object"});
 
     // reset any current highlighting
     if (highlightActive === true) {
-      for (var nodeId in allNodes) {
-        if (allNodes.hasOwnProperty(nodeId)) {
-          showNode(allNodes[nodeId]);
-        }
-      }
+      for (var node in allNodes) {showNode(allNodes[node]);}
       highlightActive = false;
     }
 
@@ -123,10 +127,8 @@
 
       highlightActive = true;
       // mark all nodes as hard to read.
-      for (var nodeId in allNodes) {
-        if (allNodes.hasOwnProperty(nodeId)) {
-          hideNode(allNodes[nodeId]);
-        }
+      for (var node in allNodes) {
+        hideNode(allNodes[node]);
       }
 
       var selectedNodeId = params.nodes[0];
@@ -135,18 +137,32 @@
       var connectedNodes = network.getConnectedNodes(selectedNodeId);
 
       // only highlight direct ancestors, not siblings or cousins
-      var pc = getParentsChildren(selectedNodeId);
-      pc.parents.forEach(function (entry) {
-        var dd = getParentsChildren(entry);
-        connectedNodes.push.apply(connectedNodes, dd.parents);
-      });
-      pc.children.forEach(function (entry) {
-        var ee = getParentsChildren(entry);
-        connectedNodes.push.apply(connectedNodes, ee.children);
-      });
+      var family = getParentsChildren(selectedNodeId);
+      var parents = family.parents;
+      var children = family.children;
 
-      // all first + second degree nodes get their color + label back
-      connectedNodes.forEach(function (i) {showNode(allNodes[i]);});
+      for (var degree = 1; degree < generationsHighlight; degree++) {
+        var newParents = [];
+        parents.forEach(function (entry) {
+          var dd = getParentsChildren(entry);
+          newParents.push.apply(newParents, dd.parents);
+          connectedNodes.push.apply(connectedNodes, dd.parents);
+        });
+        parents = newParents;
+
+        var newChildren = [];
+        children.forEach(function (entry) {
+          var ee = getParentsChildren(entry);
+          newChildren.push.apply(newChildren, ee.children);
+          connectedNodes.push.apply(connectedNodes, ee.children);
+        });
+        children = newChildren;
+      }
+
+      // all selected nodes get their color + label back
+      connectedNodes.forEach(function (i) {
+        showNode(allNodes[i]);
+      });
 
       // the main node gets its own color and its label back.
       showNode(selectedNode);
@@ -154,7 +170,7 @@
 
     // transform the object into an array
     var updateArray = [];
-    for (var nodeId in allNodes) {
+    for (nodeId in allNodes) {
       if (allNodes.hasOwnProperty(nodeId)) {
         updateArray.push(allNodes[nodeId]);
       }
