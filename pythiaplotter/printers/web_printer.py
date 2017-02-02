@@ -1,4 +1,11 @@
-"""Print webpage with interactive graph."""
+"""Print webpage with interactive graph.
+
+This uses vis.js to do all the hard work: http://visjs.org/,
+but we still use graphviz to do the layout for (a) parity with the PDF version,
+(b) because it is faster, whereas web pages (so far) crash.
+
+Of course if I could find a graphviz-as-as-JS service, that would be cooler...
+"""
 
 
 from __future__ import absolute_import, print_function
@@ -40,9 +47,9 @@ class VisPrinter(object):
         event : Event
         """
 
-        gv = construct_gv_only_edges(event.graph, WEB_LAYOUT_OPTS)
+        gv_str = construct_gv_only_edges(event.graph, WEB_LAYOUT_OPTS)
 
-        raw_json = get_dot_json(gv, self.renderer)
+        raw_json = get_dot_json(gv_str, self.renderer)
 
         add_node_positions(event.graph, raw_json)
 
@@ -152,14 +159,21 @@ def create_vis_dicts(graph):
         Lists of dicts corresponding to (nodes, edges)
     """
     def _generate_particle_opts(particle):
-        return {
+        pd = {
             'label': pdgid_to_string(particle.pdgid),
+            'name': pdgid_to_string(particle.pdgid),
             # does tooltip, can use HTML, css
             'title': "{}<br/>"
                      "p<sub>T</sub>: {pt:.3g} GeV<br/>"
                      "&eta;: {eta:.3g}<br/>"
                      "&phi;: {phi:.3g}".format(pdgid_to_string(particle.pdgid), **vars(particle))
         }
+        attr = particle.__dict__
+        for k, v in attr.items():
+            if isinstance(v, float):
+                attr[k] = "%.3g" % v
+        pd.update(**attr)
+        return pd
 
     node_dicts = []
     for node, node_data in graph.nodes_iter(data=True):
