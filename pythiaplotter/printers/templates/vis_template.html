@@ -258,7 +258,7 @@
     var checkboxes = tooltipForm.getElementsByTagName("input");
     var changes = [];
     nodesDataset.get().forEach(function(node) {
-      var titleStr = "";
+      var titleStr = "(" + node.id + ")<br/>";
       for (var i=0; i<checkboxes.length; i++) {
         var box = checkboxes[i];
         if (!box.checked) {
