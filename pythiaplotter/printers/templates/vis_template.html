@@ -2,8 +2,12 @@
 <html><head><meta http-equiv="content-type" content="text/html; charset=UTF8">
   <title>PythiaPlotter - {{title}}</title>
 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
+  <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>-->
+  <!--<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">-->
+  <script type="text/javascript" src="../vis/dist/vis.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="../vis/dist/vis.min.css">
+  <!--<script type="text/javascript" src="../jquery/jquery-3.1.1.min.js"></script>-->
+  <!--<link type="text/css" rel="stylesheet" href="../font-awesome/font-awesome-4.7.0/css/font-awesome.min.css">-->
 
   <style type="text/css">
     * {
@@ -67,6 +71,43 @@
     tr:nth-child(even) {
       background-color: #dddddd;
     }
+
+    button.accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+      font-size: 12pt;
+    }
+
+    button.accordion:after {
+      content: '\02795'; /* Unicode character for "plus" sign (+) */
+      font-size: 13px;
+      color: #777;
+      float: right;
+      margin-left: 5px;
+    }
+
+    button.accordion.active:after {
+      content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    button.accordion.active, button.accordion:hover {
+      background-color: #ddd;
+    }
+
+    /* Style the accordion panel. Note: hidden by default */
+    div.option {
+      padding: 0 18px;
+      background-color: white;
+      display: none;
+    }
   </style>
 </head>
 
@@ -75,6 +116,7 @@
 <span style="vertical-align: middle;">
   Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
+  <button id="settingsBtn" style="vertical-align: middle;">Settings</button>
 </span>
 
 <p></p>
@@ -117,6 +159,22 @@
         <td>Highlight one fewer generations</td>
       </tr>
     </table>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal">
+  <div class="modal-content" style="width:50%">
+    <span class="close">&times;</span>
+    <h2>Settings</h2>
+    <button class="accordion">Tooltips</button>
+    <div class="option">Select fields to show:
+      <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
+    </div>
+    <button class="accordion">Highlights</button>
+    <div class="option">Something will go here</div>
+    <button class="accordion">Nodes</button>
+    <div class="option">Something will go here</div>
+    <button class="accordion">Edges</button>
   </div>
 </div>
 
@@ -190,29 +248,54 @@
 
   redrawAll();
 
-  var helpModal = document.getElementById('helpModal');
-  // Get the <span> element that closes the modal
-  var span = document.getElementsByClassName("close")[0];
-
-  function hideHelp() {
-    helpModal.style.display = "none";
+  function hideModal(modal) {
+    modal.style.display = "none";
   }
 
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
-    hideHelp()
+  var helpModal = document.getElementById('helpModal');
+  var helpModalClose = document.getElementsByClassName("close")[0];
+  helpModalClose.onclick = function() { hideModal(helpModal) };
+
+  var settingsModal = document.getElementById('settingsModal');
+  var settingsModalClose = document.getElementsByClassName("close")[1];
+  settingsModalClose.onclick = function() {
+    hideModal(settingsModal);
+    updateSettings();
+  };
+  document.getElementById("settingsBtn").onclick = function () {
+    settingsModal.style.display = "block";
   };
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
-    if (event.target == helpModal) {
-      hideHelp()
+    if (event.target == helpModal || event.target == settingsModal) {
+      hideModal(event.target)
+    }
+    if (event.target == settingsModal) {
+      updateSettings();
     }
   };
 
+  var acc = document.getElementsByClassName("accordion");
+  for (var i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+      /* Toggle between adding and removing the "active" class,
+       to highlight the button that controls the panel */
+      this.classList.toggle("active");
+
+      /* Toggle between hiding and showing the active panel */
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    }
+  }
+
   document.addEventListener('keypress', function(e) {
     if (String.fromCharCode(e.charCode) === "r") {
-      network.fit();
+      network.fit(network.getSelectedNodes());
     } else if (String.fromCharCode(e.charCode) === "m") {
       generationsHighlight++;
       familyHighlight(network.getSelection());
