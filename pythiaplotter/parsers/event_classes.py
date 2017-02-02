@@ -75,7 +75,6 @@ class Particle(object):
         self.status = int(status)
         self.final_state = final_state
         self.initial_state = initial_state
-        self.event = None  # parent event
         self.__dict__.update(**kwargs)
         if all([k in kwargs for k in ['px', 'py', 'pz']]):
             pt, eta, phi = convert_px_py_pz(float(self.px), float(self.py), float(self.pz))
@@ -84,8 +83,7 @@ class Particle(object):
             self.__dict__['phi'] = phi
 
     def __repr__(self):
-        ignore = ['event']
-        return generate_repr_str(self, ignore)
+        return generate_repr_str(self)
 
     def __str__(self):
         # Properties to print out - we don't want all of them!
