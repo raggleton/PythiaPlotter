@@ -188,6 +188,77 @@
   var network = null;
   var highlightActive = false;
 
+  var allTooltips = {
+    name: "",
+    status: "status: ",
+    energy: "E: ",
+    pt: "p<sub>T</sub>: ",
+    eta: "&eta;: ",
+    phi: "&phi;: ",
+    x: "x: ",
+    y: "y: ",
+    z: "z: ",
+    px: "p<sub>x</sub>: ",
+    py: "p<sub>y</sub>: ",
+    pz: "p<sub>z</sub>: "
+  };
+
+  var tooltipTable = document.getElementById("tooltipTable");
+  var ttKeys = Object.keys(allTooltips);
+
+  function addTooltipCheckboxEntry(key) {
+    var entry = document.createElement("td");
+    var option = document.createElement("input");
+    option.type ="checkbox";
+    option.value = allTooltips[key];
+    option.name = key;
+    var tooltipText = document.createElement("div");
+    tooltipText.style = "width:100px;display: inline-block";
+    tooltipText.innerHTML = key;
+    entry.appendChild(tooltipText);
+    entry.appendChild(option);
+    return entry;
+  }
+
+  function setupTooltipTable() {
+    for (var i = 0; i < ttKeys.length;) {
+      var row = document.createElement("tr");
+      for (var j = 0; j < 3; j++) {
+        if (ttKeys[i] != null) {
+          row.appendChild(addTooltipCheckboxEntry(ttKeys[i]));
+        }
+        i++;
+      }
+      tooltipTable.appendChild(row);
+    }
+  }
+
+  setupTooltipTable();
+
+  function updateTooltips() {
+    var tooltipForm = document.getElementById("tooltipSelection");
+    var checkboxes = tooltipForm.getElementsByTagName("input");
+    var changes = [];
+    nodesDataset.get().forEach(function(node) {
+      var titleStr = "";
+      for (var i=0; i<checkboxes.length; i++) {
+        var box = checkboxes[i];
+        if (!box.checked) {
+          continue;
+        }
+        titleStr += box.value;
+        titleStr += String(node[box.name]);
+        titleStr += "<br/>";
+      };
+      changes.push({id: node.id, title: titleStr});
+    });
+    nodesDataset.update(changes);
+  }
+
+  function updateSettings() {
+    updateTooltips();
+  }
+
   var defaultNodeColor = {
     border: '#2B7CE9',
     background: '#97C2FC',
@@ -295,7 +366,7 @@
 
   document.addEventListener('keypress', function(e) {
     if (String.fromCharCode(e.charCode) === "r") {
-      network.fit(network.getSelectedNodes());
+      network.fit();
     } else if (String.fromCharCode(e.charCode) === "m") {
       generationsHighlight++;
       familyHighlight(network.getSelection());
