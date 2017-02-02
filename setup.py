@@ -24,6 +24,7 @@ setup(
     },
     package_data={
         'pythiaplotter': ['particledata/*.tex', 'particledata/*.xml',
+                          'particledata/pythia8status.json',
                           'printers/templates/vis_template.html']
     },
     classifiers=[

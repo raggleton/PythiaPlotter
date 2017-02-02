@@ -181,7 +181,7 @@
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
-
+  var pythia8status = {{pythia8status}};
   var nodesDataset = new vis.DataSet({{nodedata}});
   var edgesDataset = new vis.DataSet({{edgedata}});
 
@@ -266,6 +266,10 @@
         }
         titleStr += box.value;
         titleStr += String(node[box.name]);
+        if ((box.name === "status") && (Math.abs(node.status) in pythia8status)) {
+          titleStr += "<br/><i>";
+          titleStr += pythia8status[Math.abs(node.status)].replace("] ", "]</i><br/>");
+        }
         titleStr += "<br/>";
       };
       changes.push({id: node.id, title: titleStr});

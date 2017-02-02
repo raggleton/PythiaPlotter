@@ -55,13 +55,16 @@ class VisPrinter(object):
 
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
+        pythia8status = template = resource_string('pythiaplotter', 'particledata/pythia8status.json')
+
         dkwargs = dict(indent=None, sort_keys=True)
 
         field_data = dict(
             title="NONE",
             nodedata=json.dumps(vis_node_dicts, **dkwargs),
             edgedata=json.dumps(vis_edge_dicts, **dkwargs),
-            inputfile="blah"
+            inputfile="blah",
+            pythia8status=pythia8status
         )
 
         # create new webpage
