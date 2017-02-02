@@ -237,7 +237,7 @@
 
   setupTooltipTable();
 
-  var defaultTooltips = ['status', 'pt', 'eta', 'phi'];
+  var defaultTooltips = ['name', 'status', 'pt', 'eta', 'phi'];
   function setIntitalTooltips() {
     defaultTooltips.forEach(function(entry){
       var tooltipForm = document.getElementById("tooltipSelection");
@@ -265,7 +265,13 @@
           continue;
         }
         titleStr += box.value;
-        titleStr += String(node[box.name]);
+        if (box.name == "name") {
+          titleStr += "<b>";
+          titleStr += String(node[box.name]);
+          titleStr += "</b>";
+        } else {
+          titleStr += String(node[box.name]);
+        }
         if ((box.name === "status") && (Math.abs(node.status) in pythia8status)) {
           titleStr += "<br/><i>";
           titleStr += pythia8status[Math.abs(node.status)].replace("] ", "]</i><br/>");
