@@ -188,6 +188,7 @@
   var network = null;
   var highlightActive = false;
 
+  // Setup tooltips & their settings
   var allTooltips = {
     name: "",
     status: "status: ",
@@ -277,7 +278,7 @@
           titleStr += pythia8status[Math.abs(node.status)].replace("] ", "]</i><br/>");
         }
         titleStr += "<br/>";
-      };
+      }
       changes.push({id: node.id, title: titleStr});
     });
     nodesDataset.update(changes);
@@ -289,6 +290,7 @@
     updateTooltips();
   }
 
+  // Other generic settings
   var defaultNodeColor = {
     border: '#2B7CE9',
     background: '#97C2FC',
@@ -338,6 +340,7 @@
     }
   };
 
+  // Actually draw the diagram
   function redrawAll() {
     var container = document.getElementById('mynetwork');
 
@@ -353,21 +356,29 @@
     modal.style.display = "none";
   }
 
+  function showModal(modal) {
+    modal.style.display = "block";
+  }
+
+  // Setup help modal
   var helpModal = document.getElementById('helpModal');
   var helpModalClose = document.getElementsByClassName("close")[0];
   helpModalClose.onclick = function() { hideModal(helpModal) };
+  hideModal(helpModal);
 
+  // Setup settings modal
   var settingsModal = document.getElementById('settingsModal');
   var settingsModalClose = document.getElementsByClassName("close")[1];
   settingsModalClose.onclick = function() {
     hideModal(settingsModal);
     updateSettings();
   };
+  hideModal(settingsModal);
   document.getElementById("settingsBtn").onclick = function() {
     settingsModal.style.display = "block";
   };
 
-  // When the user clicks anywhere outside of the modal, close it
+  // When the user clicks anywhere outside of any modal, close it
   window.onclick = function(event) {
     if (event.target == helpModal || event.target == settingsModal) {
       hideModal(event.target)
@@ -377,6 +388,7 @@
     }
   };
 
+  // Setup settings accordian behaviour
   var acc = document.getElementsByClassName("accordion");
   for (var i = 0; i < acc.length; i++) {
     acc[i].onclick = function(){
@@ -394,6 +406,7 @@
     }
   }
 
+  // Additional keyboard shortcuts
   document.addEventListener('keypress', function(e) {
     if (String.fromCharCode(e.charCode) === "r") {
       network.fit();
@@ -404,7 +417,11 @@
       if (generationsHighlight > 1) {generationsHighlight--;}
       familyHighlight(network.getSelection());
     } else if (String.fromCharCode(e.charCode) === "h") {
-      helpModal.style.display = "block";
+      if (helpModal.style.display != "none"){
+        hideModal(helpModal);
+      } else {
+        showModal(helpModal);
+      }
     }
   });
 
