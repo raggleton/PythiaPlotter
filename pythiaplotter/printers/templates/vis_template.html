@@ -389,7 +389,7 @@
       generationsHighlight++;
       familyHighlight(network.getSelection());
     } else if (String.fromCharCode(e.charCode) === "n") {
-      generationsHighlight--;
+      if (generationsHighlight > 1) {generationsHighlight--;}
       familyHighlight(network.getSelection());
     } else if (String.fromCharCode(e.charCode) === "h") {
       helpModal.style.display = "block";
