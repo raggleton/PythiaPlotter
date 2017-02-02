@@ -162,11 +162,7 @@ def create_vis_dicts(graph):
         pd = {
             'label': pdgid_to_string(particle.pdgid),
             'name': pdgid_to_string(particle.pdgid),
-            # does tooltip, can use HTML, css
-            'title': "{}<br/>"
-                     "p<sub>T</sub>: {pt:.3g} GeV<br/>"
-                     "&eta;: {eta:.3g}<br/>"
-                     "&phi;: {phi:.3g}".format(pdgid_to_string(particle.pdgid), **vars(particle))
+            'title': ""  # does tooltip, control in webpage itself
         }
         attr = particle.__dict__
         for k, v in attr.items():

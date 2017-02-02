@@ -235,6 +235,22 @@
 
   setupTooltipTable();
 
+  var defaultTooltips = ['status', 'pt', 'eta', 'phi'];
+  function setIntitalTooltips() {
+    defaultTooltips.forEach(function(entry){
+      var tooltipForm = document.getElementById("tooltipSelection");
+      var checkboxes = tooltipForm.getElementsByTagName("input");
+      for (var i=0; i<checkboxes.length; i++) {
+        var box = checkboxes[i];
+        if (box.name === entry) {
+          box.checked = true;
+        }
+      }
+    });
+  }
+
+  setIntitalTooltips();
+
   function updateTooltips() {
     var tooltipForm = document.getElementById("tooltipSelection");
     var checkboxes = tooltipForm.getElementsByTagName("input");
@@ -254,6 +270,8 @@
     });
     nodesDataset.update(changes);
   }
+
+  updateTooltips();
 
   function updateSettings() {
     updateTooltips();
@@ -333,7 +351,7 @@
     hideModal(settingsModal);
     updateSettings();
   };
-  document.getElementById("settingsBtn").onclick = function () {
+  document.getElementById("settingsBtn").onclick = function() {
     settingsModal.style.display = "block";
   };
 
