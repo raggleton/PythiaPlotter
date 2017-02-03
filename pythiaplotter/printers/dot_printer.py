@@ -12,7 +12,7 @@ Several stages:
 
 from __future__ import absolute_import
 import os
-from subprocess import call
+from subprocess import call, PIPE, Popen
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
@@ -72,10 +72,13 @@ class DotPrinter(object):
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
         gv_str = construct_gv_full(event)
-        write_gv(gv_str, self.gv_filename)
         if self.make_diagram:
-            print_diagram(gv_filename=self.gv_filename, output_filename=self.output_filename,
-                          renderer=self.renderer, output_format=self.output_format)
+            run_cmds = print_diagram(gv_str=gv_str,
+                                     output_filename=self.output_filename,
+                                     renderer=self.renderer,
+                                     output_format=self.output_format)
+        if self.write_gv:
+            write_gv(gv_str, self.gv_filename)
 
 
 def add_display_attr(graph, fancy):
@@ -140,13 +143,13 @@ def write_gv(gv_str, gv_filename):
         gv_file.write(gv_str)
 
 
-def print_diagram(gv_filename, output_filename, renderer, output_format):
-    """Run Graphviz file through a Graphviz program to produce a final diagram.
+def print_diagram(gv_str, output_filename, renderer, output_format):
+    """Pass graph in DOT language to a Graphviz program to produce a diagram.
 
     Parameters
     ----------
-    gv_filename : str
-        Name of graphviz file to process
+    gv_str : str
+        Graph contents in DOT language
 
     output_filename : str
         Final diagram filename
@@ -161,9 +164,11 @@ def print_diagram(gv_filename, output_filename, renderer, output_format):
         * ps2 - PDF searchable, but won't obey all HTML tags or unicode.
         * pdf - obeys HTML but not searchable
     """
+    if output_format is None:
+        raise RuntimeError("Need an output format for graphviz")
 
     log.info("Printing diagram to %s", output_filename)
-    log.info("To re-run:")
+    run_cmds = []
 
     if output_format == "ps" or output_format == "ps2":
         # Do 2 stages: make a PostScript file, then convert to PDF.
@@ -172,22 +177,24 @@ def print_diagram(gv_filename, output_filename, renderer, output_format):
         if output_format == "ps":  # hmm or should we get user to do this
             output_format += ":cairo"
 
-        psargs = [renderer, "-T" + output_format, gv_filename, "-o", ps_filename]
-        log.info(" ".join(psargs))
-        call(psargs)
+        dot_args = [renderer, "-T" + output_format, "-o", ps_filename]
+        p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
+        out, err = p.communicate(input=gv_str)
+        if p.returncode != 0:
+            raise RuntimeError(err)
 
         if output_filename.endswith(".pdf"):
             pdfargs = ["ps2pdf", ps_filename, output_filename]
-            log.info(" ".join(pdfargs))
             call(pdfargs)
 
             rmargs = ["rm", ps_filename]
-            log.info(" ".join(rmargs))
             call(rmargs)
 
     elif output_format is not None:
-        dotargs = [renderer, "-T" + output_format, gv_filename, "-o", output_filename]
-        log.info(" ".join(dotargs))
-        call(dotargs)
-    else:
-        raise RuntimeError("Need an output format for graphviz")
+        dot_args = [renderer, "-T" + output_format, "-o", output_filename]
+        p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
+        out, err = p.communicate(input=gv_str)
+        if p.returncode != 0:
+            raise RuntimeError(err)
+
+    return run_cmds

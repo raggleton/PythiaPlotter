@@ -104,6 +104,11 @@ def get_args(input_args):
                               help="Keep redundant particles (defualt is to remove them)",
                               action="store_true")
 
+    output_group.add_argument("--saveGraphviz",
+                              help="Save intermediate GraphViz file (for testing puposes, "
+                              "or quick style edits)",
+                              action="store_true")
+
     #################
     # Miscellaneous options
     #################
