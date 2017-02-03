@@ -233,6 +233,9 @@ class Pythia8Parser(object):
         event = (self.block_types["Info"]["blocks"][self.event_num].parser_results
                  if self.block_types["Info"]["blocks"] else Event())
 
+        event.event_num = self.event_num
+        event.source = self.filename
+
         # Hard event blocks:
         # hard_node_particles = self.block_types["HardEvent"]["blocks"][self.event_num].parser_results
 

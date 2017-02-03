@@ -139,7 +139,7 @@ class HeppyParser(object):
 
                 node_particles.append(np)
 
-            event = Event()
+            event = Event(event_num=self.event_num, source=self.filename)
             return event, node_particles
 
 

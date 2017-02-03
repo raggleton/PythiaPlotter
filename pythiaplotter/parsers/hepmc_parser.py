@@ -142,7 +142,7 @@ class HepMCParser(object):
                   "signal_process_id", "signal_process_vtx_id", "n_vtx",
                   "beam1_pdgid", "beam2_pdgid"]
         contents = map_columns_to_dict(fields, line[1:])
-        return Event(event_num=contents["event_num"],
+        return Event(event_num=contents["event_num"], source=self.filename,
                      signal_process_vtx_id=contents["signal_process_vtx_id"])
 
     def parse_vertex_line(self, line):

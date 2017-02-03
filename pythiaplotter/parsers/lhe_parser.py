@@ -81,6 +81,9 @@ class LHEParser(object):
             raise
 
         event, node_particles = self.parse_event_text(root[event_ind].text)
+        event.event_num = self.event_num
+        event.source = self.filename
+
         log.debug(node_particles)
         return event, node_particles
 
