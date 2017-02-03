@@ -119,7 +119,7 @@ class EdgeGrapher_Test(unittest.TestCase):
         particles = [p1, p2, p3, p4, p5, p6, p7]
         graph = eg.assign_particles_edges(particles)
         eg.remove_redundant_edges(graph)
-        edges = [(-1, -2), (-2, -4), (-2, -6), (-6, -7), (-6, -8)]
+        edges = [(-1, -2), (-2, -4), (-2, -3), (-3, -7), (-3, -8)]
         self.check_graph_edges(edges, graph)
 
     def test_intial_final_state(self):

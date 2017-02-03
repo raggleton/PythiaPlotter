@@ -78,6 +78,48 @@ def assign_particles_edges(edge_particles):
     return gr
 
 
+def remove_particle_edge(graph, edge):
+    """Remove a particle edge from the graph.
+
+    Rewires the other particles such that the nodes at either end of the edge
+    essentially merge together into one:
+    - any children of the edge, are now children of the edge's parents
+    - any incoming edges into the edge's in node are now
+      incoming to the out node (ie where the parents are incoming to)
+
+    Parameters
+    ----------
+    graph: NetworkX.MultiDiGraph
+    edge : (int, int)
+        Outgoing node, incoming node
+    """
+    # rewire: ensure all incoming parents and all outgoing children use same vtx
+    out_node, in_node = edge
+
+    parents = graph.predecessors(out_node)
+    if len(parents) == 0:
+        graph.remove_node(out_node)
+
+    children = graph.successors(in_node)
+    if len(children) == 0:
+        graph.remove_node(in_node)
+
+    for child in children:
+        these = graph[in_node][child]
+        for x in these:  # since Multi DiGraph
+            log.debug("Adding %d %d %s", out_node, child, these[x])
+            graph.add_edge(out_node, child, **these[x])
+
+    # incoming edges to the in_node
+    for out_e, in_e, edge_data in graph.in_edges(in_node, data=True):
+        if (out_e, in_e) == (out_node, in_node):
+            continue  # ignore the original edge itself!
+        log.debug("Adding %d %d %s", out_e, out_node, **edge_data)
+        graph.add_edge(out_e, out_node, **edge_data)
+
+    graph.remove_node(in_node)
+
+
 def remove_redundant_edges(graph):
     """Remove redundant particle edges from a graph.
 
@@ -123,11 +165,8 @@ def remove_redundant_edges(graph):
     while not done_removing:
 
         done_removing = True
-        remove_nodes = set()  # use a set here to only keep unique nodes
 
         for out_node, in_node, edge_data in graph.edges_iter(data=True):
-            log.debug("Doing edge:", )
-            log.debug([out_node, in_node])
 
             # get all incoming edges to this particle's out node (parents)
             parent_edges = graph.in_edges(out_node, data=True)
@@ -135,31 +174,19 @@ def remove_redundant_edges(graph):
             sibling_edges = graph.out_edges(out_node)
             # get all outgoing edges from this particle's in node (children)
             child_edges = graph.out_edges(in_node)
-            log.debug("Parent edges: %s", parent_edges)
-            log.debug("Child edges: %s", child_edges)
-            log.debug("Sibling edges: %s", sibling_edges)
 
             if len(parent_edges) == 1 and len(child_edges) != 0 and len(sibling_edges) == 1:
                 parent_out, parent_in, parent_data = parent_edges[0]
 
                 # Do removal if parent PDGID matches
                 if parent_data["particle"].pdgid == edge_data["particle"].pdgid:
+                    log.debug("Doing edge: %d %d", out_node, in_node)
+                    log.debug("Parent edges: %s", parent_edges)
+                    log.debug("Child edges: %s", child_edges)
 
                     done_removing = False
 
-                    log.debug("Removing redundant edge %s", edge_data)
-                    particle = edge_data["particle"]
-
-                    # set incoming edges' incoming node to this edge's incoming node
-                    # and mark this edge's outgoing node for removal
-                    graph.add_edge(parent_out, in_node, barcode=particle.barcode, particle=particle)
-                    log.debug("Adding new edge %d -- %d with barcode %d",
-                              parent_out, in_node, particle.barcode)
-                    remove_nodes.add(out_node)
+                    log.debug("Removing redundant edge (%d, %d) %s", out_node, in_node, edge_data)
+                    remove_particle_edge(graph, (out_node, in_node))
 
                     break
-
-        # Remove all redundant nodes, also removes the associated edges usefully
-        log.debug("removing nodes %s", remove_nodes)
-        for node in remove_nodes:
-            graph.remove_node(node)
