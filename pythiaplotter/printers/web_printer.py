@@ -65,9 +65,10 @@ class VisPrinter(object):
 
         field_data = dict(
             title="NONE",
+            inputfile=event.source,
+            eventnum=event.event_num,
             nodedata=json.dumps(vis_node_dicts, **dkwargs),
             edgedata=json.dumps(vis_edge_dicts, **dkwargs),
-            inputfile="blah",
             pythia8status=pythia8status
         )
 
@@ -213,7 +214,7 @@ def write_webpage(field_data, output_filename):
     template = resource_string('pythiaplotter', 'printers/templates/vis_template.html')
 
     for k, v in field_data.items():
-        template = template.replace("{{%s}}" % k, v)
+        template = template.replace("{{%s}}" % str(k), str(v))
 
     with open(output_filename, 'w') as f:
         f.write(template)
