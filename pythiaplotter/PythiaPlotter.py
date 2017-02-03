@@ -38,20 +38,6 @@ def choose_parser(opts):
         raise NotImplementedError("Cannot parse input format %s" % opts.inputFormat)
 
 
-def choose_printer(opts):
-    """Choose printer & configure"""
-
-    if opts.printer == "DOT":
-        return printers.DotPrinter(output_filename=opts.output,
-                                   renderer=opts.layout,
-                                   output_format=opts.outputFormat,
-                                   make_diagram=(not opts.noOutput))
-    elif opts.printer == "LATEX":
-        return None
-    elif opts.printer == "WEB":
-        return printers.VisPrinter(output_filename=opts.output, renderer=opts.layout)
-
-
 def main(in_args=None):
     """Main entry point to run the whole thing."""
     opts = cli.get_args(in_args)
@@ -64,7 +50,7 @@ def main(in_args=None):
     event.graph = graph
     if opts.stats:
         event.print_stats()
-    printer = choose_printer(opts)
+    printer = printers.printer_opts_checked[opts.printer].printer(opts)
     printer.print_event(event)
     if opts.open and not opts.noOutput:
         open_pdf(opts.output)

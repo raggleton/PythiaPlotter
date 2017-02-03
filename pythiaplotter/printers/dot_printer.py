@@ -24,10 +24,15 @@ log = get_logger(__name__)
 class DotPrinter(object):
     """Class to print event to file using Graphviz"""
 
-    def __init__(self, output_filename, renderer="dot", output_format="pdf", make_diagram=True):
+    def __init__(self, opts):
         """
 
         Parameters
+        ----------
+        opts : Argparse.Namespace
+            Set of options from the arg parser.
+
+        Attributes
         ----------
         output_filename : str
             Final output filename (e.g of the pdf, not the intermediate graphviz file)
@@ -43,11 +48,15 @@ class DotPrinter(object):
         gv_filename : str
             Filename for intermediate Graphviz file
         """
-        self.output_filename = output_filename
-        self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
-        self.renderer = renderer
-        self.output_format = output_format or os.path.splitext(self.output_filename)[1][1:]
-        self.make_diagram = make_diagram
+        self.output_filename = opts.output
+        self.renderer = opts.layout
+        self.output_format = opts.outputFormat
+        self.make_diagram = not opts.noOutput
+        self.write_gv = opts.saveGraphviz
+        if self.write_gv:
+            self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
+        else:
+            self.gv_filename = None
 
     def __repr__(self):
         return generate_repr_str(self)

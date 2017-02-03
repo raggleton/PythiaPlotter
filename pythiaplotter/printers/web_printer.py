@@ -23,18 +23,22 @@ log = get_logger(__name__)
 
 class VisPrinter(object):
 
-    def __init__(self, output_filename="index.html", renderer="dot"):
+    def __init__(self, opts):
         """
-
         Parameters
+        ----------
+        opts : Argparse.Namespace
+            Set of options from the arg parser.
+
+        Attributes
         ----------
         output_filename : str, optional
             Final web page output filename
         renderer : str, optional
             Graphviz program to use for rendering layout, default is dot since dealing with DAGs
         """
-        self.output_filename = output_filename
-        self.renderer = renderer
+        self.output_filename = opts.output
+        self.renderer = opts.layout
 
     def __repr__(self):
         return generate_repr_str(self)
