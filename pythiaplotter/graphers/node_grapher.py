@@ -69,6 +69,15 @@ def assign_particles_nodes(node_particles):
     return gr
 
 
+def remove_particle_node(graph, node):
+    """Remove a particle node from the graph"""
+    # rewire - ensure all it's parents decay to all it's children
+    for child in graph.successors(node):
+        for parent in graph.predecessors(node):
+            graph.add_edge(parent, child)
+    graph.remove_node(node)  # also removes the relevant edges
+
+
 def remove_isolated_nodes(gr):
     """Remove nodes with no parents and no children.
 
@@ -112,9 +121,6 @@ def remove_redundant_nodes(graph):
             parent = graph.node[parents[0]]['particle']
             child = graph.node[children[0]]['particle']
             if parent.pdgid == p.pdgid:
-                removed_nodes.append(node)
-                # rewire the graph
                 log.debug("Removing (%d) %s", node, data['particle'])
-                child.parent_barcodes = [parent.barcode]
-                graph.remove_node(node)  # also removes the relevant edges
-                graph.add_edge(parent.barcode, child.barcode)
+                remove_particle_node(graph, node)
+                removed_nodes.append(node)
