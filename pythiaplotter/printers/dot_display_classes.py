@@ -193,4 +193,4 @@ class DotGraphAttr(object):
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
         attr_list = ['{0}={1};'.format(*it) for it in self.attr.items()]
-        return "\t{0}".format("\n\t".join(attr_list))
+        return "{0}".format("\n\t".join(attr_list))

@@ -62,7 +62,8 @@ class DotPrinter(object):
         """
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event.graph, fancy)
-        write_gv(event, self.gv_filename)
+        gv_str = construct_gv_full(event)
+        write_gv(gv_str, self.gv_filename)
         if self.make_diagram:
             print_diagram(gv_filename=self.gv_filename, output_filename=self.output_filename,
                           renderer=self.renderer, output_format=self.output_format)
@@ -88,43 +89,46 @@ def add_display_attr(graph, fancy):
         edge_data["attr"] = DotEdgeAttr(edge_data, fancy)
 
 
-def write_nodes(graph, gv_file):
-    """Write all node to file, with their display attributes"""
+def construct_gv_full(event):
+    """Turn event graph into Graphviz string in DOT language
+
+    Parameters
+    ----------
+    event : Event
+
+    Returns
+    -------
+    str
+    """
+    graph = event.graph
+
+    # Header-type info with graph-wide settings
+    gv_str = ["digraph g {"]
+    gv_str.append("{attr}".format(**graph.graph))
+
+    # Write all the nodes to file, with their display attributes
     for node, node_data in graph.nodes_iter(data=True):
-        gv_file.write("\t{0} {attr};\n".format(node, **node_data))
+        gv_str.append("{0} {attr};".format(node, **node_data))
 
-
-def write_edges(graph, gv_file):
-    """Write all edges to file, with their display attributes"""
+    # Write all the edges to file, with their display attributes
     for out_node, in_node, edge_data in graph.edges_iter(data=True):
-        gv_file.write("\t{0} -> {1} {attr};\n".format(out_node, in_node, **edge_data))
+        gv_str.append("{0} -> {1} {attr};".format(out_node, in_node, **edge_data))
+
+    # Set all initial particles to be level in diagram
+    initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
+                        if node_data['initial_state']])
+    gv_str.append("{{rank=same; {0} }}; "
+                    "// initial particles on same level".format(initial))
+    gv_str.append("}")
+    return "\n".join(gv_str)
 
 
-def write_gv(event, gv_filename):
+def write_gv(gv_str, gv_filename):
     """Write event graph to file in Graphviz format"""
 
     log.info("Writing Graphviz file to %s", gv_filename)
     with open(gv_filename, "w") as gv_file:
-
-        graph = event.graph
-
-        # Header-type info with graph-wide settings
-        gv_file.write("digraph g {\n")
-        gv_file.write("{attr}\n".format(**graph.graph))
-
-        # Write all the nodes to file, with their display attributes
-        write_nodes(graph, gv_file)
-
-        # Write all the edges to file, with their display attributes
-        write_edges(graph, gv_file)
-
-        # Set all initial particles to be level in diagram
-        initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
-                            if node_data['initial_state']])
-        gv_file.write("\t{{rank=same; {0} }}; "
-                      "// initial particles on same level\n".format(initial))
-
-        gv_file.write("}\n")
+        gv_file.write(gv_str)
 
 
 def print_diagram(gv_filename, output_filename, renderer, output_format):
