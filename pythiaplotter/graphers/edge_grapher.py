@@ -92,12 +92,14 @@ def remove_particle_edge(graph, edge):
     out_node, in_node = edge
 
     parents = graph.predecessors(out_node)
-    if len(parents) == 0:
+    if (len(parents) == 0 and len(graph.successors(out_node)) == 0):
         graph.remove_node(out_node)
+        return
 
     children = graph.successors(in_node)
-    if len(children) == 0:
+    if (len(children) == 0 and len(graph.predecessors(in_node)) == 1):
         graph.remove_node(in_node)
+        return
 
     for child in children:
         these = graph[in_node][child]
