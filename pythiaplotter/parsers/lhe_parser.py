@@ -81,8 +81,6 @@ class LHEParser(object):
             raise
 
         event, node_particles = self.parse_event_text(root[event_ind].text)
-        event.event_num = self.event_num
-        event.source = self.filename
 
         log.debug(node_particles)
         return event, node_particles
@@ -161,7 +159,7 @@ class LHEParser(object):
         fields = ["num_particles", "proc_id", "weight", "scale", "aQED", "aQCD"]
         contents = map_columns_to_dict(fields, line)
         log.debug(contents)
-        return Event(event_num=int(event_num))
+        return Event(event_num=int(event_num), source=self.filename)
 
     def parse_particle_line(self, line, barcode):
         """Parse a line that describes a particle and its mothers from a LHE file.

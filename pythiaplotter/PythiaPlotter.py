@@ -41,8 +41,13 @@ def choose_parser(opts):
 def main(in_args=None):
     """Main entry point to run the whole thing."""
     opts = cli.get_args(in_args)
+    # Parse input into a set of particles
     parser = choose_parser(opts)
     event, particles = parser.parse()
+    event.source = opts.input
+    event.event_num = opts.eventNumber
+
+    # Assign particles to graph
     default_repr = parsers.parser_opts[opts.inputFormat].default_representation
     graph = assign_particles_to_graph(particles, default_repr,
                                       desired_repr=opts.representation,
@@ -50,10 +55,13 @@ def main(in_args=None):
     event.graph = graph
     if opts.stats:
         event.print_stats()
+
+    # Print the graph
     printer = printers.printer_opts_checked[opts.printer].printer(opts)
     printer.print_event(event)
     if opts.open and not opts.noOutput:
         open_pdf(opts.output)
+
     return 0
 
 

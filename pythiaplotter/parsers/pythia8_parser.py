@@ -230,8 +230,9 @@ class Pythia8Parser(object):
         # Deal with each type
         # Info block: make a blank Event() object in case there's no Info block,
         # assigning grapher (TODO: move elsewhere?)
-        event = (self.block_types["Info"]["blocks"][self.event_num].parser_results
-                 if self.block_types["Info"]["blocks"] else Event())
+        event = Event()
+        if self.block_types["Info"]["blocks"]:
+            event = self.block_types["Info"]["blocks"][self.event_num].parser_results
 
         event.event_num = self.event_num
         event.source = self.filename
