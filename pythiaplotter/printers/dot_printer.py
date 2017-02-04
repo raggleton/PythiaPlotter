@@ -70,7 +70,7 @@ class DotPrinter(object):
             Event to print
         """
         fancy = self.output_format in ["ps", "pdf"]
-        add_display_attr(event.graph, fancy)
+        add_display_attr(event, fancy)
         gv_str = construct_gv_full(event)
         if self.make_diagram:
             run_cmds = print_diagram(gv_str=gv_str,
@@ -81,18 +81,21 @@ class DotPrinter(object):
             write_gv(gv_str, self.gv_filename)
 
 
-def add_display_attr(graph, fancy):
+def add_display_attr(event, fancy):
     """Auto add display attribute to graph, nodes & edges
 
     Parameters
     ----------
-    graph : NetworkX.MultiDiGraph
-        Graph to process
+    event : Event
+        Event to process
     fancy : bool
         If True, will use HTML/unicode in labels
     """
-
+    graph = event.graph
     graph.graph["attr"] = DotGraphAttr(graph)
+    for k, v in graph.graph['attr'].attr.items():
+        if isinstance(v, str):
+            graph.graph['attr'].attr[k] = v.format(**event.__dict__)
 
     for _, node_data in graph.nodes_iter(data=True):
         node_data["attr"] = DotNodeAttr(node_data, fancy)

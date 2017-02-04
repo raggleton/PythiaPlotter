@@ -28,7 +28,7 @@ def assign_particles_nodes(node_particles):
         Directed graph with particles assigned to nodes, and edges to represent relationships.
     """
 
-    gr = nx.MultiDiGraph(attr=None)  # placeholder attr for later in printer
+    gr = nx.MultiDiGraph()
 
     # assign a node for each Particle obj
     for np in node_particles:

@@ -14,6 +14,7 @@ There are separate dicts for the node & edge representations of particles.
 For each, we store dot attributes as key:value pairs, where keys & values can be any
 suitable attribute name & value as described in the GraphViz documentation:
 http://www.graphviz.org/doc/info/attrs.html
+http://www.graphviz.org/doc/info/attrs.html#k:color
 http://www.graphviz.org/doc/info/colors.html
 
 Note that in the event of several option dicts evaulating True,
@@ -31,7 +32,7 @@ DOT_GRAPH_OPTS = {
     "nodesep": 0.6,
     "labelloc": "top",
     "labeljust": "left",
-    "label": '<<FONT POINT-SIZE="45"><B>Event</B></FONT>>'
+    "label": '<<FONT POINT-SIZE="45"><B>{{title}}</B><br/><B>Event {{event_num}}</B></FONT><br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
 }
 
 

@@ -175,17 +175,9 @@ class DotNodeAttr(object):
 class DotGraphAttr(object):
     """Hold Graphviz attributes for the graph as whole."""
 
-    def __init__(self, graph):
-        self.graph = graph  # TODO: does this do anything?
+    def __init__(self, event):
         self.attr = DOT_GRAPH_OPTS.copy()
-        # Add units to plot title
-        label = self.attr.get("label", "")
-        if not label.endswith(">"):
-            label += "<"
-        else:
-            label = label[:-1]
-        label += '<br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
-        self.attr['label'] = label
+        self.attr['label'] = self.attr.get("label", "").format(**event.__dict__)
 
     def __repr__(self):
         return generate_repr_str(self)
@@ -193,4 +185,4 @@ class DotGraphAttr(object):
     def __str__(self):
         """Print graph attributes in dot-friendly format"""
         attr_list = ['{0}={1};'.format(*it) for it in self.attr.items()]
-        return "{0}".format("\n\t".join(attr_list))
+        return "{0}".format("\n".join(attr_list))
