@@ -15,9 +15,10 @@ log = get_logger(__name__)
 class Event(object):
     """Hold event info"""
 
-    def __init__(self, event_num=0, source=None, **kwargs):
+    def __init__(self, event_num=0, source=None, title=None, **kwargs):
         self.event_num = int(event_num)
         self.source = source or ""
+        self.title = title or ""
         self.graph = None  # to hold NetworkX graph
         self.__dict__.update(**kwargs)
 

@@ -64,7 +64,7 @@ class VisPrinter(object):
         dkwargs = dict(indent=None, sort_keys=True)
 
         field_data = dict(
-            title="NONE",
+            title=event.title,
             inputfile=event.source,
             eventnum=event.event_num,
             nodedata=json.dumps(vis_node_dicts, **dkwargs),

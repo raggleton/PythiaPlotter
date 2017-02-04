@@ -92,6 +92,10 @@ def get_args(input_args):
                               choices=list(layouts.keys()),
                               default="dot")
 
+    output_group.add_argument("--title",
+                              help="Title to put on the plot",
+                              default="")
+
     printer_help = ["Printing methods:"]
     printer_help.extend(["{0}: {1}".format(k, v.description)
                          for k, v in printer_opts_checked.items()])

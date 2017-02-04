@@ -46,6 +46,7 @@ def main(in_args=None):
     event, particles = parser.parse()
     event.source = opts.input
     event.event_num = opts.eventNumber
+    event.title = opts.title
 
     # Assign particles to graph
     default_repr = parsers.parser_opts[opts.inputFormat].default_representation
