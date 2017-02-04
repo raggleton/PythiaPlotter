@@ -32,8 +32,7 @@ def assign_particles_nodes(node_particles):
 
     # assign a node for each Particle obj
     for np in node_particles:
-        gr.add_node(np.particle.barcode, particle=np.particle,
-                    initial_state=False, final_state=False)
+        gr.add_node(np.particle.barcode, particle=np.particle)
 
     # get the barcode of the system to avoid useless edges
     # and non-existent particles. 0 for Pythia8, -1 for CMSSW, but easiest
@@ -52,15 +51,12 @@ def assign_particles_nodes(node_particles):
     # (for initial_state) or number of children (for final_state)
     # This should be the only place it is done, otherwise confusing!
     for node, data in gr.nodes_iter(data=True):
-        data['initial_state'] = False
-        data['final_state'] = False
+
         if len(gr.predecessors(node)) == 0:
             data['particle'].initial_state = True
-            data['initial_state'] = True
 
         if len(gr.successors(node)) == 0:
             data['particle'].final_state = True
-            data['final_state'] = True
 
     # log.debug("Graph nodes after assigning: %s" % gr.node)
 

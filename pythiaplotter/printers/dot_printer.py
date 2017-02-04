@@ -130,8 +130,9 @@ def construct_gv_full(event):
         gv_str.append("{0} -> {1} {attr};".format(out_node, in_node, **edge_data))
 
     # Set all initial particles to be level in diagram
-    initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
-                        if node_data['initial_state']])
+    initial = ' '.join([str(node) for node, node_data
+                        in graph.nodes_iter(data=True)
+                        if len(graph.predecessors(node)) == 0])
     gv_str.append("{{rank=same; {0} }}; "
                     "// initial particles on same level".format(initial))
     gv_str.append("}")

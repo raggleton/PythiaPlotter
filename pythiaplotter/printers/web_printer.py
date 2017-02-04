@@ -99,8 +99,9 @@ def construct_gv_only_edges(graph, graph_attr=None):
             gv_str.append("{}={};".format(k, v))
     for out_node, in_node in graph.edges_iter(data=False):
         gv_str.append("{0} -> {1};".format(out_node, in_node))
-    initial = ' '.join([str(node) for node, node_data in graph.nodes_iter(data=True)
-                        if node_data['initial_state']])
+    initial = ' '.join([str(node) for node, node_data
+                        in graph.nodes_iter(data=True)
+                        if len(graph.predecessors(node)) == 0])
     gv_str.append("{{rank=same; {0} }};".format(initial))
     gv_str.append("}")
     return "".join(gv_str)
