@@ -59,7 +59,7 @@ class VisPrinter(object):
 
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
-        pythia8status = template = resource_string('pythiaplotter', 'particledata/pythia8status.json')
+        pythia8status = resource_string('pythiaplotter', 'particledata/pythia8status.json')
 
         dkwargs = dict(indent=None, sort_keys=True)
 
@@ -123,7 +123,7 @@ def get_dot_json(graphviz_str, renderer="dot"):
     """
     dot_args = [renderer, "-Tjson0"]
     p = Popen(dot_args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    out, err = p.communicate(input=graphviz_str)
+    out, err = p.communicate(input=graphviz_str.encode())
     if p.returncode != 0:
         raise RuntimeError(err)
     return out

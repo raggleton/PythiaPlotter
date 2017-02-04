@@ -43,7 +43,7 @@ class CMSSWParticleListParser(object):
         """
 
         log.info("Opening event file %s", self.filename)
-        event = Event(event_num=self.event_num, source=self.filename)
+        event = Event(source=self.filename)
 
         with open(self.filename, 'r') as f:
             # Indicates whether to parse current line as a particle or not

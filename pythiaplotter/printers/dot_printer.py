@@ -179,7 +179,7 @@ def print_diagram(gv_str, output_filename, renderer, output_format):
 
         dot_args = [renderer, "-T" + output_format, "-o", ps_filename]
         p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
-        out, err = p.communicate(input=gv_str)
+        out, err = p.communicate(input=gv_str.encode())
         if p.returncode != 0:
             raise RuntimeError(err)
 
@@ -193,7 +193,7 @@ def print_diagram(gv_str, output_filename, renderer, output_format):
     elif output_format is not None:
         dot_args = [renderer, "-T" + output_format, "-o", output_filename]
         p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
-        out, err = p.communicate(input=gv_str)
+        out, err = p.communicate(input=gv_str.encode())
         if p.returncode != 0:
             raise RuntimeError(err)
 
