@@ -59,7 +59,7 @@ class VisPrinter(object):
 
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
-        pythia8status = resource_string('pythiaplotter', 'particledata/pythia8status.json')
+        pythia8status = resource_string('pythiaplotter', 'particledata/pythia8status.json').decode()
 
         dkwargs = dict(indent=None, sort_keys=True)
 
@@ -126,7 +126,7 @@ def get_dot_json(graphviz_str, renderer="dot"):
     out, err = p.communicate(input=graphviz_str.encode())
     if p.returncode != 0:
         raise RuntimeError(err)
-    return out
+    return out.decode()
 
 
 def add_node_positions(graph, raw_json):
@@ -211,7 +211,7 @@ def write_webpage(field_data, output_filename):
     output_filename : str
         Output HTML filename
     """
-    template = resource_string('pythiaplotter', 'printers/templates/vis_template.html')
+    template = resource_string('pythiaplotter', 'printers/templates/vis_template.html').decode()
 
     for k, v in field_data.items():
         template = template.replace("{{%s}}" % str(k), str(v))
