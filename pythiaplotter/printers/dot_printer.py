@@ -12,6 +12,7 @@ Several stages:
 
 from __future__ import absolute_import
 import os
+from string import Template
 from subprocess import call, PIPE, Popen
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
@@ -93,9 +94,6 @@ def add_display_attr(event, fancy):
     """
     graph = event.graph
     graph.graph["attr"] = DotGraphAttr(graph)
-    for k, v in graph.graph['attr'].attr.items():
-        if isinstance(v, str):
-            graph.graph['attr'].attr[k] = v.format(**event.__dict__)
 
     for _, node_data in graph.nodes_iter(data=True):
         node_data["attr"] = DotNodeAttr(node_data, fancy)
@@ -136,7 +134,12 @@ def construct_gv_full(event):
     gv_str.append("{{rank=same; {0} }}; "
                     "// initial particles on same level".format(initial))
     gv_str.append("}")
-    return "\n".join(gv_str)
+    gv_str = "\n".join(gv_str)
+
+    # Fill in template with any data
+    gv_str = Template(gv_str).safe_substitute(event.__dict__)
+
+    return gv_str
 
 
 def write_gv(gv_str, gv_filename):

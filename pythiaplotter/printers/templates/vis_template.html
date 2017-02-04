@@ -112,8 +112,8 @@
 </head>
 
 <body>
-<h2>{{title}}</h2>
-<h3>Diagram of {{inputfile}}, event {{eventnum}}</h3>
+<h2>${title}</h2>
+<h3>Diagram of ${inputfile}, event ${eventnum}</h3>
 <span style="vertical-align: middle;">
   Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
@@ -182,9 +182,9 @@
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
-  var pythia8status = {{pythia8status}};
-  var nodesDataset = new vis.DataSet({{nodedata}});
-  var edgesDataset = new vis.DataSet({{edgedata}});
+  var pythia8status = ${pythia8status};
+  var nodesDataset = new vis.DataSet(${nodedata});
+  var edgesDataset = new vis.DataSet(${edgedata});
 
   var network = null;
   var highlightActive = false;

@@ -177,7 +177,6 @@ class DotGraphAttr(object):
 
     def __init__(self, event):
         self.attr = DOT_GRAPH_OPTS.copy()
-        self.attr['label'] = self.attr.get("label", "").format(**event.__dict__)
 
     def __repr__(self):
         return generate_repr_str(self)

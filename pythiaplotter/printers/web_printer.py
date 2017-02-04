@@ -10,6 +10,7 @@ Of course if I could find a graphviz-as-as-JS service, that would be cooler...
 
 from __future__ import absolute_import, print_function
 import json
+from string import Template
 from subprocess import PIPE, Popen
 from pkg_resources import resource_string
 from pythiaplotter.utils.logging_config import get_logger
@@ -212,10 +213,9 @@ def write_webpage(field_data, output_filename):
     output_filename : str
         Output HTML filename
     """
-    template = resource_string('pythiaplotter', 'printers/templates/vis_template.html').decode()
-
-    for k, v in field_data.items():
-        template = template.replace("{{%s}}" % str(k), str(v))
+    template = resource_string('pythiaplotter',
+                               'printers/templates/vis_template.html').decode()
+    template = Template(template).safe_substitute(field_data)
 
     with open(output_filename, 'w') as f:
         f.write(template)
