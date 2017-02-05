@@ -313,16 +313,35 @@
   }
 
   // Other generic settings
-  var defaultNodeColor = {
-    border: '#2B7CE9',
-    background: '#97C2FC',
-    highlight: {
-      border: '#2B7CE9',
-      background: '#D2E5FF'
+  var defaultNodeOpts = {
+    chosen: {
+      node: function(values, id, selected, hovering) {
+        values.size *= 2;
+      },
+      label: function(ctx, values, id) {
+        values.size *= 2;
+      }
     },
-    hover: {
+    color: {
       border: '#2B7CE9',
-      background: '#D2E5FF'
+      background: '#97C2FC',
+      highlight: {
+        border: '#2B7CE9',
+        background: '#D2E5FF'
+      },
+      hover: {
+        border: '#2B7CE9',
+        background: '#D2E5FF'
+      }
+    },
+    font: {
+      size: 18
+    },
+    scaling: {
+      label: {
+        drawThreshold: 2,
+        min: 2
+      }
     }
   };
 
@@ -360,27 +379,12 @@
     size: 60
   };
 
+  var hiddenNodeOpts = {
+    color: 'rgba(200,200,200,0.5)'
+  };
+
   var options = {
-    nodes: {
-      chosen: {
-        node: function(values, id, selected, hovering) {
-          values.size *= 2;
-        },
-        label: function(ctx, values, id) {
-          values.size *= 2;
-        }
-      },
-      color: defaultNodeColor,
-      font: {
-        size: 18
-      },
-      scaling: {
-        label: {
-          drawThreshold: 2,
-          min: 2
-        }
-      }
-    },
+    nodes: defaultNodeOpts,
     edges: {
       arrows: {to: {enabled: true}},
       width: 0.15,
@@ -401,8 +405,10 @@
       hover: true
     },
     groups: {
+      default: defaultNodeOpts,
       initial: initialStateNodeOpts,
-      final: finalStateNodeOpts
+      final: finalStateNodeOpts,
+      hidden: hiddenNodeOpts
     }
   };
 
@@ -596,12 +602,7 @@
   }
 
   function hideNode(node) {
-    // required cos node.color doesn't actually get the default node color...s
-    if (node.color === undefined) {
-      node.color = defaultNodeColor;
-    }
-    node.hiddenColor = node.color;
-    node.color = 'rgba(200,200,200,0.5)';
+    node.group = "hidden";
     if (node.hiddenLabel === undefined) {
       node.hiddenLabel = node.label;
       node.label = undefined;
@@ -609,10 +610,7 @@
   }
 
   function showNode(node) {
-    if (node.hiddenColor !== undefined) {
-      node.color = node.hiddenColor;
-      node.hiddenColor = undefined;
-    }
+    node.group = node.originalGroup;
     if (node.hiddenLabel !== undefined) {
       node.label = node.hiddenLabel;
       node.hiddenLabel = undefined;

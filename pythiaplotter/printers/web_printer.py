@@ -175,7 +175,8 @@ def create_vis_dicts(graph):
         pd = {
             'label': pdgid_to_string(particle.pdgid),
             'name': pdgid_to_string(particle.pdgid),
-            'title': ""  # does tooltip, control in webpage itself
+            'title': "",  # does tooltip, control in webpage itself
+            'group': "default"
         }
         attr = particle.__dict__
         for k, v in attr.items():
@@ -186,6 +187,7 @@ def create_vis_dicts(graph):
             pd['group'] = 'initial'
         if particle.final_state:
             pd['group'] = 'final'
+        pd['originalGroup'] = pd['group']
         return pd
 
     node_dicts = []
