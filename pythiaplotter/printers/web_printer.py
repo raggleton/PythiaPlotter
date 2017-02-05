@@ -60,7 +60,8 @@ class VisPrinter(object):
 
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
-        pythia8status = resource_string('pythiaplotter', 'particledata/pythia8status.json').decode()
+        pythia8status = resource_string('pythiaplotter',
+                                        'particledata/pythia8status.json').decode('utf-8')
 
         dkwargs = dict(indent=None, sort_keys=True)
 
@@ -214,10 +215,10 @@ def write_webpage(field_data, output_filename):
         Output HTML filename
     """
     template = resource_string('pythiaplotter',
-                               'printers/templates/vis_template.html').decode()
+                               'printers/templates/vis_template.html').decode('utf-8')
     template = Template(template).safe_substitute(field_data)
 
     with open(output_filename, 'w') as f:
-        f.write(template)
+        f.write(template.encode('utf-8'))
 
     log.info("Webpage written to %s", output_filename)
