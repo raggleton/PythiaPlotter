@@ -182,6 +182,10 @@ def create_vis_dicts(graph):
             if isinstance(v, float):
                 attr[k] = "%.3g" % v
         pd.update(**attr)
+        if particle.initial_state:
+            pd['group'] = 'initial'
+        if particle.final_state:
+            pd['group'] = 'final'
         return pd
 
     node_dicts = []

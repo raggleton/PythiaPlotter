@@ -326,6 +326,40 @@
     }
   };
 
+ var initialStateNodeOpts = {
+    color: {
+      border: '#22bf51',
+      background: '#83db9f',
+      highlight: {
+        border: '#22bf51',
+        background: '#d2ffdb'
+      },
+      hover: {
+        border: '#22bf51',
+        background: '#d2ffdb'
+      }
+    },
+    shape: "star",
+    size: 60
+  };
+
+  var finalStateNodeOpts = {
+    color: {
+      border: '#9721bf',
+      background: '#c383db',
+      highlight: {
+        border: '#9721bf',
+        background: '#ecd2ff'
+      },
+      hover: {
+        border: '#9721bf',
+        background: '#ecd2ff'
+      }
+    },
+    shape: "box",
+    size: 60
+  };
+
   var options = {
     nodes: {
       chosen: {
@@ -365,6 +399,10 @@
       tooltipDelay: 100,
       hideEdgesOnDrag: false,
       hover: true
+    },
+    groups: {
+      initial: initialStateNodeOpts,
+      final: finalStateNodeOpts
     }
   };
 
