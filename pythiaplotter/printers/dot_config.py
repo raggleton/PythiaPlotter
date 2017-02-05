@@ -32,7 +32,7 @@ DOT_GRAPH_OPTS = {
     "nodesep": 0.6,
     "labelloc": "top",
     "labeljust": "left",
-    "label": r'<<FONT POINT-SIZE="45"><B>${title}<br/>${source}, event ${event_num}</B></FONT><br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
+    "label": r'<<FONT POINT-SIZE="45"><B>${title}<br/>${source}<br/>event ${event_num}</B></FONT><br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
 }
 
 
