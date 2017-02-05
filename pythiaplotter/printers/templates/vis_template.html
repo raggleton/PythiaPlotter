@@ -16,12 +16,33 @@
 
     #mynetwork {
       margin: auto;
-      width: 98%;
+      width: 84%;
       position: absolute;
       height: 75%;
       border: 1px solid lightgray;
+      display: inline-block;
     }
 
+    #sidebar {
+      width: 14%;
+      display: inline-block;
+      float: right;
+      border: 1px solid lightgray;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .sidebarEntry {
+      border: 1px solid  #dddddd;
+      padding: 4px;
+      background-color: white;
+    }
+
+    .sidebarEntry:hover {
+      border: 1px solid  #dddddd;
+      padding: 4px;
+      background-color: lightgrey;
+    }
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -179,6 +200,7 @@
 </div>
 
 <div id="mynetwork"></div>
+<div id="sidebar"></div>
 
 <script type="text/javascript">
   var pythia8status = ${pythia8status};
@@ -558,6 +580,97 @@
       node.hiddenLabel = undefined;
     }
   }
+
+    function highlightPDGID(pdgid) {
+    var allNodes = nodesDataset.get({returnType:"Object"});
+
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // mark all nodes as hard to read, except those we want
+    for (var node in allNodes) {
+      if (Math.abs(allNodes[node]['pdgid']) != parseInt(pdgid)) {
+        hideNode(allNodes[node]);
+        highlightActive = true;
+      }
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  var keepHighlighting = false;
+
+  function showAll() {
+    var allNodes = nodesDataset.get({returnType:"Object"});
+
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  function populateSidebar() {
+    sidebar = document.getElementById("sidebar");
+    var particleDict = {};
+    nodesDataset.get().forEach(function(node) {
+      // prettify names, make charge into ±
+      pname = (node.name.replace("bar", "")
+                        .replace(/_(.*)$/, "<sub>$1</sub>")
+                        .replace(/_(.*)([+0-])/, "<sub>$1</sub>$2"))
+                        .replace(/[+-]/g, "<sup>&plusmn;</sup>")
+                        .replace("0", "<sup>0</sup>")
+
+      particleDict[Math.abs(node.pdgid)] = pname;
+    });
+    var sortedKeys = Object.keys(particleDict).sort(function(a, b) {
+      return particleDict[a].toUpperCase().localeCompare(particleDict[b].toUpperCase());
+    });
+    sortedKeys.forEach(function(key) {
+      entry = document.createElement("div")
+      entry.classList.add("sidebarEntry");
+      entry.setAttribute("id", key);
+      entry.innerHTML = particleDict[key] + " (" + key  + ")";
+      entry.addEventListener("mouseenter", function (e) {
+        highlightPDGID(this.id);
+      });
+      entry.addEventListener("click", function (e) {
+        if (keepHighlighting === true) {
+          keepHighlighting = false;
+          // this.style.background =
+        } else {
+          keepHighlighting = true;
+        }
+      });
+      entry.addEventListener("mouseleave", function() {
+        if (keepHighlighting === false) {
+          showAll();
+        }
+      });
+      sidebar.appendChild(entry);
+    });
+  }
+
+  populateSidebar();
 </script>
 
 </body></html>
