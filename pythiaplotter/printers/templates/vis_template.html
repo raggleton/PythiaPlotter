@@ -317,6 +317,12 @@
       color: defaultNodeColor,
       font: {
         size: 18
+      },
+      scaling: {
+        label: {
+          drawThreshold: 2,
+          min: 2
+        }
       }
     },
     edges: {
@@ -334,7 +340,7 @@
     interaction: {
       keyboard: true,
       navigationButtons: true,
-      tooltipDelay: 200,
+      tooltipDelay: 100,
       hideEdgesOnDrag: false,
       hover: true
     }
