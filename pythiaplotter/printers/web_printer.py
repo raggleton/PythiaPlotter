@@ -12,7 +12,7 @@ from __future__ import absolute_import, print_function
 import json
 from string import Template
 from subprocess import PIPE, Popen
-from pkg_resources import resource_string
+from pkg_resources import resource_filename
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
@@ -60,8 +60,10 @@ class VisPrinter(object):
 
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
-        pythia8status = resource_string('pythiaplotter',
-                                        'particledata/pythia8status.json').decode('utf-8')
+        pythia8status_file = resource_filename('pythiaplotter',
+                                               'particledata/pythia8status.json')
+        with open(pythia8status_file) as f:
+            pythia8status = f.read()
 
         dkwargs = dict(indent=None, sort_keys=True)
 
@@ -214,11 +216,14 @@ def write_webpage(field_data, output_filename):
     output_filename : str
         Output HTML filename
     """
-    template = resource_string('pythiaplotter',
-                               'printers/templates/vis_template.html').decode('utf-8')
+    template_file = resource_filename('pythiaplotter',
+                                      'printers/templates/vis_template.html')
+    with open(template_file, "r") as f:
+        template = f.read()
+
     template = Template(template).safe_substitute(field_data)
 
     with open(output_filename, 'w') as f:
-        f.write(template.encode('utf-8'))
+        f.write(template)
 
     log.info("Webpage written to %s", output_filename)
