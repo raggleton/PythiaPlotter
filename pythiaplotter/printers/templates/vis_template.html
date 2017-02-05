@@ -133,7 +133,7 @@
       </tr>
       <tr>
         <td>h</td>
-        <td>Bring up help</td>
+        <td>Show/hide help</td>
       </tr>
       <tr>
         <td>Up/down/left/right</td>
@@ -159,6 +159,10 @@
         <td>n</td>
         <td>Highlight one fewer generations</td>
       </tr>
+      <tr>
+        <td>s</td>
+        <td>Switch tree orientation</td>
+      </tr>
     </table>
   </div>
 </div>
@@ -171,11 +175,6 @@
     <div class="option">Select fields to show:
       <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
     </div>
-    <button class="accordion">Highlights</button>
-    <div class="option">Something will go here</div>
-    <button class="accordion">Nodes</button>
-    <div class="option">Something will go here</div>
-    <button class="accordion">Edges</button>
   </div>
 </div>
 
@@ -423,6 +422,8 @@
       } else {
         showModal(helpModal);
       }
+    } else if (String.fromCharCode(e.charCode) === "s") {
+      switchNodeDirection();
     }
   });
 
