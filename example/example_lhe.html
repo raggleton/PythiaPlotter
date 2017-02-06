@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <title>PythiaPlotter</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
+
+  <style type="text/css">
+    * {
+      font-family: sans-serif;
+    }
+
+    #mynetwork {
+      margin: auto;
+      width: 84%;
+      position: absolute;
+      height: 75%;
+      border: 1px solid lightgray;
+      display: inline-block;
+    }
+
+    #sidebar {
+      width: 14%;
+      display: inline-block;
+      float: right;
+      border: 1px solid lightgray;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .sidebarEntry {
+      border: 1px solid  #dddddd;
+      padding: 4px;
+      background-color: white;
+    }
+
+    .sidebarEntry:hover {
+      border: 1px solid  #dddddd;
+      padding: 4px;
+      background-color: lightgrey;
+    }
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      text-align: center; /* makes the content horizontally centered PRAISE THE LORD!!!! */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% 30% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: auto;
+      display: inline-block; /* important for centering!! */
+    }
+
+    /* The Close Button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    td, th {
+      border: 0px solid #dddddd;
+      text-align: left;
+      padding: 10px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    button.accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+      font-size: 12pt;
+    }
+
+    button.accordion:after {
+      content: '\02795'; /* Unicode character for "plus" sign (+) */
+      font-size: 13px;
+      color: #777;
+      float: right;
+      margin-left: 5px;
+    }
+
+    button.accordion.active:after {
+      content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    button.accordion.active, button.accordion:hover {
+      background-color: #ddd;
+    }
+
+    /* Style the accordion panel. Note: hidden by default */
+    div.option {
+      padding: 0 18px;
+      background-color: white;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+<h2>LHE input</h2>
+<h3>Diagram of /Users/robina/PythiaPlotter/example/example_lhe.lhe, event 0</h3>
+<span style="vertical-align: middle;">
+  Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
+  <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
+  <button id="settingsBtn" style="vertical-align: middle;">Settings</button>
+</span>
+
+<p></p>
+
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Keyboard shortcuts</h2>
+    <table>
+      <tr>
+        <th>Key</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td>h</td>
+        <td>Show/hide help</td>
+      </tr>
+      <tr>
+        <td>Up/down/left/right</td>
+        <td>Navigate</td>
+      </tr>
+      <tr>
+        <td>[, =</td>
+        <td>Zoom in</td>
+      </tr>
+      <tr>
+        <td>], -</td>
+        <td>Zoom out</td>
+      </tr>
+      <tr>
+        <td>r</td>
+        <td>Reset zoom</td>
+      </tr>
+      <tr>
+        <td>m</td>
+        <td>Highlight one more generation</td>
+      </tr>
+      <tr>
+        <td>n</td>
+        <td>Highlight one fewer generations</td>
+      </tr>
+      <tr>
+        <td>s</td>
+        <td>Switch tree orientation</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal">
+  <div class="modal-content" style="width:50%">
+    <span class="close">&times;</span>
+    <h2>Settings</h2>
+    <button class="accordion">Tooltips</button>
+    <div class="option">Select fields to show:
+      <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
+    </div>
+  </div>
+</div>
+
+<div id="mynetwork"></div>
+<div id="sidebar"></div>
+
+<script type="text/javascript">
+  var pythia8status = {
+  "11" : "[beam] the event as a whole",
+  "12" : "[beam] incoming beam",
+  "13" : "[beam] incoming beam-inside-beam (e.g. gamma inside e)",
+  "14" : "[beam] outgoing elastically scattered",
+  "15" : "[beam] outgoing diffractively scattered",
+  "21" : "[hardest subprocess] incoming",
+  "22" : "[hardest subprocess] intermediate (intended to have preserved mass)",
+  "23" : "[hardest subprocess] outgoing",
+  "24" : "[hardest subprocess] outgoing, nonperturbatively kicked out in diffraction",
+  "31" : "[subsequent subprocesses] incoming",
+  "32" : "[subsequent subprocesses] intermediate (intended to have preserved mass)",
+  "33" : "[subsequent subprocesses] outgoing",
+  "34" : "[subsequent subprocesses] incoming that has already scattered",
+  "41" : "[initial-state-showers] incoming on spacelike main branch",
+  "42" : "[initial-state-showers] incoming copy of recoiler",
+  "43" : "[initial-state-showers] outgoing produced by a branching",
+  "44" : "[initial-state-showers] outgoing shifted by a branching",
+  "45" : "[initial-state-showers] incoming rescattered parton, with changed kinematics owing to ISR in the mother system (cf. status 34)",
+  "46" : "[initial-state-showers] incoming copy of recoiler when this is a rescattered parton (cf. status 42)",
+  "47" : "[initial-state-showers] a W or Z gauge boson produced in the shower evolution",
+  "49" : "[initial-state-showers] a special state in the evolution, where E^2 - p^2 = m^2 is not fulfilled",
+  "51" : "[final-state-showers] outgoing produced by parton branching",
+  "52" : "[final-state-showers] outgoing copy of recoiler, with changed momentum",
+  "53" : "[final-state-showers] copy of recoiler when this is incoming parton, with changed momentum",
+  "54" : "[final-state-showers] copy of a recoiler, when in the initial state of a different system from the radiator",
+  "55" : "[final-state-showers] copy of a recoiler, when in the final state of a different system from the radiator",
+  "56" : "[final-state-showers] a W or Z gauge boson produced in a shower branching (special case of 51)",
+  "59" : "[final-state-showers] a special state in the evolution, where E^2 - p^2 = m^2 is not fulfilled",
+  "61" : "[beam-remnant treatment] incoming subprocess particle with primordial kT included",
+  "62" : "[beam-remnant treatment] outgoing subprocess particle with primordial kT included",
+  "63" : "[beam-remnant treatment] outgoing beam remnant",
+  "64" : "[beam-remnant treatment] copied particle with new colour according to the colour configuration of the beam remnant",
+  "71" : "[preparation of hadronization process] copied partons to collect into contiguous colour singlet",
+  "72" : "[preparation of hadronization process] copied recoiling singlet when ministring collapses to one hadron and momentum has to be reshuffled",
+  "73" : "[preparation of hadronization process] combination of very nearby partons into one",
+  "74" : "[preparation of hadronization process] combination of two junction quarks (+ nearby gluons) to a diquark (this index is not changed by recoils or recombinations)",
+  "75" : "[preparation of hadronization process] gluons split to decouple a junction-antijunction pair",
+  "76" : "[preparation of hadronization process] partons with momentum shuffled or a new colour to decouple junction-antijunction structures",
+  "77" : "[preparation of hadronization process] temporary opposing parton when fragmenting first two strings in to junction (should disappear again)",
+  "78" : "[preparation of hadronization process] temporary combined diquark end when fragmenting last string in to junction (should disappear again)",
+  "79" : "[preparation of hadronization process] copy of particle with new colour indices after the colour reconnection",
+  "81" : "[hadronization process] from ministring into one hadron",
+  "82" : "[hadronization process] from ministring into two hadrons",
+  "83" : "[hadronization process] from normal string (fragmented off from the top of the string system)",
+  "84" : "[hadronization process] from normal string (fragmented off from the bottom)",
+  "85" : "[hadronization process] primary produced hadrons in junction fragmentation of the first two string legs in to the junction (first)",
+  "86" : "[hadronization process] primary produced hadrons in junction fragmentation of the first two string legs in to the junction (second)",
+  "87" : "[hadronization process] primary produced baryon from a junction (fragmented off from the top of the string system)",
+  "88" : "[hadronization process] primary produced baryon from a junction (fragmented off from the bottom of the string system)",
+  "89" : "[hadronization process] primary produced baryon from a junction in the ministring framework",
+  "91" : "[decay process, or Bose-Einstein effects] normal decay products",
+  "92" : "[decay process, or Bose-Einstein effects] decay products after oscillation B0 <-> B0bar or B_s0 <-> B_s0bar",
+  "93" : "[decay process, or Bose-Einstein effects] decay handled by an external program, normally",
+  "94" : "[decay process, or Bose-Einstein effects] decay handled by an external program, with oscillation",
+  "95" : "[decay process, or Bose-Einstein effects] a forced decay handled by an external program, i.e. picked from a subset of the possible channels to enhance the rate of rare signals, normally or with oscillation",
+  "96" : "[decay process, or Bose-Einstein effects] a forced decay handled by an external program, i.e. picked from a subset of the possible channels to enhance the rate of rare signals, normally or with oscillation",
+  "99" : "[decay process, or Bose-Einstein effects] particles with momenta shifted by Bose-Einstein effects (not a proper decay, but bookkept as an 1 -> 1 such, happening after decays of short-lived resonances but before decays of longer-lived particles)",
+  "101" : "[handling of R-hadron production and decay] when a string system contains two such long-lived particles, the system is split up by the production of a new q-qbar pair (bookkept as decay chains that seemingly need not conserve flavour etc., but do when considered together)",
+  "102" : "[handling of R-hadron production and decay] partons rearranged from the long-lived particle end to prepare for fragmentation from this end",
+  "103" : "[handling of R-hadron production and decay] intermediate 'half-R-hadron' formed when a colour octet particle (like the gluino) has been fragmented on one side, but not yet on the other",
+  "104" : "[handling of R-hadron production and decay] an R-hadron",
+  "105" : "[handling of R-hadron production and decay] partons or particles formed together with the R-hadron during the fragmentation treatment",
+  "106" : "[handling of R-hadron production and decay] subdivision of an R-hadron into its flavour content, with momentum split accordingly, in preparation of the decay of the heavy new particle, if it is unstable",
+  "107" : "[handling of R-hadron production and decay] two temporary leftover gluons joined into one in the formation of a gluino-gluon R-hadron",
+  "111" : "[changed momentum due to hadron (re)scattering] first time scattering",
+  "112" : "[changed momentum due to hadron (re)scattering] second or more time scattering"
+};
+  var nodesDataset = new vis.DataSet([{"barcode": 1, "energy": "3.8", "eta": "inf", "final_state": false, "group": "initial", "id": 1, "initial_state": true, "label": "g", "mass": "0.75", "name": "g", "originalGroup": "initial", "pdgid": 21, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "3.73", "status": -1, "title": "", "x": 27.0, "y": 136.0}, {"barcode": 2, "energy": "54.7", "eta": "-inf", "final_state": false, "group": "initial", "id": 2, "initial_state": true, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "initial", "pdgid": 3, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "-54.7", "status": -1, "title": "", "x": 27.0, "y": 57.0}, {"barcode": 3, "energy": "17.3", "eta": "-1.32", "final_state": true, "group": "final", "id": 3, "initial_state": false, "label": "b", "mass": "4.7", "name": "b", "originalGroup": "final", "pdgid": 5, "phi": "-0.436", "pt": "8.31", "px": "7.53", "py": "-3.51", "pz": "-14.4", "status": 1, "title": "", "x": 153.0, "y": 176.0}, {"barcode": 4, "energy": "5.27", "eta": "-0.812", "final_state": true, "group": "final", "id": 4, "initial_state": false, "label": "bbar", "mass": "4.7", "name": "bbar", "originalGroup": "final", "pdgid": -5, "phi": "-1.03", "pt": "1.76", "px": "-0.909", "py": "-1.51", "pz": "-1.59", "status": 1, "title": "", "x": 153.0, "y": 97.0}, {"barcode": 5, "energy": "36", "eta": "-2.15", "final_state": true, "group": "final", "id": 5, "initial_state": false, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "final", "pdgid": 3, "phi": "0.649", "pt": "8.31", "px": "-6.62", "py": "5.02", "pz": "-35", "status": 1, "title": "", "x": 153.0, "y": 18.0}]);
+  var edgesDataset = new vis.DataSet([{"from": 1, "to": 3}, {"from": 1, "to": 4}, {"from": 1, "to": 5}, {"from": 2, "to": 3}, {"from": 2, "to": 4}, {"from": 2, "to": 5}]);
+
+  var network = null;
+  var highlightActive = false;
+
+  // Setup tooltips & their settings
+  var allTooltips = {
+    name: "",
+    status: "status: ",
+    energy: "E: ",
+    pt: "p<sub>T</sub>: ",
+    eta: "&eta;: ",
+    phi: "&phi;: ",
+    x: "x: ",
+    y: "y: ",
+    z: "z: ",
+    px: "p<sub>x</sub>: ",
+    py: "p<sub>y</sub>: ",
+    pz: "p<sub>z</sub>: "
+  };
+
+  var tooltipTable = document.getElementById("tooltipTable");
+  var ttKeys = Object.keys(allTooltips);
+
+  function addTooltipCheckboxEntry(key) {
+    var entry = document.createElement("td");
+    var option = document.createElement("input");
+    option.type ="checkbox";
+    option.value = allTooltips[key];
+    option.name = key;
+    option.id = key;
+    var tooltipText = document.createElement("label");
+    tooltipText.style = "width:100px;display: inline-block";
+    tooltipText.innerHTML = key;
+    tooltipText.setAttribute("for", key);
+    entry.appendChild(tooltipText);
+    entry.appendChild(option);
+    return entry;
+  }
+
+  function setupTooltipTable() {
+    for (var i = 0; i < ttKeys.length;) {
+      var row = document.createElement("tr");
+      for (var j = 0; j < 3; j++) {
+        if (ttKeys[i] != null) {
+          row.appendChild(addTooltipCheckboxEntry(ttKeys[i]));
+        }
+        i++;
+      }
+      tooltipTable.appendChild(row);
+    }
+  }
+
+  setupTooltipTable();
+
+  var defaultTooltips = ['name', 'status', 'pt', 'eta', 'phi'];
+  function setIntitalTooltips() {
+    defaultTooltips.forEach(function(entry){
+      var tooltipForm = document.getElementById("tooltipSelection");
+      var checkboxes = tooltipForm.getElementsByTagName("input");
+      for (var i=0; i<checkboxes.length; i++) {
+        var box = checkboxes[i];
+        if (box.name === entry) {
+          box.checked = true;
+        }
+      }
+    });
+  }
+
+  setIntitalTooltips();
+
+  function updateTooltips() {
+    var tooltipForm = document.getElementById("tooltipSelection");
+    var checkboxes = tooltipForm.getElementsByTagName("input");
+    var changes = [];
+    nodesDataset.get().forEach(function(node) {
+      var titleStr = "(" + node.id + ")<br/>";
+      for (var i=0; i<checkboxes.length; i++) {
+        var box = checkboxes[i];
+        if (!box.checked) {
+          continue;
+        }
+        titleStr += box.value;
+        if (box.name == "name") {
+          titleStr += "<b>";
+          titleStr += String(node[box.name]);
+          titleStr += "</b>";
+        } else {
+          titleStr += String(node[box.name]);
+        }
+        if ((box.name === "status") && (Math.abs(node.status) in pythia8status)) {
+          titleStr += "<br/><i>";
+          titleStr += pythia8status[Math.abs(node.status)].replace("] ", "]</i><br/>");
+        }
+        titleStr += "<br/>";
+      }
+      changes.push({id: node.id, title: titleStr});
+    });
+    nodesDataset.update(changes);
+  }
+
+  updateTooltips();
+
+  function updateSettings() {
+    updateTooltips();
+  }
+
+  // Other generic settings
+  var defaultNodeOpts = {
+    chosen: {
+      node: function(values, id, selected, hovering) {
+        values.size *= 2;
+      },
+      label: function(ctx, values, id) {
+        values.size *= 2;
+      }
+    },
+    color: {
+      border: '#2B7CE9',
+      background: '#97C2FC',
+      highlight: {
+        border: '#2B7CE9',
+        background: '#D2E5FF'
+      },
+      hover: {
+        border: '#2B7CE9',
+        background: '#D2E5FF'
+      }
+    },
+    font: {
+      size: 18
+    },
+    scaling: {
+      label: {
+        drawThreshold: 2,
+        min: 2
+      }
+    }
+  };
+
+ var initialStateNodeOpts = {
+    color: {
+      border: '#22bf51',
+      background: '#83db9f',
+      highlight: {
+        border: '#22bf51',
+        background: '#d2ffdb'
+      },
+      hover: {
+        border: '#22bf51',
+        background: '#d2ffdb'
+      }
+    },
+    shape: "star",
+    size: 60
+  };
+
+  var finalStateNodeOpts = {
+    color: {
+      border: '#9721bf',
+      background: '#c383db',
+      highlight: {
+        border: '#9721bf',
+        background: '#ecd2ff'
+      },
+      hover: {
+        border: '#9721bf',
+        background: '#ecd2ff'
+      }
+    },
+    shape: "box",
+    size: 60
+  };
+
+  var hiddenNodeOpts = {
+    color: 'rgba(200,200,200,0.5)'
+  };
+
+  var options = {
+    nodes: defaultNodeOpts,
+    edges: {
+      arrows: {to: {enabled: true}},
+      width: 0.15,
+      color: {inherit: 'from'},
+      smooth: {
+        type: 'continuous'
+      }
+    },
+    autoResize: true,
+    width: '100%',
+    height: '100%',
+    physics: false,
+    interaction: {
+      keyboard: true,
+      navigationButtons: true,
+      tooltipDelay: 100,
+      hideEdgesOnDrag: false,
+      hover: true
+    },
+    groups: {
+      default: defaultNodeOpts,
+      initial: initialStateNodeOpts,
+      final: finalStateNodeOpts,
+      hidden: hiddenNodeOpts
+    }
+  };
+
+  // Actually draw the diagram
+  function redrawAll() {
+    var container = document.getElementById('mynetwork');
+
+    var data = {nodes:nodesDataset, edges:edgesDataset};
+    network = new vis.Network(container, data, options);
+
+    network.on("click", familyHighlight);
+  }
+
+  redrawAll();
+
+  function hideModal(modal) {
+    modal.style.display = "none";
+  }
+
+  function showModal(modal) {
+    modal.style.display = "block";
+  }
+
+  // Setup help modal
+  var helpModal = document.getElementById('helpModal');
+  var helpModalClose = document.getElementsByClassName("close")[0];
+  helpModalClose.onclick = function() { hideModal(helpModal) };
+  hideModal(helpModal);
+
+  // Setup settings modal
+  var settingsModal = document.getElementById('settingsModal');
+  var settingsModalClose = document.getElementsByClassName("close")[1];
+  settingsModalClose.onclick = function() {
+    hideModal(settingsModal);
+    updateSettings();
+  };
+  hideModal(settingsModal);
+  document.getElementById("settingsBtn").onclick = function() {
+    settingsModal.style.display = "block";
+  };
+
+  // When the user clicks anywhere outside of any modal, close it
+  window.onclick = function(event) {
+    if (event.target == helpModal || event.target == settingsModal) {
+      hideModal(event.target)
+    }
+    if (event.target == settingsModal) {
+      updateSettings();
+    }
+  };
+
+  // Setup settings accordian behaviour
+  var acc = document.getElementsByClassName("accordion");
+  for (var i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+      /* Toggle between adding and removing the "active" class,
+       to highlight the button that controls the panel */
+      this.classList.toggle("active");
+
+      /* Toggle between hiding and showing the active panel */
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    }
+  }
+
+  // Additional keyboard shortcuts
+  document.addEventListener('keypress', function(e) {
+    if (String.fromCharCode(e.charCode) === "r") {
+      network.fit();
+    } else if (String.fromCharCode(e.charCode) === "m") {
+      generationsHighlight++;
+      familyHighlight(network.getSelection());
+    } else if (String.fromCharCode(e.charCode) === "n") {
+      if (generationsHighlight > 1) {generationsHighlight--;}
+      familyHighlight(network.getSelection());
+    } else if (String.fromCharCode(e.charCode) === "h") {
+      if (helpModal.style.display != "none"){
+        hideModal(helpModal);
+      } else {
+        showModal(helpModal);
+      }
+    } else if (String.fromCharCode(e.charCode) === "s") {
+      switchNodeDirection();
+    }
+  });
+
+  function switchNodeDirection() {
+    var changes = [];
+    nodesDataset.get({fields: ['id', 'x', 'y']}).forEach(function(node) {
+      changes.push({id: node.id, x: node.y, y: node.x});
+    });
+    nodesDataset.update(changes);
+    network.fit();
+  }
+
+  var generationsHighlight = 2;
+
+  function familyHighlight(params) {
+    // get JSON Object with node.id as keys
+    var allNodes = nodesDataset.get({returnType:"Object"});
+
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // if something is selected:
+    if (params.nodes.length > 0) {
+
+      highlightActive = true;
+      // mark all nodes as hard to read.
+      for (var node in allNodes) {
+        hideNode(allNodes[node]);
+      }
+
+      var selectedNodeId = params.nodes[0];
+      var selectedNode = allNodes[selectedNodeId];
+
+      var connectedNodes = network.getConnectedNodes(selectedNodeId);
+
+      // only highlight direct ancestors, not siblings or cousins
+      var family = getParentsChildren(selectedNodeId);
+      var parents = family.parents;
+      var children = family.children;
+
+      for (var degree = 1; degree < generationsHighlight; degree++) {
+        var newParents = [];
+        parents.forEach(function (entry) {
+          var dd = getParentsChildren(entry);
+          newParents.push.apply(newParents, dd.parents);
+          connectedNodes.push.apply(connectedNodes, dd.parents);
+        });
+        parents = newParents;
+
+        var newChildren = [];
+        children.forEach(function (entry) {
+          var ee = getParentsChildren(entry);
+          newChildren.push.apply(newChildren, ee.children);
+          connectedNodes.push.apply(connectedNodes, ee.children);
+        });
+        children = newChildren;
+      }
+
+      // all selected nodes get their color + label back
+      connectedNodes.forEach(function (i) {
+        showNode(allNodes[i]);
+      });
+
+      // the main node gets its own color and its label back.
+      showNode(selectedNode);
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  function isParent(nodeA, nodeB) {
+    // checks if A is a parent of B
+    var allEdges = edgesDataset.get({fields: ["from", "to"]});
+    for (var i=0; i < allEdges.length; i++) {
+      if ((allEdges[i].from === nodeA) && (allEdges[i].to === nodeB)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getParentsChildren(node) {
+    var connections = network.getConnectedNodes(node);
+    var parents = [];
+    var children = [];
+    connections.forEach(function (entry) {
+      if (isParent(entry, node)) {
+        parents.push(entry);
+      } else {
+        children.push(entry);
+      }
+    });
+    return {parents:parents, children:children};
+  }
+
+  function hideNode(node) {
+    node.group = "hidden";
+    if (node.hiddenLabel === undefined) {
+      node.hiddenLabel = node.label;
+      node.label = undefined;
+    }
+  }
+
+  function showNode(node) {
+    node.group = node.originalGroup;
+    if (node.hiddenLabel !== undefined) {
+      node.label = node.hiddenLabel;
+      node.hiddenLabel = undefined;
+    }
+  }
+
+  function highlightPDGID(pdgid) {
+    var allNodes = nodesDataset.get({returnType:"Object"});
+
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // mark all nodes as hard to read, except those we want
+    for (var node in allNodes) {
+      if (Math.abs(allNodes[node]['pdgid']) != parseInt(pdgid)) {
+        hideNode(allNodes[node]);
+        highlightActive = true;
+      }
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  var keepHighlighting = false;
+
+  function showAll() {
+    var allNodes = nodesDataset.get({returnType:"Object"});
+
+    // reset any current highlighting
+    if (highlightActive === true) {
+      for (var node in allNodes) {showNode(allNodes[node]);}
+      highlightActive = false;
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodesDataset.update(updateArray);
+  }
+
+  function populateSidebar() {
+    sidebar = document.getElementById("sidebar");
+    var particleDict = {};
+    nodesDataset.get().forEach(function(node) {
+      // prettify names, make charge into ±
+      pname = (node.name.replace("bar", "")
+                        .replace(/_(.*)$/, "<sub>$1</sub>")
+                        .replace(/_(.*)([+0-])/, "<sub>$1</sub>$2"))
+                        .replace(/[+-]/g, "<sup>&plusmn;</sup>")
+                        .replace("0", "<sup>0</sup>")
+
+      particleDict[Math.abs(node.pdgid)] = pname;
+    });
+    var sortedKeys = Object.keys(particleDict).sort(function(a, b) {
+      return particleDict[a].toUpperCase().localeCompare(particleDict[b].toUpperCase());
+    });
+    sortedKeys.forEach(function(key) {
+      entry = document.createElement("div")
+      entry.classList.add("sidebarEntry");
+      entry.setAttribute("id", key);
+      entry.innerHTML = particleDict[key] + " (" + key  + ")";
+      entry.addEventListener("mouseenter", function (e) {
+        highlightPDGID(this.id);
+      });
+      entry.addEventListener("click", function (e) {
+        if (keepHighlighting === true) {
+          keepHighlighting = false;
+        } else {
+          keepHighlighting = true;
+        }
+      });
+      entry.addEventListener("mouseleave", function() {
+        if (keepHighlighting === false) {
+          showAll();
+        }
+      });
+      sidebar.appendChild(entry);
+    });
+  }
+
+  populateSidebar();
+</script>
+
+</body></html>
