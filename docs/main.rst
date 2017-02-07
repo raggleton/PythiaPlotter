@@ -57,6 +57,14 @@ How Do I Get It:
 
     make install
 
+* If you *really* can't install it, it is also possible to clone and run it in the main PythiaPlotter directory by doing:
+
+::
+
+    python -m pythiaplotter
+
+However this is the least recommended way, as you must be in the specific `PythiaPlotter` directory.
+
 How Do I Use It:
 ----------------
 
