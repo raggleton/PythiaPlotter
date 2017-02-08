@@ -9,11 +9,3 @@ WEB_LAYOUT_OPTS = {
     "ranksep": 1,
     "nodesep": 0.6,
 }
-
-
-WEB_GRAPH_OPTS = {
-}
-
-
-WEB_PARTICLE_OPTS = [
-]
