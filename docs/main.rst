@@ -9,7 +9,9 @@ What Is It
 Plots diagrams of particle decay trees from HEP Monte Carlo (MC) events.
 Very handy to figure out what is actually going on in your MC!
 
-Some snippets from the full examples in the `example <https://github.com/raggleton/PythiaPlotter/tree/master/example>`_ folder:
+`Click here for an interactive example <https://raggleton.github.io/PythiaPlotter/test_py8.html>`_.
+
+And some snippets from the PDF examples in the `example <https://github.com/raggleton/PythiaPlotter/tree/master/example>`_ folder:
 
 .. image:: images/snippet_node.png
 
