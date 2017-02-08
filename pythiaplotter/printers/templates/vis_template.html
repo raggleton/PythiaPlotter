@@ -32,6 +32,12 @@
       overflow: auto;
     }
 
+    #tooltip {
+      width: 150px;
+      word-wrap: break-all;
+      white-space: normal;
+    }
+
     .sidebarEntry {
       border: 1px solid  #dddddd;
       padding: 4px;
@@ -281,7 +287,7 @@
     var checkboxes = tooltipForm.getElementsByTagName("input");
     var changes = [];
     nodesDataset.get().forEach(function(node) {
-      var titleStr = "(" + node.id + ")<br/>";
+      var titleStr = "<div id='tooltip'>(" + node.id + ")<br/>";
       for (var i=0; i<checkboxes.length; i++) {
         var box = checkboxes[i];
         if (!box.checked) {
@@ -301,6 +307,7 @@
         }
         titleStr += "<br/>";
       }
+      titleStr += "</div>";
       changes.push({id: node.id, title: titleStr});
     });
     nodesDataset.update(changes);
@@ -617,7 +624,7 @@
     }
   }
 
-    function highlightPDGID(pdgid) {
+  function highlightPDGID(pdgid) {
     var allNodes = nodesDataset.get({returnType:"Object"});
 
     // reset any current highlighting
@@ -692,7 +699,6 @@
       entry.addEventListener("click", function (e) {
         if (keepHighlighting === true) {
           keepHighlighting = false;
-          // this.style.background =
         } else {
           keepHighlighting = true;
         }
