@@ -74,17 +74,16 @@ Example usage (requires downloading the example input files in the
 
 ::
 
-    PythiaPlotter example/example_pythia8.txt --open --inputFormat PYTHIA
-    PythiaPlotter example/example_hepmc.hepmc --open --inputFormat HEPMC
+    PythiaPlotter example/example_pythia8.txt --open --inputFormat PYTHIA --printer WEB
+    PythiaPlotter example/example_hepmc.hepmc --open --inputFormat HEPMC --printer DOT
 
     # to show all options:
     PythiaPlotter --help
 
 There are various input (**parser**) and output (**printer**) options.
-Although only 1 printer, ``dot``, is currently implemented, more are
-envisaged. You should specify the input format using ``--inputFormat``
-(although it does try to guess), and and output printer using ``-p``
-(defaults to DOT). There are also other options for specifying the
+You should specify the input format using ``--inputFormat``
+(although it does try to guess), and and output printer using ``--printer``
+(defaults to ``DOT``). There are also other options for specifying the
 output filename and format.
 
 MC generators often internally make several sequential copies of a
@@ -120,14 +119,6 @@ going on in an event.
 
 Note that redundant particle removal is done *after* representation
 conversion.
-
-What Improvements Are Being Working On:
----------------------------------------
-
-*  Parser: More parsers? Some under-the-hood magic for faster/safer
-   processing
-*  Printer: JS? TikZ/Latex printer for more formatting and more
-   beautiful output?
 
 Full documentation:
 -------------------

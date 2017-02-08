@@ -28,6 +28,22 @@ pythiaplotter.printers.dot_printer module
     :undoc-members:
     :show-inheritance:
 
+pythiaplotter.printers.web_config module
+----------------------------------------
+
+.. automodule:: pythiaplotter.printers.web_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pythiaplotter.printers.web_printer module
+-----------------------------------------
+
+.. automodule:: pythiaplotter.printers.web_printer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

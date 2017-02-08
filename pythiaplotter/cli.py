@@ -102,7 +102,7 @@ def get_args(input_args):
     output_group.add_argument("-p", "--printer",
                               help="\n".join(printer_help),
                               choices=list(printer_opts_checked.keys()),
-                              default="DOT" if "DOT" in printer_opts_checked else "LATEX")
+                              default="DOT" if "DOT" in printer_opts_checked else "WEB")
 
     output_group.add_argument("--redundants",
                               help="Keep redundant particles (defualt is to remove them)",

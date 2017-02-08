@@ -1,5 +1,6 @@
 .PHONY: clean clean-test clean-pyc clean-build docs
 docs:
+	cp README.rst docs/main.rst
 	sed -i '.bak' 's@docs/@@g' docs/main.rst
 	sphinx-apidoc -f -H PythiaPlotter -o docs/ pythiaplotter/
 	$(MAKE) -C docs clean

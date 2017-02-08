@@ -35,7 +35,7 @@ In the example, Edge 1 has outgoing node A, and incoming node B, whilst Edge 2 h
 This implies some sort of "relationship" between nodes.
 
 Graphs and the Representations of Particles
-============================================
+===========================================
 
 A particle event is characterised by the production and decay of particles; for example two gluons combine to make a Higgs boson, or a pion decays to two photons.
 There are **parents** (historically "mothers") such as the gluons or pion, and **children** ("daughters"), the Higgs or photons, and the parents "produce" the children.
@@ -61,8 +61,8 @@ That is, the incoming Higgs is parent to the two tau children.
 
 This is not the only possible assignment of particles to a direct graph however.
 Whilst natural from a theoretical particle physics persepctive, one can pose an alternate formulation.
-If we choose to represent each particle as a node, then all parent-daughter relationships can be denoted with a directed edge.
-In the example above of Higgs decaying to a pair of taus, we can also denote this as:
+If we choose to represent each particle as a node, then each parent-daughter relationships can be denoted with a directed edge.
+In the example above of Higgs decaying to a pair of taus, there are two (parent, child) relationships, (Higgs, tau), so we can denote this as:
 
 .. graphviz::
 
@@ -76,3 +76,28 @@ In the example above of Higgs decaying to a pair of taus, we can also denote thi
 
 This is the **node representation**.
 Given a list of parent-child relationships, this is the natural representation, and is therefore the default for Pythia8, LHE, Heppy graphs.
+
+Conversion between representations
+==================================
+
+Naturally, one might ask if it is possible to convert between the two representations.
+Spoiler: yes! Although it is sometimes non-trivial.
+
+Edge to Node (easier)
+---------------------
+
+Due to the definition of a node, this conversion is easy:
+
+1. On our new graph, for each edge particle, create a node for that particle
+2. For each vertex, iterate through all combinations of (incoming, outgoing) edges; for each draw a directed line between the corresponding pair of nodes.
+
+And that's it!
+
+A simple example is shown:
+
+
+Node to Edge (harder)
+---------------------
+
+Unlike edge to node, this is not always trivial.
+Consider the very simple example below.
