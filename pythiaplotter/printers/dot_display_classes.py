@@ -12,7 +12,7 @@ from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 from pythiaplotter.utils.common import generate_repr_str
-from pythiaplotter.printers.printer_config import DOT_PARTICLE_OPTS, GRAPH_OPTS
+from pythiaplotter.default_config import GRAPH_OPTS, DOT_LABEL_OPTS, DOT_PARTICLE_OPTS
 
 
 log = get_logger(__name__)
@@ -29,17 +29,19 @@ def validate_particle_opt(opt):
 
 
 # Quick check to ensure dicts are valid
-for opt in DOT_PARTICLE_OPTS:
-    validate_particle_opt(opt)
+for op in DOT_PARTICLE_OPTS:
+    validate_particle_opt(op)
 
 
-def get_particle_label(particle, fancy):
+def get_particle_label(particle, representation, fancy=True):
     """Return string for particle label to be displayed on graph.
 
     Parameters
     ----------
     particle : Particle
         Particle under consideration
+    representation : {"NODE", "EDGE"}
+        Particle representation
     fancy : bool
         If True, will use HTML/unicode in labels
 
@@ -47,19 +49,19 @@ def get_particle_label(particle, fancy):
     -------
     str
         Particle label string
+
+    Raises
+    ------
+    RuntimeError
+        If representation is not one of "NODE", "EDGE"
     """
+    if representation not in ["NODE", "EDGE"]:
+        raise RuntimeError('representation must be "NODE" or "EDGE"')
+    style_key = "fancy" if fancy else "plain"
+    label = DOT_LABEL_OPTS[representation.lower()][style_key].format(**particle.__dict__)
     if fancy:
-        label = r"<{0}: {1},  p<SUB>T</SUB>: {2:.2f}<br/>&eta;: {3:.2f},  &phi;: {4:.2f}<br/>status: {5}>".format(
-            particle.barcode, pdgid_to_string(particle.pdgid),
-            float(particle.__dict__.get('pt', 0)), float(particle.__dict__.get('eta', 0)),
-            float(particle.__dict__.get('phi', 0)), particle.status)
         label = label.replace("inf", "&#x221e;")
-        return label
-    else:
-        return '"{0}: {1}, pT: {2:.2f}, eta: {3:.2f}, phi: {4:.2f}"'.format(
-            particle.barcode, pdgid_to_string(particle.pdgid),
-            float(particle.__dict__.get('pt', 0)), float(particle.__dict__.get('eta', 0)),
-            float(particle.__dict__.get('phi', 0)))
+    return label
 
 
 class DotEdgeAttr(object):
@@ -105,7 +107,7 @@ class DotEdgeAttr(object):
         particle = edge["particle"]
 
         # Displayed edge label
-        self.attr["label"] = get_particle_label(particle, fancy)
+        self.attr["label"] = get_particle_label(particle, "EDGE", fancy)
 
         for opt in DOT_PARTICLE_OPTS:
             if opt['filter'](particle):
@@ -164,7 +166,7 @@ class DotNodeAttr(object):
         particle = node["particle"]
 
         # Displayed node label
-        self.attr["label"] = get_particle_label(particle, fancy)
+        self.attr["label"] = get_particle_label(particle, "NODE", fancy)
 
         for opt in DOT_PARTICLE_OPTS:
             if opt['filter'](particle):

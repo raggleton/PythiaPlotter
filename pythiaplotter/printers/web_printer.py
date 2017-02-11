@@ -16,7 +16,7 @@ from pkg_resources import resource_filename
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
-from pythiaplotter.printers.printer_config import GRAPH_OPTS
+from pythiaplotter.default_config import GRAPH_OPTS
 
 
 log = get_logger(__name__)

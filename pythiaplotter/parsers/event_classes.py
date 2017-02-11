@@ -1,4 +1,4 @@
-"""Classes to describe event & physical particles, as well as four-vectors."""
+"""Classes to describe event & physical particles."""
 
 
 from __future__ import absolute_import, division
@@ -6,6 +6,7 @@ import math
 import networkx as nx
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str, get_terminal_width
+from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 from functools import total_ordering
 
 
@@ -71,12 +72,28 @@ class Particle(object):
             Flag final state particle (no children)
         kwargs : dict
             Store any other particle attributes, such as px/py/pz/pt/energy/mass
+
+        Attributes
+        ----------
+        name : str
+        pt : float
+        eta : float
+        phi : float
+        px : float
+        py : float
+        pz : float
+        energy : float
+        mass : float
         """
         self.barcode = int(barcode)
         self.pdgid = int(pdgid)
+        self.name = pdgid_to_string(self.pdgid)
         self.status = int(status)
         self.final_state = final_state
         self.initial_state = initial_state
+        # some default fields
+        for k in ['pt', 'eta', 'phi', 'px', 'py', 'pz', 'energy', 'mass']:
+            self.__dict__[k] = 0.0
         self.__dict__.update(**kwargs)
         if all([k in kwargs for k in ['px', 'py', 'pz']]):
             pt, eta, phi = convert_px_py_pz(float(self.px), float(self.py), float(self.pz))

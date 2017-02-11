@@ -16,9 +16,37 @@ GRAPH_OPTS = {
 }
 
 
-# Settings for particles using the dot printer
+# Settings for particle labels for the DOT printer
+# Uses the python .format() method.
+# Any particle field name can be used in the {} specifiers, e.g. {pt}
+#
+# There separate dicts for NODE and EDGE representations,
+# and for each a "fancy" label (e.g for PDF output), and "plain" label
+# (e.g for postscript output).
+DOT_LABEL_OPTS = {
+    "node": {
+        "fancy": r"<{barcode}: {name}, p<SUB>T</SUB>: {pt:.2f}<br/>&eta;: {eta:.2f},  &phi;: {phi:.2f}<br/>status: {status}>",
+        "plain": '"{barcode}: {name}, pT: {pt:.2f}, eta: {eta:.2f}, phi: {phi:.2f}"'
+    },
+    "edge": {
+        "fancy": r"<{barcode}: {name}, p<SUB>T</SUB>: {pt:.2f}<br/>&eta;: {eta:.2f},  &phi;: {phi:.2f}<br/>status: {status}>",
+        "plain": '"{barcode}: {name}, pT: {pt:.2f}, eta: {eta:.2f}, phi: {phi:.2f}"'
+    }
+}
+
+
+# Settings for particle styling using the DOT printer
+# Each entry must be a dict, with 2 fields: "filter" and "attr".
+# "filter" must hold a lambda, that takes in a particle and returns a bool.
+# If this evaluates True, the styling will be used.
+# The "attr"" field must hold a dict, with keys "node" and "edge".
+# The "node" dict is used for NODE particle representation, and similarly
+# the "edge" dict for EDGE representation.
+# Each of these holds a dict, with graphviz key : values.
+# Possible keys and values can be found here:
+#
 DOT_PARTICLE_OPTS = [
-    # Example for b quarks
+    # Style b quarks
     dict(
         filter=lambda p: abs(p.pdgid) == 5,
         attr={
@@ -32,7 +60,7 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-    # Example for muons, taus
+    # Style muons, taus
     dict(
         filter=lambda p: abs(p.pdgid) in [13, 15],
         attr={
@@ -47,7 +75,7 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-    # Example for gluons
+    # Style gluons
     dict(
         filter=lambda p: abs(p.pdgid) == 21,
         attr={
@@ -61,7 +89,7 @@ DOT_PARTICLE_OPTS = [
             }
         }
     ),
-    # Example for photons
+    # Style photons
     dict(
         filter=lambda p: abs(p.pdgid) == 22,
         attr={
