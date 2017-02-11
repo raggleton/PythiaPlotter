@@ -4,6 +4,18 @@
 from __future__ import absolute_import, division
 
 
+# Settings for Heppy parser
+HEPPY_PARSER_OPTS = {
+    # Stem for the gen particle collection. e.g. if pt is stored in `allGenPart_pt`,
+    # this should be `allGenPart`
+    "particle_collection_name": "allGenPart",
+
+    # Branch names for mother and daughter indices
+    "mother_index_branch_name": "motherIndices",
+    "daughter_index_branch_name": "daughterIndices"
+}
+
+
 # Settings for the entire graph
 GRAPH_OPTS = {
     "rankdir": "LR",

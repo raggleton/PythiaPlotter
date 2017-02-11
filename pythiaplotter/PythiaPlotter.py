@@ -12,6 +12,7 @@ import pythiaplotter.printers as printers
 from pythiaplotter.graphers import assign_particles_to_graph
 import pythiaplotter.cli as cli
 from pythiaplotter.utils.common import open_pdf
+from pythiaplotter.default_config import HEPPY_PARSER_OPTS
 
 
 log = get_logger(__name__)
@@ -33,7 +34,8 @@ def choose_parser(opts):
         return parsers.CMSSWParticleListParser(filename=opts.input)
     elif opts.inputFormat == "HEPPY":
         return parsers.HeppyParser(filename=opts.input,
-                                   event_num=opts.eventNumber)
+                                   event_num=opts.eventNumber,
+                                   **HEPPY_PARSER_OPTS)
     else:
         raise NotImplementedError("Cannot parse input format %s" % opts.inputFormat)
 
