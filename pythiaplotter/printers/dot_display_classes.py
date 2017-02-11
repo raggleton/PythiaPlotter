@@ -12,7 +12,7 @@ from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
 from pythiaplotter.utils.common import generate_repr_str
-from .dot_config import DOT_PARTICLE_OPTS, DOT_GRAPH_OPTS
+from pythiaplotter.printers.printer_config import DOT_PARTICLE_OPTS, GRAPH_OPTS
 
 
 log = get_logger(__name__)
@@ -176,7 +176,7 @@ class DotGraphAttr(object):
     """Hold Graphviz attributes for the graph as whole."""
 
     def __init__(self, event):
-        self.attr = DOT_GRAPH_OPTS.copy()
+        self.attr = GRAPH_OPTS.copy()
 
     def __repr__(self):
         return generate_repr_str(self)

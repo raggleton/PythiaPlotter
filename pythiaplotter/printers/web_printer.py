@@ -16,7 +16,7 @@ from pkg_resources import resource_filename
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
-from pythiaplotter.printers.web_config import WEB_LAYOUT_OPTS
+from pythiaplotter.printers.printer_config import GRAPH_OPTS
 
 
 log = get_logger(__name__)
@@ -52,7 +52,7 @@ class VisPrinter(object):
         event : Event
         """
 
-        gv_str = construct_gv_only_edges(event.graph, WEB_LAYOUT_OPTS)
+        gv_str = construct_gv_only_edges(event.graph, GRAPH_OPTS)
 
         raw_json = get_dot_json(gv_str, self.renderer)
 
