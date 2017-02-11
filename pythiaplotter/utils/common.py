@@ -149,3 +149,12 @@ def generate_repr_str(obj, ignore=None):
 def get_terminal_width():
     """Get the width of the user's terminal. Requires tput."""
     return int(check_output(['tput', 'cols']))
+
+
+VALID_REPRESENTATIONS = ["NODE", "EDGE"]
+
+
+def check_representation_str(representation, variable="representation"):
+    """Check the representation string is valid, if not raise KeyError"""
+    if representation not in VALID_REPRESENTATIONS:
+        raise KeyError('%s must be one of %s' % (variable, keys))

@@ -5,6 +5,7 @@ from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.graphers.edge_grapher import assign_particles_edges, remove_redundant_edges
 from pythiaplotter.graphers.node_grapher import assign_particles_nodes, remove_redundant_nodes
+from pythiaplotter.utils.common import check_representation_str
 from pythiaplotter.graphers.converters import node_to_edge, edge_to_node
 
 
@@ -29,18 +30,17 @@ def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove
     -------
     NetworkX.MultiDiGraph
     """
+    check_representation_str(default_repr, "default_repr")
     if default_repr == "NODE":
         graph = assign_particles_nodes(particles)
     elif default_repr == "EDGE":
         graph = assign_particles_edges(particles)
-    else:
-        raise KeyError("default_repr must be NODE or EDGE")
+        remove_edges_by_pdgid(graph, 22, True)
 
     new_repr = default_repr
 
     if desired_repr and desired_repr != default_repr:
-        if desired_repr not in ["NODE", "EDGE"]:
-            raise KeyError("desired_repr must be NODE or EDGE")
+        check_representation_str(desired_repr, "desired_repr")
 
         new_repr = desired_repr
         if (default_repr, desired_repr) == ("NODE", "EDGE"):

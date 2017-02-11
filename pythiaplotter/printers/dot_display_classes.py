@@ -11,7 +11,7 @@ possible to simplify things...
 from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
-from pythiaplotter.utils.common import generate_repr_str
+from pythiaplotter.utils.common import generate_repr_str, check_representation_str
 from pythiaplotter.default_config import GRAPH_OPTS, DOT_LABEL_OPTS, DOT_PARTICLE_OPTS
 
 
@@ -55,8 +55,7 @@ def get_particle_label(particle, representation, fancy=True):
     RuntimeError
         If representation is not one of "NODE", "EDGE"
     """
-    if representation not in ["NODE", "EDGE"]:
-        raise RuntimeError('representation must be "NODE" or "EDGE"')
+    check_representation_str(representation)
     style_key = "fancy" if fancy else "plain"
     label = DOT_LABEL_OPTS[representation.lower()][style_key].format(**particle.__dict__)
     if fancy:

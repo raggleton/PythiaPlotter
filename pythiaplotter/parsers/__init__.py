@@ -10,7 +10,7 @@ parser_opts : dict[str, ParserOption]
 
 from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
-from pythiaplotter.utils.common import generate_repr_str
+from pythiaplotter.utils.common import generate_repr_str, check_representation_str
 from .pythia8_parser import Pythia8Parser
 from .hepmc_parser import HepMCParser
 from .lhe_parser import LHEParser
@@ -42,9 +42,8 @@ class ParserOption(object):
         self.description = description
         self.parser = parser
         self.file_extension = file_extension
+        check_representation_str(default_representation, "default_representation")
         self.default_representation = default_representation
-        if default_representation not in ["NODE", "EDGE"]:
-            raise RuntimeError("default_representation must be one of NODE, EDGE")
 
     def __repr__(self):
         return generate_repr_str(self)

@@ -75,7 +75,7 @@ def get_args(input_args):
     output_group.add_argument("-r", "--representation",
                               help="Particle representation for output diagram, "
                                    "either representated by Nodes or as Edges",
-                              choices=["NODE", "EDGE"])
+                              choices=helpr.VALID_REPRESENTATIONS)
 
     layouts = OrderedDict()
     layouts["dot"] = "(Default) Hierarchical drawings of directed graphs."
