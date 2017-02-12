@@ -17,7 +17,6 @@ from subprocess import call, PIPE, Popen
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from .dot_display_classes import DotNodeAttrGenerator, DotEdgeAttrGenerator, DotGraphAttrGenerator
-from pythiaplotter.default_config import DOT_PARTICLE_OPTS, DOT_LABEL_OPTS, GRAPH_OPTS
 
 
 log = get_logger(__name__)
@@ -59,9 +58,9 @@ class DotPrinter(object):
             self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
         else:
             self.gv_filename = None
-        self.graph_attr_gen = DotGraphAttrGenerator(GRAPH_OPTS)
-        self.node_attr_gen = DotNodeAttrGenerator(DOT_PARTICLE_OPTS, DOT_LABEL_OPTS)
-        self.edge_attr_gen = DotEdgeAttrGenerator(DOT_PARTICLE_OPTS, DOT_LABEL_OPTS)
+        self.graph_attr_gen = DotGraphAttrGenerator(opts.GRAPH_OPTS)
+        self.node_attr_gen = DotNodeAttrGenerator(opts.DOT_PARTICLE_OPTS, opts.DOT_LABEL_OPTS)
+        self.edge_attr_gen = DotEdgeAttrGenerator(opts.DOT_PARTICLE_OPTS, opts.DOT_LABEL_OPTS)
 
     def __repr__(self):
         return generate_repr_str(self)

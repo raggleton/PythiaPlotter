@@ -5,6 +5,9 @@ from __future__ import absolute_import
 import logging
 import argparse
 import os.path
+import sys
+import shutil
+from imp import load_source
 from collections import OrderedDict
 from pythiaplotter.utils.logging_config import get_logger
 import pythiaplotter.utils.common as helpr
@@ -117,7 +120,12 @@ def get_args(input_args):
     # Miscellaneous options
     #################
     misc_group = parser.add_argument_group("Miscellaneous Options")
-
+    dump_config_key = "--dumpConfig"
+    misc_group.add_argument(dump_config_key,
+                            help="Dump the default config file. User can then modify it, "
+                            "and use it via --configFile.")
+    misc_group.add_argument("--configFile",
+                            help="Configuration file to use")
     misc_group.add_argument("-v", "--verbose",
                             help="Print debug statements to screen",
                             action="store_true")
@@ -135,6 +143,11 @@ def get_args(input_args):
         print_printers_requirements(log.info)
         exit(11)
 
+    # Can generate default config file and exit before doing any parsing
+    if dump_config_key in sys.argv:
+        dump_default_config()
+        exit(0)
+
     args = parser.parse_args(input_args)
 
     if args.verbose:
@@ -149,6 +162,7 @@ def get_args(input_args):
     set_default_output_settings(args)
     set_default_input_format(args)
     set_default_mode(args)
+    load_default_user_configs(args)
 
     for k, v in args.__dict__.items():
         log.debug("%s: %s", k, v)
@@ -202,3 +216,31 @@ def set_default_mode(args):
         log.info("Will convert from %s -> %s representation", default_repr, args.representation)
     else:
         log.info("Using default %s particle representation", args.representation)
+
+
+def dump_default_config():
+    """Produce default config file"""
+    output = "PythiaPlotter_config.py"
+    log.info("Dumping config to %s", output)
+    import pythiaplotter.default_config as dc
+    shutil.copy(dc.__file__.replace(".pyc", ".py"), output)
+
+
+def load_default_user_configs(args):
+    """Add default and custom user options to main args object"""
+    # Skip any imported keys from future
+    import __future__ as ff
+    future_keys = dir(ff)
+    # Load default settings
+    import pythiaplotter.default_config as dc
+    default_settings = {k: getattr(dc, k) for k in dir(dc)
+                        if k not in future_keys and not k.startswith("_")}
+    args.__dict__.update(default_settings)  # argparse.Namespace doesn't like update() or new keys
+    # Load user config
+    if args.configFile:
+        if not helpr.check_file_exists(args.configFile):
+            raise IOError("Configuration file %s does not exist" % args.configFile)
+        cc = load_source("cc", args.configFile)
+        custom_settings = {k: getattr(cc, k) for k in dir(cc)
+                           if k not in future_keys and not k.startswith("_")}
+        args.__dict__.update(custom_settings)

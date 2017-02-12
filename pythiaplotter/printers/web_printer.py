@@ -16,7 +16,6 @@ from pkg_resources import resource_filename
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
 from pythiaplotter.utils.pdgid_converter import pdgid_to_string
-from pythiaplotter.default_config import GRAPH_OPTS
 
 
 log = get_logger(__name__)
@@ -33,13 +32,17 @@ class VisPrinter(object):
 
         Attributes
         ----------
-        output_filename : str, optional
+        output_filename : str
             Final web page output filename
-        renderer : str, optional
+        renderer : str
             Graphviz program to use for rendering layout, default is dot since dealing with DAGs
+        graph_opts : dict
+            Dict of Graphviz attributes for the whole graph (e.g. direction, nodesep)
         """
         self.output_filename = opts.output
         self.renderer = opts.layout
+        self.graph_opts = opts.GRAPH_OPTS
+        # self.pythia_statusfile = 'particledata/pythia6status.json' if opts.inputFormat == "CMSSW" else
 
     def __repr__(self):
         return generate_repr_str(self)
@@ -52,7 +55,7 @@ class VisPrinter(object):
         event : Event
         """
 
-        gv_str = construct_gv_only_edges(event.graph, GRAPH_OPTS)
+        gv_str = construct_gv_only_edges(event.graph, self.graph_opts)
 
         raw_json = get_dot_json(gv_str, self.renderer)
 
@@ -61,7 +64,7 @@ class VisPrinter(object):
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
         pythia8status_file = resource_filename('pythiaplotter',
-                                               'particledata/pythia8status.json')
+                                               'particledata/pythia6status.json')
         with open(pythia8status_file) as f:
             pythia8status = f.read()
 
