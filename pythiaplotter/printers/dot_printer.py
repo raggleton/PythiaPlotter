@@ -16,7 +16,8 @@ from string import Template
 from subprocess import call, PIPE, Popen
 from pythiaplotter.utils.logging_config import get_logger
 from pythiaplotter.utils.common import generate_repr_str
-from .dot_display_classes import DotNodeAttr, DotEdgeAttr, DotGraphAttr
+from .dot_display_classes import DotNodeAttrGenerator, DotEdgeAttrGenerator, DotGraphAttrGenerator
+from pythiaplotter.default_config import DOT_PARTICLE_OPTS, DOT_LABEL_OPTS, GRAPH_OPTS
 
 
 log = get_logger(__name__)
@@ -58,6 +59,9 @@ class DotPrinter(object):
             self.gv_filename = os.path.splitext(self.output_filename)[0] + ".gv"
         else:
             self.gv_filename = None
+        self.graph_attr_gen = DotGraphAttrGenerator(GRAPH_OPTS)
+        self.node_attr_gen = DotNodeAttrGenerator(DOT_PARTICLE_OPTS, DOT_LABEL_OPTS)
+        self.edge_attr_gen = DotEdgeAttrGenerator(DOT_PARTICLE_OPTS, DOT_LABEL_OPTS)
 
     def __repr__(self):
         return generate_repr_str(self)
@@ -71,7 +75,7 @@ class DotPrinter(object):
             Event to print
         """
         fancy = self.output_format in ["ps", "pdf"]
-        add_display_attr(event, fancy)
+        self.add_display_attr(event, fancy)
         gv_str = construct_gv_full(event)
         # save gv first incase of parsing errors
         if self.write_gv:
@@ -86,24 +90,24 @@ class DotPrinter(object):
             log.info('\n'.join(run_cmds))
 
 
-def add_display_attr(event, fancy):
-    """Auto add display attribute to graph, nodes & edges
+    def add_display_attr(self, event, fancy):
+        """Add display attribute to graph, nodes & edges
 
-    Parameters
-    ----------
-    event : Event
-        Event to process
-    fancy : bool
-        If True, will use HTML/unicode in labels
-    """
-    graph = event.graph
-    graph.graph["attr"] = DotGraphAttr(graph)
+        Parameters
+        ----------
+        event : Event
+            Event to process
+        fancy : bool
+            If True, will use HTML/unicode in labels
+        """
+        graph = event.graph
+        graph.graph["attr"] = self.graph_attr_gen.gv_str()
 
-    for _, node_data in graph.nodes_iter(data=True):
-        node_data["attr"] = DotNodeAttr(node_data, fancy)
+        for _, node_data in graph.nodes_iter(data=True):
+            node_data["attr"] = self.node_attr_gen.gv_str(node_data, fancy)
 
-    for _, _, edge_data in graph.edges_iter(data=True):
-        edge_data["attr"] = DotEdgeAttr(edge_data, fancy)
+        for _, _, edge_data in graph.edges_iter(data=True):
+            edge_data["attr"] = self.edge_attr_gen.gv_str(edge_data, fancy)
 
 
 def construct_gv_full(event):
