@@ -73,13 +73,17 @@ class DotPrinter(object):
         fancy = self.output_format in ["ps", "pdf"]
         add_display_attr(event, fancy)
         gv_str = construct_gv_full(event)
+        # save gv first incase of parsing errors
+        if self.write_gv:
+            write_gv(gv_str, self.gv_filename)
         if self.make_diagram:
             run_cmds = print_diagram(gv_str=gv_str,
                                      output_filename=self.output_filename,
                                      renderer=self.renderer,
                                      output_format=self.output_format)
         if self.write_gv:
-            write_gv(gv_str, self.gv_filename)
+            log.info("To re-run:")
+            log.info('\n'.join(run_cmds))
 
 
 def add_display_attr(event, fancy):
@@ -170,6 +174,11 @@ def print_diagram(gv_str, output_filename, renderer, output_format):
         * ps - uses ps:cairo. Obeys HTML tags & unicode, but not searchable
         * ps2 - PDF searchable, but won't obey all HTML tags or unicode.
         * pdf - obeys HTML but not searchable
+
+    Returns
+    -------
+    list[str]
+        List of commands run to produce diagram from graphviz file
     """
     if output_format is None:
         raise RuntimeError("Need an output format for graphviz")
@@ -185,6 +194,7 @@ def print_diagram(gv_str, output_filename, renderer, output_format):
             output_format += ":cairo"
 
         dot_args = [renderer, "-T" + output_format, "-o", ps_filename]
+        run_cmds.append(" ".join(dot_args))
         p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
         out, err = p.communicate(input=gv_str.encode())
         if p.returncode != 0:
@@ -192,13 +202,16 @@ def print_diagram(gv_str, output_filename, renderer, output_format):
 
         if output_filename.endswith(".pdf"):
             pdfargs = ["ps2pdf", ps_filename, output_filename]
+            run_cmds.append(' '.join(pdfargs))
             call(pdfargs)
 
             rmargs = ["rm", ps_filename]
+            run_cmds.append(' '.join(rmargs))
             call(rmargs)
 
     elif output_format is not None:
         dot_args = [renderer, "-T" + output_format, "-o", output_filename]
+        run_cmds.append(' '.join(dot_args))
         p = Popen(dot_args, stdin=PIPE, stderr=PIPE)
         out, err = p.communicate(input=gv_str.encode())
         if p.returncode != 0:
