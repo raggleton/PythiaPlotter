@@ -21,12 +21,18 @@ lint: ## check linting with pylint
 lint-py3: ## check py3 porting only, but not perfect
 	pylint --rcfile=.pylintrc --py3k pythiaplotter
 
-examples: test ## update example outputs, but only if our tests are ok
+examples: test test-examples## update example outputs, but only if our tests are ok
 	@echo "Remaking examples..."
-	PythiaPlotter examples/example_pythia8.txt --inputFormat PYTHIA
-	PythiaPlotter examples/example_cmssw.txt --inputFormat CMSSW
-	PythiaPlotter examples/example_lhe.lhe --inputFormat LHE
-	PythiaPlotter examples/example_hepmc.hepmc --inputFormat HEPMC
+	PythiaPlotter example/example_pythia8.txt --inputFormat PYTHIA -O example/example_pythia8.pdf
+	PythiaPlotter example/example_pythia8.txt --inputFormat PYTHIA -p WEB -O example/example_pythia8.html
+	PythiaPlotter example/example_cmssw.txt --inputFormat CMSSW -O example/example_cmssw.pdf
+	PythiaPlotter example/example_cmssw.txt --inputFormat CMSSW -p WEB -O example/example_cmssw.html
+	PythiaPlotter example/example_lhe.lhe --inputFormat LHE -O example/example_lhe.pdf
+	PythiaPlotter example/example_lhe.lhe --inputFormat LHE -p WEB -O example/example_lhe.html
+	PythiaPlotter example/example_hepmc.hepmc --inputFormat HEPMC -O example/example_hepmc.pdf
+	PythiaPlotter example/example_hepmc.hepmc --inputFormat HEPMC -p WEB -O example/example_hepmc.html
+	PythiaPlotter example/example_heppy.root --inputFormat HEPPY -O example/example_heppy.pdf
+	PythiaPlotter example/example_heppy.root --inputFormat HEPPY -p WEB -O example/example_heppy.html
 
 test: ## run standard tests
 	python -m pytest -k "not test_examples_full" -r fEsp

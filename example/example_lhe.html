@@ -4,6 +4,9 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
+  <!--<script type="text/javascript" src="../vis/dist/vis.min.js"></script>-->
+  <!--<link type="text/css" rel="stylesheet" href="../vis/dist/vis.min.css">-->
+  <!--<script type="text/javascript" src="../jquery/jquery-3.1.1.min.js"></script>-->
 
   <style type="text/css">
     * {
@@ -14,7 +17,7 @@
       margin: auto;
       width: 84%;
       position: absolute;
-      height: 75%;
+      height: 75vh;
       border: 1px solid lightgray;
       display: inline-block;
     }
@@ -24,8 +27,14 @@
       display: inline-block;
       float: right;
       border: 1px solid lightgray;
-      height: 100%;
+      height: 75vh;
       overflow: auto;
+    }
+
+    #tooltip {
+      width: 150px;
+      word-wrap: break-all;
+      white-space: normal;
     }
 
     .sidebarEntry {
@@ -129,7 +138,7 @@
 </head>
 
 <body>
-<h2>LHE input</h2>
+<h2></h2>
 <h3>Diagram of /Users/robina/PythiaPlotter/example/example_lhe.lhe, event 0</h3>
 <span style="vertical-align: middle;">
   Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
@@ -267,7 +276,7 @@
   "111" : "[changed momentum due to hadron (re)scattering] first time scattering",
   "112" : "[changed momentum due to hadron (re)scattering] second or more time scattering"
 };
-  var nodesDataset = new vis.DataSet([{"barcode": 1, "energy": "3.8", "eta": "inf", "final_state": false, "group": "initial", "id": 1, "initial_state": true, "label": "g", "mass": "0.75", "name": "g", "originalGroup": "initial", "pdgid": 21, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "3.73", "status": -1, "title": "", "x": 27.0, "y": 136.0}, {"barcode": 2, "energy": "54.7", "eta": "-inf", "final_state": false, "group": "initial", "id": 2, "initial_state": true, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "initial", "pdgid": 3, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "-54.7", "status": -1, "title": "", "x": 27.0, "y": 57.0}, {"barcode": 3, "energy": "17.3", "eta": "-1.32", "final_state": true, "group": "final", "id": 3, "initial_state": false, "label": "b", "mass": "4.7", "name": "b", "originalGroup": "final", "pdgid": 5, "phi": "-0.436", "pt": "8.31", "px": "7.53", "py": "-3.51", "pz": "-14.4", "status": 1, "title": "", "x": 153.0, "y": 176.0}, {"barcode": 4, "energy": "5.27", "eta": "-0.812", "final_state": true, "group": "final", "id": 4, "initial_state": false, "label": "bbar", "mass": "4.7", "name": "bbar", "originalGroup": "final", "pdgid": -5, "phi": "-1.03", "pt": "1.76", "px": "-0.909", "py": "-1.51", "pz": "-1.59", "status": 1, "title": "", "x": 153.0, "y": 97.0}, {"barcode": 5, "energy": "36", "eta": "-2.15", "final_state": true, "group": "final", "id": 5, "initial_state": false, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "final", "pdgid": 3, "phi": "0.649", "pt": "8.31", "px": "-6.62", "py": "5.02", "pz": "-35", "status": 1, "title": "", "x": 153.0, "y": 18.0}]);
+  var nodesDataset = new vis.DataSet([{"barcode": 1, "energy": "3.8", "eta": "inf", "final_state": false, "group": "initial", "id": 1, "initial_state": true, "label": "g", "mass": "0.75", "name": "g", "originalGroup": "initial", "pdgid": 21, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "3.73", "status": -1, "title": "", "x": 152.0, "y": 136.0}, {"barcode": 2, "energy": "54.7", "eta": "-inf", "final_state": false, "group": "initial", "id": 2, "initial_state": true, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "initial", "pdgid": 3, "phi": 0, "pt": "0", "px": "0", "py": "0", "pz": "-54.7", "status": -1, "title": "", "x": 152.0, "y": 57.0}, {"barcode": 3, "energy": "17.3", "eta": "-1.32", "final_state": true, "group": "final", "id": 3, "initial_state": false, "label": "b", "mass": "4.7", "name": "b", "originalGroup": "final", "pdgid": 5, "phi": "-0.436", "pt": "8.31", "px": "7.53", "py": "-3.51", "pz": "-14.4", "status": 1, "title": "", "x": 249.0, "y": 176.0}, {"barcode": 4, "energy": "5.27", "eta": "-0.812", "final_state": true, "group": "final", "id": 4, "initial_state": false, "label": "bbar", "mass": "4.7", "name": "bbar", "originalGroup": "final", "pdgid": -5, "phi": "-1.03", "pt": "1.76", "px": "-0.909", "py": "-1.51", "pz": "-1.59", "status": 1, "title": "", "x": 249.0, "y": 97.0}, {"barcode": 5, "energy": "36", "eta": "-2.15", "final_state": true, "group": "final", "id": 5, "initial_state": false, "label": "s", "mass": "0.5", "name": "s", "originalGroup": "final", "pdgid": 3, "phi": "0.649", "pt": "8.31", "px": "-6.62", "py": "5.02", "pz": "-35", "status": 1, "title": "", "x": 249.0, "y": 18.0}]);
   var edgesDataset = new vis.DataSet([{"from": 1, "to": 3}, {"from": 1, "to": 4}, {"from": 1, "to": 5}, {"from": 2, "to": 3}, {"from": 2, "to": 4}, {"from": 2, "to": 5}]);
 
   var network = null;
@@ -344,7 +353,7 @@
     var checkboxes = tooltipForm.getElementsByTagName("input");
     var changes = [];
     nodesDataset.get().forEach(function(node) {
-      var titleStr = "(" + node.id + ")<br/>";
+      var titleStr = "<div id='tooltip'>(" + node.id + ")<br/>";
       for (var i=0; i<checkboxes.length; i++) {
         var box = checkboxes[i];
         if (!box.checked) {
@@ -364,6 +373,7 @@
         }
         titleStr += "<br/>";
       }
+      titleStr += "</div>";
       changes.push({id: node.id, title: titleStr});
     });
     nodesDataset.update(changes);
