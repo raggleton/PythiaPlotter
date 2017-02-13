@@ -3,17 +3,20 @@
 
 from __future__ import absolute_import
 from pythiaplotter.utils.logging_config import get_logger
-from pythiaplotter.graphers.edge_grapher import assign_particles_edges, remove_redundant_edges
-from pythiaplotter.graphers.node_grapher import assign_particles_nodes, remove_redundant_nodes
 from pythiaplotter.utils.common import check_representation_str
+from pythiaplotter.graphers.edge_grapher import assign_particles_edges, remove_redundant_edges, remove_edges_by_pdgid
+from pythiaplotter.graphers.node_grapher import assign_particles_nodes, remove_redundant_nodes, remove_nodes_by_pdgid
 from pythiaplotter.graphers.converters import node_to_edge, edge_to_node
 
 
 log = get_logger(__name__)
 
 
-def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove_redundants=True):
-    """Wrapper to easily assign particles to graph, change representation, remove redundants.
+def assign_particles_to_graph(particles, default_repr, desired_repr=None,
+                              filter_pdgid=None, filter_pdgid_final=None,
+                              remove_redundants=True):
+    """Wrapper to easily assign particles to graph, change representation,
+    filter out certain PDGIDs, and remove redundants.
 
     Parameters
     ----------
@@ -23,6 +26,11 @@ def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove
         Particle representation for particles
     desired_repr : {"NODE", "EDGE"}, optional
         Desired output representation.
+    filter_pdgid : list[int], optional
+    filter_pdgid_final : list[int], optional
+        These two args allow for removal of particles from the graph based on PDGID,
+        the latter only removing final-state particles.
+        Note that both particles and anti-particles will be removed.
     remove_redundants : bool, optional
         Whether to remove redundant particles from the graph.
 
@@ -35,7 +43,6 @@ def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove
         graph = assign_particles_nodes(particles)
     elif default_repr == "EDGE":
         graph = assign_particles_edges(particles)
-        remove_edges_by_pdgid(graph, 22, True)
 
     new_repr = default_repr
 
@@ -47,6 +54,14 @@ def assign_particles_to_graph(particles, default_repr, desired_repr=None, remove
             graph = node_to_edge(graph)
         elif (default_repr, desired_repr) == ("EDGE", "NODE"):
             graph = edge_to_node(graph)
+
+    filterer = remove_nodes_by_pdgid if new_repr == "NODE" else remove_edges_by_pdgid
+    filter_pdgid = filter_pdgid or []
+    for pdgid in filter_pdgid:
+        filterer(graph, pdgid, False)
+    filter_pdgid_final = filter_pdgid_final or []
+    for pdgid in filter_pdgid_final:
+        filterer(graph, pdgid, True)
 
     if remove_redundants:
         if new_repr == "NODE":

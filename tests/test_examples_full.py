@@ -36,6 +36,14 @@ def test_run_py8_web(main_func=FUNC):
     main_func(["example/example_pythia8.txt", '-O', 'test_py8.html', '--inputFormat', 'PYTHIA', '--printer', 'WEB'])
 
 
+def test_run_py8_filter(main_func=FUNC):
+    main_func(["example/example_pythia8.txt", '-O', 'test_py8_filter.pdf', '--inputFormat', 'PYTHIA', '--filter', '22'])
+
+
+def test_run_py8_filterFinal(main_func=FUNC):
+    main_func(["example/example_pythia8.txt", '-O', 'test_py8_filterFinal.pdf', '--inputFormat', 'PYTHIA', '--filterFinal', '22'])
+
+
 def test_run_dump_config(main_func=FUNC):
     main_func(["--dumpConfig"])
 

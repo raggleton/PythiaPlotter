@@ -79,6 +79,20 @@ def get_args(input_args):
                                    "either representated by Nodes or as Edges",
                               choices=helpr.VALID_REPRESENTATIONS)
 
+    output_group.add_argument("--filter",
+                              type=int,
+                              action="append",
+                              help="Remove any particles with this PDGID (final-state or not). "
+                              "Note that this covers both particle and anti-particle. "
+                              "Use this option multiple times for multiple PDGIDs.")
+
+    output_group.add_argument("--filterFinal",
+                              type=int,
+                              action="append",
+                              help="Remove any final-state particles with this PDGID. "
+                              "Note that this covers both particle and anti-particle. "
+                              "Use this option multiple times for multiple PDGIDs.")
+
     layouts = OrderedDict()
     layouts["dot"] = "(Default) Hierarchical drawings of directed graphs."
     layouts["neato"] = "'Spring model' layout by minimizing a global energy function."

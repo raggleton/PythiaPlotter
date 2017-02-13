@@ -127,3 +127,29 @@ def remove_redundant_nodes(graph):
                 log.debug("Removing (%d) %s", node, data['particle'])
                 remove_particle_node(graph, node)
                 removed_nodes.append(node)
+
+
+def remove_nodes_by_pdgid(graph, pdgid, final_state_only=True):
+    """Remove particles with pdgid from graph.
+
+    Removes both particle and anti-particle.
+
+    Parameters
+    ----------
+    graph : NetworkX.MultiDiGraph
+    pdgid : int
+        PDGID of particles to remove.
+    final_state_only : bool, optional
+        Only remove final state particles
+    """
+    # Do a while loop as editign whilst iterating could lead to issues.
+    done_removing = False
+    while not done_removing:
+        done_removing = True
+        for node, node_data in graph.nodes_iter(data=True):
+            if ((abs(node_data['particle'].pdgid) == pdgid) and
+                ((final_state_only and len(graph.successors(node)) == 0) or
+                 not final_state_only)):
+                remove_particle_node(graph, node)
+                done_removing = False
+                break

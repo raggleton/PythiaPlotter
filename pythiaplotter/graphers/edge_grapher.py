@@ -160,11 +160,8 @@ def remove_redundant_edges(graph):
 
     done_removing = False
     while not done_removing:
-
         done_removing = True
-
         for out_node, in_node, edge_data in graph.edges_iter(data=True):
-
             # get all incoming edges to this particle's out node (parents)
             parent_edges = graph.in_edges(out_node, data=True)
             # get all outgoing edges from this particle's out node (siblings)
@@ -187,3 +184,28 @@ def remove_redundant_edges(graph):
                     remove_particle_edge(graph, (out_node, in_node))
 
                     break
+
+def remove_edges_by_pdgid(graph, pdgid, final_state_only=True):
+    """Remove particles with pdgid from graph.
+
+    Removes both particle and anti-particle.
+
+    Parameters
+    ----------
+    graph : NetworkX.MultiDiGraph
+    pdgid : int
+        PDGID of particles to remove.
+    final_state_only : bool, optional
+        Only remove final state particles
+    """
+    # Do a while loop as editign whilst iterating could lead to issues.
+    done_removing = False
+    while not done_removing:
+        done_removing = True
+        for out_vtx, in_vtx, edge_data in graph.edges_iter(data=True):
+            if ((abs(edge_data['particle'].pdgid) == pdgid) and
+                ((final_state_only and len(graph.successors(in_vtx)) == 0) or
+                 not final_state_only)):
+                remove_particle_edge(graph, (out_vtx, in_vtx))
+                done_removing = False
+                break

@@ -53,6 +53,8 @@ def main(in_args=sys.argv[1:]):
     default_repr = parsers.parser_opts[opts.inputFormat].default_representation
     graph = assign_particles_to_graph(particles, default_repr,
                                       desired_repr=opts.representation,
+                                      filter_pdgid=opts.filter,
+                                      filter_pdgid_final=opts.filterFinal,
                                       remove_redundants=(not opts.redundants))
     event.graph = graph
     if opts.stats:
