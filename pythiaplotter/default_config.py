@@ -24,7 +24,10 @@ GRAPH_OPTS = {
     # These 3 only apply to the DOT printer
     "labelloc": "top",
     "labeljust": "left",
-    "label": r'<<FONT POINT-SIZE="45"><B>${title}<br/>${source}<br/>event ${event_num}</B></FONT><br/><FONT POINT-SIZE="35">All energies in GeV</FONT>>'
+    "label": r'<<FONT POINT-SIZE="45"><B>${title}<br/>' \
+             r'${source}<br/>' \
+             r'event ${event_num}</B></FONT><br/><' \
+             r'FONT POINT-SIZE="35">All energies in GeV</FONT>>'
 }
 
 

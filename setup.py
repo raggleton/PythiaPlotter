@@ -11,7 +11,9 @@ setup(
     version=__version__,
     description="Generate diagram of particles in the event tree from a "
                 "High-Energy Physics Monte Carlo event generator.",
-    long_description="SOMETHING HERE",
+    long_description="This program reads in Monte Carlo events in a variety of formats, "
+                     "and produces an output diagram, either a static PDF, or an interactive webpage. "
+                     "It is useful for exploring the event, and tracing the lineage of particles.",
     author="Robin Aggleton",
     author_email="robinaggleton@gmail.com",
     url="https://github.com/raggleton/PythiaPlotter",
