@@ -39,6 +39,10 @@ def test_run_py8_web(main_func=FUNC):
     main_func(["example/example_pythia8.txt", '-O', 'test_py8.html', '--inputFormat', 'PYTHIA', '--printer', 'WEB'])
 
 
+def test_run_dump_config(main_func=FUNC):
+    main_func(["--dumpConfig"])
+
+
 def test_run_hepmc(main_func=FUNC):
     main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC'])
 

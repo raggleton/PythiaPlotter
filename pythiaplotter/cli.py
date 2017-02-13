@@ -5,7 +5,6 @@ from __future__ import absolute_import
 import logging
 import argparse
 import os.path
-import sys
 import shutil
 from imp import load_source
 from collections import OrderedDict
@@ -123,7 +122,8 @@ def get_args(input_args):
     dump_config_key = "--dumpConfig"
     misc_group.add_argument(dump_config_key,
                             help="Dump the default config file. User can then modify it, "
-                            "and use it via --configFile.")
+                            "and use it via --configFile.",
+                            action='store_true')
     misc_group.add_argument("--configFile",
                             help="Configuration file to use")
     misc_group.add_argument("-v", "--verbose",
@@ -144,7 +144,7 @@ def get_args(input_args):
         exit(11)
 
     # Can generate default config file and exit before doing any parsing
-    if dump_config_key in sys.argv:
+    if dump_config_key in input_args:
         dump_default_config()
         exit(0)
 
