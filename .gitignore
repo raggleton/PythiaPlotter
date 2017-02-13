@@ -28,3 +28,4 @@ random_examples
 notebook
 refdoc
 test_*.*
+example/*_0.*
