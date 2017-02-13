@@ -39,7 +39,7 @@ def choose_parser(opts):
         raise NotImplementedError("Cannot parse input format %s" % opts.inputFormat)
 
 
-def main(in_args=None):
+def main(in_args=sys.argv[1:]):
     """Main entry point to run the whole thing."""
     opts = cli.get_args(in_args)
     # Parse input into a set of particles
