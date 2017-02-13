@@ -124,6 +124,20 @@ class NodeGrapher_Test(unittest.TestCase):
         self.assertTrue(p5.particle.final_state)
         self.assertTrue(p6.particle.final_state)
 
+    def test_node_removal_simple(self):
+        """Test whether node removal works in simple scenario.
+
+        (1) -> (2) -> (3)
+        becomes
+        (1) -> (3)
+        """
+        p1 = NodeParticle(particle=Particle(barcode=1), parent_barcodes=[])
+        p2 = NodeParticle(particle=Particle(barcode=2), parent_barcodes=[1])
+        p3 = NodeParticle(particle=Particle(barcode=3), parent_barcodes=[2])
+        g = ng.assign_particles_nodes([p1, p2, p3])
+        ng.remove_particle_node(g, 2)
+        self.check_graph_edges([(1, 3)], g)
+        self.check_graph_nodes([np.particle for np in [p1, p3]], g)
 
 def main():
     unittest.main()

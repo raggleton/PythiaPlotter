@@ -66,7 +66,14 @@ def assign_particles_nodes(node_particles):
 
 
 def remove_particle_node(graph, node):
-    """Remove a particle node from the graph"""
+    """Remove a particle node from the graph
+
+    Parameters
+    ----------
+    graph : NetworkX.MultiDiGraph
+    node : int
+        Node to remove.
+    """
     # rewire - ensure all it's parents decay to all it's children
     for child in graph.successors(node):
         for parent in graph.predecessors(node):

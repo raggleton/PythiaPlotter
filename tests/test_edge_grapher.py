@@ -151,6 +151,20 @@ class EdgeGrapher_Test(unittest.TestCase):
         self.assertTrue(p5.particle.final_state)
         self.assertTrue(p6.particle.final_state)
 
+    def test_edge_removal_simple(self):
+        """Test whether edge removal works in simple scenario.
+
+        (0) - p1 -> (1) - p2 -> (2) - p3 -> (3)
+        becomes
+        (0) - p1 -> (1) - p3 -> (3)
+        """
+        p1 = EdgeParticle(particle=Particle(barcode=1), vtx_out_barcode=0, vtx_in_barcode=1)
+        p2 = EdgeParticle(particle=Particle(barcode=2), vtx_out_barcode=1, vtx_in_barcode=2)
+        p3 = EdgeParticle(particle=Particle(barcode=3), vtx_out_barcode=2, vtx_in_barcode=3)
+        g = eg.assign_particles_edges([p1, p2, p3])
+        eg.remove_particle_edge(g, (1, 2))
+        self.check_graph_edges([(0, 1), (1, 3)], g)
+        self.check_graph_particles([ep.particle for ep in [p1, p3]], g)
 
 def main():
     unittest.main()
