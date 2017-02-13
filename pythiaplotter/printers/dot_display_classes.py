@@ -1,10 +1,7 @@
-"""Classes to describe visual attributes. Used when making the Graphviz file.
+"""Classes to describe and generate visual attributes for making the Graphviz description.
 
 Also set particle label in here, see ``get_particle_label()``. Or should this be a
 method for the particle?
-
-TODO: there's so much common between the two classes, surely it must be
-possible to simplify things...
 """
 
 
@@ -15,16 +12,6 @@ from pythiaplotter.utils.common import generate_repr_str, check_representation_s
 
 
 log = get_logger(__name__)
-
-
-def validate_particle_opt(opt):
-    """Validate particle options dict"""
-    for key in ['filter', 'attr']:
-        if key not in opt:
-            raise KeyError("Key '%s' must be in particle options dict" % key)
-    for key in ['node', 'edge']:
-        if key not in opt['attr']:
-            raise KeyError("Key '%s' must be in particle options dict['attr']" % key)
 
 
 def get_particle_label(particle, representation, label_opts, fancy=True):
@@ -59,101 +46,140 @@ def get_particle_label(particle, representation, label_opts, fancy=True):
     return label
 
 
-class DotEdgeAttrGenerator(object):
+class DotAttrGenerator(object):
+    """Base class for generating particle attr dicts"""
 
-    def __init__(self, style_opts, label_opts):
-        """Generate Graphviz attribute string for an edge.
+    def __init__(self, particle_opts=None, label_opts=None):
+        """Create Graphviz attribute str for an object that may or may not correspond to a Particle.
 
         Parameters
         ----------
-        style_opts : list[dict]
+        particle_opts : list[dict]
             List of style option dicts for particles, each with `filter` and `attr` fields.
         label_opts : dict
             Dict of label templates, for node/edge and fancy/plain.
         """
-        self.style_opts = style_opts
-        for op in self.style_opts:
-            validate_particle_opt(op)
+        self.particle_opts = particle_opts
+        if self.particle_opts:
+            for op in self.particle_opts:
+                self.validate_particle_opt(op)
         self.label_opts = label_opts
 
     def __repr__(self):
         return generate_repr_str(self)
 
-    def gv_str(self, edge, fancy):
-        """Generate string from an edge. Can be used directly in Graphviz file.
+    @staticmethod
+    def validate_particle_opt(opt):
+        """Validate particle options dict"""
+        for key in ['filter', 'attr']:
+            if key not in opt:
+                raise KeyError("Key '%s' must be in particle options dict" % key)
+        for key in ['node', 'edge']:
+            if key not in opt['attr']:
+                raise KeyError("Key '%s' must be in particle options dict['attr']" % key)
+
+    def gv_str(self, obj, fancy):
+        """Create attribute string for obj.
+
+        If "particle" in obj.keys(), will style it as a Particle,
+        otherwise will assume it's a non-Particle.
 
         Parameters
         ----------
-        edge : dict
-            Edge to process
+        obj : an object
+            Object to create string for
         fancy : bool
-            Whether to do fancy stylings or not
+            Whether to style plain or fancy
         """
-        attr = {}
-        if "particle" in list(edge.keys()):
-            particle = edge["particle"]
-
-            # Displayed node label
-            attr["label"] = get_particle_label(particle, "EDGE", self.label_opts, fancy)
-
-            for opt in self.style_opts:
-                if opt['filter'](particle):
-                    attr.update(opt['attr']['edge'])
-                    break
-
-        attr_list = ['{0}={1}'.format(*it) for it in attr.items()]
-        return "[{0}]".format(", ".join(attr_list))
-
-
-class DotNodeAttrGenerator(object):
-
-    def __init__(self, style_opts, label_opts):
-        """Generate Graphviz attribute string for a node.
-
-        Parameters
-        ----------
-        style_opts : list[dict]
-            List of style option dicts for particles, each with `filter` and `attr` fields.
-        label_opts : dict
-            Dict of label templates, for node/edge and fancy/plain.
-        """
-        self.style_opts = style_opts
-        for op in self.style_opts:
-            validate_particle_opt(op)
-        self.label_opts = label_opts
-
-    def __repr__(self):
-        return generate_repr_str(self)
-
-    def gv_str(self, node, fancy):
-        """Generate string from a node. Can be used directly in Graphviz file.
-
-        Parameters
-        ----------
-        node : dict
-            Node to process
-        fancy : bool
-            Whether to do fancy stylings or not
-        """
-        attr = {}
-        if "particle" in list(node.keys()):
-            particle = node["particle"]
-
-            # Displayed node label
-            attr["label"] = get_particle_label(particle, "NODE", self.label_opts, fancy)
-
-            for opt in self.style_opts:
-                if opt['filter'](particle):
-                    attr.update(opt['attr']['node'])
-                    break
+        if 'particle' in list(obj.keys()):
+            attr = self.get_particle_attr(obj['particle'], fancy)
         else:
-            attr["shape"] = "point"
+            attr = self.get_non_particle_attr(obj, fancy)
+        return self.dict_to_gv_str(attr)
 
-        attr_list = ['{0}={1}'.format(*it) for it in attr.items()]
+    def get_particle_attr(self, particle, fancy):
+        """Base method for getting an attribute dict for a particle.
+
+        key:value pairs must be legal graphviz key/values.
+
+        The user should override this method.
+
+        Parameters
+        ----------
+        particle : Particle
+        fancy : bool
+
+        Returns
+        -------
+        dict
+        """
+        return {}
+
+    def get_non_particle_attr(self, obj, fancy):
+        """Base method for getting an attribute dict for not a particle.
+
+        key:value pairs must be legal graphviz key/values.
+
+        The user should override this method.
+
+        Parameters
+        ----------
+        obj : object
+            The object in question.
+        fancy : bool
+
+        Returns
+        -------
+        dict
+        """
+        return {}
+
+    def dict_to_gv_str(self, attr_dict):
+        """Convert a dict to a graphviz-legal string."""
+        if not attr_dict:
+            return ""
+        attr_list = ['{0}={1}'.format(*it) for it in attr_dict.items()]
         return "[{0}]".format(", ".join(attr_list))
 
 
-class DotGraphAttrGenerator(object):
+class DotEdgeAttrGenerator(DotAttrGenerator):
+    """AttrGenerator specifically for Edges."""
+
+    def __init__(self, particle_opts, label_opts):
+        super(DotEdgeAttrGenerator, self).__init__(particle_opts, label_opts)
+
+    def get_particle_attr(self, particle, fancy):
+        attr = {"label": get_particle_label(particle, "EDGE", self.label_opts, fancy)}
+
+        for opt in self.particle_opts:
+            if opt['filter'](particle):
+                attr.update(opt['attr']['edge'])
+                break
+        return attr
+
+class DotNodeAttrGenerator(DotAttrGenerator):
+    """AttrGenerator specifically for Nodes."""
+
+    def __init__(self, particle_opts, label_opts):
+        super(DotNodeAttrGenerator, self).__init__(particle_opts, label_opts)
+
+    def __repr__(self):
+        return generate_repr_str(self)
+
+    def get_particle_attr(self, particle, fancy):
+        attr = {"label": get_particle_label(particle, "NODE", self.label_opts, fancy)}
+
+        for opt in self.particle_opts:
+            if opt['filter'](particle):
+                attr.update(opt['attr']['node'])
+                break
+        return attr
+
+    def get_non_particle_attr(self, obj, fancy):
+        return {"shape": "point"}
+
+
+class DotGraphAttrGenerator(DotAttrGenerator):
     """Generate Graphviz string with overall graph options"""
 
     def __init__(self, attr):

@@ -42,12 +42,11 @@ class DotPrinter(object):
         output_format : str, optional
             Output format for diagram. Defaults to PDF.
         make_diagram : bool, optional
-            If True, the chosen renderer converts the Graphviz file to a graph diagram.
-
-        Attributes
-        ----------
+            If True, the chosen renderer converts the Graphviz description to a graph diagram.
+        write_gv : bool
+            If True, writes Graphviz description to file.
         gv_filename : str
-            Filename for intermediate Graphviz file
+            Filename for intermediate Graphviz file.
         """
         self.output_filename = opts.output
         self.renderer = opts.layout
@@ -66,7 +65,9 @@ class DotPrinter(object):
         return generate_repr_str(self)
 
     def print_event(self, event):
-        """Write the event diagram to Graphivz file and run the renderer.
+        """Convert the event diagram to Graphivz language, then run the renderer.
+
+        Can also optionally save the Graphviz description to file.
 
         Parameters
         ----------
