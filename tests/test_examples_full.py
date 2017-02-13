@@ -8,6 +8,7 @@ from pythiaplotter.cli import get_args
 
 
 FUNC = get_args
+FUNC = main
 
 
 @pytest.mark.xfail
@@ -23,16 +24,12 @@ def test_run_py8_redundants(main_func=FUNC):
     main_func(["example/example_pythia8.txt", '-O', 'test_py8.pdf', '--inputFormat', 'PYTHIA', '--redundants'])
 
 
-def test_run_py8_ofmt(main_func=FUNC):
-    main_func(["example/example_pythia8.txt", '--outputFormat', 'pdf', '--inputFormat', 'PYTHIA', '--redundants'])
-
-
 def test_run_py8_convert(main_func=FUNC):
     main_func(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '-r', 'EDGE'])
 
 
 def test_run_py8_sfdp(main_func=FUNC):
-    main_func(["example/example_pythia8.txt", '-O', 'test_py8_conv.pdf', '--inputFormat', 'PYTHIA', '--layout', 'sfdp'])
+    main_func(["example/example_pythia8.txt", '-O', 'test_py8_sfdp.pdf', '--inputFormat', 'PYTHIA', '--layout', 'sfdp'])
 
 
 def test_run_py8_web(main_func=FUNC):
@@ -52,7 +49,7 @@ def test_run_hepmc_guess_input(main_func=FUNC):
 
 
 def test_run_hepmc_redundants(main_func=FUNC):
-    main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc.pdf', '--inputFormat', 'HEPMC', '--redundants'])
+    main_func(["example/example_hepmc.hepmc", '-O', 'test_hepmc_redundants.pdf', '--inputFormat', 'HEPMC', '--redundants'])
 
 
 def test_run_hepmc_convert(main_func=FUNC):
