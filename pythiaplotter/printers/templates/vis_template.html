@@ -7,7 +7,6 @@
   <!--<script type="text/javascript" src="../vis/dist/vis.min.js"></script>-->
   <!--<link type="text/css" rel="stylesheet" href="../vis/dist/vis.min.css">-->
   <!--<script type="text/javascript" src="../jquery/jquery-3.1.1.min.js"></script>-->
-  <!--<link type="text/css" rel="stylesheet" href="../font-awesome/font-awesome-4.7.0/css/font-awesome.min.css">-->
 
   <style type="text/css">
     * {
@@ -236,6 +235,7 @@
   var ttKeys = Object.keys(allTooltips);
 
   function addTooltipCheckboxEntry(key) {
+    // Add a checkbox for a tooltip field
     var entry = document.createElement("td");
     var option = document.createElement("input");
     option.type ="checkbox";
@@ -252,6 +252,7 @@
   }
 
   function setupTooltipTable() {
+    // Add rows to the tooltip setting table with checkboxes
     for (var i = 0; i < ttKeys.length;) {
       var row = document.createElement("tr");
       for (var j = 0; j < 3; j++) {
@@ -264,10 +265,9 @@
     }
   }
 
-  setupTooltipTable();
-
   var defaultTooltips = ['name', 'status', 'pt', 'eta', 'phi'];
   function setIntitalTooltips() {
+    // Select some tooltip checkboxes when page first loads
     defaultTooltips.forEach(function(entry){
       var tooltipForm = document.getElementById("tooltipSelection");
       var checkboxes = tooltipForm.getElementsByTagName("input");
@@ -280,9 +280,12 @@
     });
   }
 
+  // Setup and fill the tooltip settings modals
+  setupTooltipTable();
   setIntitalTooltips();
 
-  function updateTooltips() {
+  function updateNodeTooltips() {
+    // Update the node tooltips according to the checkboxes in the settings modal
     var tooltipForm = document.getElementById("tooltipSelection");
     var checkboxes = tooltipForm.getElementsByTagName("input");
     var changes = [];
@@ -313,10 +316,12 @@
     nodesDataset.update(changes);
   }
 
-  updateTooltips();
+  updateNodeTooltips();
 
   function updateSettings() {
-    updateTooltips();
+    // This is called whenever the settings pane is closed, so should make
+    // the necessary changes to the graph
+    updateNodeTooltips();
   }
 
   // Other generic settings
