@@ -201,6 +201,10 @@
     <div class="option">Select fields to show:
       <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
     </div>
+    <button class="accordion">Final-state colouring</button>
+    <div class="option">Select how to colouring final state particles:
+      <form id="colouringSelection"><table id="colouringTable" style="margin:auto;"></table></form>
+    </div>
   </div>
 </div>
 
@@ -319,10 +323,167 @@
 
   updateNodeTooltips();
 
+  var allColourings = {
+    default: "All same colour",
+    energy: "E: ",
+    pt: "p<sub>T</sub>: ",
+    eta: "&eta;: ",
+    phi: "&phi;: ",
+    x: "x: ",
+    y: "y: ",
+    z: "z: ",
+    px: "p<sub>x</sub>: ",
+    py: "p<sub>y</sub>: ",
+    pz: "p<sub>z</sub>: "
+  };
+
+  var colouringTable = document.getElementById("colouringTable");
+  var colouringKeys = Object.keys(allColourings);
+
+  function addColouringRadioEntry(key) {
+    // Add a radio selector for a colouring option
+    var entry = document.createElement("td");
+    var option = document.createElement("input");
+    option.type ="radio";
+    option.value = key;
+    option.name = "colouring";
+    var buttonId = key + "_col";
+    option.id = buttonId;
+    var colouringText = document.createElement("label");
+    colouringText.style = "width:100px;display: inline-block";
+    colouringText.innerHTML = allColourings[key];
+    colouringText.setAttribute("for", buttonId);
+    entry.appendChild(colouringText);
+    entry.appendChild(option);
+    return entry;
+  }
+
+  function setupColouringTable() {
+    // Add rows to the colouring setting table with checkboxes
+    for (var i = 0; i < colouringKeys.length;) {
+      var row = document.createElement("tr");
+      for (var j = 0; j < 3; j++) {
+        if (colouringKeys[i] != null) {
+          row.appendChild(addColouringRadioEntry(colouringKeys[i]));
+        }
+        i++;
+      }
+      colouringTable.appendChild(row);
+    }
+  }
+
+  function setInitialColouring() {
+    // Set the default colouring scheme
+    var colouringForm = document.getElementById("colouringSelection");
+    var buttons = colouringForm.getElementsByTagName("input");
+    for (var i=0; i<buttons.length; i++) {
+      var button = buttons[i];
+      if (button.value === "default") {
+        button.checked = true;
+      }
+    }
+  }
+
+  // Setup and fill the colouring settings modals
+  setupColouringTable();
+  setInitialColouring();
+
+  function convertStringToNumber(value) {
+    if (value === "inf") {
+      return Infinity;
+    } else if (value === "-inf") {
+      return -Infinity;
+    } else {
+      return Number(value);
+    }
+  }
+
+  function updateFinalStateNodeColours() {
+    // Update final-state node colours according to what's in the settings modal
+    var colouringForm = document.getElementById("colouringSelection");
+    var buttons = colouringForm.getElementsByTagName("input");
+    var checkedKey = "";
+    for (var i=0; i<buttons.length; i++) {
+      var button = buttons[i];
+      if (button.checked) {
+        checkedKey = button.value;
+        checkedValue = allColourings[checkedKey];
+      }
+    }
+
+    // Simple case: reset to default
+    if (checkedKey == "default") {
+      var changes = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          changes.push({id: node.id, color: finalStateNodeOpts['color']});
+        }
+      });
+      nodesDataset.update(changes);
+    } else {
+      // Need to determine colour scales by finding min/max of all values of the chosen variable
+      var vals = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+          if (Math.abs(thisVal) != Infinity) {
+            // Avoid infinities
+            vals.push(thisVal);
+          }
+        }
+      });
+      var maxVal = Math.max.apply(null, vals);
+      var minVal = Math.min.apply(null, vals);
+
+      var maxColRGB = [255, 0, 0];
+      var minColRGB = [255, 240, 240];
+
+      function calcRGB(value) {
+        // Calculate how to map a given value onto a set of RGB values
+        var thisRGB = [];
+        for(var i=0; i < 3; i++) {
+          var minCol = minColRGB[i];
+          var maxCol = maxColRGB[i];
+          var f = (value - minVal) / (maxVal - minVal);
+          thisRGB.push(Math.round(f * (maxCol - minCol) + minCol));
+        }
+        return thisRGB;
+      }
+
+      // For each node, pick colour according to value of the chosen property
+      var changes = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+          if (thisVal === Infinity) {
+            thisVal == maxVal;
+          }
+          var thisRGB = calcRGB(thisVal);
+          var thisCol = "rgb("+thisRGB[0].toString()+","+thisRGB[1].toString()+","+thisRGB[2].toString()+")";
+          var nodeColours = {
+            border: thisCol,
+            background: thisCol,
+            highlight: {
+              border: thisCol,
+              background: thisCol
+            },
+            hover: {
+              border: thisCol,
+              background: thisCol
+            }
+          };
+          changes.push({id: node.id, color: nodeColours});
+        }
+      });
+      nodesDataset.update(changes);
+    }
+  }
+
   function updateSettings() {
     // This is called whenever the settings pane is closed, so should make
     // the necessary changes to the graph
     updateNodeTooltips();
+    updateFinalStateNodeColours();
   }
 
   // Other generic settings
