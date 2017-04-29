@@ -241,11 +241,12 @@
     option.type ="checkbox";
     option.value = allTooltips[key];
     option.name = key;
-    option.id = key;
+    var boxId = key + "_toolTip";
+    option.id = boxId;
     var tooltipText = document.createElement("label");
     tooltipText.style = "width:100px;display: inline-block";
     tooltipText.innerHTML = key;
-    tooltipText.setAttribute("for", key);
+    tooltipText.setAttribute("for", boxId);
     entry.appendChild(tooltipText);
     entry.appendChild(option);
     return entry;
