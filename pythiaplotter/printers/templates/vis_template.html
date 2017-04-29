@@ -235,18 +235,54 @@
 
   // Setup tooltips & their settings
   var allTooltips = {
-    name: "",
-    status: "status: ",
-    energy: "E: ",
-    pt: "p<sub>T</sub>: ",
-    eta: "&eta;: ",
-    phi: "&phi;: ",
-    dx: "d<sub>x</sub>: ",
-    dy: "d<sub>y</sub>: ",
-    dz: "d<sub>z</sub>: ",
-    px: "p<sub>x</sub>: ",
-    py: "p<sub>y</sub>: ",
-    pz: "p<sub>z</sub>: "
+    name: {
+      "tooltipText": "",
+      "settingsText": "Name",
+    },
+    status: {
+      "tooltipText": "status: ",
+      "settingsText": "Status: ",
+    },
+    energy: {
+      "tooltipText": "E: ",
+      "settingsText": "E: ",
+    },
+    pt: {
+      "tooltipText": "p<sub>T</sub>: ",
+      "settingsText": "p<sub>T</sub>: ",
+    },
+    eta: {
+      "tooltipText": "&eta;: ",
+      "settingsText": "&eta;: ",
+    },
+    phi: {
+      "tooltipText": "&phi;: ",
+      "settingsText": "&phi;: ",
+    },
+    dx: {
+      "tooltipText": "d<sub>x</sub>: ",
+      "settingsText": "d<sub>x</sub>: ",
+    },
+    dy: {
+      "tooltipText": "d<sub>y</sub>: ",
+      "settingsText": "d<sub>y</sub>: ",
+    },
+    dz: {
+      "tooltipText": "d<sub>z</sub>: ",
+      "settingsText": "d<sub>z</sub>: ",
+    },
+    px: {
+      "tooltipText": "p<sub>x</sub>: ",
+      "settingsText": "p<sub>x</sub>: ",
+    },
+    py: {
+      "tooltipText": "p<sub>y</sub>: ",
+      "settingsText": "p<sub>y</sub>: ",
+    },
+    pz: {
+      "tooltipText": "p<sub>z</sub>: ",
+      "settingsText": "p<sub>z</sub>: "
+    }
   };
 
   var tooltipTable = document.getElementById("tooltipTable");
@@ -257,13 +293,13 @@
     var entry = document.createElement("td");
     var option = document.createElement("input");
     option.type ="checkbox";
-    option.value = allTooltips[key];
+    option.value = allTooltips[key]['tooltipText'];
     option.name = key;
     var boxId = key + "_toolTip";
     option.id = boxId;
     var tooltipText = document.createElement("label");
     tooltipText.style = "width:100px;display: inline-block";
-    tooltipText.innerHTML = key;
+    tooltipText.innerHTML = allTooltips[key]['settingsText'];
     tooltipText.setAttribute("for", boxId);
     entry.appendChild(tooltipText);
     entry.appendChild(option);
@@ -339,8 +375,8 @@
 
   var allColorings = {
     default: "All same color",
+    status: "Status: ",
     energy: "E: ",
-    status: "status: ",
     pt: "p<sub>T</sub>: ",
     eta: "&eta;: ",
     phi: "&phi;: ",
