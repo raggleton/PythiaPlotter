@@ -412,11 +412,50 @@
     }
   }
 
+  function hideElement(element) {
+    element.style.display = "none";
+  }
+
+  function showElement(element) {
+    element.style.display = "block";
+  }
+
+  function hideColorbar() {
+    // Hide colorbar & its labels
+    hideElement(document.getElementById('colorbar'));
+    hideElement(document.getElementById('maxLabel'));
+    hideElement(document.getElementById('minLabel'));
+    hideElement(document.getElementById('varLabel'));
+    document.getElementById('sidebar').style.width = "14%";
+  }
+
+  // Set limits of colorbar
+  var maxColRGB = [255, 0, 0];
+  var minColRGB = [255, 240, 240];
+
+  function calcRGB(value, minColRGB, maxColRGB, minVal, maxVal) {
+    // Calculate how to map a given value onto a set of RGB values
+    var thisRGB = [];
+    for(var i=0; i < 3; i++) {
+      var minCol = minColRGB[i];
+      var maxCol = maxColRGB[i];
+      var f = (value - minVal) / (maxVal - minVal);
+      thisRGB.push(Math.round(f * (maxCol - minCol) + minCol));
+    }
+    return thisRGB;
+  }
+
+  function createRGBString(rgb) {
+    // Convert array of RGB into a string
+    return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")";
+  }
+
   function updateFinalStateNodeColors() {
     // Update final-state node colors according to what's in the settings modal
     var coloringForm = document.getElementById("coloringSelection");
     var buttons = coloringForm.getElementsByTagName("input");
     var checkedKey = "";
+    var checkedValue = "";
     for (var i=0; i<buttons.length; i++) {
       var button = buttons[i];
       if (button.checked) {
@@ -434,44 +473,21 @@
         }
       });
       nodesDataset.update(changes);
-      document.getElementById('colorbar').style.display = "none";
-      document.getElementById('maxLabel').style.display = "none";
-      document.getElementById('minLabel').style.display = "none";
-      document.getElementById('varLabel').style.display = "none";
-      document.getElementById('sidebar').style.width = "14%";
+      hideColorbar();
     } else {
       // Need to determine color scales by finding min/max of all values of the chosen variable
       var vals = [];
       nodesDataset.get().forEach(function(node) {
         if (node['final_state']) {
           var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+          // Avoid infinities screwing up range
           if (Math.abs(thisVal) != Infinity) {
-            // Avoid infinities
             vals.push(thisVal);
           }
         }
       });
       var maxVal = Math.max.apply(null, vals);
       var minVal = Math.min.apply(null, vals);
-
-      var maxColRGB = [255, 0, 0];
-      var minColRGB = [255, 240, 240];
-
-      function calcRGB(value) {
-        // Calculate how to map a given value onto a set of RGB values
-        var thisRGB = [];
-        for(var i=0; i < 3; i++) {
-          var minCol = minColRGB[i];
-          var maxCol = maxColRGB[i];
-          var f = (value - minVal) / (maxVal - minVal);
-          thisRGB.push(Math.round(f * (maxCol - minCol) + minCol));
-        }
-        return thisRGB;
-      }
-
-      function createRGBString(rgb) {
-        return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")";
-      }
 
       // For each node, pick color according to value of the chosen property
       var changes = [];
@@ -481,7 +497,7 @@
           if (thisVal === Infinity) {
             thisVal == maxVal;
           }
-          var thisRGB = calcRGB(thisVal);
+          var thisRGB = calcRGB(thisVal, minColRGB, maxColRGB, minVal, maxVal);
           var thisCol = createRGBString(thisRGB);
           var nodeColors = {
             border: thisCol,
@@ -524,7 +540,7 @@
       for(var i = 0; i < nSegments; i++) {
         context.beginPath();
         var value = minVal + ((i/nSegments) * (maxVal - minVal));
-        var color = createRGBString(calcRGB(value));
+        var color = createRGBString(calcRGB(value, minColRGB, maxColRGB, minVal, maxVal));
         context.fillStyle = color;
         // x, y are relative to the canvas obj, i think...
         context.fillRect(0, barHeight - ((i+1) * sliceHeight), loc.width, sliceHeight);
@@ -669,28 +685,20 @@
 
   redrawAll();
 
-  function hideModal(modal) {
-    modal.style.display = "none";
-  }
-
-  function showModal(modal) {
-    modal.style.display = "block";
-  }
-
   // Setup help modal
   var helpModal = document.getElementById('helpModal');
   var helpModalClose = document.getElementsByClassName("close")[0];
-  helpModalClose.onclick = function() { hideModal(helpModal) };
-  hideModal(helpModal);
+  helpModalClose.onclick = function() { hideElement(helpModal) };
+  hideElement(helpModal);
 
   // Setup settings modal
   var settingsModal = document.getElementById('settingsModal');
   var settingsModalClose = document.getElementsByClassName("close")[1];
   settingsModalClose.onclick = function() {
-    hideModal(settingsModal);
+    hideElement(settingsModal);
     updateSettings();
   };
-  hideModal(settingsModal);
+  hideElement(settingsModal);
   document.getElementById("settingsBtn").onclick = function() {
     settingsModal.style.display = "block";
   };
@@ -698,7 +706,7 @@
   // When the user clicks anywhere outside of any modal, close it
   window.onclick = function(event) {
     if (event.target == helpModal || event.target == settingsModal) {
-      hideModal(event.target)
+      hideElement(event.target)
     }
     if (event.target == settingsModal) {
       updateSettings();
@@ -716,9 +724,9 @@
       /* Toggle between hiding and showing the active panel */
       var panel = this.nextElementSibling;
       if (panel.style.display === "block") {
-        panel.style.display = "none";
+        hideElement(panel);
       } else {
-        panel.style.display = "block";
+        showElement(panel);
       }
     }
   }
@@ -735,9 +743,9 @@
       familyHighlight(network.getSelection());
     } else if (String.fromCharCode(e.charCode) === "h") {
       if (helpModal.style.display != "none"){
-        hideModal(helpModal);
+        hideElement(helpModal);
       } else {
-        showModal(helpModal);
+        showElement(helpModal);
       }
     } else if (String.fromCharCode(e.charCode) === "s") {
       switchNodeDirection();
