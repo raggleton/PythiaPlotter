@@ -201,9 +201,9 @@
     <div class="option">Select fields to show:
       <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
     </div>
-    <button class="accordion">Final-state colouring</button>
-    <div class="option">Select how to colouring final state particles:
-      <form id="colouringSelection"><table id="colouringTable" style="margin:auto;"></table></form>
+    <button class="accordion">Final-state coloring</button>
+    <div class="option">Select how to coloring final state particles:
+      <form id="coloringSelection"><table id="coloringTable" style="margin:auto;"></table></form>
     </div>
   </div>
 </div>
@@ -327,8 +327,8 @@
 
   updateNodeTooltips();
 
-  var allColourings = {
-    default: "All same colour",
+  var allColorings = {
+    default: "All same color",
     energy: "E: ",
     pt: "p<sub>T</sub>: ",
     eta: "&eta;: ",
@@ -341,45 +341,45 @@
     pz: "p<sub>z</sub>: "
   };
 
-  var colouringTable = document.getElementById("colouringTable");
-  var colouringKeys = Object.keys(allColourings);
+  var coloringTable = document.getElementById("coloringTable");
+  var coloringKeys = Object.keys(allColorings);
 
-  function addColouringRadioEntry(key) {
-    // Add a radio selector for a colouring option
+  function addColoringRadioEntry(key) {
+    // Add a radio selector for a coloring option
     var entry = document.createElement("td");
     var option = document.createElement("input");
     option.type ="radio";
     option.value = key;
-    option.name = "colouring";
+    option.name = "coloring";
     var buttonId = key + "_col";
     option.id = buttonId;
-    var colouringText = document.createElement("label");
-    colouringText.style = "width:100px;display: inline-block";
-    colouringText.innerHTML = allColourings[key];
-    colouringText.setAttribute("for", buttonId);
-    entry.appendChild(colouringText);
+    var coloringText = document.createElement("label");
+    coloringText.style = "width:100px;display: inline-block";
+    coloringText.innerHTML = allColorings[key];
+    coloringText.setAttribute("for", buttonId);
+    entry.appendChild(coloringText);
     entry.appendChild(option);
     return entry;
   }
 
-  function setupColouringTable() {
-    // Add rows to the colouring setting table with checkboxes
-    for (var i = 0; i < colouringKeys.length;) {
+  function setupColoringTable() {
+    // Add rows to the coloring setting table with checkboxes
+    for (var i = 0; i < coloringKeys.length;) {
       var row = document.createElement("tr");
       for (var j = 0; j < 3; j++) {
-        if (colouringKeys[i] != null) {
-          row.appendChild(addColouringRadioEntry(colouringKeys[i]));
+        if (coloringKeys[i] != null) {
+          row.appendChild(addColoringRadioEntry(coloringKeys[i]));
         }
         i++;
       }
-      colouringTable.appendChild(row);
+      coloringTable.appendChild(row);
     }
   }
 
-  function setInitialColouring() {
-    // Set the default colouring scheme
-    var colouringForm = document.getElementById("colouringSelection");
-    var buttons = colouringForm.getElementsByTagName("input");
+  function setInitialColoring() {
+    // Set the default coloring scheme
+    var coloringForm = document.getElementById("coloringSelection");
+    var buttons = coloringForm.getElementsByTagName("input");
     for (var i=0; i<buttons.length; i++) {
       var button = buttons[i];
       if (button.value === "default") {
@@ -388,9 +388,9 @@
     }
   }
 
-  // Setup and fill the colouring settings modals
-  setupColouringTable();
-  setInitialColouring();
+  // Setup and fill the coloring settings modals
+  setupColoringTable();
+  setInitialColoring();
 
   function convertStringToNumber(value) {
     if (value === "inf") {
@@ -402,16 +402,16 @@
     }
   }
 
-  function updateFinalStateNodeColours() {
-    // Update final-state node colours according to what's in the settings modal
-    var colouringForm = document.getElementById("colouringSelection");
-    var buttons = colouringForm.getElementsByTagName("input");
+  function updateFinalStateNodeColors() {
+    // Update final-state node colors according to what's in the settings modal
+    var coloringForm = document.getElementById("coloringSelection");
+    var buttons = coloringForm.getElementsByTagName("input");
     var checkedKey = "";
     for (var i=0; i<buttons.length; i++) {
       var button = buttons[i];
       if (button.checked) {
         checkedKey = button.value;
-        checkedValue = allColourings[checkedKey];
+        checkedValue = allColorings[checkedKey];
       }
     }
 
@@ -430,7 +430,7 @@
       document.getElementById('varLabel').style.display = "none";
       document.getElementById('sidebar').style.width = "14%";
     } else {
-      // Need to determine colour scales by finding min/max of all values of the chosen variable
+      // Need to determine color scales by finding min/max of all values of the chosen variable
       var vals = [];
       nodesDataset.get().forEach(function(node) {
         if (node['final_state']) {
@@ -463,7 +463,7 @@
         return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")";
       }
 
-      // For each node, pick colour according to value of the chosen property
+      // For each node, pick color according to value of the chosen property
       var changes = [];
       nodesDataset.get().forEach(function(node) {
         if (node['final_state']) {
@@ -473,7 +473,7 @@
           }
           var thisRGB = calcRGB(thisVal);
           var thisCol = createRGBString(thisRGB);
-          var nodeColours = {
+          var nodeColors = {
             border: thisCol,
             background: thisCol,
             highlight: {
@@ -485,7 +485,7 @@
               background: thisCol
             }
           };
-          changes.push({id: node.id, color: nodeColours});
+          changes.push({id: node.id, color: nodeColors});
         }
       });
       nodesDataset.update(changes);
@@ -544,7 +544,7 @@
     // This is called whenever the settings pane is closed, so should make
     // the necessary changes to the graph
     updateNodeTooltips();
-    updateFinalStateNodeColours();
+    updateFinalStateNodeColors();
   }
 
   // Other generic settings
