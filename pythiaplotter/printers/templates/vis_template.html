@@ -347,6 +347,22 @@
   setupTooltipTable();
   setIntitalTooltips();
 
+  function prettifyParticleName(name, preserveCharge) {
+    // prettify names, can optionally make charge into ±
+    pname =  (name.replace("bar", "")
+                  .replace("_mu", "<sub>mu</sub>")
+                  .replace("_tau", "<sub>tau</sub>")
+                  .replace("_e", "<sub>e</sub>")
+                  .replace(/_(.)/, "<sub>$1</sub>")
+                  .replace(/0(?!\<\/sub\>)(?!.*\))/g, "<sup>0</sup>")) // need lookahead to ensure not inside a () or a <sub></sub>
+    if (preserveCharge ===true) {
+      pname = pname.replace(/([+-])/g, "<sup>$1</sup>");
+    } else {
+      pname = pname.replace(/[+-]/g, "<sup>&plusmn;</sup>");
+    }
+    return pname;
+  }
+
   function updateNodeTooltips() {
     // Update the node tooltips according to the checkboxes in the settings modal
     var tooltipForm = document.getElementById("tooltipSelection");
@@ -362,7 +378,7 @@
         titleStr += box.value;
         if (box.name == "name") {
           titleStr += "<b>";
-          titleStr += String(node[box.name]);
+          titleStr += String(prettifyParticleName(node[box.name], true));
           titleStr += "</b>";
         } else {
           titleStr += String(node[box.name]);
@@ -967,16 +983,7 @@
     sidebar = document.getElementById("sidebar");
     var particleDict = {};
     nodesDataset.get().forEach(function(node) {
-      // prettify names, make charge into ±
-      pname = (node.name.replace("bar", "")
-                        .replace("_mu", "<sub>mu</sub>")
-                        .replace("_tau", "<sub>tau</sub>")
-                        .replace("_e", "<sub>e</sub>")
-                        .replace(/_(.)/, "<sub>$1</sub>")
-                        .replace(/[+-]/g, "<sup>&plusmn;</sup>")
-                        .replace(/0(?!\<\/sub\>)(?!.*\))/g, "<sup>0</sup>")) // need lookahead to ensure not inside a () or a <sub></sub>
-
-      particleDict[Math.abs(node.pdgid)] = pname;
+      particleDict[Math.abs(node.pdgid)] = prettifyParticleName(node.name, false);
     });
     var sortedKeys = Object.keys(particleDict).sort(function(a, b) {
       return particleDict[a].toUpperCase().localeCompare(particleDict[b].toUpperCase());
