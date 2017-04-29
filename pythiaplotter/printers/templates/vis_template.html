@@ -961,10 +961,12 @@
     nodesDataset.get().forEach(function(node) {
       // prettify names, make charge into ±
       pname = (node.name.replace("bar", "")
-                        .replace(/_(.*)$/, "<sub>$1</sub>")
-                        .replace(/_(.*)([+0-])/, "<sub>$1</sub>$2"))
+                        .replace("_mu", "<sub>mu</sub>")
+                        .replace("_tau", "<sub>tau</sub>")
+                        .replace("_e", "<sub>e</sub>")
+                        .replace(/_(.)/, "<sub>$1</sub>")
                         .replace(/[+-]/g, "<sup>&plusmn;</sup>")
-                        .replace("0", "<sup>0</sup>")
+                        .replace(/0(?!\<\/sub\>)(?!.*\))/g, "<sup>0</sup>")) // need lookahead to ensure not inside a () or a <sub></sub>
 
       particleDict[Math.abs(node.pdgid)] = pname;
     });
