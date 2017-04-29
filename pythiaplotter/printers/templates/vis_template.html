@@ -48,6 +48,14 @@
       padding: 4px;
       background-color: lightgrey;
     }
+
+    .colorbarLabel {
+      width: 4%;
+      display: none;
+      position: absolute;
+      text-align: center;
+    }
+
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -210,9 +218,9 @@
 
 <div id="mynetwork"></div>
 <canvas id="colorbar" style="width:4% ;height:75vh;display:none;float:right;"></canvas>
-<div id="maxLabel" style="width: 4%; display: none; position: absolute; text-align: center;"></div>
-<div id="minLabel" style="width: 4%; display: none; position: absolute; text-align: center;"></div>
-<div id="varLabel" style="width: 4%; display: none; position: absolute; text-align: center;"></div>
+<div id="maxLabel" class="colorbarLabel"></div>
+<div id="minLabel" class="colorbarLabel"></div>
+<div id="varLabel" class="colorbarLabel"></div>
 <div id="sidebar"></div>
 
 <script type="text/javascript">
