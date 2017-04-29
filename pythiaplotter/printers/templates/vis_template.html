@@ -33,6 +33,14 @@
       margin-right: 2px;
     }
 
+    #colorbar {
+      width:4%;
+      height:75vh;
+      display:none;
+      float:right;
+      margin-left: 2px;
+    }
+
     #tooltip {
       width: 150px;
       word-wrap: break-all;
@@ -212,14 +220,14 @@
       <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
     </div>
     <button class="accordion">Final-state coloring</button>
-    <div class="option">Select how to coloring final state particles:
+    <div class="option">Select how to color final state particles:
       <form id="coloringSelection"><table id="coloringTable" style="margin:auto;"></table></form>
     </div>
   </div>
 </div>
 
 <div id="mynetwork"></div>
-<canvas id="colorbar" style="width:4% ;height:75vh;display:none;float:right;margin-left: 2px"></canvas>
+<canvas id="colorbar"></canvas>
 <div id="maxLabel" class="colorbarLabel"></div>
 <div id="minLabel" class="colorbarLabel"></div>
 <div id="varLabel" class="colorbarLabel"></div>
