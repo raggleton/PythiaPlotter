@@ -4,8 +4,8 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
-  <!--<script type="text/javascript" src="../vis/dist/vis.min.js"></script>-->
-  <!--<link type="text/css" rel="stylesheet" href="../vis/dist/vis.min.css">-->
+  <!-- <script type="text/javascript" src="../vis-4.19.1/dist/vis.min.js"></script> -->
+  <!-- <link type="text/css" rel="stylesheet" href="../vis-4.19.1/dist/vis.min.css"> -->
   <!--<script type="text/javascript" src="../jquery/jquery-3.1.1.min.js"></script>-->
 
   <style type="text/css">
@@ -17,7 +17,7 @@
       margin: auto;
       width: 84%;
       position: absolute;
-      height: 75vh;
+      height: 80vh;
       border: 1px solid lightgray;
       display: inline-block;
     }
@@ -27,8 +27,18 @@
       display: inline-block;
       float: right;
       border: 1px solid lightgray;
-      height: 75vh;
+      height: 80vh;
       overflow: auto;
+      margin-left: 2px;
+      margin-right: 2px;
+    }
+
+    #colorbar {
+      width:4%;
+      height:80vh;
+      display:none;
+      float:right;
+      margin-left: 2px;
     }
 
     #tooltip {
@@ -48,6 +58,14 @@
       padding: 4px;
       background-color: lightgrey;
     }
+
+    .colorbarLabel {
+      width: 4%;
+      display: none;
+      position: absolute;
+      text-align: center;
+    }
+
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -67,7 +85,7 @@
     .modal-content {
       background-color: #fefefe;
       margin: 15% 30% auto; /* 15% from the top and centered */
-      padding: 20px;
+      padding: 10px;
       border: 1px solid #888;
       width: auto;
       display: inline-block; /* important for centering!! */
@@ -139,7 +157,7 @@
 
 <body>
 <h2></h2>
-<h3>Diagram of /Users/robina/PythiaPlotter/example/example_heppy.root, event 0</h3>
+<h3>Diagram of /Users/robin/Projects/PythiaPlotter/example/example_heppy.root, event 0</h3>
 <span style="vertical-align: middle;">
   Press <b>h</b> to bring up keyboard shortcuts. Click on a node to show its parents/children.
   <button onclick="switchNodeDirection()" style="vertical-align: middle;">Switch tree direction</button>
@@ -194,17 +212,31 @@
 </div>
 
 <div id="settingsModal" class="modal">
-  <div class="modal-content" style="width:50%">
+  <div class="modal-content">
     <span class="close">&times;</span>
     <h2>Settings</h2>
     <button class="accordion">Tooltips</button>
     <div class="option">Select fields to show:
       <form id="tooltipSelection"><table id="tooltipTable" style="margin:auto;"></table></form>
     </div>
+    <button class="accordion">Final-state coloring</button>
+    <div class="option">Select how to color final state particles:
+      <form id="coloringSelection"><table id="coloringTable" style="margin:auto;"></table></form>
+      <span>
+        <label>Min value color:</label>
+        <input type="color" name="minColorPicker" id="minColorPicker" value="#FFF000">
+        <label>Max value color:</label>
+        <input type="color" name="maxColorPicker" id="maxColorPicker" value="#FF0000">
+      </span>
+    </div>
   </div>
 </div>
 
 <div id="mynetwork"></div>
+<canvas id="colorbar"></canvas>
+<div id="maxLabel" class="colorbarLabel"></div>
+<div id="minLabel" class="colorbarLabel"></div>
+<div id="varLabel" class="colorbarLabel"></div>
 <div id="sidebar"></div>
 
 <script type="text/javascript">
@@ -284,40 +316,79 @@
 
   // Setup tooltips & their settings
   var allTooltips = {
-    name: "",
-    status: "status: ",
-    energy: "E: ",
-    pt: "p<sub>T</sub>: ",
-    eta: "&eta;: ",
-    phi: "&phi;: ",
-    x: "x: ",
-    y: "y: ",
-    z: "z: ",
-    px: "p<sub>x</sub>: ",
-    py: "p<sub>y</sub>: ",
-    pz: "p<sub>z</sub>: "
+    name: {
+      "tooltipText": "",
+      "settingsText": "Name",
+    },
+    status: {
+      "tooltipText": "status: ",
+      "settingsText": "Status: ",
+    },
+    energy: {
+      "tooltipText": "E: ",
+      "settingsText": "E: ",
+    },
+    pt: {
+      "tooltipText": "p<sub>T</sub>: ",
+      "settingsText": "p<sub>T</sub>: ",
+    },
+    eta: {
+      "tooltipText": "&eta;: ",
+      "settingsText": "&eta;: ",
+    },
+    phi: {
+      "tooltipText": "&phi;: ",
+      "settingsText": "&phi;: ",
+    },
+    dx: {
+      "tooltipText": "d<sub>x</sub>: ",
+      "settingsText": "d<sub>x</sub>: ",
+    },
+    dy: {
+      "tooltipText": "d<sub>y</sub>: ",
+      "settingsText": "d<sub>y</sub>: ",
+    },
+    dz: {
+      "tooltipText": "d<sub>z</sub>: ",
+      "settingsText": "d<sub>z</sub>: ",
+    },
+    px: {
+      "tooltipText": "p<sub>x</sub>: ",
+      "settingsText": "p<sub>x</sub>: ",
+    },
+    py: {
+      "tooltipText": "p<sub>y</sub>: ",
+      "settingsText": "p<sub>y</sub>: ",
+    },
+    pz: {
+      "tooltipText": "p<sub>z</sub>: ",
+      "settingsText": "p<sub>z</sub>: "
+    }
   };
 
   var tooltipTable = document.getElementById("tooltipTable");
   var ttKeys = Object.keys(allTooltips);
 
   function addTooltipCheckboxEntry(key) {
+    // Add a checkbox for a tooltip field
     var entry = document.createElement("td");
     var option = document.createElement("input");
     option.type ="checkbox";
-    option.value = allTooltips[key];
+    option.value = allTooltips[key]['tooltipText'];
     option.name = key;
-    option.id = key;
+    var boxId = key + "_toolTip";
+    option.id = boxId;
     var tooltipText = document.createElement("label");
     tooltipText.style = "width:100px;display: inline-block";
-    tooltipText.innerHTML = key;
-    tooltipText.setAttribute("for", key);
+    tooltipText.innerHTML = allTooltips[key]['settingsText'];
+    tooltipText.setAttribute("for", boxId);
     entry.appendChild(tooltipText);
     entry.appendChild(option);
     return entry;
   }
 
   function setupTooltipTable() {
+    // Add rows to the tooltip setting table with checkboxes
     for (var i = 0; i < ttKeys.length;) {
       var row = document.createElement("tr");
       for (var j = 0; j < 3; j++) {
@@ -330,10 +401,9 @@
     }
   }
 
-  setupTooltipTable();
-
   var defaultTooltips = ['name', 'status', 'pt', 'eta', 'phi'];
   function setIntitalTooltips() {
+    // Select some tooltip checkboxes when page first loads
     defaultTooltips.forEach(function(entry){
       var tooltipForm = document.getElementById("tooltipSelection");
       var checkboxes = tooltipForm.getElementsByTagName("input");
@@ -346,9 +416,28 @@
     });
   }
 
+  // Setup and fill the tooltip settings modals
+  setupTooltipTable();
   setIntitalTooltips();
 
-  function updateTooltips() {
+  function prettifyParticleName(name, preserveCharge) {
+    // prettify names, can optionally make charge into ±
+    pname =  (name.replace("bar", "")
+                  .replace("_mu", "<sub>mu</sub>")
+                  .replace("_tau", "<sub>tau</sub>")
+                  .replace("_e", "<sub>e</sub>")
+                  .replace(/_(.)/, "<sub>$1</sub>")
+                  .replace(/0(?!\<\/sub\>)(?!.*\))/g, "<sup>0</sup>")) // need lookahead to ensure not inside a () or a <sub></sub>
+    if (preserveCharge ===true) {
+      pname = pname.replace(/([+-])/g, "<sup>$1</sup>");
+    } else {
+      pname = pname.replace(/[+-]/g, "<sup>&plusmn;</sup>");
+    }
+    return pname;
+  }
+
+  function updateNodeTooltips() {
+    // Update the node tooltips according to the checkboxes in the settings modal
     var tooltipForm = document.getElementById("tooltipSelection");
     var checkboxes = tooltipForm.getElementsByTagName("input");
     var changes = [];
@@ -362,7 +451,7 @@
         titleStr += box.value;
         if (box.name == "name") {
           titleStr += "<b>";
-          titleStr += String(node[box.name]);
+          titleStr += String(prettifyParticleName(node[box.name], true));
           titleStr += "</b>";
         } else {
           titleStr += String(node[box.name]);
@@ -379,10 +468,292 @@
     nodesDataset.update(changes);
   }
 
-  updateTooltips();
+  updateNodeTooltips();
+
+  var allColorings = {
+    default: "All same color",
+    status: "Status: ",
+    energy: "E: ",
+    pt: "p<sub>T</sub>: ",
+    eta: "&eta;: ",
+    phi: "&phi;: ",
+    dx: "d<sub>x</sub>: ",
+    dy: "d<sub>y</sub>: ",
+    dz: "d<sub>z</sub>: ",
+    px: "p<sub>x</sub>: ",
+    py: "p<sub>y</sub>: ",
+    pz: "p<sub>z</sub>: "
+  };
+
+  var coloringTable = document.getElementById("coloringTable");
+  var coloringKeys = Object.keys(allColorings);
+
+  function addColoringRadioEntry(key) {
+    // Add a radio selector for a coloring option
+    var entry = document.createElement("td");
+    var option = document.createElement("input");
+    option.type ="radio";
+    option.value = key;
+    option.name = "coloring";
+    var buttonId = key + "_col";
+    option.id = buttonId;
+    var coloringText = document.createElement("label");
+    coloringText.style = "width:100px;display: inline-block";
+    coloringText.innerHTML = allColorings[key];
+    coloringText.setAttribute("for", buttonId);
+    entry.appendChild(coloringText);
+    entry.appendChild(option);
+    return entry;
+  }
+
+  function setupColoringTable() {
+    // Add rows to the coloring setting table with checkboxes
+    for (var i = 0; i < coloringKeys.length;) {
+      var row = document.createElement("tr");
+      for (var j = 0; j < 3; j++) {
+        if (coloringKeys[i] != null) {
+          row.appendChild(addColoringRadioEntry(coloringKeys[i]));
+        }
+        i++;
+      }
+      coloringTable.appendChild(row);
+    }
+  }
+
+  function setInitialColoring() {
+    // Set the default coloring scheme
+    var coloringForm = document.getElementById("coloringSelection");
+    var buttons = coloringForm.getElementsByTagName("input");
+    for (var i=0; i<buttons.length; i++) {
+      var button = buttons[i];
+      if (button.value === "default") {
+        button.checked = true;
+      }
+    }
+  }
+
+  // Setup and fill the coloring settings modals
+  setupColoringTable();
+  setInitialColoring();
+
+  function convertStringToNumber(value) {
+    if (value === "inf") {
+      return Infinity;
+    } else if (value === "-inf") {
+      return -Infinity;
+    } else {
+      return Number(value);
+    }
+  }
+
+  function hideElement(element) {
+    element.style.display = "none";
+  }
+
+  function showElement(element) {
+    element.style.display = "block";
+  }
+
+  function hideColorbar() {
+    // Hide colorbar & its labels
+    hideElement(document.getElementById('colorbar'));
+    hideElement(document.getElementById('maxLabel'));
+    hideElement(document.getElementById('minLabel'));
+    hideElement(document.getElementById('varLabel'));
+    document.getElementById('sidebar').style.width = "14%";
+  }
+
+  // Get limits of colorbar
+  function minColRGB() {
+    return hexColorToRGB(document.getElementById("minColorPicker").value);
+  };
+
+  function maxColRGB() {
+    return hexColorToRGB(document.getElementById("maxColorPicker").value);
+  };
+
+  // User - selectable color end points
+  function hexToInt(hex) {
+    return parseInt(hex, 16);
+  }
+
+  function hexColorToRGB(hex) {
+    if (hex.charAt(0) == "#")
+      hex = hex.substring(1, 7);
+    var rgb = [
+      hexToInt(hex.substring(0, 2)),
+      hexToInt(hex.substring(2, 4)),
+      hexToInt(hex.substring(4, 6))
+    ];
+    return rgb;
+  }
+
+  document.getElementById("minColorPicker").addEventListener("input", function (event) {
+    minColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("minColorPicker").addEventListener("change", function (event) {
+    minColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("maxColorPicker").addEventListener("input", function (event) {
+    maxColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("maxColorPicker").addEventListener("change", function (event) {
+    maxColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+
+  function valueToRGB(value, minRGB, maxRGB, minVal, maxVal) {
+    // Calculate how to map a given value onto a set of RGB values
+    var thisRGB = [];
+    for(var i=0; i < 3; i++) {
+      var minCol = minRGB[i];
+      var maxCol = maxRGB[i];
+      var f = (value - minVal) / (maxVal - minVal);
+      thisRGB.push(Math.round(f * (maxCol - minCol) + minCol));
+    }
+    return thisRGB;
+  }
+
+  function createRGBString(rgb) {
+    // Convert array of RGB into a string
+    return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")";
+  }
+
+  function drawColorbar(minVal, maxVal, label, minRGB, maxRGB) {
+    var colorbar = document.getElementById('colorbar');
+    colorbar.style.width = "4%";
+    colorbar.style.display = "inline-block";
+    const width = colorbar.clientWidth;
+    const height = colorbar.clientHeight;
+
+    // If it's resolution does not match change it
+    // Important to stop height/width fuckups
+    if (colorbar.width !== width || colorbar.height !== height) {
+      colorbar.width = width;
+      colorbar.height = height;
+    }
+
+    var context = colorbar.getContext('2d');
+    var loc = colorbar.getBoundingClientRect();
+    var barHeight = loc.height;
+
+    var nSegments = barHeight; // makes it smooooth
+    var sliceHeight = barHeight/nSegments;
+
+    for(var i = 0; i < nSegments; i++) {
+      context.beginPath();
+      var color = createRGBString(minRGB);
+      if (minVal != maxVal) {
+        var value = minVal + ((i/nSegments) * (maxVal - minVal));
+        color = createRGBString(valueToRGB(value, minRGB, maxRGB, minVal, maxVal));
+      }
+      context.fillStyle = color;
+      // x, y are relative to the canvas obj, i think...
+      context.fillRect(0, barHeight - ((i+1) * sliceHeight), loc.width, sliceHeight);
+    }
+
+    // add labels
+    var maxLabel = document.getElementById('maxLabel');
+    maxLabel.style.left = loc.left.toString() + "px";
+    maxLabel.style.display = "inline";
+    maxLabel.innerHTML = Math.round(maxVal).toString();
+
+    var minLabel = document.getElementById('minLabel');
+    minLabel.style.left = loc.left.toString() + "px";
+    minLabel.style.display = "inline";
+    minLabel.style.top = Math.round(0.975*loc.bottom).toString() + "px";
+    minLabel.innerHTML = Math.round(minVal).toString();
+
+    var varLabel = document.getElementById('varLabel');
+    varLabel.style.left = loc.left.toString() + "px";
+    varLabel.style.display = "inline";
+    varLabel.style.top = Math.round(0.5*loc.height + loc.top).toString() + "px";
+    varLabel.innerHTML = label;
+  }
+
+  function updateFinalStateNodeColors() {
+    // Update final-state node colors according to what's in the settings modal
+    var coloringForm = document.getElementById("coloringSelection");
+    var buttons = coloringForm.getElementsByTagName("input");
+    var checkedKey = "";
+    var checkedValue = "";
+    for (var i=0; i<buttons.length; i++) {
+      var button = buttons[i];
+      if (button.checked) {
+        checkedKey = button.value;
+        checkedValue = allColorings[checkedKey];
+      }
+    }
+
+    // Simple case: reset to default
+    if (checkedKey == "default") {
+      var changes = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          changes.push({id: node.id, color: finalStateNodeOpts['color']});
+        }
+      });
+      nodesDataset.update(changes);
+      hideColorbar();
+    } else {
+      // Need to determine color scales by finding min/max of all values of the chosen variable
+      var vals = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+          // Avoid infinities screwing up range
+          if (Math.abs(thisVal) != Infinity) {
+            vals.push(thisVal);
+          }
+        }
+      });
+      var maxVal = Math.max.apply(null, vals);
+      var minVal = Math.min.apply(null, vals);
+
+      // handle case where all values the same
+      var thisCol = "";
+      if (minVal == maxVal) {
+        thisCol = createRGBString(minColRGB());
+      }
+
+      // For each node, pick color according to value of the chosen property
+      var changes = [];
+      nodesDataset.get().forEach(function(node) {
+        if (node['final_state']) {
+          if (minVal != maxVal) {
+            var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+            if (thisVal === Infinity) {
+              thisVal == maxVal;
+            }
+            var thisRGB = valueToRGB(thisVal, minColRGB(), maxColRGB(), minVal, maxVal);
+            thisCol = createRGBString(thisRGB);
+          }
+          var nodeColors = {
+            border: thisCol,
+            background: thisCol,
+            highlight: {
+              border: thisCol,
+              background: thisCol
+            },
+            hover: {
+              border: thisCol,
+              background: thisCol
+            }
+          };
+          changes.push({id: node.id, color: nodeColors});
+        }
+      });
+      nodesDataset.update(changes);
+
+      document.getElementById('sidebar').style.width = "10%";
+      drawColorbar(minVal, maxVal, checkedValue.replace(":", ""), minColRGB(), maxColRGB());
+    }
+  }
 
   function updateSettings() {
-    updateTooltips();
+    // This is called whenever the settings pane is closed, so should make
+    // the necessary changes to the graph
+    updateNodeTooltips();
+    updateFinalStateNodeColors();
   }
 
   // Other generic settings
@@ -497,28 +868,20 @@
 
   redrawAll();
 
-  function hideModal(modal) {
-    modal.style.display = "none";
-  }
-
-  function showModal(modal) {
-    modal.style.display = "block";
-  }
-
   // Setup help modal
   var helpModal = document.getElementById('helpModal');
   var helpModalClose = document.getElementsByClassName("close")[0];
-  helpModalClose.onclick = function() { hideModal(helpModal) };
-  hideModal(helpModal);
+  helpModalClose.onclick = function() { hideElement(helpModal) };
+  hideElement(helpModal);
 
   // Setup settings modal
   var settingsModal = document.getElementById('settingsModal');
   var settingsModalClose = document.getElementsByClassName("close")[1];
   settingsModalClose.onclick = function() {
-    hideModal(settingsModal);
+    hideElement(settingsModal);
     updateSettings();
   };
-  hideModal(settingsModal);
+  hideElement(settingsModal);
   document.getElementById("settingsBtn").onclick = function() {
     settingsModal.style.display = "block";
   };
@@ -526,7 +889,7 @@
   // When the user clicks anywhere outside of any modal, close it
   window.onclick = function(event) {
     if (event.target == helpModal || event.target == settingsModal) {
-      hideModal(event.target)
+      hideElement(event.target)
     }
     if (event.target == settingsModal) {
       updateSettings();
@@ -544,9 +907,9 @@
       /* Toggle between hiding and showing the active panel */
       var panel = this.nextElementSibling;
       if (panel.style.display === "block") {
-        panel.style.display = "none";
+        hideElement(panel);
       } else {
-        panel.style.display = "block";
+        showElement(panel);
       }
     }
   }
@@ -563,9 +926,9 @@
       familyHighlight(network.getSelection());
     } else if (String.fromCharCode(e.charCode) === "h") {
       if (helpModal.style.display != "none"){
-        hideModal(helpModal);
+        hideElement(helpModal);
       } else {
-        showModal(helpModal);
+        showElement(helpModal);
       }
     } else if (String.fromCharCode(e.charCode) === "s") {
       switchNodeDirection();
@@ -742,14 +1105,7 @@
     sidebar = document.getElementById("sidebar");
     var particleDict = {};
     nodesDataset.get().forEach(function(node) {
-      // prettify names, make charge into ±
-      pname = (node.name.replace("bar", "")
-                        .replace(/_(.*)$/, "<sub>$1</sub>")
-                        .replace(/_(.*)([+0-])/, "<sub>$1</sub>$2"))
-                        .replace(/[+-]/g, "<sup>&plusmn;</sup>")
-                        .replace("0", "<sup>0</sup>")
-
-      particleDict[Math.abs(node.pdgid)] = pname;
+      particleDict[Math.abs(node.pdgid)] = prettifyParticleName(node.name, false);
     });
     var sortedKeys = Object.keys(particleDict).sort(function(a, b) {
       return particleDict[a].toUpperCase().localeCompare(particleDict[b].toUpperCase());
