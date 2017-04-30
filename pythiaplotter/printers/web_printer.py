@@ -64,7 +64,7 @@ class VisPrinter(object):
         vis_node_dicts, vis_edge_dicts = create_vis_dicts(event.graph)
 
         pythia8status_file = resource_filename('pythiaplotter',
-                                               'particledata/pythia6status.json')
+                                               'particledata/pythia8status.json')
         with open(pythia8status_file) as f:
             pythia8status = f.read()
 
