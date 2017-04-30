@@ -550,16 +550,24 @@
       var maxVal = Math.max.apply(null, vals);
       var minVal = Math.min.apply(null, vals);
 
+      // handle case where all values the same
+      var thisCol = "";
+      if (minVal == maxVal) {
+        thisCol = createRGBString(minColRGB);
+      }
+
       // For each node, pick color according to value of the chosen property
       var changes = [];
       nodesDataset.get().forEach(function(node) {
         if (node['final_state']) {
-          var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
-          if (thisVal === Infinity) {
-            thisVal == maxVal;
+          if (minVal != maxVal) {
+            var thisVal = Math.abs(convertStringToNumber(node[checkedKey]));
+            if (thisVal === Infinity) {
+              thisVal == maxVal;
+            }
+            var thisRGB = calcRGB(thisVal, minColRGB, maxColRGB, minVal, maxVal);
+            thisCol = createRGBString(thisRGB);
           }
-          var thisRGB = calcRGB(thisVal, minColRGB, maxColRGB, minVal, maxVal);
-          var thisCol = createRGBString(thisRGB);
           var nodeColors = {
             border: thisCol,
             background: thisCol,
@@ -600,8 +608,11 @@
 
       for(var i = 0; i < nSegments; i++) {
         context.beginPath();
-        var value = minVal + ((i/nSegments) * (maxVal - minVal));
-        var color = createRGBString(calcRGB(value, minColRGB, maxColRGB, minVal, maxVal));
+        var color = createRGBString(minColRGB);
+        if (minVal != maxVal) {
+          var value = minVal + ((i/nSegments) * (maxVal - minVal));
+          color = createRGBString(calcRGB(value, minColRGB, maxColRGB, minVal, maxVal));
+        }
         context.fillStyle = color;
         // x, y are relative to the canvas obj, i think...
         context.fillRect(0, barHeight - ((i+1) * sliceHeight), loc.width, sliceHeight);
