@@ -511,6 +511,58 @@
     return "rgb("+rgb[0].toString()+","+rgb[1].toString()+","+rgb[2].toString()+")";
   }
 
+  function drawColorbar(minVal, maxVal, label, minRGB, maxRGB) {
+    var colorbar = document.getElementById('colorbar');
+    colorbar.style.width = "4%";
+    colorbar.style.display = "inline-block";
+    const width = colorbar.clientWidth;
+    const height = colorbar.clientHeight;
+
+    // If it's resolution does not match change it
+    // Important to stop height/width fuckups
+    if (colorbar.width !== width || colorbar.height !== height) {
+      colorbar.width = width;
+      colorbar.height = height;
+    }
+
+    var context = colorbar.getContext('2d');
+    var loc = colorbar.getBoundingClientRect();
+    var barHeight = loc.height;
+
+    var nSegments = barHeight; // makes it smooooth
+    var sliceHeight = barHeight/nSegments;
+
+    for(var i = 0; i < nSegments; i++) {
+      context.beginPath();
+      var color = createRGBString(minRGB);
+      if (minVal != maxVal) {
+        var value = minVal + ((i/nSegments) * (maxVal - minVal));
+        color = createRGBString(valueToRGB(value, minRGB, maxRGB, minVal, maxVal));
+      }
+      context.fillStyle = color;
+      // x, y are relative to the canvas obj, i think...
+      context.fillRect(0, barHeight - ((i+1) * sliceHeight), loc.width, sliceHeight);
+    }
+
+    // add labels
+    var maxLabel = document.getElementById('maxLabel');
+    maxLabel.style.left = loc.left.toString() + "px";
+    maxLabel.style.display = "inline";
+    maxLabel.innerHTML = Math.round(maxVal).toString();
+
+    var minLabel = document.getElementById('minLabel');
+    minLabel.style.left = loc.left.toString() + "px";
+    minLabel.style.display = "inline";
+    minLabel.style.top = Math.round(0.975*loc.bottom).toString() + "px";
+    minLabel.innerHTML = Math.round(minVal).toString();
+
+    var varLabel = document.getElementById('varLabel');
+    varLabel.style.left = loc.left.toString() + "px";
+    varLabel.style.display = "inline";
+    varLabel.style.top = Math.round(0.5*loc.height + loc.top).toString() + "px";
+    varLabel.innerHTML = label;
+  }
+
   function updateFinalStateNodeColors() {
     // Update final-state node colors according to what's in the settings modal
     var coloringForm = document.getElementById("coloringSelection");
@@ -586,55 +638,7 @@
       nodesDataset.update(changes);
 
       document.getElementById('sidebar').style.width = "10%";
-      var colorbar = document.getElementById('colorbar');
-      colorbar.style.width = "4%";
-      colorbar.style.display = "inline-block";
-      const width = colorbar.clientWidth;
-      const height = colorbar.clientHeight;
-
-      // If it's resolution does not match change it
-      // Important to stop height/width fuckups
-      if (colorbar.width !== width || colorbar.height !== height) {
-        colorbar.width = width;
-        colorbar.height = height;
-      }
-
-      var context = colorbar.getContext('2d');
-      var loc = colorbar.getBoundingClientRect();
-      var barHeight = loc.height;
-
-      var nSegments = barHeight; // makes it smooooth
-      var sliceHeight = barHeight/nSegments;
-
-      for(var i = 0; i < nSegments; i++) {
-        context.beginPath();
-        var color = createRGBString(minColRGB);
-        if (minVal != maxVal) {
-          var value = minVal + ((i/nSegments) * (maxVal - minVal));
-          color = createRGBString(calcRGB(value, minColRGB, maxColRGB, minVal, maxVal));
-        }
-        context.fillStyle = color;
-        // x, y are relative to the canvas obj, i think...
-        context.fillRect(0, barHeight - ((i+1) * sliceHeight), loc.width, sliceHeight);
-      }
-
-      // add labels
-      var maxLabel = document.getElementById('maxLabel');
-      maxLabel.style.left = loc.left.toString() + "px";
-      maxLabel.style.display = "inline";
-      maxLabel.innerHTML = Math.round(maxVal).toString();
-
-      var minLabel = document.getElementById('minLabel');
-      minLabel.style.left = loc.left.toString() + "px";
-      minLabel.style.display = "inline";
-      minLabel.style.top = Math.round(0.975*loc.bottom).toString() + "px";
-      minLabel.innerHTML = Math.round(minVal).toString();
-
-      var varLabel = document.getElementById('varLabel');
-      varLabel.style.left = loc.left.toString() + "px";
-      varLabel.style.display = "inline";
-      varLabel.style.top = Math.round(0.5*loc.height + loc.top).toString() + "px";
-      varLabel.innerHTML = checkedValue.replace(":", "");
+      drawColorbar(minVal, maxVal, checkedValue.replace(":", ""), minColRGB(), maxColRGB());
     }
   }
 
