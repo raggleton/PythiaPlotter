@@ -222,6 +222,12 @@
     <button class="accordion">Final-state coloring</button>
     <div class="option">Select how to color final state particles:
       <form id="coloringSelection"><table id="coloringTable" style="margin:auto;"></table></form>
+      <span>
+        <label>Min value color:</label>
+        <input type="color" name="minColorPicker" id="minColorPicker" value="#FFF000">
+        <label>Max value color:</label>
+        <input type="color" name="maxColorPicker" id="maxColorPicker" value="#FF0000">
+      </span>
     </div>
   </div>
 </div>
@@ -490,16 +496,50 @@
     document.getElementById('sidebar').style.width = "14%";
   }
 
-  // Set limits of colorbar
-  var maxColRGB = [255, 0, 0];
-  var minColRGB = [255, 240, 0];
+  // Get limits of colorbar
+  function minColRGB() {
+    return hexColorToRGB(document.getElementById("minColorPicker").value);
+  };
 
-  function calcRGB(value, minColRGB, maxColRGB, minVal, maxVal) {
+  function maxColRGB() {
+    return hexColorToRGB(document.getElementById("maxColorPicker").value);
+  };
+
+  // User - selectable color end points
+  function hexToInt(hex) {
+    return parseInt(hex, 16);
+  }
+
+  function hexColorToRGB(hex) {
+    if (hex.charAt(0) == "#")
+      hex = hex.substring(1, 7);
+    var rgb = [
+      hexToInt(hex.substring(0, 2)),
+      hexToInt(hex.substring(2, 4)),
+      hexToInt(hex.substring(4, 6))
+    ];
+    return rgb;
+  }
+
+  document.getElementById("minColorPicker").addEventListener("input", function (event) {
+    minColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("minColorPicker").addEventListener("change", function (event) {
+    minColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("maxColorPicker").addEventListener("input", function (event) {
+    maxColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+  document.getElementById("maxColorPicker").addEventListener("change", function (event) {
+    maxColorRGB = hexColorToRGB(event.target.value);
+  }, false);
+
+  function valueToRGB(value, minRGB, maxRGB, minVal, maxVal) {
     // Calculate how to map a given value onto a set of RGB values
     var thisRGB = [];
     for(var i=0; i < 3; i++) {
-      var minCol = minColRGB[i];
-      var maxCol = maxColRGB[i];
+      var minCol = minRGB[i];
+      var maxCol = maxRGB[i];
       var f = (value - minVal) / (maxVal - minVal);
       thisRGB.push(Math.round(f * (maxCol - minCol) + minCol));
     }
@@ -605,7 +645,7 @@
       // handle case where all values the same
       var thisCol = "";
       if (minVal == maxVal) {
-        thisCol = createRGBString(minColRGB);
+        thisCol = createRGBString(minColRGB());
       }
 
       // For each node, pick color according to value of the chosen property
@@ -617,7 +657,7 @@
             if (thisVal === Infinity) {
               thisVal == maxVal;
             }
-            var thisRGB = calcRGB(thisVal, minColRGB, maxColRGB, minVal, maxVal);
+            var thisRGB = valueToRGB(thisVal, minColRGB(), maxColRGB(), minVal, maxVal);
             thisCol = createRGBString(thisRGB);
           }
           var nodeColors = {
