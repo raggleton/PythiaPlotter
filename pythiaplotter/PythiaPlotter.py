@@ -35,6 +35,9 @@ def choose_parser(opts):
         return parsers.HeppyParser(filename=opts.input,
                                    event_num=opts.eventNumber,
                                    **opts.HEPPY_PARSER_OPTS)
+    elif opts.inputFormat == "HERWIG":
+        return parsers.HerwigParser(filename=opts.input,
+                                   event_num=opts.eventNumber)
     else:
         raise NotImplementedError("Cannot parse input format %s" % opts.inputFormat)
 

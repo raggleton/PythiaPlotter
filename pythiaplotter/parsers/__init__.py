@@ -15,6 +15,7 @@ from .pythia8_parser import Pythia8Parser
 from .hepmc_parser import HepMCParser
 from .lhe_parser import LHEParser
 from .cmssw_particle_list_parser import CMSSWParticleListParser
+from .herwig_parser import HerwigParser
 
 
 log = get_logger(__name__)
@@ -79,6 +80,13 @@ parser_opts = {
     "CMSSW": ParserOption(
         description="For ParticleListDrawer output from CMSSW piped into file",
         parser=CMSSWParticleListParser,
+        file_extension=None,
+        default_representation="NODE"
+    ),
+
+    "HERWIG": ParserOption(
+        description="For *.log file from running Herwig7",
+        parser=HerwigParser,
         file_extension=None,
         default_representation="NODE"
     )
