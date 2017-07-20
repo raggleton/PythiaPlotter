@@ -8,7 +8,7 @@ TODO: deal with tex entries like: ``25 h^0 / H_1^0``
 """
 
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 import re
 import xml.etree.ElementTree as ET
 from pkg_resources import resource_string
@@ -98,23 +98,17 @@ PDGID_NAME_DICT = load_pdgid_dict()
 #                             raw="I0", raw_anti="I0")
 
 
-def check_pdgid(pdgid):
-    """Check if entry corresponding to given pdgid. If not, throw KeyError."""
-
-    if int(pdgid) not in list(PDGID_NAME_DICT.keys()):
-        raise KeyError("%r not in list of valid particle names/PDGIDs. Please "
-                       "add custom entry in pdgid_converter.py" % pdgid)
-
-
 def pdgid_to_tex(pdgid):
     """Convert PDGID to TeX-compatible name e.g. ``\pi^0``"""
-
-    check_pdgid(pdgid)
+    if int(pdgid) not in PDGID_NAME_DICT.keys():
+        print("Warning, there is no name for PDGID %d" % pdgid)
+        return str(pdgid)
     return PDGID_NAME_DICT[int(pdgid)]["tex"]
 
 
 def pdgid_to_string(pdgid):
     """Convert PDGID to readable string (raw) name e.g. ``pi0``"""
-
-    check_pdgid(pdgid)
+    if int(pdgid) not in PDGID_NAME_DICT.keys():
+        print("Warning, there is no name for PDGID %d" % pdgid)
+        return str(pdgid)
     return PDGID_NAME_DICT[int(pdgid)]["raw"]
