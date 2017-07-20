@@ -33,6 +33,8 @@ examples: test test-examples## update example outputs, but only if our tests are
 	PythiaPlotter example/example_hepmc.hepmc --inputFormat HEPMC -p WEB -O example/example_hepmc.html
 	PythiaPlotter example/example_heppy.root --inputFormat HEPPY -O example/example_heppy.pdf
 	PythiaPlotter example/example_heppy.root --inputFormat HEPPY -p WEB -O example/example_heppy.html
+	PythiaPlotter example/example_herwig.log --inputFormat HERWIG -O example/example_herwig.pdf
+	PythiaPlotter example/example_herwig.log --inputFormat HERWIG -p WEB -O example/example_herwig.html
 
 test: ## run standard tests
 	python -m pytest -k "not test_examples_full" -r fEsp
