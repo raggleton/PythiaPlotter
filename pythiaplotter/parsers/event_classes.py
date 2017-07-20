@@ -178,6 +178,9 @@ class NodeParticle(object):
     def __repr__(self):
         return generate_repr_str(self)
 
+    def __eq__(self, other):
+        return self.particle == other.particle
+
     @property
     def barcode(self):
         return self.particle.barcode
@@ -196,6 +199,9 @@ class EdgeParticle(object):
         self.particle = particle
         self.vtx_in_barcode = int(vtx_in_barcode)
         self.vtx_out_barcode = int(vtx_out_barcode)
+
+    def __eq__(self, other):
+        return self.particle == other.particle
 
     @property
     def barcode(self):
