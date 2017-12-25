@@ -52,6 +52,9 @@ class CMSSWParticleListParser(object):
 
             for line in f:
                 line = line.strip()
+                if line == "":
+                    continue
+
                 if line.startswith('[ParticleListDrawer]'):
                     continue
 

@@ -68,6 +68,9 @@ class HepMCParser(object):
         log.info("Opening event file %s", self.filename)
         with open(self.filename) as f:
             for line in f:
+                line = line.strip()
+                if line == "":
+                    continue
                 if line.startswith("E") or "END_EVENT_LISTING" in line:
                     # General GenEvent information
                     if current_event:

@@ -93,6 +93,9 @@ class HerwigParser(object):
             parsing_particle = False
             current_particle_info = None
             for line in f:
+                line = line.strip()
+                if line == "":
+                    continue
                 # Figure out if we're looking at the desired event
                 if "Event number" in line:
                     if self.extract_event_num(line)-1 != self.event_num:
