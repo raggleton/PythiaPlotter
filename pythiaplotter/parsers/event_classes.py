@@ -153,7 +153,7 @@ def convert_px_py_pz(px, py, pz):
     p = math.sqrt(math.fsum([math.pow(pt, 2), math.pow(pz, 2)]))
     if pt != 0:
         eta = math.asinh(pz / pt)
-        phi = math.asin(py / pt)
+        phi = math.atan2(py, px)
     else:
         eta = math.copysign(float('inf'), pz)
         phi = 0
