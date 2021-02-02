@@ -6,7 +6,7 @@ astroid==1.4.9
 Babel==2.3.4
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
-bleach==1.5.0
+bleach==3.3.0
 bottle==0.12.13
 certifi==2017.1.23
 configparser==3.5.0
