@@ -37,7 +37,7 @@ jupyter-console==5.0.0
 jupyter-core==4.2.1
 lazy-object-proxy==1.2.2
 livereload==2.5.1
-lxml==3.7.2
+lxml==4.6.5
 MarkupSafe==0.23
 mccabe==0.6.0
 mistune==0.7.3
